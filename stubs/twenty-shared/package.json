@@ -1,0 +1,14 @@
+{
+  "name": "twenty-shared",
+  "version": "1.0.0",
+  "exports": {
+    "./constants": {
+      "types": "./constants/index.d.ts",
+      "default": "./constants/index.js"
+    },
+    "./utils": {
+      "types": "./utils/index.d.ts",
+      "default": "./utils/index.js"
+    }
+  }
+}

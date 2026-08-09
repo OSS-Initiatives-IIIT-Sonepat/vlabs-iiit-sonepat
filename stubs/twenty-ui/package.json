@@ -1,0 +1,8 @@
+{
+  "name": "twenty-ui",
+  "version": "1.0.0",
+  "exports": {
+    "./theme": "./theme/index.js",
+    "./theme-constants": "./theme-constants/index.js"
+  }
+}

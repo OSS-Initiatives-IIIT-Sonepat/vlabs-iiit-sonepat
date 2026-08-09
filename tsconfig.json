@@ -1,0 +1,53 @@
+{
+  "compilerOptions": {
+    "target": "es2020",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "incremental": true,
+    "plugins": [
+      { "name": "next" }
+    ],
+    "paths": { "@/*": ["./src/*"] }
+  },
+  "include": [
+    "next-env.d.ts",
+    "src/app/**/*.ts",
+    "src/app/**/*.tsx",
+    "src/sections/**/*.ts",
+    "src/sections/**/*.tsx",
+    "src/ui/**/*.ts",
+    "src/ui/**/*.tsx",
+    "src/tokens/**/*.ts",
+    "src/icons/**/*.ts",
+    "src/icons/**/*.tsx",
+    "src/platform/community/**/*.ts",
+    "src/platform/i18n/**/*.ts",
+    "src/platform/i18n/**/*.tsx",
+    "src/platform/menu-style/**/*.ts",
+    "src/platform/menu-style/**/*.tsx",
+    "src/platform/motion/**/*.ts",
+    "src/platform/motion/**/*.tsx",
+    "src/platform/seo/**/*.ts",
+    "src/platform/seo/**/*.tsx",
+    "src/platform/visuals/**/*.ts",
+    "src/platform/visuals/**/*.tsx",
+    "src/platform/site-urls.ts",
+    "src/platform/routing/**/*.ts",
+    "src/app-preview/**/*.ts",
+    "src/app-preview/**/*.tsx",
+    "src/contact-cal/**/*.ts",
+    "src/contact-cal/**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
+  ],
+  "exclude": ["node_modules", "src/platform/enterprise/**", "src/platform/http/**", "src/platform/releases/**"]
+}
