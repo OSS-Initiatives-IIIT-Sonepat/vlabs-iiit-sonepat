@@ -15,7 +15,7 @@ export const SITE_URLS: Record<
   | 'x',
   string
 > = {
-  appWelcome: 'https://app.twenty.com/welcome',
+  appWelcome: '/onboarding',
   calBooking: 'https://cal.com/forms/f7841033-0a20-4958-8c92-4e34ec128a81',
   discord: 'https://discord.gg/cx5n4Jzs57',
   docsApi: 'https://docs.twenty.com/developers/extend/api',
