@@ -426,7 +426,7 @@ export function OnboardingFlow() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       if (localStorage.getItem(ONBOARDING_KEY)) {
-        router.replace('/subjects');
+        router.replace('/explore');
       }
     }
   }, [router]);
@@ -447,7 +447,7 @@ export function OnboardingFlow() {
     if (typeof window !== 'undefined') {
       localStorage.setItem(ONBOARDING_KEY, '1');
     }
-    router.push('/subjects');
+    router.push('/explore');
   };
 
   // Step 0 — Role: one-click advance except "other"

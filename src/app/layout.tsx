@@ -1,5 +1,6 @@
 import { css } from '@linaria/core';
 import localFont from 'next/font/local';
+import { Inria_Serif } from 'next/font/google';
 import { type ReactNode } from 'react';
 import { color, tokenCssVariables } from '@/tokens';
 
@@ -45,6 +46,14 @@ const inter = localFont({
   display: 'swap',
 });
 
+const inriaSerif = Inria_Serif({
+  weight: ['300', '400'],
+  style: ['normal', 'italic'],
+  subsets: ['latin'],
+  variable: '--font-inria',
+  display: 'swap',
+});
+
 const globalStyles = css`
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
@@ -69,7 +78,7 @@ const globalStyles = css`
 export default async function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${tokenCssVariables} ${globalStyles} ${hostGrotesk.variable} ${aleo.variable} ${azeretMono.variable} ${vt323.variable} ${inter.variable}`}>
+      <body className={`${tokenCssVariables} ${globalStyles} ${hostGrotesk.variable} ${aleo.variable} ${azeretMono.variable} ${vt323.variable} ${inter.variable} ${inriaSerif.variable}`}>
         {children}
       </body>
     </html>
