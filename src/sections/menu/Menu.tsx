@@ -25,6 +25,7 @@ import { Button, Container, IconButton } from '@/ui';
 
 import { MenuDrawer } from './components/MenuDrawer';
 import { MenuNav } from './components/MenuNav';
+import { MenuSearch } from './components/MenuSearch';
 import { MenuSocial } from './components/MenuSocial';
 import { MENU } from './data/menu';
 import { CloseDrawerOnDesktopEffect } from './effect-components/CloseDrawerOnDesktopEffect';
@@ -71,6 +72,18 @@ const MenuRow = styled.div`
   min-height: ${MENU_HEIGHT_PX}px;
 `;
 
+const MenuCenter = styled.div`
+  align-items: center;
+  display: flex;
+  gap: ${spacing(5)};
+  flex: 1;
+  justify-content: flex-end;
+
+  ${mediaUp('md')} {
+    justify-content: space-between;
+  }
+`;
+
 const LogoLink = styled.a`
   display: grid;
   text-decoration: none;
@@ -87,7 +100,7 @@ const DesktopActions = styled.div`
   ${mediaUp('md')} {
     align-items: center;
     display: flex;
-    gap: ${spacing(2)};
+    gap: ${spacing(4)};
   }
 `;
 
@@ -138,23 +151,26 @@ export function Menu({ communityStats, scheme = 'light' }: MenuProps) {  const {
             >
               <VLabsLogo sizePx={40} />
             </Drawer.Close>
-            <MenuNav items={MENU.navItems} />
-            <MenuSocial links={MENU.socialLinks} stats={communityStats} />
-             <DesktopActions>
+            <MenuCenter>
+              <MenuNav items={MENU.navItems} />
+              <DesktopActions>
+                <MenuSearch />
+                <MenuSocial links={MENU.socialLinks} stats={communityStats} />
                 <Button
                   href={MENU.appUrl}
                   label="Get started"
                   size="small"
                 />
               </DesktopActions>
-             <MobileActions>
-               <Button href={MENU.appUrl} label="Get started" />
-               <IconButton
-                 ariaLabel={
-                   isDrawerOpen
-                     ? "Close menu"
-                     : "Open menu"
-                 }
+            </MenuCenter>
+            <MobileActions>
+              <Button href={MENU.appUrl} label="Get started" />
+              <IconButton
+                ariaLabel={
+                  isDrawerOpen
+                    ? "Close menu"
+                    : "Open menu"
+                }
                 onClick={() => setIsDrawerOpen((previous) => !previous)}
               >
                 {isDrawerOpen ? (

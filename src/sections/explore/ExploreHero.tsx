@@ -67,10 +67,7 @@ const HeroDivider = styled.div`
 
 const HeroBodyText = styled.div`
   padding-block: ${spacing(5)};
-  /* Single line — don't let it wrap */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  max-width: 52ch;
 `;
 
 // ── Featured card (right column) ──────────────────────────────────────────
@@ -104,7 +101,7 @@ const FeaturedBodyText = styled.p`
   color: ${semanticColor.inkMuted};
   font-family: var(--font-sans), sans-serif;
   font-size: 0.8125rem;
-  line-height: 1.55;
+  line-height: 1.85;
   margin: 0;
 `;
 
