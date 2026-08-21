@@ -4,7 +4,6 @@ import { Helped } from '@/sections/helped';
 import { HomeHero } from '@/sections/home-hero';
 import { Menu } from '@/sections/menu';
 import { Testimonials } from '@/sections/testimonials';
-import { Problem } from '@/sections/problem';
 import { ThreeCards } from '@/sections/three-cards';
 import { TrustedBy } from '@/sections/trusted-by';
 import { Footer } from '@/sections/footer';
@@ -18,7 +17,6 @@ export default function HomePage() {
       <main>
         <HomeHero />
         <TrustedBy />
-        <Problem />
         <ThreeCards />
         <FeatureCards />
         <Helped />
