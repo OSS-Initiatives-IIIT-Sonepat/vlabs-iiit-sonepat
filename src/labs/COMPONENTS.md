@@ -13,6 +13,8 @@ The output should be a single TypeScript file saved to `src/labs/circuits/<name>
 4. Add it to `src/labs/circuits/index.ts` in `ALL_CIRCUITS`
 5. Done — it renders automatically in the hero preview and at `/labs/<id>`
 
+Human docs: `/docs` in the running app.
+
 ---
 
 ## Circuit schema
@@ -71,6 +73,13 @@ export const MyCircuit: Circuit = {
 - Spans **col → col+3** (4 columns wide, horizontal)
 - Use row 'c' for output resistors (keeps them away from IC rows)
 
+### Capacitor
+```ts
+{ id: 'c1', type: 'capacitor', capacitance: 100, mountedAt: { board: 'bb', col: 5, row: 'c' } }
+```
+- Spans **col → col+1**
+- `capacitance` in µF
+
 ### LED (output indicator)
 ```ts
 { id: 'led1', type: 'led', color: 'green',  mountedAt: { board: 'bb', col: 24, row: 'c' } }
@@ -100,9 +109,9 @@ Valid cols: `1–30`
 { ic: 'xor1', pin: 'B' }   // input B of gate xor1  (col+1, row e)
 { ic: 'xor1', pin: 'Y' }   // output Y of gate xor1 (col+2, row e)
 ```
-Pin names: `A`, `B`, `Y` (for single-gate ICs)
+Pin names: `A`, `B`, `Y` (single gate) or `1A`, `1B`, `1Y`, `2A`, `2B`, `2Y` (dual gate)
 
-### Passive pin (resistor)
+### Passive pin (resistor / capacitor)
 ```ts
 { component: 'r1', end: 'p1' }   // left lead  (col)
 { component: 'r1', end: 'p2' }   // right lead (col+3)
@@ -236,6 +245,64 @@ That's it. It appears in the hero preview sidebar and gets its own step-by-step 
 
 ---
 
+## Adding a new component type (geometry + registry)
+
+Only needed if the circuit uses a part that doesn't exist yet (not in the type list above).
+This requires THREE file edits — all in `src/labs/`.
+
+### 1. Add the type variant to `types.ts`
+
+```ts
+// src/labs/types.ts — add to the ComponentInstance union:
+| { id: string; type: 'my-part'; someField: number; mountedAt: MountPoint }
+```
+
+### 2. Write the geometry builder
+
+Add to `src/labs/geometry/extra-components.ts` (or a new file):
+
+```ts
+import * as THREE from 'three';
+import { PITCH, BOARD_H, TOP_Y } from '../coords';
+import { M } from './materials';
+import { solidBox, solidCyl } from './primitives';
+
+// Board-mounted variant (takes hole position)
+export function buildMyPart(mountPos: THREE.Vector3, someField: number): THREE.Group {
+  const root = new THREE.Group();
+  // Use solidBox / solidCyl / THREE primitives only.
+  // White/cream fill + M.edge() wireframe. Leads use M.gold().
+  // Position body above TOP_Y; leads hang down to TOP_Y - BOARD_H * 0.3.
+  return root;
+}
+
+// Standalone variant (centred at origin — for showcase cards)
+export function buildMyPartStandalone(someField: number): THREE.Group {
+  return buildMyPart(new THREE.Vector3(0, 0, 0), someField);
+}
+```
+
+Export from `src/labs/geometry/index.ts`:
+```ts
+export { buildMyPart, buildMyPartStandalone } from './extra-components';
+```
+
+### 3. Add the registry entry to `LabScene.tsx`
+
+```ts
+// At the top: import { buildMyPart, ... } from './geometry/index';
+
+// In COMPONENT_REGISTRY:
+'my-part': (inst) => {
+  const p = inst as Extract<ComponentInstance, { type: 'my-part' }>;
+  return buildMyPart(hole(p.mountedAt.col, p.mountedAt.row), p.someField);
+},
+```
+
+That's all. No changes to the renderer loop.
+
+---
+
 ## Column layout guide
 
 ```
@@ -248,6 +315,10 @@ cols 26–29  : second resistor + LED pair
 col  30     : do not use (board edge)
 ```
 
+IC rows: always `e` (straddles centre gap).
+Passive/LED rows: always `c` (clear of ICs).
+Input tie-points: rows `a` and `b`.
+
 ---
 
 ## Constraints for valid output
@@ -258,3 +329,4 @@ col  30     : do not use (board edge)
 - Resistor at col N → its LED at col N+2 (not N+1, that's the resistor's right lead)
 - Always end with a ground wire from each LED cathode to `gnd_top`
 - `activeInputs` keys must match `truthTable.inputs` exactly
+- Last step's `show[]` must contain every component id including all wires
