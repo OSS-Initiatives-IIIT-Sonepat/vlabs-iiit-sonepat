@@ -48,7 +48,6 @@ function resolvePin(pin: PinRef, all: ComponentInstance[]): THREE.Vector3 | null
     const inst = all.find(c => c.id === ip.ic);
     if (!inst || !('mountedAt' in inst)) return null;
     const col  = inst.mountedAt.col;
-    // Standard gate pinout (pin 1=A, 2=B, 3=Y for each gate)
     if (ip.pin === 'A' || ip.pin === '1A') return hole(col,     'e');
     if (ip.pin === 'B' || ip.pin === '1B') return hole(col + 1, 'e');
     if (ip.pin === 'Y' || ip.pin === '1Y') return hole(col + 2, 'e');
@@ -79,60 +78,64 @@ function resolvePin(pin: PinRef, all: ComponentInstance[]): THREE.Vector3 | null
   return null;
 }
 
+// ── Component registry ────────────────────────────────────────────────────
+// Maps every ComponentInstance type to a builder function.
+// To add a new renderable type:
+//   1. Add its variant to ComponentInstance in types.ts
+//   2. Write its geometry builder in geometry/ (or extra-components.ts)
+//   3. Import the builder above and add one entry here.
+// The renderer (buildInstance below) is data-driven — no switch needed.
+
+type BuildFn = (inst: ComponentInstance, all: ComponentInstance[]) => THREE.Group | null;
+
+const COMPONENT_REGISTRY: Record<string, BuildFn> = {
+
+  breadboard: () => buildBreadboard(COLS),
+
+  'xor-gate':  (inst) => buildDip14((inst as Extract<ComponentInstance, { type: 'xor-gate'  }>).mountedAt.col, 'XOR'),
+  'and-gate':  (inst) => buildDip14((inst as Extract<ComponentInstance, { type: 'and-gate'  }>).mountedAt.col, 'AND'),
+  'or-gate':   (inst) => buildDip14((inst as Extract<ComponentInstance, { type: 'or-gate'   }>).mountedAt.col, 'OR'),
+  'not-gate':  (inst) => buildDip14((inst as Extract<ComponentInstance, { type: 'not-gate'  }>).mountedAt.col, 'NOT'),
+  'nand-gate': (inst) => buildDip14((inst as Extract<ComponentInstance, { type: 'nand-gate' }>).mountedAt.col, 'NAND'),
+  'nor-gate':  (inst) => buildDip14((inst as Extract<ComponentInstance, { type: 'nor-gate'  }>).mountedAt.col, 'NOR'),
+
+  resistor: (inst) => {
+    const r = inst as Extract<ComponentInstance, { type: 'resistor' }>;
+    return buildResistor(hole(r.mountedAt.col, r.mountedAt.row), hole(r.mountedAt.col + 3, r.mountedAt.row), r.ohms);
+  },
+
+  capacitor: (inst) => {
+    const c = inst as Extract<ComponentInstance, { type: 'capacitor' }>;
+    return buildCapacitor(hole(c.mountedAt.col, c.mountedAt.row), hole(c.mountedAt.col + 1, c.mountedAt.row), c.capacitance);
+  },
+
+  led: (inst) => {
+    const l = inst as Extract<ComponentInstance, { type: 'led' }>;
+    return buildLed(hole(l.mountedAt.col, l.mountedAt.row), hole(l.mountedAt.col + 1, l.mountedAt.row), l.color);
+  },
+
+  wire: (inst, all) => {
+    const w = inst as Extract<ComponentInstance, { type: 'wire' }>;
+    const from = resolvePin(w.from, all);
+    const to   = resolvePin(w.to,   all);
+    if (!from || !to) return null;
+    return buildWire(from, to, w.color);
+  },
+
+  // ── Not yet rendered (geometry builders pending) ──────────────────────
+  // Adding these is the only step needed once a geometry builder exists.
+  potentiometer: () => null,
+  'push-button': () => null,
+  switch:        () => null,
+  battery:       () => null,
+  'dc-jack':     () => null,
+};
+
 // ── Component placement ───────────────────────────────────────────────────
+// Dispatches through the registry — no switch, no fallthrough.
 function buildInstance(inst: ComponentInstance, all: ComponentInstance[]): THREE.Group | null {
-  switch (inst.type) {
-
-    case 'breadboard':
-      return buildBreadboard(COLS);
-
-    case 'xor-gate':
-    case 'and-gate':
-    case 'or-gate':
-    case 'not-gate':
-    case 'nand-gate':
-    case 'nor-gate': {
-      const label = inst.type === 'xor-gate'  ? 'XOR'
-                  : inst.type === 'and-gate'   ? 'AND'
-                  : inst.type === 'or-gate'    ? 'OR'
-                  : inst.type === 'not-gate'   ? 'NOT'
-                  : inst.type === 'nand-gate'  ? 'NAND' : 'NOR';
-      return buildDip14(inst.mountedAt.col, label);
-    }
-
-    case 'resistor': {
-      const { col, row } = inst.mountedAt;
-      return buildResistor(hole(col, row), hole(col + 3, row), inst.ohms);
-    }
-
-    case 'capacitor': {
-      const { col, row } = inst.mountedAt;
-      return buildCapacitor(hole(col, row), hole(col + 1, row), inst.capacitance);
-    }
-
-    case 'led': {
-      const { col, row } = inst.mountedAt;
-      return buildLed(hole(col, row), hole(col + 1, row), inst.color);
-    }
-
-    case 'wire': {
-      const from = resolvePin(inst.from, all);
-      const to   = resolvePin(inst.to,   all);
-      if (!from || !to) return null;
-      return buildWire(from, to, inst.color);
-    }
-
-    // Not yet rendered — return null (handled gracefully)
-    case 'potentiometer':
-    case 'push-button':
-    case 'switch':
-    case 'battery':
-    case 'dc-jack':
-      return null;
-
-    default:
-      return null;
-  }
+  const builder = COMPONENT_REGISTRY[inst.type];
+  return builder ? builder(inst, all) : null;
 }
 
 // ── React component ───────────────────────────────────────────────────────
