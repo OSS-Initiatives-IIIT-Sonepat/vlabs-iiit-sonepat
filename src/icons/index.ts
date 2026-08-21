@@ -19,6 +19,6 @@ export { MinusMark, type MinusMarkProps } from './MinusMark';
 export { PlusMark, type PlusMarkProps } from './PlusMark';
 export { RatingStar, type RatingStarProps } from './RatingStar';
 export { Search, type SearchProps } from './Search';
-export { TwentyLogo, type TwentyLogoProps } from './TwentyLogo';
+export { AppLogo, type AppLogoProps } from './TwentyLogo';
 export { VLabsLogo, type VLabsLogoProps } from './VLabsLogo';
 export { type IconComponent } from './icon-component';

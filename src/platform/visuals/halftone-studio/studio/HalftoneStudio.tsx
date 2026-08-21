@@ -9,7 +9,7 @@ import {
   useState,
 } from 'react';
 
-import { TwentyLogo } from '@/icons';
+import { AppLogo } from '@/icons';
 
 import { createInitialHalftoneStudioState } from '../engine/create-initial-studio-state';
 import { HALFTONE_FOOTPRINT } from '../engine/footprint';
@@ -47,8 +47,8 @@ import { useTimeoutRegistry } from './use-timeout-registry';
 const STATUS_CLEAR_DELAY_MS = 2000;
 
 const DEFAULT_PREVIEW_DISTANCE = 6;
-const DEFAULT_IMAGE_ASSET_PATH = '/images/shared/halftone/twenty-logo.svg';
-const DEFAULT_IMAGE_FILENAME = 'twenty-logo.svg';
+const DEFAULT_IMAGE_ASSET_PATH = '/images/shared/halftone/vlabs-logo.svg';
+const DEFAULT_IMAGE_FILENAME = 'vlabs-logo.svg';
 type PendingFilePicker = {
   resolve: (file: File | null) => void;
 };
@@ -264,7 +264,7 @@ export function HalftoneStudio() {
   const defaultExportName = useMemo(() => {
     if (state.settings.sourceMode === 'image') {
       if (!imageFile || imageFile.name === DEFAULT_IMAGE_FILENAME) {
-        return 'TwentyImage';
+        return 'VLabsImage';
       }
 
       return HALFTONE_EXPORT_PARSING.deriveComponentName(undefined, imageFile);
@@ -1093,7 +1093,7 @@ export function HalftoneStudio() {
         onPasteError={handlePasteError}
       />
       <STUDIO_STYLES.LogoLink aria-label="Go to homepage" href="/">
-        <TwentyLogo sizePx={40} />
+        <AppLogo sizePx={40} />
       </STUDIO_STYLES.LogoLink>
 
       <STUDIO_STYLES.ContentRegion $panelOpen={controlsVisible}>

@@ -23,8 +23,8 @@ const RESOLUTION_OPTIONS = [
   { label: '2K (2560 × 1440)', value: '2560x1440' },
   { label: '4K (3840 × 2160)', value: '3840x2160' },
 ];
-const DEFAULT_IMAGE_FILE_NAME = 'twenty-logo.svg';
-const DEFAULT_IMAGE_LABEL = 'Twenty image';
+const DEFAULT_IMAGE_FILE_NAME = 'vlabs-logo.svg';
+const DEFAULT_IMAGE_LABEL = 'VLabs image';
 const REACT_EXPORT_SETTING_OPTIONS: Array<{
   description: string;
   key: keyof ReactExportSettings;
@@ -40,13 +40,13 @@ const REACT_EXPORT_SETTING_OPTIONS: Array<{
     key: 'includeStyledMount',
     label: 'Use Linaria wrapper',
     description:
-      'Wraps the mount node with a StyledVisualMount using @linaria/react and keeps the Twenty-ready mount shape.',
+      'Wraps the mount node with a StyledVisualMount using @linaria/react and keeps the VLabs-ready mount shape.',
   },
   {
     key: 'includeUseClientDirective',
     label: "Add 'use client'",
     description:
-      'Prepends the Next.js client directive so the exported component can be dropped into the Twenty website directly.',
+      'Prepends the Next.js client directive so the exported component can be dropped into the VLabs website directly.',
   },
   {
     key: 'includeTsNoCheck',
@@ -58,11 +58,11 @@ const REACT_EXPORT_SETTING_OPTIONS: Array<{
     key: 'includeNamedAndDefaultExport',
     label: 'Named + default export',
     description:
-      'Exports both a named component and a default export to match the current Twenty illustration import pattern.',
+      'Exports both a named component and a default export to match the current VLabs illustration import pattern.',
   },
   {
     key: 'includeRegistryComment',
-    label: 'Add Twenty header comment',
+    label: 'Add VLabs header comment',
     description:
       'Adds suggested destination and registry wiring comments at the top of the generated file.',
   },

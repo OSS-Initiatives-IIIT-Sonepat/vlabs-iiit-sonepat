@@ -1,5 +1,5 @@
 // The mockup's tone tables (single module). Every product-color group derives
-// straight from twenty-ui: TAG (tag color3/11), SIDEBAR (TintedIconTile
+// straight from the design system: TAG (tag color3/11), SIDEBAR (TintedIconTile
 // color5/6/11), DASHBOARD_CHART (graph color8), WORKFLOW_CANVAS (blue/red +
 // turquoise tag), WORKFLOW_AVATAR_INK (gray11), RECORD_FILE_SHEET_INK
 // (turquoise), PRODUCT_VISUAL washes (transparent ramp + primary ink).
@@ -11,7 +11,7 @@ import { THEME_LIGHT } from 'twenty-ui/theme';
 type ToneSurface = { background: string; border: string; color: string };
 type TonePair = { background: string; color: string };
 
-// Our tone names map 1:1 onto twenty-ui's tag colors, except `teal` is the
+// Our tone names map 1:1 onto the design system's tag colors, except `teal` is the
 // product's `turquoise`.
 const tagTone = (name: keyof typeof THEME_LIGHT.tag.text): TonePair => ({
   background: THEME_LIGHT.tag.background[name],
@@ -63,7 +63,7 @@ const TAG: Record<string, TonePair> = {
   teal: tagTone('turquoise'),
 };
 
-// twenty-ui colors are `color(display-p3 r g b)` strings with 0–1 channels;
+// The design system colors are `color(display-p3 r g b)` strings with 0–1 channels;
 // the reveal pulse needs an `r, g, b` 0–255 tuple to feed rgba().
 function colorStringToRgbTuple(color: string): string {
   const channels = color.match(/display-p3\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)/);
@@ -73,7 +73,7 @@ function colorStringToRgbTuple(color: string): string {
     .join(', ');
 }
 
-// The Ask-AI panel washes map onto twenty-ui's transparent ramp + primary
+// The Ask-AI panel washes map onto the design system's transparent ramp + primary
 // ink. The three collaborator-cursor inks have no product equivalent
 // (authored marketing identities).
 const PRODUCT_VISUAL = {
@@ -109,7 +109,7 @@ const WORKFLOW_CANVAS = {
   actionIcon: THEME_LIGHT.color.red,
 };
 
-// twenty-front's graph-color registry assigns chart series from the color8
+// The design system's graph-color registry assigns chart series from the color8
 // shade; trend arrows use the turquoise8/red8 success/danger pair.
 const DASHBOARD_CHART = {
   accent: THEME_LIGHT.color.blue8,

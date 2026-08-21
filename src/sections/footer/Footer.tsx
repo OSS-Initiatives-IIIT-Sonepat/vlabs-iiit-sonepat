@@ -234,7 +234,7 @@ export function Footer() {
             <SocialRow>
               <SocialLink
                 aria-label="GitHub"
-                href="https://github.com/twentyhq/twenty"
+                href="https://github.com/OSS-Initiatives-IIIT-Sonepat/vlabs-iiit-sonepat"
                 rel="noopener noreferrer"
                 target="_blank"
               >
@@ -242,7 +242,7 @@ export function Footer() {
               </SocialLink>
               <SocialLink
                 aria-label="Discord"
-                href="https://discord.gg/twenty"
+                href="https://discord.gg/5MaJbxFnm"
                 rel="noopener noreferrer"
                 target="_blank"
               >
@@ -279,14 +279,14 @@ export function Footer() {
             <NavLabel>Project</NavLabel>
             <NavLinks>
               <NavLink
-                href="https://github.com/twentyhq/twenty"
+                href="https://github.com/OSS-Initiatives-IIIT-Sonepat/vlabs-iiit-sonepat"
                 rel="noopener noreferrer"
                 target="_blank"
               >
                 GitHub ↗
               </NavLink>
               <NavLink
-                href="https://discord.gg/twenty"
+                href="https://discord.gg/5MaJbxFnm"
                 rel="noopener noreferrer"
                 target="_blank"
               >
@@ -301,7 +301,7 @@ export function Footer() {
         <Rule />
 
         <BottomBand>
-          <Copyright>© 2026 vlabs — built on Twenty</Copyright>
+          <Copyright>© 2026 vlabs — open source ECE labs</Copyright>
           <Badge><Dot />Open source</Badge>
         </BottomBand>
       </Card>

@@ -19,7 +19,7 @@ export const TESTIMONIALS: readonly TestimonialRecord[] = [
     },
   },
   {
-    quote: 'It is just such a nicer experience than dealing with a Salesforce or a HubSpot. My mission has been to get every tool API-accessible, so everything talks to each other. Twenty made that possible in a way older CRM platforms simply do not.',
+    quote: 'It is just such a nicer experience than dealing with a proprietary simulation tool or a closed platform. My mission has been to get every lab API-accessible, so everything talks to each other. VLabs made that possible in a way older platforms simply do not.',
     author: {
       name: 'Justin Beadle',
       designation: 'Director of Digital and Information, Elevate Consulting',

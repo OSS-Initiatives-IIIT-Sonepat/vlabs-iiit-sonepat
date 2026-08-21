@@ -108,7 +108,7 @@ function getStandaloneThreeImports(
   return imports.join('\n      ');
 }
 
-function getTwentyReactHeaderComment(
+function getVLabsReactHeaderComment(
   componentName: string,
   registryKey: string,
   assetUrl?: string,
@@ -1117,7 +1117,7 @@ function generateReactComponent(
   const defaultImageUrl = assetUrl ?? `./${defaultImageFilename}`;
   const importBlock = getReactImportBlock(exportSettings, isImageMode, shape);
   const headerComment = exportSettings.includeRegistryComment
-    ? getTwentyReactHeaderComment(
+    ? getVLabsReactHeaderComment(
         normalizedComponentName,
         toIllustrationRegistryKey(normalizedComponentName),
         isImageMode || shape.kind === 'imported'

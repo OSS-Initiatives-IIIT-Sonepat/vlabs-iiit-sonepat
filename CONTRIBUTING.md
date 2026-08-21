@@ -7,7 +7,7 @@ Virtual ECE labs. Interact with 3D components, step through circuit assembly.
 ## What this project is
 
 A Next.js 16 landing page + interactive virtual lab for ECE education.
-The landing page is based on Twenty's design system (Linaria CSS-in-JS, design tokens, halftone WebGL visuals).
+The landing page is based on an open-source design system (Linaria CSS-in-JS, design tokens, halftone WebGL visuals).
 The lab system lets you build circuits from reusable 3D components and step through assembly.
 
 ---
@@ -38,8 +38,8 @@ public/
   models/               .glb 3D models (used by halftone engine)
   lottie/               lottie animations
 stubs/
-  twenty-ui/            local stub for twenty-ui design tokens
-  twenty-shared/        local stub for twenty-shared constants
+  ui/            local stub for ui design tokens
+  shared/        local stub for shared constants
 ```
 
 ---
@@ -214,7 +214,7 @@ template to follow for the `LabScene` renderer.
 |---|---|
 | `Menu` | Nav bar with logo, links, GitHub/Discord stats |
 | `HomeHero` | Headline + CTA + hero bridge backdrop (WebGL halftone) + mockup placeholder |
-| `TrustedBy` | Logo bar of companies using Twenty |
+| `TrustedBy` | Logo bar of companies using VLabs |
 | `Problem` | The problem statement with masked WebGL visual |
 | `ThreeCards` | 3 ECE component showcase cards (breadboard, LED, resistor) |
 | `FeatureCards` | 3 feature cards (familiar interface, live data, fast path) |

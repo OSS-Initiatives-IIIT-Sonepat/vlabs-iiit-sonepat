@@ -8,8 +8,8 @@ import { WEBSITE_LOCALE_LIST } from '@/platform/i18n/website-locale-list';
 
 import { getSiteUrl } from './get-site-url';
 
-const SITE_NAME = 'Twenty';
-const TWITTER_HANDLE = '@twentycrm';
+const SITE_NAME = 'VLabs';
+const TWITTER_HANDLE = '@vlabs_iiit';
 const DEFAULT_OG_IMAGE_PATH = '/images/og/default.png';
 
 type MetadataText = MessageDescriptor | string;
