@@ -19,9 +19,9 @@ export const Encoder4to2: Circuit = {
     { id: 'or_b', type: 'or-gate', mountedAt: { board: 'bb', col: 16, row: 'e' } },
 
     { id: 'r_a', type: 'resistor', ohms: 330, mountedAt: { board: 'bb', col: 22, row: 'c' } },
-    { id: 'r_b', type: 'resistor', ohms: 330, mountedAt: { board: 'bb', col: 25, row: 'c' } },
-    { id: 'led_a', type: 'led', color: 'green',  mountedAt: { board: 'bb', col: 22, row: 'a' } },
-    { id: 'led_b', type: 'led', color: 'yellow', mountedAt: { board: 'bb', col: 25, row: 'a' } },
+    { id: 'r_b', type: 'resistor', ohms: 330, mountedAt: { board: 'bb', col: 22, row: 'h' } },
+    { id: 'led_a', type: 'led', color: 'green',  mountedAt: { board: 'bb', col: 26, row: 'c' } },
+    { id: 'led_b', type: 'led', color: 'yellow', mountedAt: { board: 'bb', col: 26, row: 'h' } },
 
     // I2 → OR_A
     { id: 'w_i2_ora', type: 'wire', color: 'blue',   from: { board: 'bb', col: 3, row: 'a' }, to: { ic: 'or_a', pin: 'A' } },

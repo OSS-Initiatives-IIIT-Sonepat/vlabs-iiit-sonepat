@@ -17,9 +17,9 @@ export const HalfSubtractor: Circuit = {
     { id: 'and1', type: 'and-gate', mountedAt: { board: 'bb', col: 20, row: 'e' } },
 
     { id: 'r_diff',   type: 'resistor', ohms: 330, mountedAt: { board: 'bb', col: 24, row: 'c' } },
-    { id: 'r_borrow', type: 'resistor', ohms: 330, mountedAt: { board: 'bb', col: 27, row: 'c' } },
-    { id: 'led_diff',   type: 'led', color: 'green',  mountedAt: { board: 'bb', col: 24, row: 'a' } },
-    { id: 'led_borrow', type: 'led', color: 'red',    mountedAt: { board: 'bb', col: 27, row: 'a' } },
+    { id: 'r_borrow', type: 'resistor', ohms: 330, mountedAt: { board: 'bb', col: 24, row: 'h' } },
+    { id: 'led_diff',   type: 'led', color: 'green',  mountedAt: { board: 'bb', col: 28, row: 'c' } },
+    { id: 'led_borrow', type: 'led', color: 'red',    mountedAt: { board: 'bb', col: 28, row: 'h' } },
 
     { id: 'w_a_xor', type: 'wire', color: 'red',  from: { board: 'bb', col: 2, row: 'a' }, to: { ic: 'xor1', pin: 'A' } },
     { id: 'w_b_xor', type: 'wire', color: 'blue', from: { board: 'bb', col: 3, row: 'a' }, to: { ic: 'xor1', pin: 'B' } },

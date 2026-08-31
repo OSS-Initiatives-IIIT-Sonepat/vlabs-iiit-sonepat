@@ -10,7 +10,7 @@ import { Container } from '@/ui/Container';
 
 import { CardShape } from '../three-cards/CardShape';
 import { CircuitModel } from './CircuitModel';
-import { type ExploreSubjectCard } from './explore.data';
+import { type ExploreExperiment } from './explore.data';
 
 // ── Hero layout ───────────────────────────────────────────────────────────
 const HeroWrap = styled.section`
@@ -114,7 +114,7 @@ const FeaturedStage = styled.div`
 `;
 
 // ── Component ─────────────────────────────────────────────────────────────
-type Props = { featured: ExploreSubjectCard };
+type Props = { featured: ExploreExperiment & { category: string } };
 
 export function ExploreHero({ featured }: Props) {
   return (

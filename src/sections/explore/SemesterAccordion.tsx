@@ -17,8 +17,9 @@ import {
 } from '@/tokens';
 import { Container } from '@/ui/Container';
 
-import { ExploreCard } from './ExploreCard';
-import { type ExploreSemester } from './explore.data';
+import { SubjectCard } from './SubjectCard';
+import { SubjectModal } from './SubjectModal';
+import { type ExploreSemester, type ExploreSubject } from './explore.data';
 
 // ── Outer section ─────────────────────────────────────────────────────────
 const SemestersWrap = styled.section`
@@ -28,7 +29,7 @@ const SemestersWrap = styled.section`
   padding-bottom: ${spacing(20)};
 `;
 
-// ── Accordion item — NO background, sits directly on the grid bg ──────────
+// ── Accordion item ────────────────────────────────────────────────────────
 const AccordionItem = styled.div`
   display: flex;
   flex-direction: column;
@@ -73,7 +74,7 @@ const ChevronWrap = styled.span<{ $open: boolean }>`
   }
 `;
 
-// Cards grid — each card is its own white island on the grid bg
+// Cards grid — 3 columns on desktop
 const CardsGrid = styled.div`
   display: grid;
   gap: ${spacing(6)};
@@ -111,9 +112,11 @@ function Chevron() {
 function SemesterItem({
   semester,
   defaultOpen,
+  onSubjectClick,
 }: {
   semester: ExploreSemester;
   defaultOpen: boolean;
+  onSubjectClick: (subject: ExploreSubject) => void;
 }) {
   const [open, setOpen] = useState(defaultOpen);
 
@@ -131,8 +134,12 @@ function SemesterItem({
 
       {open && (
         <CardsGrid>
-          {semester.subjects.map((card) => (
-            <ExploreCard key={card.id} card={card} />
+          {semester.subjects.map((subject) => (
+            <SubjectCard
+              key={subject.id}
+              subject={subject}
+              onClick={onSubjectClick}
+            />
           ))}
         </CardsGrid>
       )}
@@ -144,25 +151,37 @@ function SemesterItem({
 type Props = { semesters: readonly ExploreSemester[] };
 
 export function SemesterAccordion({ semesters }: Props) {
+  const [activeSubject, setActiveSubject] = useState<ExploreSubject | null>(null);
+
   return (
-    <SemestersWrap aria-label="Explore by semester">
-      <Container>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: spacing(2),
-          }}
-        >
-          {semesters.map((semester, index) => (
-            <SemesterItem
-              key={semester.id}
-              semester={semester}
-              defaultOpen={index === 0}
-            />
-          ))}
-        </div>
-      </Container>
-    </SemestersWrap>
+    <>
+      <SemestersWrap aria-label="Explore by semester">
+        <Container>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: spacing(2),
+            }}
+          >
+            {semesters.map((semester, index) => (
+              <SemesterItem
+                key={semester.id}
+                semester={semester}
+                defaultOpen={index === 0}
+                onSubjectClick={setActiveSubject}
+              />
+            ))}
+          </div>
+        </Container>
+      </SemestersWrap>
+
+      {activeSubject && (
+        <SubjectModal
+          subject={activeSubject}
+          onClose={() => setActiveSubject(null)}
+        />
+      )}
+    </>
   );
 }

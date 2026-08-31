@@ -18,9 +18,9 @@ export const Demux1to2: Circuit = {
     { id: 'and2', type: 'and-gate', mountedAt: { board: 'bb', col: 19, row: 'e' } },
 
     { id: 'r_y0', type: 'resistor', ohms: 330, mountedAt: { board: 'bb', col: 23, row: 'c' } },
-    { id: 'r_y1', type: 'resistor', ohms: 330, mountedAt: { board: 'bb', col: 26, row: 'c' } },
-    { id: 'led_y0', type: 'led', color: 'green',  mountedAt: { board: 'bb', col: 23, row: 'a' } },
-    { id: 'led_y1', type: 'led', color: 'yellow', mountedAt: { board: 'bb', col: 26, row: 'a' } },
+    { id: 'r_y1', type: 'resistor', ohms: 330, mountedAt: { board: 'bb', col: 23, row: 'h' } },
+    { id: 'led_y0', type: 'led', color: 'green',  mountedAt: { board: 'bb', col: 27, row: 'c' } },
+    { id: 'led_y1', type: 'led', color: 'yellow', mountedAt: { board: 'bb', col: 27, row: 'h' } },
 
     // S → NOT
     { id: 'w_s_not',   type: 'wire', color: 'orange', from: { board: 'bb', col: 2, row: 'a' }, to: { ic: 'not1', pin: 'A' } },

@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { PITCH, BOARD_H, TOP_Y } from '../coords';
+import { PITCH, BOARD_H, BOARD_W, BOARD_D, TOP_Y } from '../coords';
 import { M } from './materials';
 import { solidBox, solidCyl, textLabel } from './primitives';
 
@@ -439,5 +439,120 @@ export function buildMcuTrainerStandalone(): THREE.Group {
   }
 
   root.rotation.x = 0.5;
+  return root;
+}
+
+// ── Instrument connection wire helper ─────────────────────────────────────
+// Draws a smooth TubeGeometry wire from an instrument position to a board hole.
+function instrumentWire(
+  from: THREE.Vector3,
+  to: THREE.Vector3,
+  color: number,
+  arcHeight: number = PITCH * 2.5,
+): THREE.Mesh {
+  const wireR = PITCH * 0.11;
+  const mid = from.clone().lerp(to, 0.5);
+  mid.y = Math.max(from.y, to.y) + arcHeight;
+  const pts = [from, mid, to];
+  const curve = new THREE.CatmullRomCurve3(pts);
+  const tube = new THREE.TubeGeometry(curve, 32, wireR, 6, false);
+  return new THREE.Mesh(tube, new THREE.MeshBasicMaterial({ color }));
+}
+
+// ── BOARD-PLACED DC POWER SUPPLY ─────────────────────────────────────────
+export function buildDcPowerSupply(
+  position: 'left' | 'right' = 'left',
+  displayValue: string = '--',
+  targets?: { vcc: THREE.Vector3; gnd: THREE.Vector3 },
+): THREE.Group {
+  const model = buildDcPowerSupplyStandalone();
+
+  const P = PITCH;
+  const BW = P * 7.0, BH = P * 4.5, BD = P * 5.0;
+  const lcdLabel = textLabel(displayValue, BW * 0.50, BH * 0.22, {
+    textColor: '#22dd22',
+    fontSize: 56,
+    bold: true,
+  });
+  if (lcdLabel) {
+    lcdLabel.position.set(-BW * 0.10, BH * 0.22, BD / 2 + 0.042);
+    model.add(lcdLabel);
+  }
+
+  const wrapper = new THREE.Group();
+  wrapper.add(model);
+  wrapper.scale.setScalar(0.22);
+
+  // Position behind-left of the breadboard — like it's sitting at the back of the bench
+  // Z is negative = behind the board (away from viewer)
+  // X is offset left or right
+  const xSign = position === 'left' ? -1 : 1;
+  wrapper.position.set(xSign * (BOARD_W / 2 - 1.2), 0, -(BOARD_D / 2 + 0.5));
+
+  const root = new THREE.Group();
+  root.add(wrapper);
+
+  // ── Connection wires to specific board holes ──────────────────────────
+  if (targets) {
+    const xSign = position === 'left' ? -1 : 1;
+    const wrapperX = xSign * (BOARD_W / 2 - 1.2);
+    const wrapperZ = -(BOARD_D / 2 + 0.5);
+    const psuY = TOP_Y + PITCH * 0.5;
+    const psuOrigin = new THREE.Vector3(wrapperX, psuY, wrapperZ);
+    root.add(instrumentWire(psuOrigin, targets.vcc, 0xd63b2a));
+    const psuOrigin2 = psuOrigin.clone();
+    psuOrigin2.x += xSign * 0.06;
+    psuOrigin2.z += 0.05;
+    root.add(instrumentWire(psuOrigin2, targets.gnd, 0x202020));
+  }
+
+  return root;
+}
+
+// ── BOARD-PLACED IC METER (DIGITAL MULTIMETER) ──────────────────────────
+export function buildIcMeter(
+  position: 'left' | 'right' = 'right',
+  displayValue: string = '--',
+  targets?: { probe1: THREE.Vector3; probe2: THREE.Vector3 },
+): THREE.Group {
+  const model = buildIcMeterStandalone();
+
+  const P = PITCH;
+  const BW = P * 4.0, BH = P * 9.0, BD = P * 1.2;
+  const lcdLabel = textLabel(displayValue, BW * 0.70, BH * 0.18, {
+    textColor: '#2a4a1a',
+    fontSize: 48,
+    bold: true,
+  });
+  if (lcdLabel) {
+    lcdLabel.position.set(0, BH * 0.30, BD / 2 + 0.040);
+    model.add(lcdLabel);
+  }
+
+  const wrapper = new THREE.Group();
+  wrapper.add(model);
+  wrapper.scale.setScalar(0.18);
+
+  // Position behind-right of the breadboard
+  const xSign = position === 'right' ? 1 : -1;
+  wrapper.position.set(xSign * (BOARD_W / 2 - 1.2), 0, -(BOARD_D / 2 + 0.5));
+
+  const root = new THREE.Group();
+  root.add(wrapper);
+
+  // ── Probe wires to specific board holes ────────────────────────────────
+  if (targets) {
+    const xSign = position === 'right' ? 1 : -1;
+    const wrapperX = xSign * (BOARD_W / 2 - 1.2);
+    const wrapperZ = -(BOARD_D / 2 + 0.5);
+    const dmmY = TOP_Y + PITCH * 0.5;
+    const dmmOrigin = new THREE.Vector3(wrapperX, dmmY, wrapperZ);
+    root.add(instrumentWire(dmmOrigin, targets.probe1, 0xe07020));
+    const dmmOrigin2 = dmmOrigin.clone();
+    dmmOrigin2.x -= xSign * 0.06;
+    dmmOrigin2.z += 0.05;
+    root.add(instrumentWire(dmmOrigin2, targets.probe2, 0x202020));
+  }
+
   return root;
 }

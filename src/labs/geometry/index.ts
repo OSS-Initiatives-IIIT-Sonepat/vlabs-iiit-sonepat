@@ -30,4 +30,6 @@ export {
   buildIcMeterStandalone,
   buildDcPowerSupplyStandalone,
   buildMcuTrainerStandalone,
+  buildDcPowerSupply,
+  buildIcMeter,
 } from './extra-components';

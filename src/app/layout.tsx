@@ -3,6 +3,7 @@ import localFont from 'next/font/local';
 import { Inria_Serif } from 'next/font/google';
 import { type ReactNode } from 'react';
 import { color, tokenCssVariables } from '@/tokens';
+import 'katex/dist/katex.min.css';
 
 const hostGrotesk = localFont({
   src: '../../public/fonts/host-grotesk-latin-variable.woff2',

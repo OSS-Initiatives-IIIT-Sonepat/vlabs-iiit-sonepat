@@ -1,3 +1,4 @@
+export { MathText } from './Math';
 export { MarkedDivider } from './MarkedDivider';
 export { Modal, type ModalProps } from './Modal';
 export { NotchedCardShape } from './NotchedCardShape';

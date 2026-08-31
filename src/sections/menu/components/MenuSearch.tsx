@@ -17,17 +17,19 @@ import {
   Z_INDEX,
   REDUCED_MOTION,
 } from '@/tokens';
-import { ALL_SUBJECTS, type ExploreSubjectCard } from '@/sections/explore/explore.data';
+import { ALL_EXPERIMENTS, type ExploreExperiment } from '@/sections/explore/explore.data';
+
+type SearchResult = ExploreExperiment & { subjectTitle: string; semesterLabel: string };
 
 // ─── Search logic ─────────────────────────────────────────────────────────────
-function searchSubjects(query: string): ExploreSubjectCard[] {
+function searchSubjects(query: string): SearchResult[] {
   const q = query.trim().toLowerCase();
   if (!q) return [];
-  return ALL_SUBJECTS.filter((s) => {
+  return ALL_EXPERIMENTS.filter((s) => {
     return (
       s.title.toLowerCase().includes(q) ||
       s.description.toLowerCase().includes(q) ||
-      s.category.toLowerCase().includes(q) ||
+      s.subjectTitle.toLowerCase().includes(q) ||
       s.tags.some((t) => t.toLowerCase().includes(q)) ||
       s.circuitId.toLowerCase().includes(q)
     );
@@ -265,7 +267,7 @@ export function MenuSearch() {
     [showOverlay, results, activeIdx],
   );
 
-  function navigate(card: ExploreSubjectCard) {
+  function navigate(card: SearchResult) {
     setOpen(false);
     setQuery('');
     setActiveIdx(-1);
@@ -349,7 +351,7 @@ export function MenuSearch() {
               >
                 <ResultTitle>{card.title}</ResultTitle>
                 <ResultMeta>
-                  {card.category} · {card.tags.slice(0, 3).join(', ')}
+                  {card.subjectTitle} · {card.tags.slice(0, 3).join(', ')}
                 </ResultMeta>
               </ResultItem>
             ))

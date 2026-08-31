@@ -18,8 +18,8 @@ export const Mux2to1: Circuit = {
     { id: 'and2', type: 'and-gate', mountedAt: { board: 'bb', col: 18, row: 'e' } },
     { id: 'or1',  type: 'or-gate', mountedAt: { board: 'bb', col: 22, row: 'e' } },
 
-    { id: 'r_out', type: 'resistor', ohms: 330, mountedAt: { board: 'bb', col: 25, row: 'c' } },
-    { id: 'led_out', type: 'led', color: 'green', mountedAt: { board: 'bb', col: 25, row: 'a' } },
+    { id: 'r_out', type: 'resistor', ohms: 330, mountedAt: { board: 'bb', col: 26, row: 'c' } },
+    { id: 'led_out', type: 'led', color: 'green', mountedAt: { board: 'bb', col: 26, row: 'h' } },
 
     // S → NOT
     { id: 'w_s_not', type: 'wire', color: 'orange', from: { board: 'bb', col: 1, row: 'a' }, to: { ic: 'not1', pin: 'A' } },

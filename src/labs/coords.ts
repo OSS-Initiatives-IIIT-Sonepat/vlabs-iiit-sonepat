@@ -31,10 +31,10 @@ export const ROWS         = 5;       // rows per bank (a-e and f-j)
 export const BOARD_H      = 0.18;    // board thickness (Y axis)
 export const TOP_Y        = BOARD_H / 2;  // Y of top surface
 
-const EDGE_MARGIN   = 0.22;
+const EDGE_MARGIN   = 0.28;
 const RAIL_SPACING  = PITCH;
-const RAIL_TO_HOLES = PITCH * 1.1;
-const GAP_SIZE      = PITCH * 1.5;
+const RAIL_TO_HOLES = PITCH * 2.2;   // wider gap between power rails and tie-point rows
+const GAP_SIZE      = PITCH * 2.8;   // wider DIP centre gap so the channel is clearly visible
 
 // Total board depth: walk the same cursor as Z below
 export const BOARD_D =

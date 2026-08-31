@@ -26,13 +26,14 @@ export const FullAdder: Circuit = {
     // OR: Cout = (A AND B) OR (Sum1 AND Cin)
     { id: 'or1',  type: 'or-gate', mountedAt: { board: 'bb', col: 22, row: 'e' } },
 
-    // Output resistors
-    { id: 'r_sum',  type: 'resistor', ohms: 330, mountedAt: { board: 'bb', col: 24, row: 'c' } },
-    { id: 'r_cout', type: 'resistor', ohms: 330, mountedAt: { board: 'bb', col: 27, row: 'c' } },
+    // Output resistors — r_sum NOT at col24 (or1.Y lands there due to or1 at col22+2=col24)
+    // Use col25 to avoid the col24 conflict in the top bank
+    { id: 'r_sum',  type: 'resistor', ohms: 330, mountedAt: { board: 'bb', col: 25, row: 'c' } },
+    { id: 'r_cout', type: 'resistor', ohms: 330, mountedAt: { board: 'bb', col: 25, row: 'h' } },
 
-    // Output LEDs
-    { id: 'led_sum',  type: 'led', color: 'green',  mountedAt: { board: 'bb', col: 24, row: 'a' } },
-    { id: 'led_cout', type: 'led', color: 'yellow', mountedAt: { board: 'bb', col: 27, row: 'a' } },
+    // Output LEDs — placed past resistor p2 (col25+3=28) to avoid any col overlap
+    { id: 'led_sum',  type: 'led', color: 'green',  mountedAt: { board: 'bb', col: 29, row: 'c' } },
+    { id: 'led_cout', type: 'led', color: 'yellow', mountedAt: { board: 'bb', col: 29, row: 'h' } },
 
     // Input A (red)
     { id: 'w_a_xor1', type: 'wire', color: 'red',  from: { board: 'bb', col: 1, row: 'a' }, to: { ic: 'xor1', pin: 'A' } },

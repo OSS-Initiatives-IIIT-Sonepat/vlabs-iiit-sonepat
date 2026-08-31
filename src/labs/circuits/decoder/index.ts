@@ -20,14 +20,16 @@ export const Decoder2to4: Circuit = {
     { id: 'and2',  type: 'and-gate', mountedAt: { board: 'bb', col: 9,  row: 'h' } }, // Y2: AB'
     { id: 'and3',  type: 'and-gate', mountedAt: { board: 'bb', col: 14, row: 'h' } }, // Y3: AB
 
-    { id: 'r0', type: 'resistor', ohms: 330, mountedAt: { board: 'bb', col: 20, row: 'b' } },
-    { id: 'r1', type: 'resistor', ohms: 330, mountedAt: { board: 'bb', col: 23, row: 'b' } },
-    { id: 'r2', type: 'resistor', ohms: 330, mountedAt: { board: 'bb', col: 26, row: 'b' } },
-    { id: 'r3', type: 'resistor', ohms: 330, mountedAt: { board: 'bb', col: 29, row: 'b' } },
-    { id: 'led0', type: 'led', color: 'red',    mountedAt: { board: 'bb', col: 20, row: 'a' } },
-    { id: 'led1', type: 'led', color: 'yellow', mountedAt: { board: 'bb', col: 23, row: 'a' } },
-    { id: 'led2', type: 'led', color: 'green',  mountedAt: { board: 'bb', col: 26, row: 'a' } },
-    { id: 'led3', type: 'led', color: 'blue',   mountedAt: { board: 'bb', col: 29, row: 'a' } },
+    // Output layout — resistors at col17 (past and1/and3 col range 14-16),
+    // LEDs at col21 (cathode col22, which ≠ r2.p1 col24). 4 independent paths.
+    { id: 'r0', type: 'resistor', ohms: 330, mountedAt: { board: 'bb', col: 17, row: 'c' } },
+    { id: 'r1', type: 'resistor', ohms: 330, mountedAt: { board: 'bb', col: 17, row: 'h' } },
+    { id: 'r2', type: 'resistor', ohms: 330, mountedAt: { board: 'bb', col: 24, row: 'c' } },
+    { id: 'r3', type: 'resistor', ohms: 330, mountedAt: { board: 'bb', col: 24, row: 'h' } },
+    { id: 'led0', type: 'led', color: 'red',    mountedAt: { board: 'bb', col: 21, row: 'c' } },
+    { id: 'led1', type: 'led', color: 'yellow', mountedAt: { board: 'bb', col: 21, row: 'h' } },
+    { id: 'led2', type: 'led', color: 'green',  mountedAt: { board: 'bb', col: 28, row: 'c' } },
+    { id: 'led3', type: 'led', color: 'blue',   mountedAt: { board: 'bb', col: 28, row: 'h' } },
 
     // Inputs
     { id: 'w_a_na',   type: 'wire', color: 'red',   from: { board: 'bb', col: 1, row: 'a' }, to: { ic: 'not_a', pin: 'A' } },

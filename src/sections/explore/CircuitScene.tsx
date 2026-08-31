@@ -11,6 +11,8 @@ import {
   buildLed,
   buildWire,
   buildCapacitor,
+  buildDcPowerSupply,
+  buildIcMeter,
 } from '@/labs/geometry/index';
 import { hole, railHole, COLS } from '@/labs/coords';
 import {
@@ -103,6 +105,12 @@ function buildCircuitGroup(circuit: Circuit): THREE.Group {
       case 'nor-gate':
         g = buildDip14(inst.mountedAt.col, 'NOR');
         break;
+      case 'xnor-gate':
+        g = buildDip14(inst.mountedAt.col, 'XNOR');
+        break;
+      case 'buffer-gate':
+        g = buildDip14(inst.mountedAt.col, 'BUF');
+        break;
       case 'resistor': {
         const { col, row } = inst.mountedAt;
         g = buildResistor(hole(col, row), hole(col + 3, row), inst.ohms);
@@ -124,6 +132,13 @@ function buildCircuitGroup(circuit: Circuit): THREE.Group {
         if (from && to) g = buildWire(from, to, inst.color);
         break;
       }
+      case 'dc-jack':
+      case 'battery':
+        g = buildDcPowerSupply('left');
+        break;
+      case 'potentiometer':
+        g = buildIcMeter('right');
+        break;
     }
 
     if (g) pivot.add(g);
