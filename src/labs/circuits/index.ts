@@ -27,6 +27,23 @@ import { FullAdderRippleCircuit } from './full-adder-ripple';
 import { GpioInterfacingCircuit } from './gpio-interfacing';
 import { SevenSegmentDisplayCircuit } from './seven-segment-display';
 import { AdcDacCircuit } from './adc-dac';
+import { CbAmplifierCircuit } from './cb-amplifier';
+import { BjtBiasCircuit } from './bjt-bias';
+import { MosfetCharacteristicsCircuit } from './mosfet-characteristics';
+import { OpampCircuitsCircuit } from './opamp-circuits';
+import { BcdXs3Converter } from './bcd-xs3-converter';
+import { GrayBinaryConverter } from './gray-binary-converter';
+import { Mux4to1IC } from './mux-4to1-ic';
+import { Demux1to4IC } from './demux-1to4-ic';
+import { BinaryAdder4bit } from './binary-adder-4bit';
+import { BinarySubtractor4bit } from './binary-subtractor-4bit';
+import { SRLatchCircuit } from './sr-latch';
+import { DFlipFlopCircuit } from './d-flip-flop';
+import { JKTFlipFlopCircuit } from './jk-t-flip-flop';
+import { Mod5CounterCircuit } from './mod5-counter';
+import { ParityChecker } from './parity-checker';
+import { DigitalComparator } from './digital-comparator';
+import { ShiftRegister } from './shift-register';
 import { type Circuit }   from '@/labs/types';
 
 export const ALL_CIRCUITS: Circuit[] = [
@@ -59,6 +76,23 @@ export const ALL_CIRCUITS: Circuit[] = [
   GpioInterfacingCircuit,
   SevenSegmentDisplayCircuit,
   AdcDacCircuit,
+  CbAmplifierCircuit,
+  BjtBiasCircuit,
+  MosfetCharacteristicsCircuit,
+  OpampCircuitsCircuit,
+  BcdXs3Converter,
+  GrayBinaryConverter,
+  Mux4to1IC,
+  Demux1to4IC,
+  BinaryAdder4bit,
+  BinarySubtractor4bit,
+  SRLatchCircuit,
+  DFlipFlopCircuit,
+  JKTFlipFlopCircuit,
+  Mod5CounterCircuit,
+  ParityChecker,
+  DigitalComparator,
+  ShiftRegister,
 ];
 
 export {
@@ -71,4 +105,8 @@ export {
   CeAmplifierCircuit, MuxBasedLogicCircuit, DemuxAddressDecoderCircuit,
   HalfAdderRevisitCircuit, FullAdderRippleCircuit, GpioInterfacingCircuit,
   SevenSegmentDisplayCircuit, AdcDacCircuit,
+  CbAmplifierCircuit, BjtBiasCircuit, MosfetCharacteristicsCircuit, OpampCircuitsCircuit,
+  BcdXs3Converter, GrayBinaryConverter, Mux4to1IC, Demux1to4IC,
+  BinaryAdder4bit, BinarySubtractor4bit, SRLatchCircuit, DFlipFlopCircuit,
+  JKTFlipFlopCircuit, Mod5CounterCircuit, ParityChecker, DigitalComparator, ShiftRegister,
 };

@@ -9,7 +9,28 @@ export type LabSection =
   | ApparatusSection
   | ProcedureSection
   | ObservationSection
-  | ConclusionSection;
+  | ConclusionSection
+  | CodeLabSection
+  | SimulationSection;
+
+export type CodeLabSection = {
+  id: string;
+  type: 'code-lab';
+  title: string;
+  language: '8085';
+  starterCode: string;
+  description: string;
+  memoryInit?: Record<string, number>;
+  expectedOutputs?: string;
+};
+
+export type SimulationSection = {
+  id: string;
+  type: 'simulation';
+  title: string;
+  simType: 'alu' | 'memory' | 'cache-direct' | 'cache-assoc' | 'cpu' | 'fsm';
+  description?: string;
+};
 
 // Theory: paragraphs with optional inline math ($$...$$ blocks) + 3D schematic spec
 export type TheorySection = {
@@ -102,5 +123,13 @@ export type LabContent = {
   title: string;
   /** Circuit id for the 3D scene */
   circuitId?: string;
+  /**
+   * Lab rendering mode.
+   * - 'breadboard' (default): interactive 3D breadboard scene
+   * - 'text': text/theory-only lab — no breadboard scene rendered
+   * - 'code': code editor / programming lab
+   * - 'simulation': circuit simulation without physical breadboard
+   */
+  labType?: 'breadboard' | 'text' | 'code' | 'simulation';
   sections: LabSection[];
 };

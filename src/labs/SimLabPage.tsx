@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { styled } from '@linaria/react';
 import dynamic from 'next/dynamic';
 
 import {
@@ -17,46 +16,28 @@ import {
   REDUCED_MOTION,
 } from '@/tokens';
 import { MathText } from '@/ui/Math';
-import { ALL_CIRCUITS } from '@/labs/circuits';
-import {
-  type LabContent,
-  type LabSection,
-  type ProcedureStep,
-  type TheorySection,
-  type ApparatusSection,
-  type ObservationSection,
-  type ConclusionSection,
-} from '@/labs/lab-content.types';
-import { type Circuit } from '@/labs/types';
-import { type StepMarker } from '@/labs/LabScene';
+import { type LabContent, type LabSection, type ProcedureStep } from '@/labs/lab-content.types';
+import { styled } from '@linaria/react';
 
-// ── Dynamic imports (all client-only Three.js) ────────────────────────────
-const LabSceneCanvas = dynamic(
-  () => import('@/labs/LabScene').then((m) => m.LabSceneCanvas),
+// ── Simulation component map ──────────────────────────────────────────────
+const SimALU = dynamic(() => import('./simulations/SimALU').then((m) => m.SimALU), { ssr: false });
+const SimMemory = dynamic(() => import('./simulations/SimMemory').then((m) => m.SimMemory), { ssr: false });
+const SimCacheDirectMapped = dynamic(
+  () => import('./simulations/SimCacheDirectMapped').then((m) => m.SimCacheDirectMapped),
   { ssr: false },
 );
-const TheoryScene = dynamic(
-  () => import('@/labs/TheoryScene').then((m) => m.TheoryScene),
+const SimCacheAssociative = dynamic(
+  () => import('./simulations/SimCacheAssociative').then((m) => m.SimCacheAssociative),
   { ssr: false },
 );
-const ApparatusScene = dynamic(
-  () => import('@/labs/ApparatusScene').then((m) => m.ApparatusScene),
-  { ssr: false },
-);
-const CodeLabPage = dynamic(
-  () => import('@/labs/CodeLabPage').then((m) => m.CodeLabPage),
-  { ssr: false },
-);
-const SimLabPage = dynamic(
-  () => import('@/labs/SimLabPage').then((m) => m.SimLabPage),
-  { ssr: false },
-);
+const SimCPU = dynamic(() => import('./simulations/SimCPU').then((m) => m.SimCPU), { ssr: false });
 
-// ── Fallback circuit ───────────────────────────────────────────────────────
-const BREADBOARD_ONLY: Circuit = {
-  id: '__breadboard', title: '', description: '',
-  components: [{ id: 'bb', type: 'breadboard' }],
-  steps: [{ title: '', body: '', show: ['bb'] }],
+const SIM_COMPONENTS: Record<string, React.ComponentType<{ description?: string }>> = {
+  alu: SimALU,
+  memory: SimMemory,
+  'cache-direct': SimCacheDirectMapped,
+  'cache-assoc': SimCacheAssociative,
+  cpu: SimCPU,
 };
 
 // ── Layout ────────────────────────────────────────────────────────────────
@@ -214,49 +195,70 @@ const SubStepBtn = styled.button<{ $active: boolean }>`
   ${REDUCED_MOTION} { transition: none; }
 `;
 
-// ── Main scene area (always full-screen, section determines WHAT renders) ─
-const SceneArea = styled.div`
+const MainArea = styled.div`
   flex: 1;
   min-width: 0;
   overflow: hidden;
   position: relative;
+  display: flex;
+  flex-direction: column;
 `;
 
-// ── Floating text card (overlays scene) ───────────────────────────────────
-const FloatingCard = styled.div`
-  background: rgba(255,255,255,0.97);
-  border-radius: ${radius(3)};
-  box-shadow: 0 2px 16px rgba(0,0,0,0.10), 0 0 0 1px rgba(0,0,0,0.06);
-  left: ${spacing(6)};
-  max-height: 44vh;
-  max-width: 480px;
+const ContentArea = styled.div`
+  flex: 1;
   overflow-y: auto;
-  padding: ${spacing(5)} ${spacing(6)};
-  position: absolute;
-  top: ${spacing(5)};
-  z-index: ${Z_INDEX.floatingNav};
-
-  &[data-wide='true'] {
-    max-width: calc(100% - ${spacing(12)});
-    right: ${spacing(6)};
-    max-height: 52vh;
-  }
+  padding: ${spacing(6)};
+  background: ${color('neutral')};
 `;
 
-const FloatingParagraph = styled.p`
+const ExpandBtn = styled.button`
+  all: unset;
+  align-items: center;
+  background: #fff;
+  border: 1px solid ${color('black-10')};
+  border-radius: 4px;
+  color: ${semanticColor.inkMuted};
+  cursor: pointer;
+  display: flex;
+  height: 28px;
+  justify-content: center;
+  margin: ${spacing(3)};
+  transition: color ${DURATION.sm} ${EASING.standard};
+  width: 28px;
+  flex-shrink: 0;
+  &:hover { color: ${semanticColor.ink}; }
+  ${REDUCED_MOTION} { transition: none; }
+`;
+
+const ReadingCard = styled.div`
+  background: #fff;
+  border-radius: ${radius(3)};
+  box-shadow: 0 2px 16px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04);
+  max-width: 680px;
+  padding: ${spacing(6)} ${spacing(7)};
+`;
+
+const Para = styled.p`
   color: ${semanticColor.ink};
   font-family: ${fontFamily('sans')};
-  font-size: 13.5px;
-  line-height: 1.7;
+  font-size: 14px;
+  line-height: 1.75;
   margin: 0;
   & + & { margin-top: ${spacing(3)}; }
 `;
 
-// ── Observation table inside the card ────────────────────────────────────
+const SectionHeading = styled.h2`
+  color: ${semanticColor.ink};
+  font-family: ${fontFamily('sans')};
+  font-size: 16px;
+  font-weight: ${FONT_WEIGHT.medium};
+  margin: 0 0 ${spacing(4)};
+`;
+
 const ObsTable = styled.table`
   border-collapse: collapse;
   font-family: ${fontFamily('sans')};
-  font-size: 12.5px;
+  font-size: 13px;
   margin-top: ${spacing(4)};
   width: 100%;
 `;
@@ -276,16 +278,10 @@ const ObsTd = styled.td`
   padding: ${spacing(1.5)} ${spacing(2)};
 `;
 
-// ── Apparatus list inside the card (appears over the 3D tray) ────────────
-const AppListWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: ${spacing(1.5)};
-  margin-top: ${spacing(3)};
-`;
 const AppRow = styled.div`
   display: flex;
   gap: ${spacing(3)};
+  margin-bottom: ${spacing(2)};
 `;
 const AppDot = styled.span`
   color: #e6502e;
@@ -305,26 +301,10 @@ const AppSpec = styled.span`
   font-size: 12px;
 `;
 
-// ── Expand button ─────────────────────────────────────────────────────────
-const ExpandBtn = styled.button`
-  all: unset;
-  align-items: center;
-  background: #fff;
-  border: 1px solid ${color('black-10')};
-  border-radius: 4px;
-  color: ${semanticColor.inkMuted};
-  cursor: pointer;
+const SimWrap = styled.div`
   display: flex;
-  height: 28px;
   justify-content: center;
-  left: ${spacing(3)};
-  position: absolute;
-  top: ${spacing(3)};
-  transition: color ${DURATION.sm} ${EASING.standard};
-  width: 28px;
-  z-index: ${Z_INDEX.floatingNav};
-  &:hover { color: ${semanticColor.ink}; }
-  ${REDUCED_MOTION} { transition: none; }
+  padding: ${spacing(2)} 0;
 `;
 
 // ── Icons ─────────────────────────────────────────────────────────────────
@@ -368,134 +348,110 @@ function ExpandIcon() {
   );
 }
 
-// ── Floating card content per section type ────────────────────────────────
-function FloatingCardContent({ section, procedureStepIndex }: {
+// ── Content renderer ──────────────────────────────────────────────────────
+function SectionContent({
+  section,
+  procedureStepIndex,
+}: {
   section: LabSection;
   procedureStepIndex: number;
 }) {
+  const sec = section as any;
+
+  if (sec.type === 'simulation') {
+    const SimComp = SIM_COMPONENTS[sec.simType];
+    if (!SimComp) return <Para>Unknown simulation type: {sec.simType}</Para>;
+    return (
+      <SimWrap>
+        <SimComp description={sec.description} />
+      </SimWrap>
+    );
+  }
+
   if (section.type === 'text') {
     return (
-      <>
+      <ReadingCard>
+        <SectionHeading>{section.title}</SectionHeading>
         {section.paragraphs.map((p, i) => (
-          <FloatingParagraph key={i}><MathText text={p} /></FloatingParagraph>
+          <Para key={i}><MathText text={p} /></Para>
         ))}
-      </>
+      </ReadingCard>
     );
   }
 
   if (section.type === 'apparatus') {
     return (
-      <>
-        <FloatingParagraph>
-          Use the arrows or dots below to inspect each component in 3D.
-        </FloatingParagraph>
-        <AppListWrap>
-          {section.items.map((item, i) => (
-            <AppRow key={i}>
-              <AppDot>·</AppDot>
-              <div>
-                <AppName><MathText text={item.name} /></AppName>
-                {item.specification && (
-                  <> — <AppSpec><MathText text={item.specification} /></AppSpec></>
-                )}
-                {item.quantity && <AppSpec> ×{item.quantity}</AppSpec>}
-              </div>
-            </AppRow>
-          ))}
-        </AppListWrap>
-      </>
+      <ReadingCard>
+        <SectionHeading>{section.title}</SectionHeading>
+        {section.items.map((item, i) => (
+          <AppRow key={i}>
+            <AppDot>·</AppDot>
+            <div>
+              <AppName><MathText text={item.name} /></AppName>
+              {item.specification && <> — <AppSpec><MathText text={item.specification} /></AppSpec></>}
+              {item.quantity && <AppSpec> ×{item.quantity}</AppSpec>}
+            </div>
+          </AppRow>
+        ))}
+      </ReadingCard>
     );
   }
 
   if (section.type === 'procedure') {
     const step = section.steps[procedureStepIndex];
-    if (!step) return <FloatingParagraph>Select a step to begin.</FloatingParagraph>;
     return (
-      <>
-        {step.body.split('\n').map((line, i) => (
-          <FloatingParagraph key={i}><MathText text={line} /></FloatingParagraph>
-        ))}
-      </>
+      <ReadingCard>
+        <SectionHeading>{section.title}</SectionHeading>
+        {step ? (
+          step.body.split('\n').map((line, i) => (
+            <Para key={i}><MathText text={line} /></Para>
+          ))
+        ) : (
+          <Para>Select a step to begin.</Para>
+        )}
+      </ReadingCard>
     );
   }
 
   if (section.type === 'observation') {
     return (
-      <>
+      <ReadingCard>
+        <SectionHeading>{section.title}</SectionHeading>
         {section.paragraphs.map((p, i) => (
-          <FloatingParagraph key={i}><MathText text={p} /></FloatingParagraph>
+          <Para key={i}><MathText text={p} /></Para>
         ))}
         {section.table && (
           <ObsTable>
             <thead>
-              <tr>{section.table.headers.map((h) => (
-                <ObsTh key={h}><MathText text={h} /></ObsTh>
-              ))}</tr>
+              <tr>{section.table.headers.map((h) => <ObsTh key={h}><MathText text={h} /></ObsTh>)}</tr>
             </thead>
             <tbody>
               {section.table.rows.map((row, ri) => (
-                <tr key={ri}>{row.map((cell, ci) => (
-                  <ObsTd key={ci}><MathText text={String(cell)} /></ObsTd>
-                ))}</tr>
+                <tr key={ri}>{row.map((cell, ci) => <ObsTd key={ci}><MathText text={String(cell)} /></ObsTd>)}</tr>
               ))}
             </tbody>
           </ObsTable>
         )}
-      </>
+      </ReadingCard>
     );
   }
 
   if (section.type === 'conclusion') {
     return (
-      <>
-        {section.paragraphs.map((p, i) => (
-          <FloatingParagraph key={i}><MathText text={p} /></FloatingParagraph>
-        ))}
-      </>
+      <ReadingCard>
+        <SectionHeading>{section.title}</SectionHeading>
+        {section.paragraphs.map((p, i) => <Para key={i}><MathText text={p} /></Para>)}
+      </ReadingCard>
     );
   }
 
   return null;
 }
 
-// ── Scene renderer per section type ──────────────────────────────────────
-function SceneRenderer({ section, circuit, sceneStepIndex, activeMarkers }: {
-  section: LabSection;
-  circuit: Circuit;
-  sceneStepIndex: number;
-  activeMarkers: StepMarker[];
-}) {
-  if (section.type === 'code-lab' || section.type === 'simulation') {
-    return null; // These sections are handled by CodeLabPage/SimLabPage directly
-  }
-  if (section.type === 'text' && section.schematic) {
-    return <TheoryScene spec={section.schematic} />;
-  }
-  if (section.type === 'apparatus') {
-    return <ApparatusScene items={section.items} />;
-  }
-  // For text-only labs (labType === 'text'), do not render a bare breadboard
-  // when there is no real circuit — return null so sections show cleanly.
-  if (circuit.id === '__breadboard' && section.type !== 'text' && section.type !== 'apparatus') {
-    return null;
-  }
-  // Procedure / observation / conclusion / theory without schematic: show breadboard
-  return (
-    <LabSceneCanvas
-      circuit={circuit}
-      activeStepIndex={sceneStepIndex}
-      markers={activeMarkers}
-    />
-  );
-}
-
-// ── Main component ─────────────────────────────────────────────────────────
+// ── Main component ────────────────────────────────────────────────────────
 type Props = { content: LabContent };
 
-export function LabPage({ content }: Props) {
-  if (content.labType === 'code') return <CodeLabPage content={content} />;
-  if (content.labType === 'simulation') return <SimLabPage content={content} />;
-
+export function SimLabPage({ content }: Props) {
   const [collapsed, setCollapsed] = useState(false);
   const [activeSectionId, setActiveSectionId] = useState(content.sections[0]?.id ?? '');
   const [expandedProcedureId, setExpandedProcedureId] = useState<string | null>(
@@ -504,19 +460,6 @@ export function LabPage({ content }: Props) {
   const [procedureStepIndex, setProcedureStepIndex] = useState(0);
 
   const activeSection = content.sections.find((s) => s.id === activeSectionId) ?? content.sections[0];
-
-  const circuit: Circuit = ALL_CIRCUITS.find((c) => c.id === content.circuitId) ?? BREADBOARD_ONLY;
-
-  const { sceneStepIndex, activeMarkers } = (() => {
-    if (activeSection?.type !== 'procedure') return { sceneStepIndex: 0, activeMarkers: [] as StepMarker[] };
-    const step = activeSection.steps[procedureStepIndex];
-    if (!step) return { sceneStepIndex: 0, activeMarkers: [] as StepMarker[] };
-    const mapped = step.circuitStepIndex ?? procedureStepIndex;
-    return {
-      sceneStepIndex: Math.min(mapped, circuit.steps.length - 1),
-      activeMarkers: step.markers ?? [],
-    };
-  })();
 
   const handleSectionClick = useCallback((section: LabSection) => {
     setActiveSectionId(section.id);
@@ -527,7 +470,7 @@ export function LabPage({ content }: Props) {
 
   return (
     <Root>
-      {/* ── Sidebar ── */}
+      {/* Sidebar */}
       <Sidebar $collapsed={collapsed}>
         <SidebarHeader>
           <CodeIcon>{'<>'}</CodeIcon>
@@ -576,34 +519,22 @@ export function LabPage({ content }: Props) {
         </SectionNav>
       </Sidebar>
 
-      {/* ── Scene area (always full screen) ── */}
-      <SceneArea>
+      {/* Main area */}
+      <MainArea>
         {collapsed && (
           <ExpandBtn onClick={() => setCollapsed(false)} aria-label="Expand sidebar">
             <ExpandIcon />
           </ExpandBtn>
         )}
-
-        {/* Scene fills the full area */}
-        {activeSection && (
-          <SceneRenderer
-            section={activeSection}
-            circuit={circuit}
-            sceneStepIndex={sceneStepIndex}
-            activeMarkers={activeMarkers}
-          />
-        )}
-
-        {/* Floating text card over scene */}
-        {activeSection && (
-          <FloatingCard data-wide={activeSection.type === 'text' ? 'true' : 'false'}>
-            <FloatingCardContent
+        <ContentArea>
+          {activeSection && (
+            <SectionContent
               section={activeSection}
               procedureStepIndex={procedureStepIndex}
             />
-          </FloatingCard>
-        )}
-      </SceneArea>
+          )}
+        </ContentArea>
+      </MainArea>
     </Root>
   );
 }
