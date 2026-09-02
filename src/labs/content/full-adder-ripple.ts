@@ -51,27 +51,27 @@ export const FullAdderRippleContent: LabContent = {
         {
           label: 'Build and wire FA1, FA2, FA3',
           body: 'Replicate the Full Adder structure for FA1 (using A1, B1, Cin=C1), FA2 (A2, B2, Cin=C2), and FA3 (A3, B3, Cin=C3). For each stage, connect the Cout of the previous stage to the Cin of the current stage — this is the carry-ripple chain. Each stage produces a Sum LED (S1, S2, S3) and a carry-out (C2, C3, C4 respectively). Connect the red LED for C4 (final carry-out).',
-          circuitStepIndex: 2,
+          circuitStepIndex: 4,
         },
         {
           label: 'Verify carry chain wiring',
           body: 'Trace the carry chain: GND → C0 (FA0 Cin) → C1 (FA0 Cout / FA1 Cin) → C2 (FA1 Cout / FA2 Cin) → C3 (FA2 Cout / FA3 Cin) → C4 (FA3 Cout / final carry LED). Use a multimeter to verify continuity at each carry junction point. Any break in the carry chain will cause all higher-order bits to produce incorrect results — this is the most common wiring error in RCA construction.',
-          circuitStepIndex: 3,
+          circuitStepIndex: 10,
         },
         {
           label: 'Test with selected binary additions',
           body: 'Test the following additions and verify the binary outputs: (a) 0001 + 0001 = 0010 (1+1=2); (b) 0111 + 0001 = 1000 (7+1=8, tests carry ripple through 3 stages); (c) 1111 + 0001 = 10000 (15+1=16, S=0000, C4=1); (d) 0101 + 0011 = 1000 (5+3=8); (e) 1010 + 0110 = 10000 (10+6=16, C4=1). Record binary inputs and observed LED outputs for each.',
-          circuitStepIndex: 4,
+          circuitStepIndex: 10,
         },
         {
           label: 'Test worst-case carry propagation',
           body: 'Set A = 0111 (0,1,1,1) and B = 0001 (0,0,0,1). The carry must propagate from bit 0 through bits 1, 2, and 3. Expected result: 0111 + 0001 = 1000 (S = 1000, C4 = 0). Verify all four Sum LEDs and C4. Then try A = 1111, B = 0001: expected S = 0000 with C4 = 1. These worst-case patterns exercise the full carry ripple chain and are the critical test vectors for RCA validation.',
-          circuitStepIndex: 5,
+          circuitStepIndex: 10,
         },
         {
           label: 'Measure carry ripple delay with oscilloscope',
           body: 'Drive A[3:0] = 0111 and B[3:0] = 0001 with a pulse generator (A0 toggling at 1 MHz, others static). Monitor the A0 input (Ch1) and S3 output (Ch2) on the oscilloscope. The delay from A0 edge to S3 settling is the carry ripple delay through 4 stages. Measure and compare with the calculated estimate (4 × 14 ns = 56 ns for 74HC). This empirically validates the RCA timing model.',
-          circuitStepIndex: 6,
+          circuitStepIndex: 10,
         },
       ],
     },
