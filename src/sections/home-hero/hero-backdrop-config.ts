@@ -52,7 +52,7 @@ export const HERO_BACKDROP: Pick<
   HalftoneImageBackdropProps,
   'imageUrl' | 'settings'
 > = {
-  imageUrl: '/images/home/hero-bridge.webp',
+  imageUrl: '/images/home/bu.png',
   settings: {
     previewDistance: 3.2,
     imageFit: 'width',
