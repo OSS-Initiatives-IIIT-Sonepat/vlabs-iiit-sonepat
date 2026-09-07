@@ -9,6 +9,7 @@ import { Mux2to1 } from '@/labs/circuits/mux';
 import { Demux1to2 } from '@/labs/circuits/demux';
 import { Encoder4to2 } from '@/labs/circuits/encoder';
 import { Decoder2to4 } from '@/labs/circuits/decoder';
+import { FullAdderRippleCircuit } from '@/labs/circuits/full-adder-ripple';
 
 // ── helpers ───────────────────────────────────────────────────────────────
 
@@ -201,5 +202,54 @@ describe('simulate() — netValues sanity', () => {
     const { ledOn } = simulate(HalfAdder, {});
     expect(ledOn.get('led_sum')).toBe(false);
     expect(ledOn.get('led_carry')).toBe(false);
+  });
+});
+
+// ── 4-bit Ripple Carry Adder ─────────────────────────────────────────────
+
+describe('4-bit Ripple Carry Adder — representative test vectors', () => {
+  // A[3:0] + B[3:0] + Cin(=0) → {Cout, S3, S2, S1, S0}
+  // LEDs: led_s0..led_s3 (green), led_cout (yellow)
+  const run = (A3:0|1, A2:0|1, A1:0|1, A0:0|1, B3:0|1, B2:0|1, B1:0|1, B0:0|1) =>
+    simulate(FullAdderRippleCircuit, { A0, B0, A1, B1, A2, B2, A3, B3 }).ledOn;
+
+  it('0000+0000 = 00000', () => {
+    const l = run(0,0,0,0, 0,0,0,0);
+    expectLed(l, [], ['led_s0','led_s1','led_s2','led_s3','led_cout']);
+  });
+
+  it('0001+0010 = 00011', () => {
+    const l = run(0,0,0,1, 0,0,1,0);
+    expectLed(l, ['led_s0','led_s1'], ['led_s2','led_s3','led_cout']);
+  });
+
+  it('0011+0101 = 01000 (carry propagation)', () => {
+    const l = run(0,0,1,1, 0,1,0,1);
+    expectLed(l, ['led_s3'], ['led_s0','led_s1','led_s2','led_cout']);
+  });
+
+  it('0111+0001 = 01000 (carry ripple through 3 stages)', () => {
+    const l = run(0,1,1,1, 0,0,0,1);
+    expectLed(l, ['led_s3'], ['led_s0','led_s1','led_s2','led_cout']);
+  });
+
+  it('1111+0001 = 10000 (full overflow, Cout=1)', () => {
+    const l = run(1,1,1,1, 0,0,0,1);
+    expectLed(l, ['led_cout'], ['led_s0','led_s1','led_s2','led_s3']);
+  });
+
+  it('1010+0101 = 01111 (complementary inputs)', () => {
+    const l = run(1,0,1,0, 0,1,0,1);
+    expectLed(l, ['led_s0','led_s1','led_s2','led_s3'], ['led_cout']);
+  });
+
+  it('1110+0001 = 01111 (single bit addition, no ripple)', () => {
+    const l = run(1,1,1,0, 0,0,0,1);
+    expectLed(l, ['led_s0','led_s1','led_s2','led_s3'], ['led_cout']);
+  });
+
+  it('1111+1111 = 11110 (max + max)', () => {
+    const l = run(1,1,1,1, 1,1,1,1);
+    expectLed(l, ['led_s1','led_s2','led_s3','led_cout'], ['led_s0']);
   });
 });
