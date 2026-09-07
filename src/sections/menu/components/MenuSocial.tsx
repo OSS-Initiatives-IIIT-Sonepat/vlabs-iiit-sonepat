@@ -64,7 +64,7 @@ const SocialAnchor = styled(ExternalLink)`
 
 export type MenuSocialProps = {
   links: readonly MenuSocialLink[];
-  stats: CommunityStats;
+  stats?: CommunityStats;
 };
 
 export function MenuSocial({ links, stats }: MenuSocialProps) {

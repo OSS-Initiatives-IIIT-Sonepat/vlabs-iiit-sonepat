@@ -197,7 +197,7 @@ export type MenuDrawerProps = {
   navItems: readonly MenuNavItem[];
   scheme: Scheme;
   socialLinks: readonly MenuSocialLink[];
-  stats: CommunityStats;
+  stats?: CommunityStats;
 };
 
 export function MenuDrawer({
@@ -270,7 +270,7 @@ export function MenuDrawer({
                   href={link.href}
                 >
                   <IconComponent aria-hidden size={16} />
-                  {link.statKey
+                  {link.statKey && stats
                     ? formatCompactCount(stats[link.statKey])
                     : null}
                   {link.statKey ? <ExternalArrow /> : null}

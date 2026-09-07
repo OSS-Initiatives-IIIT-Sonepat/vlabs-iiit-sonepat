@@ -210,7 +210,7 @@ export function TestimonialsCarousel({
         <MarkedDivider />
       </SeparatorSlot>
       <RightColumn>
-        <Eyebrow>What builders are saying.</Eyebrow>
+        <Eyebrow>What educators and students are saying.</Eyebrow>
         <QuoteStack>
           {testimonials.map((testimonial, testimonialIndex) => (
             <QuoteSlide

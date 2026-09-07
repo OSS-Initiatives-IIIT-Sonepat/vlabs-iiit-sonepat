@@ -5,18 +5,14 @@ import { HomeHero } from '@/sections/home-hero';
 import { Menu } from '@/sections/menu';
 import { Testimonials } from '@/sections/testimonials';
 import { ThreeCards } from '@/sections/three-cards';
-import { TrustedBy } from '@/sections/trusted-by';
 import { Footer } from '@/sections/footer';
 
 export default function HomePage() {
-  const communityStats = { githubStars: 24000, discordMembers: 7000 };
-
   return (
     <MenuStyleProvider>
-      <Menu communityStats={communityStats} scheme="muted" />
+      <Menu scheme="muted" />
       <main>
         <HomeHero />
-        <TrustedBy />
         <ThreeCards />
         <FeatureCards />
         <Helped />

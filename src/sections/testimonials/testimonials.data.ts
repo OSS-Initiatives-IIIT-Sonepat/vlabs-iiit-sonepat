@@ -5,24 +5,24 @@ export type TestimonialRecord = {
 
 export const TESTIMONIALS: readonly TestimonialRecord[] = [
   {
-    quote: 'The flexibility is really what made the difference. Our needs evolve very fast. I discover a new need and in two clicks I can address it. That is a real advantage when you are moving quickly.',
+    quote: 'Before VLabs, students would spend half the lab session just getting the hardware to behave. Now they walk in having already verified the circuit virtually, and we can focus entirely on what the experiment is actually teaching.',
     author: {
-      name: 'Olivier Reinaud',
-      designation: 'Co-founder at NetZero',
+      name: 'John Doe',
+      designation: 'Associate Professor, Electronics Engineering',
     },
   },
   {
-    quote: "We didn't want to patch over the problem. We wanted to build something institutions could rely on at scale, and that meant starting from a foundation solid enough to support the full complexity of what we had in mind.",
+    quote: 'Building a full-wave bridge rectifier on a physical breadboard takes 40 minutes and someone always burns an LED. On VLabs I had the circuit running, sweep measured, and ripple factor calculated in under ten minutes.',
     author: {
-      name: 'Amrendra Pratap Singh',
-      designation: 'VP of Engineering at W3villa Technologies',
+      name: 'John Doe',
+      designation: 'B.Tech Student, Electrical Engineering',
     },
   },
   {
-    quote: 'It is just such a nicer experience than dealing with a proprietary simulation tool or a closed platform. My mission has been to get every lab API-accessible, so everything talks to each other. VLabs made that possible in a way older platforms simply do not.',
+    quote: 'The 8085 emulator is exactly what was missing. Students can single-step through assembly, watch registers change, and actually understand the fetch-decode-execute cycle instead of just memorising it for the exam.',
     author: {
-      name: 'Justin Beadle',
-      designation: 'Director of Digital and Information, Elevate Consulting',
+      name: 'John Doe',
+      designation: 'Head of Department, Computer Engineering',
     },
   },
 ];
