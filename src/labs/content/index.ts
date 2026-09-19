@@ -77,6 +77,7 @@ import { memoryDesign }                   from './memory-design';
 import { cacheDirectMapped }              from './cache-direct-mapped';
 import { cacheAssociative }               from './cache-associative';
 import { cpuDesign }                      from './cpu-design';
+import { fsmSimulation }                  from './fsm-simulation';
 
 /** All lab content keyed by experiment id (matches Circuit.id). */
 export const ALL_CONTENTS: Record<string, LabContent> = {
@@ -152,4 +153,5 @@ export const ALL_CONTENTS: Record<string, LabContent> = {
   'cache-direct-mapped':           cacheDirectMapped,
   'cache-associative':             cacheAssociative,
   'cpu-design':                    cpuDesign,
+  'fsm-simulation':                fsmSimulation,
 };

@@ -547,8 +547,8 @@ const SEMESTER_3: ExploreSemester = {
       id: 'memory-cpu-systems',
       title: 'Memory & CPU Systems',
       description:
-        'Explore ALU design, memory organisation, cache hierarchies, and the fetch-decode-execute cycle. ' +
-        'All experiments in this section are coming soon.',
+        'Explore ALU design, memory organisation, cache hierarchies, the fetch-decode-execute cycle, ' +
+        'and finite state machine design via interactive simulations.',
       circuitId: 'decoder',
       experiments: [
         {
@@ -590,6 +590,14 @@ const SEMESTER_3: ExploreSemester = {
           circuitId: 'decoder',
           labRoute: '/labs/cpu-design',
           tags: ['cpu', 'fetch decode execute', 'instruction cycle', 'register file', 'simulation'],
+        },
+        {
+          id: 'fsm-simulation',
+          title: 'FSM: Mealy & Moore Sequence Detector',
+          description: 'Build and simulate a Mealy and a Moore finite state machine that detects an overlapping "101" bit pattern in a serial stream. Compare state count and output timing between the two models.',
+          circuitId: 'decoder',
+          labRoute: '/labs/fsm-simulation',
+          tags: ['fsm', 'mealy', 'moore', 'sequence detector', 'state machine', 'simulation'],
         },
       ],
     },
@@ -639,8 +647,8 @@ const SEMESTER_4: ExploreSemester = {
       id: '8085-assembly-programming',
       title: '8085 Assembly Programming',
       description:
-        'Write and simulate Intel 8085 assembly programs covering arithmetic, sorting, and data conversion. ' +
-        'All experiments in this section are coming soon.',
+        'Write and simulate Intel 8085 assembly programs covering arithmetic, sorting, and data conversion ' +
+        'using an in-browser assembler and step debugger.',
       circuitId: 'half-adder',
       experiments: [
         {
