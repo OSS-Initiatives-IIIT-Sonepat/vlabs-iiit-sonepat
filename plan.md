@@ -1,6 +1,6 @@
 # VLabs — Implementation Plan
 
-## Status: Phase 1 ✅ | Phase 2 ✅ | Phase 3 ⏳ | Phase 4 ⏳
+## Status: Phase 1 ✅ | Phase 2 ✅ | Phase 3 ✅ | Phase 4 ✅ (minus SimFSM bonus)
 
 ---
 
@@ -26,9 +26,14 @@ All missing breadboard experiments built. 46 circuits, 56 content files, 74 stat
 
 ---
 
-## Phase 3 — 8085 Emulator + Code Labs ⏳ NOT STARTED
+## Phase 3 — 8085 Emulator + Code Labs ✅ DONE
 
 **Goal:** 11 Semester 4 assembly programs with in-browser 8085 assembler + step debugger.
+
+### Completed
+- `src/labs/emulator/8085.ts` — CPU core, `assembler.ts` — two-pass assembler, `instructions.ts` — opcode table
+- `src/labs/CodeLabPage.tsx` — editor + register panel + memory view
+- All 11 Sem 4 assembly programs (`8085-add-sub-8bit` through `8085-sqrt`) live in `src/labs/content/` and wired into `explore.data.ts`
 
 ### Files to create
 
@@ -98,9 +103,15 @@ PUSH, POP, XTHL, SPHL, PCHL, IN, OUT, EI, DI, HLT, NOP
 
 ---
 
-## Phase 4 — Simulation UIs ⏳ NOT STARTED
+## Phase 4 — Simulation UIs ✅ DONE (minus SimFSM bonus)
 
 **Goal:** Sem 3 experiments requiring interactive block-diagram simulators.
+
+### Completed
+- `SimALU.tsx`, `SimMemory.tsx`, `SimCacheDirectMapped.tsx`, `SimCacheAssociative.tsx`, `SimCPU.tsx` — all live in `src/labs/simulations/`
+- `SimLabPage.tsx` — shell wired into `LabPage.tsx` via `labType === 'simulation'`
+- All 5 non-bonus content files (`alu-simulation`, `memory-design`, `cache-direct-mapped`, `cache-associative`, `cpu-design`) done and in `explore.data.ts`
+- `SimFSM.tsx` (bonus item below) — in progress
 
 ### Files to create
 
@@ -163,8 +174,8 @@ Detect `labType === 'simulation'`, delegate to `<SimLabPage>`
 |-------|--------|------------|-------------------|
 | 1 — 3D Breadboard | ✅ Done | +30 | None (data files only) |
 | 2 — Text-only | ✅ Done | +10 | `labType` field, LabPage text-mode |
-| 3 — 8085 Code | ⏳ Todo | +11 | Emulator engine, CodeLabPage |
-| 4 — Simulations | ⏳ Todo | +5 | 5 simulation components, SimLabPage |
+| 3 — 8085 Code | ✅ Done | +11 | Emulator engine, CodeLabPage |
+| 4 — Simulations | ✅ Done | +5 (+1 bonus in progress) | 5 simulation components, SimLabPage |
 
-**Current totals:** 46 circuits, 56 content files, 74 static pages, 4 semesters on /explore.
-**After Phase 3+4:** ~72 experiments, 4 fully-populated semesters.
+**Current totals:** 47 circuits, ~74 content files, all 4 semesters fully populated on /explore.
+**Remaining:** `SimFSM.tsx` bonus item (FSM/sequence-detector simulator) — not yet built.
