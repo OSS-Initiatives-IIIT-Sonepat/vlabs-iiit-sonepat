@@ -31,6 +31,7 @@ const SimCacheAssociative = dynamic(
   { ssr: false },
 );
 const SimCPU = dynamic(() => import('./simulations/SimCPU').then((m) => m.SimCPU), { ssr: false });
+const SimFSM = dynamic(() => import('./simulations/SimFSM').then((m) => m.SimFSM), { ssr: false });
 
 const SIM_COMPONENTS: Record<string, React.ComponentType<{ description?: string }>> = {
   alu: SimALU,
@@ -38,6 +39,7 @@ const SIM_COMPONENTS: Record<string, React.ComponentType<{ description?: string 
   'cache-direct': SimCacheDirectMapped,
   'cache-assoc': SimCacheAssociative,
   cpu: SimCPU,
+  fsm: SimFSM,
 };
 
 // ── Layout ────────────────────────────────────────────────────────────────
