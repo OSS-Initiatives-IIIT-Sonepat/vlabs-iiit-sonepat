@@ -25,7 +25,7 @@
     "package-lock.json": "^1.0.0",
     "react": "19.0.0",
     "react-dom": "19.3.0",
-    "three": "^0.184.0",
+    "three": "^0.186.0",
     "vlabs-iiitsonepat-shared": "file:./stubs/vlabs-iiitsonepat-shared",
     "vlabs-iiitsonepat-ui": "file:./stubs/vlabs-iiitsonepat-ui"
   },
@@ -34,7 +34,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@types/three": "^0.184.1",
+    "@types/three": "^0.186.0",
     "eslint": "^9.39.5",
     "eslint-config-next": "^16.3.6",
     "postcss": "^8.5.28",
