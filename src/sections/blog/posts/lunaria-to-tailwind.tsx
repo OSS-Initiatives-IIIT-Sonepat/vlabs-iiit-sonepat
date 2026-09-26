@@ -24,22 +24,27 @@ export function PostLunariaToTailwind() {
         <L href="https://github.com/callstack/linaria">Linaria</L> — a
         zero-runtime CSS-in-JS library. The component styles were written as
         tagged template literals, colocated with JSX, and extracted at build
-        time. It's a solid system. It just wasn't ours.
+        time. It's a solid system. It just wasn't ours, and it wasn't built
+        for what we were doing with it.
       </p>
 
       <p>
         VLabs runs on{" "}
-        <L href="https://nextjs.org">Next.js</L> with the App Router. Linaria
-        has historically had friction with RSC (React Server Components) and
-        the App Router's streaming model. More practically: the rest of the
-        codebase we were writing used Tailwind utilities, and maintaining two
-        styling systems in one repo is a tax that compounds over time.
+        <L href="https://nextjs.org">Next.js</L> 16 with the App Router.
+        Linaria has historically had friction with RSC (React Server
+        Components) and the App Router's streaming model. Beyond the technical
+        mismatch, there was a simpler reason: the rest of the codebase we were
+        writing used Tailwind utilities, and maintaining two styling systems in
+        one repo is a tax that compounds fast — every new contributor has to
+        learn both, and every component lives in a slightly different mental
+        model.
       </p>
 
       <p>
         The decision was made: migrate the entire inherited component library
         from Linaria to{" "}
-        <L href="https://tailwindcss.com">Tailwind CSS v4</L>.
+        <L href="https://tailwindcss.com">Tailwind CSS v4</L>. All of it, in
+        one pass.
       </p>
 
       <h2>The scope</h2>
@@ -61,7 +66,7 @@ export function PostLunariaToTailwind() {
         New colours, new type choices, new token names.
       </p>
 
-      <h2>How it was done — ~$50 on OpenCode</h2>
+      <h2>How it was done</h2>
 
       <Callout $tone="info">
         <strong>Tool used</strong>
@@ -69,7 +74,6 @@ export function PostLunariaToTailwind() {
           OpenCode CLI with Claude Opus 4.6 via Amazon Bedrock. The entire
           migration ran as a single long agentic session — reading files,
           rewriting them, verifying TypeScript, iterating on broken builds.
-          Total cost: approximately $50 in API credits.
         </p>
       </Callout>
 
