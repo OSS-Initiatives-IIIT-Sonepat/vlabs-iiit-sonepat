@@ -349,12 +349,12 @@ export function PostBuildingEceLabs() {
       <ImageGrid
         images={[
           {
-            src: "/blog/01-building-ece-labs/3.jpeg",
+            src: "/blog/01-building-ece-labs/3.png",
             alt: "WhatsApp conversation showing Shubham sharing the bob-the-builder GitHub link and the IKEA inspiration",
             caption: "The 4am conversation where it clicked — August 5, 2026",
           },
           {
-            src: "/blog/01-building-ece-labs/1.jpeg",
+            src: "/blog/01-building-ece-labs/1.png",
             alt: "WhatsApp conversation showing the first working prototype video being shared",
             caption: "Sending the first working breadboard render to the group",
           },
@@ -362,7 +362,7 @@ export function PostBuildingEceLabs() {
       />
 
       <BlogImage
-        src="/blog/01-building-ece-labs/2.jpeg"
+        src="/blog/01-building-ece-labs/2.png"
         alt="WhatsApp conversation about the long-term architecture and AI-assisted contribution system"
         caption="Planning the contribution architecture — context engineering so AI can generate full experiments"
       />
