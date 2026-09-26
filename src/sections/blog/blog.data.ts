@@ -35,16 +35,6 @@ export const BLOG_POSTS: readonly BlogPostRecord[] = [
     thumbnail: "/blog/03-why-open-source/thumbnail.svg",
   },
   {
-    title: "Simulating the 8085 microprocessor in the browser",
-    excerpt:
-      "A deep dive into our fetch-decode-execute emulator: how register files, flag updates, and memory maps work under the hood.",
-    date: "2026-09-08",
-    author: { name: "Shubham Singh", role: "Founder" },
-    tag: "Engineering",
-    slug: "simulating-8085",
-    readTime: "10 min read",
-  },
-  {
     title: "From Lunaria to Tailwind: migrating a design system",
     excerpt:
       "We inherited a Linaria-based CSS-in-JS setup and moved the entire codebase to Tailwind CSS v4. Here is what went well, what broke, and what we learned.",
@@ -58,21 +48,12 @@ export const BLOG_POSTS: readonly BlogPostRecord[] = [
   {
     title: "Designing interactive procedure steps for circuit experiments",
     excerpt:
-      "Every lab follows a strict aim-theory-apparatus-procedure-observation-conclusion flow. Here is how we made each step interactive and verifiable.",
+      "Every lab follows a strict aim–theory–apparatus–procedure–observation–conclusion flow. Here is how we made each step interactive, verifiable, and wired to a live 3D scene.",
     date: "2026-08-18",
     author: { name: "Shubham Singh", role: "Founder" },
     tag: "Product",
     slug: "interactive-procedure-steps",
     readTime: "6 min read",
-  },
-  {
-    title: "Adding cache and ALU simulations to the platform",
-    excerpt:
-      "Semester 3 brings direct-mapped caches, set-associative caches, ALU operations, and a simple CPU — all running as React components with interactive controls.",
-    date: "2026-08-05",
-    author: { name: "Shubham Singh", role: "Founder" },
-    tag: "Engineering",
-    slug: "cache-alu-simulations",
-    readTime: "9 min read",
+    thumbnail: "/blog/04-interactive-procedure-steps/thumbnail.svg",
   },
 ];
