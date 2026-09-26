@@ -137,7 +137,8 @@ export function PostLunariaToTailwind() {
         </li>
         <li>
           <strong>Complex pseudo-selector chains.</strong> Some Linaria styles
-          used deeply nested <code>&amp;:hover &gt; span &gt; svg</code> chains that
+          used deeply nested{" "}
+          <code>{"&:hover > span > svg"}</code> chains that
           don't have clean Tailwind equivalents. These moved to scoped{" "}
           <code>&lt;style&gt;</code> blocks inside the component, which is the
           documented escape hatch for exactly this case.
