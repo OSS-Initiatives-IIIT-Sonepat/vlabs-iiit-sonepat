@@ -182,6 +182,17 @@ export function PostLunariaToTailwind() {
         Lowering the barrier to understanding how a component is styled is
         worth something on an open-source project.
       </p>
+
+      <p>
+        If you're curious about the architecture that came out the other side —
+        the token system, the scheme-switching, the component patterns — it's
+        all in the{" "}
+        <L href="/docs">docs</L>, and the source is{" "}
+        <L href="https://github.com/OSS-Initiatives-IIIT-Sonepat/vlabs-iiit-sonepat">
+          open on GitHub
+        </L>
+        .
+      </p>
     </Prose>
   );
 }
