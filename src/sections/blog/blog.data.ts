@@ -32,6 +32,7 @@ export const BLOG_POSTS: readonly BlogPostRecord[] = [
     tag: "Open Source",
     slug: "why-open-source-education",
     readTime: "5 min read",
+    thumbnail: "/blog/03-why-open-source/thumbnail.svg",
   },
   {
     title: "Simulating the 8085 microprocessor in the browser",

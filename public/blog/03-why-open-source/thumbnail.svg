@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f0e0d"/>
+      <stop offset="100%" stop-color="#1c1c1c"/>
+    </linearGradient>
+    <radialGradient id="glow-blue" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#4a38f5" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#4a38f5" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow-green" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#89fc9a" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#89fc9a" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="blur-lg">
+      <feGaussianBlur stdDeviation="40"/>
+    </filter>
+    <filter id="blur-sm">
+      <feGaussianBlur stdDeviation="6"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Glow orbs -->
+  <ellipse cx="300" cy="200" rx="300" ry="220" fill="url(#glow-blue)" filter="url(#blur-lg)"/>
+  <ellipse cx="950" cy="420" rx="260" ry="200" fill="url(#glow-green)" filter="url(#blur-lg)"/>
+
+  <!-- Subtle dot grid -->
+  <pattern id="dots" width="32" height="32" patternUnits="userSpaceOnUse">
+    <circle cx="1" cy="1" r="1" fill="rgba(255,255,255,0.04)"/>
+  </pattern>
+  <rect width="1200" height="630" fill="url(#dots)"/>
+
+  <!-- ── Network graph nodes & edges ── -->
+  <!-- Central hub -->
+  <circle cx="600" cy="315" r="28" fill="#4a38f5"/>
+  <circle cx="600" cy="315" r="22" fill="#5a4af7"/>
+  <!-- VLabs logo mark (simplified V shape) -->
+  <polyline points="588,305 596,323 604,305" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Satellite nodes -->
+  <!-- Top-left: student 1 -->
+  <line x1="600" y1="315" x2="310" y2="160" stroke="rgba(74,56,245,0.4)" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <circle cx="310" cy="160" r="14" fill="rgba(74,56,245,0.15)" stroke="#4a38f5" stroke-width="1.5"/>
+  <circle cx="310" cy="160" r="6" fill="#4a38f5"/>
+
+  <!-- Top-right: student 2 -->
+  <line x1="600" y1="315" x2="870" y2="155" stroke="rgba(74,56,245,0.4)" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <circle cx="870" cy="155" r="14" fill="rgba(74,56,245,0.15)" stroke="#4a38f5" stroke-width="1.5"/>
+  <circle cx="870" cy="155" r="6" fill="#4a38f5"/>
+
+  <!-- Right: contributor -->
+  <line x1="600" y1="315" x2="980" y2="310" stroke="rgba(137,252,154,0.35)" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <circle cx="980" cy="310" r="14" fill="rgba(137,252,154,0.1)" stroke="#89fc9a" stroke-width="1.5"/>
+  <circle cx="980" cy="310" r="6" fill="#89fc9a"/>
+
+  <!-- Bottom-right: student 3 -->
+  <line x1="600" y1="315" x2="840" y2="488" stroke="rgba(74,56,245,0.3)" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <circle cx="840" cy="488" r="14" fill="rgba(74,56,245,0.15)" stroke="#4a38f5" stroke-width="1.5"/>
+  <circle cx="840" cy="488" r="6" fill="#4a38f5"/>
+
+  <!-- Bottom-left: student 4 -->
+  <line x1="600" y1="315" x2="340" y2="480" stroke="rgba(137,252,154,0.3)" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <circle cx="340" cy="480" r="14" fill="rgba(137,252,154,0.1)" stroke="#89fc9a" stroke-width="1.5"/>
+  <circle cx="340" cy="480" r="6" fill="#89fc9a"/>
+
+  <!-- Left: institution -->
+  <line x1="600" y1="315" x2="220" y2="318" stroke="rgba(254,255,183,0.3)" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <circle cx="220" cy="318" r="14" fill="rgba(254,255,183,0.08)" stroke="#feffb7" stroke-width="1.5"/>
+  <circle cx="220" cy="318" r="6" fill="#feffb7"/>
+
+  <!-- Secondary connections (peer to peer) -->
+  <line x1="310" y1="160" x2="870" y2="155" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <line x1="870" y1="155" x2="980" y2="310" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <line x1="340" y1="480" x2="840" y2="488" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <line x1="220" y1="318" x2="340" y2="480" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+
+  <!-- Node labels -->
+  <text x="310" y="136" font-family="sans-serif" font-size="11" fill="rgba(255,255,255,0.45)" text-anchor="middle">Student</text>
+  <text x="870" y="131" font-family="sans-serif" font-size="11" fill="rgba(255,255,255,0.45)" text-anchor="middle">Student</text>
+  <text x="990" y="288" font-family="sans-serif" font-size="11" fill="rgba(137,252,154,0.7)" text-anchor="middle">Contributor</text>
+  <text x="840" y="514" font-family="sans-serif" font-size="11" fill="rgba(255,255,255,0.45)" text-anchor="middle">Student</text>
+  <text x="340" y="506" font-family="sans-serif" font-size="11" fill="rgba(255,255,255,0.45)" text-anchor="middle">Student</text>
+  <text x="206" y="296" font-family="sans-serif" font-size="11" fill="rgba(254,255,183,0.7)" text-anchor="middle">Institution</text>
+
+  <!-- ── Text ── -->
+  <text x="600" y="565" font-family="sans-serif" font-size="13" fill="rgba(255,255,255,0.25)" text-anchor="middle" letter-spacing="3">OPEN SOURCE · EDUCATION · COMMUNITY</text>
+
+  <!-- Tag pill -->
+  <rect x="80" y="72" width="110" height="26" rx="13" fill="rgba(74,56,245,0.25)" stroke="rgba(74,56,245,0.5)" stroke-width="1"/>
+  <circle cx="100" cy="85" r="4" fill="#4a38f5"/>
+  <text x="113" y="90" font-family="sans-serif" font-size="12" fill="#8b80f8" font-weight="500">Open Source</text>
+
+  <!-- Main headline -->
+  <text x="80" y="165" font-family="sans-serif" font-size="38" font-weight="300" fill="white" letter-spacing="-1">Why open-source education</text>
+  <text x="80" y="210" font-family="sans-serif" font-size="38" font-weight="300" fill="white" letter-spacing="-1">tools matter more than ever.</text>
+
+  <!-- Subtitle -->
+  <text x="80" y="252" font-family="sans-serif" font-size="15" fill="rgba(255,255,255,0.45)">Access, hardware, and why building in the open changes everything.</text>
+
+  <!-- Author + date row -->
+  <circle cx="90" cy="294" r="12" fill="#1c1c1c" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+  <text x="90" y="298" font-family="sans-serif" font-size="10" font-weight="600" fill="white" text-anchor="middle">SS</text>
+  <text x="110" y="291" font-family="sans-serif" font-size="13" fill="rgba(255,255,255,0.7)" font-weight="500">Shubham Singh</text>
+  <text x="110" y="306" font-family="sans-serif" font-size="12" fill="rgba(255,255,255,0.3)">Sep 14, 2026 · 5 min read</text>
+</svg>

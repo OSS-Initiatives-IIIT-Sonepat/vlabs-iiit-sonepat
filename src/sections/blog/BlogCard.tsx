@@ -108,24 +108,23 @@ export function BlogCard({ post }: { post: BlogPostRecord }) {
         "hover:border-[rgba(0,0,0,0.14)] hover:shadow-[0_2px_12px_rgba(0,0,0,0.06)]",
       ].join(" ")}
     >
-      {/* Image placeholder */}
-      <div className="bg-[#eeecea] rounded-[calc(var(--radius-base)*2)] h-[180px] w-full flex items-center justify-center overflow-hidden">
-        <div className="flex flex-col items-center gap-2 text-[#b0aea8]">
-          <svg
-            width="32"
-            height="32"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-            <line x1="3" y1="9" x2="21" y2="9" />
-            <line x1="9" y1="21" x2="9" y2="9" />
-          </svg>
-        </div>
+      {/* Thumbnail / placeholder */}
+      <div className="rounded-[calc(var(--radius-base)*2)] h-[180px] w-full overflow-hidden bg-[#eeecea] shrink-0">
+        {post.thumbnail ? (
+          <img
+            src={post.thumbnail}
+            alt={post.title}
+            className="w-full h-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.03]"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-[#b0aea8]">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+              <line x1="3" y1="9" x2="21" y2="9" />
+              <line x1="9" y1="21" x2="9" y2="9" />
+            </svg>
+          </div>
+        )}
       </div>
 
       {/* Tag */}
