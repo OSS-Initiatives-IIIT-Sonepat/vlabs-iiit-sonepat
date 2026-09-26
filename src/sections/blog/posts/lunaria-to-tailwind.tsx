@@ -68,12 +68,14 @@ export function PostLunariaToTailwind() {
 
       <h2>How it was done</h2>
 
-      <Callout $tone="info">
+    <Callout $tone="info">
         <strong>Tool used</strong>
         <p>
           OpenCode CLI with Claude Opus 4.6 via Amazon Bedrock. The entire
           migration ran as a single long agentic session — reading files,
           rewriting them, verifying TypeScript, iterating on broken builds.
+          Total cost: approximately $50 in API credits. For context, a manual
+          migration of this scope would have taken the better part of a week.
         </p>
       </Callout>
 
