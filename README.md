@@ -4,7 +4,8 @@
 
 <h1>VLabs — IIIT Sonepat</h1>
 
-<p><strong>Interactive 3D virtual ECE laboratories. No hardware. No installs. Just a browser.</strong></p>
+<p><strong>Interactive 3D virtual ECE laboratories. In your browser.</strong>
+<strong>Free to use. Libre and open source. Built as a non-profit, student-led initiative.</strong></p>
 
 <p>
   <a href="https://vlabs-iiit-sonepat.vercel.app"><img src="https://img.shields.io/badge/Live-vlabs--iiit--sonepat.vercel.app-4a38f5?style=for-the-badge&logo=vercel&logoColor=white" /></a>
