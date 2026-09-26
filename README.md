@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="public/vlabs-logo-white.svg" width="80" alt="VLabs Logo" />
+<img src="public/vlabs-logo-white.svg" width="160" alt="VLabs Logo" />
 
 <h1>VLabs — IIIT Sonepat</h1>
 
