@@ -1,0 +1,137 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f7f6f4"/>
+      <stop offset="100%" stop-color="#eeecea"/>
+    </linearGradient>
+    <linearGradient id="arrow-grad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#4a38f5" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#4a38f5"/>
+    </linearGradient>
+    <linearGradient id="card-l" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1c1c1c"/>
+      <stop offset="100%" stop-color="#2a2a2a"/>
+    </linearGradient>
+    <linearGradient id="card-r" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4a38f5"/>
+      <stop offset="100%" stop-color="#6c5ff7"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="8" stdDeviation="24" flood-color="#000" flood-opacity="0.10"/>
+    </filter>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Subtle grid -->
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(0,0,0,0.04)" stroke-width="1"/>
+  </pattern>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+
+  <!-- ── Left card: Linaria / CSS-in-JS ── -->
+  <g filter="url(#shadow)">
+    <rect x="80" y="115" width="400" height="400" rx="12" fill="url(#card-l)"/>
+  </g>
+
+  <!-- Left card label -->
+  <text x="120" y="167" font-family="monospace" font-size="11" fill="rgba(255,255,255,0.35)" letter-spacing="2" text-transform="uppercase">BEFORE</text>
+  <text x="120" y="198" font-family="sans-serif" font-size="22" font-weight="500" fill="#fff" letter-spacing="-0.5">Linaria</text>
+  <text x="120" y="220" font-family="sans-serif" font-size="13" fill="rgba(255,255,255,0.45)">CSS-in-JS / styled components</text>
+
+  <!-- Divider -->
+  <line x1="120" y1="238" x2="440" y2="238" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+
+  <!-- Code lines: Linaria styled -->
+  <rect x="120" y="256" width="52" height="10" rx="3" fill="#ed87fc" opacity="0.8"/>
+  <rect x="180" y="256" width="80" height="10" rx="3" fill="rgba(255,255,255,0.15)"/>
+  <rect x="120" y="276" width="36" height="10" rx="3" fill="#89fc9a" opacity="0.7"/>
+  <rect x="164" y="276" width="110" height="10" rx="3" fill="rgba(255,255,255,0.12)"/>
+  <rect x="120" y="296" width="60" height="10" rx="3" fill="#feffb7" opacity="0.7"/>
+  <rect x="188" y="296" width="90" height="10" rx="3" fill="rgba(255,255,255,0.12)"/>
+  <rect x="120" y="316" width="44" height="10" rx="3" fill="#ed87fc" opacity="0.5"/>
+  <rect x="172" y="316" width="130" height="10" rx="3" fill="rgba(255,255,255,0.1)"/>
+  <rect x="120" y="336" width="68" height="10" rx="3" fill="#89fc9a" opacity="0.5"/>
+  <rect x="196" y="336" width="70" height="10" rx="3" fill="rgba(255,255,255,0.1)"/>
+  <rect x="120" y="356" width="50" height="10" rx="3" fill="rgba(255,255,255,0.08)"/>
+  <rect x="120" y="376" width="36" height="10" rx="3" fill="rgba(255,255,255,0.06)"/>
+  <rect x="164" y="376" width="100" height="10" rx="3" fill="rgba(255,255,255,0.06)"/>
+
+  <!-- Token pills bottom of left card -->
+  <rect x="120" y="432" width="86" height="24" rx="4" fill="rgba(237,135,252,0.15)"/>
+  <text x="131" y="448" font-family="monospace" font-size="11" fill="#ed87fc">css`...`</text>
+  <rect x="216" y="432" width="78" height="24" rx="4" fill="rgba(137,252,154,0.12)"/>
+  <text x="228" y="448" font-family="monospace" font-size="11" fill="#89fc9a">styled()</text>
+  <rect x="304" y="432" width="60" height="24" rx="4" fill="rgba(254,255,183,0.12)"/>
+  <text x="314" y="448" font-family="monospace" font-size="11" fill="#feffb7">&amp;:hover</text>
+
+  <!-- Cost chip bottom -->
+  <rect x="120" y="468" width="120" height="22" rx="11" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+  <text x="135" y="483" font-family="monospace" font-size="11" fill="rgba(255,255,255,0.4)">Zero-runtime CSS</text>
+
+  <!-- ── Arrow in center ── -->
+  <g>
+    <!-- Arrow body -->
+    <line x1="520" y1="315" x2="670" y2="315" stroke="url(#arrow-grad)" stroke-width="2.5" stroke-dasharray="6 4"/>
+    <!-- Arrowhead -->
+    <polygon points="670,307 685,315 670,323" fill="#4a38f5"/>
+    <!-- ~$50 label -->
+    <rect x="556" y="282" width="78" height="22" rx="11" fill="#4a38f5"/>
+    <text x="572" y="297" font-family="sans-serif" font-size="11" font-weight="600" fill="#fff">~$50</text>
+    <text x="538" y="350" font-family="sans-serif" font-size="11" fill="rgba(28,28,28,0.45)" text-anchor="middle">OpenCode + Claude</text>
+    <text x="538" y="365" font-family="sans-serif" font-size="11" fill="rgba(28,28,28,0.35)" text-anchor="middle">Opus 4.6</text>
+  </g>
+
+  <!-- ── Right card: Tailwind ── -->
+  <g filter="url(#shadow)">
+    <rect x="720" y="115" width="400" height="400" rx="12" fill="url(#card-r)"/>
+  </g>
+
+  <!-- Right card label -->
+  <text x="760" y="167" font-family="monospace" font-size="11" fill="rgba(255,255,255,0.5)" letter-spacing="2">AFTER</text>
+  <text x="760" y="198" font-family="sans-serif" font-size="22" font-weight="500" fill="#fff" letter-spacing="-0.5">Tailwind CSS v4</text>
+  <text x="760" y="220" font-family="sans-serif" font-size="13" fill="rgba(255,255,255,0.6)">Utility-first / CSS custom properties</text>
+
+  <!-- Divider -->
+  <line x1="760" y1="238" x2="1080" y2="238" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
+
+  <!-- Code lines: Tailwind classes -->
+  <rect x="760" y="256" width="44" height="10" rx="3" fill="rgba(255,255,255,0.9)"/>
+  <rect x="812" y="256" width="120" height="10" rx="3" fill="rgba(255,255,255,0.5)"/>
+  <rect x="940" y="256" width="60" height="10" rx="3" fill="rgba(255,255,255,0.3)"/>
+  <rect x="760" y="276" width="60" height="10" rx="3" fill="rgba(255,255,255,0.7)"/>
+  <rect x="828" y="276" width="90" height="10" rx="3" fill="rgba(255,255,255,0.4)"/>
+  <rect x="760" y="296" width="80" height="10" rx="3" fill="rgba(255,255,255,0.7)"/>
+  <rect x="848" y="296" width="70" height="10" rx="3" fill="rgba(255,255,255,0.35)"/>
+  <rect x="760" y="316" width="50" height="10" rx="3" fill="rgba(255,255,255,0.5)"/>
+  <rect x="818" y="316" width="100" height="10" rx="3" fill="rgba(255,255,255,0.3)"/>
+  <rect x="760" y="336" width="70" height="10" rx="3" fill="rgba(255,255,255,0.5)"/>
+  <rect x="838" y="336" width="80" height="10" rx="3" fill="rgba(255,255,255,0.25)"/>
+  <rect x="760" y="356" width="40" height="10" rx="3" fill="rgba(255,255,255,0.35)"/>
+  <rect x="760" y="376" width="56" height="10" rx="3" fill="rgba(255,255,255,0.25)"/>
+  <rect x="824" y="376" width="90" height="10" rx="3" fill="rgba(255,255,255,0.2)"/>
+
+  <!-- Class pills bottom of right card -->
+  <rect x="760" y="432" width="96" height="24" rx="4" fill="rgba(255,255,255,0.18)"/>
+  <text x="772" y="448" font-family="monospace" font-size="11" fill="#fff">flex items-</text>
+  <rect x="864" y="432" width="80" height="24" rx="4" fill="rgba(255,255,255,0.15)"/>
+  <text x="876" y="448" font-family="monospace" font-size="11" fill="#fff">bg-[var(--</text>
+  <rect x="952" y="432" width="60" height="24" rx="4" fill="rgba(255,255,255,0.12)"/>
+  <text x="962" y="448" font-family="monospace" font-size="11" fill="#fff">hover:</text>
+
+  <!-- Cost chip bottom -->
+  <rect x="760" y="468" width="126" height="22" rx="11" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+  <text x="776" y="483" font-family="monospace" font-size="11" fill="rgba(255,255,255,0.8)">App Router native</text>
+
+  <!-- ── Bottom labels ── -->
+  <text x="280" y="578" font-family="sans-serif" font-size="13" fill="rgba(28,28,28,0.35)" text-anchor="middle">babel extraction · runtime overhead</text>
+  <text x="920" y="578" font-family="sans-serif" font-size="13" fill="rgba(28,28,28,0.35)" text-anchor="middle">JIT · zero runtime · faster builds</text>
+
+  <!-- VLabs watermark -->
+  <text x="600" y="604" font-family="sans-serif" font-size="11" fill="rgba(28,28,28,0.25)" text-anchor="middle" letter-spacing="3">VLABS · IIIT SONEPAT</text>
+</svg>
