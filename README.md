@@ -141,7 +141,19 @@ The **current President of the Technical Society of IIIT Sonepat** owns all righ
 
 ### Design system & Twenty CRM
 
-The initial component architecture and layout patterns were adapted from [**Twenty CRM**](https://twenty.com/) ([GitHub](https://github.com/twentyhq/twenty)) — the leading open-source CRM. The original styling was in Linaria (CSS-in-JS), which was fully migrated to **Tailwind CSS v4**. Every design was then rebuilt to match our own application identity defined in the [Figma workspace](https://www.figma.com/design/8OKl25CDzj9DO9b0VCjEVq/Open-Source-Initiatives?node-id=0-1&t=3cuqh6GhRT47vFps-1). All derived work respects Twenty CRM's [official license](https://github.com/twentyhq/twenty?tab=License-1-ov-file).
+The initial UI component architecture and layout patterns were adapted from the **`twenty-ui` package** of [Twenty CRM](https://twenty.com/) ([GitHub](https://github.com/twentyhq/twenty)).
+
+> **License note:** `twenty-ui` is explicitly licensed under the **MIT License** (as declared in its `package.json` and package-level `LICENSE` file), separate from the AGPLv3 that governs Twenty's core application. VLabs derives exclusively from this MIT-licensed package — not from any AGPLv3 or commercially-licensed portions of the Twenty repository.
+
+MIT requires preserving the copyright notice. In compliance:
+
+```
+Copyright (c) 2023-present Twenty.com, PBC
+```
+
+The original styling was in Linaria (CSS-in-JS). All styles were fully migrated to **Tailwind CSS v4** and every design rebuilt to match our own application identity in the [Figma workspace](https://www.figma.com/design/8OKl25CDzj9DO9b0VCjEVq/Open-Source-Initiatives?node-id=0-1&t=3cuqh6GhRT47vFps-1). By the end of the migration, the only thing remaining from the original code was the component architecture inspiration — all styling, tokens, and visual identity are our own.
+
+Full license text: [github.com/twentyhq/twenty — License](https://github.com/twentyhq/twenty?tab=License-1-ov-file)
 
 ---
 
@@ -161,9 +173,13 @@ You don't need to know Three.js to contribute. If you understand the experiment,
 
 ## License
 
-Libre — free to use, modify, and distribute through **December 2026**.
+VLabs' own source code is **libre** — free to use, modify, and distribute through **December 2026**.
 
 After that, the project's terms will be decided by the sitting president of the Technical Society of IIIT Sonepat. The intention is to keep it open.
+
+**Third-party attribution:**
+
+Portions of the UI component architecture are derived from [`twenty-ui`](https://github.com/twentyhq/twenty) by Twenty.com, PBC, licensed under the MIT License. Copyright © 2023-present Twenty.com, PBC. The full MIT license text is available at the [Twenty repository](https://github.com/twentyhq/twenty?tab=License-1-ov-file).
 
 ---
 
