@@ -10,7 +10,7 @@
   <a href="https://vlabs-iiit-sonepat.vercel.app"><img src="https://img.shields.io/badge/Live-vlabs--iiit--sonepat.vercel.app-4a38f5?style=for-the-badge&logo=vercel&logoColor=white" /></a>
   <a href="https://github.com/OSS-Initiatives-IIIT-Sonepat/vlabs-iiit-sonepat/blob/master/CONTRIBUTING.md"><img src="https://img.shields.io/badge/Contributing-Open-89fc9a?style=for-the-badge" /></a>
   <a href="https://discord.gg/5MaJbxFnm"><img src="https://img.shields.io/badge/Discord-Join-5865F2?style=for-the-badge&logo=discord&logoColor=white" /></a>
-  <img src="https://img.shields.io/badge/License-Libre_till_Dec_2026-feffb7?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/License-MIT-feffb7?style=for-the-badge" />
   <img src="https://img.shields.io/badge/Non--Profit-Open_Source-ed87fc?style=for-the-badge" />
 </p>
 
@@ -49,7 +49,7 @@ The platform currently covers **70+ lab experiments** across four semesters of t
 
 The students who need good virtual labs most are at institutions that can't pay for proprietary tools. A solution behind a license wall reproduces the exact access inequality it's trying to fix — just one layer up.
 
-VLabs is **non-profit**, **libre** (free to use, modify, and redistribute through **December 2026**), and built entirely in the open. If you find a missing experiment or a wrong procedure step, you can fix it. The architecture is explicitly designed so that a UG student, assisted by an AI coding assistant, can add a complete lab without ever touching the 3D renderer.
+VLabs is **non-profit**, **open source**, and **free to use, modify, and redistribute** — permanently, under the MIT License. Built entirely in the open by students, for students. If you find a missing experiment or a wrong procedure step, you can fix it. The architecture is explicitly designed so that a UG student, assisted by an AI coding assistant, can add a complete lab without ever touching the 3D renderer.
 
 ---
 
@@ -173,13 +173,13 @@ You don't need to know Three.js to contribute. If you understand the experiment,
 
 ## License
 
-VLabs' own source code is **libre** — free to use, modify, and distribute through **December 2026**.
+VLabs is open source under the **MIT License** — free to use, modify, distribute, and build on, permanently, with no restrictions.
 
-After that, the project's terms will be decided by the sitting president of the Technical Society of IIIT Sonepat. The intention is to keep it open.
+See the [`LICENSE`](LICENSE) file for the full text.
 
 **Third-party attribution:**
 
-Portions of the UI component architecture are derived from [`twenty-ui`](https://github.com/twentyhq/twenty) by Twenty.com, PBC, licensed under the MIT License. Copyright © 2023-present Twenty.com, PBC. The full MIT license text is available at the [Twenty repository](https://github.com/twentyhq/twenty?tab=License-1-ov-file).
+Portions of the UI component architecture are derived from [`twenty-ui`](https://github.com/twentyhq/twenty) by Twenty.com, PBC, also licensed under the MIT License. Copyright © 2023-present Twenty.com, PBC.
 
 ---
 

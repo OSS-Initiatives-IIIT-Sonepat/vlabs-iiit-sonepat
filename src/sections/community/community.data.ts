@@ -15,7 +15,7 @@ export const COMMUNITY = {
       {
         label: "Non-profit and open-sourced",
         detail:
-          "VLabs is a non-profit initiative. The entire source code is publicly available on GitHub under a libre license (through December 2026).",
+          "VLabs is a non-profit initiative. The entire source code is publicly available on GitHub under the MIT License — free to use, modify, and distribute, permanently.",
       },
       {
         label: "Student-led, community-driven",

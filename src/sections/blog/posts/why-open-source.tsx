@@ -128,12 +128,11 @@ export function PostWhyOpenSource() {
       </p>
 
       <Callout $tone="tip">
-        <strong>Libre until December 2026</strong>
+        <strong>MIT License — permanently open source</strong>
         <p>
-          VLabs is free to use, modify, and redistribute through December 2026
-          under a libre license. After that, the project's future terms will be
-          decided by whoever holds the Technical Society presidency at IIIT
-          Sonepat. The intention is to keep it open.
+          VLabs is free to use, modify, and redistribute permanently under the
+          MIT License. Non-profit, student-led, and fully open — no expiry
+          dates, no restrictions.
         </p>
       </Callout>
 
