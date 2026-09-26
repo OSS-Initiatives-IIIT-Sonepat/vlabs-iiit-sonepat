@@ -20,7 +20,10 @@ function Stat({ value, label }: { value: string; label: string }) {
     <div className="flex flex-col gap-[calc(var(--spacing-base)*1)] p-[calc(var(--spacing-base)*5)] bg-[#f7f6f3] rounded-[calc(var(--radius-base)*2)] border border-[rgba(0,0,0,0.06)]">
       <span
         className="font-[family-name:var(--font-sans),sans-serif] font-light tracking-[-0.04em] text-[var(--ink)]"
-        style={{ fontSize: "clamp(2rem, 1.5rem + 2vw, 2.75rem)", lineHeight: 1.1 }}
+        style={{
+          fontSize: "clamp(2rem, 1.5rem + 2vw, 2.75rem)",
+          lineHeight: 1.1,
+        }}
       >
         {value}
       </span>
@@ -35,8 +38,8 @@ export function PostWhyOpenSource() {
   return (
     <Prose>
       <p>
-        There is a version of this post that leads with statistics — the
-        number of colleges that can't afford well-stocked electronics labs, the
+        There is a version of this post that leads with statistics — the number
+        of colleges that can't afford well-stocked electronics labs, the
         percentage of engineering students who share a single oscilloscope
         between twelve people, the cost of replacing components that students
         burn through in a semester. Those numbers exist, and they're not good.
@@ -45,9 +48,9 @@ export function PostWhyOpenSource() {
 
       <p>
         We built it in the open because the problem isn't one institution's
-        problem. And a solution that lives behind a login wall — licensed,
-        paid, proprietary — can only ever fix it for the people who can afford
-        the license.
+        problem. And a solution that lives behind a login wall — licensed, paid,
+        proprietary — can only ever fix it for the people who can afford the
+        license.
       </p>
 
       <h2>The access problem is real and specific</h2>
@@ -70,21 +73,33 @@ export function PostWhyOpenSource() {
 
       {/* Stats grid */}
       <div className="grid grid-cols-2 gap-[calc(var(--spacing-base)*3)] my-[calc(var(--spacing-base)*8)] not-prose">
-        <Stat value="70+" label="lab experiments available on VLabs, zero hardware needed" />
-        <Stat value="4" label="semesters of ECE curriculum covered, from Ohm's Law to 8085 assembly" />
-        <Stat value="₹0" label="cost to any student, anywhere, on any device with a browser" />
-        <Stat value="Dec 2026" label="libre license expiry — free to use, modify, and distribute until then" />
+        <Stat
+          value="70+"
+          label="lab experiments available on VLabs, zero hardware needed"
+        />
+        <Stat
+          value="4"
+          label="semesters of ECE curriculum covered, from Ohm's Law to 8085 assembly"
+        />
+        <Stat
+          value="₹0"
+          label="cost to any student, anywhere, on any device with a browser"
+        />
+        <Stat
+          value="Dec 2026"
+          label="libre license expiry — free to use, modify, and distribute until then"
+        />
       </div>
 
       <p>
         Virtual labs don't replace physical labs. A student who has only ever
         seen a breadboard on a screen is still going to fumble the first time
         they hold one. That's fine — that's expected. What virtual labs do is
-        remove the <em>prerequisite failure modes</em>. You come to the
-        physical lab having already routed the circuit mentally, having already
-        seen where each wire goes, having already watched what happens when you
-        flip the power. The physical session becomes confirmation and
-        refinement, not first contact.
+        remove the <em>prerequisite failure modes</em>. You come to the physical
+        lab having already routed the circuit mentally, having already seen
+        where each wire goes, having already watched what happens when you flip
+        the power. The physical session becomes confirmation and refinement, not
+        first contact.
       </p>
 
       <h2>Why open source specifically</h2>
@@ -92,10 +107,10 @@ export function PostWhyOpenSource() {
       <p>
         When we started VLabs, there was already a virtual lab platform:{" "}
         <L href="https://www.vlab.co.in/">Virtual Labs by IIT Kharagpur</L>.
-        It's a significant effort. But it's 2D, has no voice modules, and
-        can't show a student which wire physically goes where on a real
-        breadboard. The experience is closer to reading a textbook with
-        diagrams than to doing a lab.
+        It's a significant effort. But it's 2D, has no voice modules, and can't
+        show a student which wire physically goes where on a real breadboard.
+        The experience is closer to reading a textbook with diagrams than to
+        doing a lab.
       </p>
 
       <p>
@@ -125,8 +140,8 @@ export function PostWhyOpenSource() {
       <h2>The architecture of contribution</h2>
 
       <p>
-        Open source without a contribution path is just public code. Anyone
-        can read it; almost no one adds to it. We thought carefully about this.
+        Open source without a contribution path is just public code. Anyone can
+        read it; almost no one adds to it. We thought carefully about this.
       </p>
 
       <p>
@@ -155,9 +170,9 @@ export function PostWhyOpenSource() {
       </p>
 
       <p>
-        If you find something missing or incorrect, and you have ten minutes
-        and a willingness to ask an AI agent for help writing TypeScript data
-        files — open a PR. The{" "}
+        If you find something missing or incorrect, and you have ten minutes and
+        a willingness to ask an AI agent for help writing TypeScript data files
+        — open a PR. The{" "}
         <L href="https://github.com/OSS-Initiatives-IIIT-Sonepat/vlabs-iiit-sonepat/blob/master/CONTRIBUTING.md">
           CONTRIBUTING.md
         </L>{" "}

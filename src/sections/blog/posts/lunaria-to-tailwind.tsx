@@ -19,19 +19,18 @@ export function PostLunariaToTailwind() {
     <Prose>
       <p>
         When VLabs adopted the initial scaffolding from{" "}
-        <L href="https://twenty.com/">Twenty CRM</L>'s open-source codebase,
-        it came with a styling system built on{" "}
+        <L href="https://twenty.com/">Twenty CRM</L>'s open-source codebase, it
+        came with a styling system built on{" "}
         <L href="https://github.com/callstack/linaria">Linaria</L> — a
         zero-runtime CSS-in-JS library. The component styles were written as
         tagged template literals, colocated with JSX, and extracted at build
-        time. It's a solid system. It just wasn't ours, and it wasn't built
-        for what we were doing with it.
+        time. It's a solid system. It just wasn't ours, and it wasn't built for
+        what we were doing with it.
       </p>
 
       <p>
-        VLabs runs on{" "}
-        <L href="https://nextjs.org">Next.js</L> 16 with the App Router.
-        Linaria has historically had friction with RSC (React Server
+        VLabs runs on <L href="https://nextjs.org">Next.js</L> 16 with the App
+        Router. Linaria has historically had friction with RSC (React Server
         Components) and the App Router's streaming model. Beyond the technical
         mismatch, there was a simpler reason: the rest of the codebase we were
         writing used Tailwind utilities, and maintaining two styling systems in
@@ -42,9 +41,8 @@ export function PostLunariaToTailwind() {
 
       <p>
         The decision was made: migrate the entire inherited component library
-        from Linaria to{" "}
-        <L href="https://tailwindcss.com">Tailwind CSS v4</L>. All of it, in
-        one pass.
+        from Linaria to <L href="https://tailwindcss.com">Tailwind CSS v4</L>.
+        All of it, in one pass.
       </p>
 
       <h2>The scope</h2>
@@ -53,9 +51,9 @@ export function PostLunariaToTailwind() {
         The inherited code covered roughly 60+ component files — buttons,
         headings, section shells, cards, the navigation system, testimonial
         carousels, footer, tokens, and the full design system layer (colour
-        schemes, spacing scale, type ramp). Every one of those files had
-        Linaria <code>css</code> or <code>styled</code> calls that needed to
-        become Tailwind class strings.
+        schemes, spacing scale, type ramp). Every one of those files had Linaria{" "}
+        <code>css</code> or <code>styled</code> calls that needed to become
+        Tailwind class strings.
       </p>
 
       <p>
@@ -68,7 +66,7 @@ export function PostLunariaToTailwind() {
 
       <h2>How it was done</h2>
 
-    <Callout $tone="info">
+      <Callout $tone="info">
         <strong>Tool used</strong>
         <p>
           OpenCode CLI with Claude Opus 4.6 via Amazon Bedrock. The entire
@@ -106,8 +104,8 @@ export function PostLunariaToTailwind() {
           properties like <code>var(--color-blue)</code> and{" "}
           <code>var(--spacing-base)</code> work natively inside Tailwind's
           arbitrary value syntax — <code>bg-[var(--color-blue)]</code>,{" "}
-          <code>p-[calc(var(--spacing-base)*4)]</code>. No token system
-          rewrite needed, just new syntax around the same variables.
+          <code>p-[calc(var(--spacing-base)*4)]</code>. No token system rewrite
+          needed, just new syntax around the same variables.
         </li>
         <li>
           <strong>The scheme-switching architecture survived intact.</strong>{" "}
@@ -123,10 +121,9 @@ export function PostLunariaToTailwind() {
           <code>string[]</code> arrays joined with <code>.join(" ")</code>.
         </li>
         <li>
-          <strong>Build times dropped noticeably.</strong> Linaria's
-          babel-based extraction added meaningful overhead to both dev and
-          production builds. Tailwind v4's CSS-first engine is significantly
-          faster.
+          <strong>Build times dropped noticeably.</strong> Linaria's babel-based
+          extraction added meaningful overhead to both dev and production
+          builds. Tailwind v4's CSS-first engine is significantly faster.
         </li>
       </ul>
 
@@ -138,13 +135,12 @@ export function PostLunariaToTailwind() {
           dynamic styles — interpolate any JavaScript expression into the CSS.
           Tailwind's JIT engine requires class names to be statically
           detectable. A handful of components needed refactoring to use CSS
-          custom properties for the dynamic parts instead of fully dynamic
-          class strings.
+          custom properties for the dynamic parts instead of fully dynamic class
+          strings.
         </li>
         <li>
           <strong>Complex pseudo-selector chains.</strong> Some Linaria styles
-          used deeply nested{" "}
-          <code>{"&:hover > span > svg"}</code> chains that
+          used deeply nested <code>{"&:hover > span > svg"}</code> chains that
           don't have clean Tailwind equivalents. These moved to scoped{" "}
           <code>&lt;style&gt;</code> blocks inside the component, which is the
           documented escape hatch for exactly this case.
@@ -164,8 +160,8 @@ export function PostLunariaToTailwind() {
         A fully migrated component library with no Linaria dependency, a
         consistent Tailwind v4 utility pattern throughout, and a custom design
         identity built on top of the token system. The total time from decision
-        to working build was a single day. The total cost was around $50 in
-        API credits.
+        to working build was a single day. The total cost was around $50 in API
+        credits.
       </p>
 
       <p>
@@ -179,15 +175,14 @@ export function PostLunariaToTailwind() {
       <p>
         The migration also made it easier for contributors. Tailwind is
         something most frontend developers already know. Linaria is not.
-        Lowering the barrier to understanding how a component is styled is
-        worth something on an open-source project.
+        Lowering the barrier to understanding how a component is styled is worth
+        something on an open-source project.
       </p>
 
       <p>
         If you're curious about the architecture that came out the other side —
         the token system, the scheme-switching, the component patterns — it's
-        all in the{" "}
-        <L href="/docs">docs</L>, and the source is{" "}
+        all in the <L href="/docs">docs</L>, and the source is{" "}
         <L href="https://github.com/OSS-Initiatives-IIIT-Sonepat/vlabs-iiit-sonepat">
           open on GitHub
         </L>

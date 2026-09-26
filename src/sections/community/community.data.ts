@@ -89,8 +89,7 @@ export const COMMUNITY = {
     ],
     licenseNote:
       "All derived work respects Twenty CRM's official license. See the license file for full legal terms.",
-    licenseLink:
-      "https://github.com/twentyhq/twenty?tab=License-1-ov-file",
+    licenseLink: "https://github.com/twentyhq/twenty?tab=License-1-ov-file",
   },
 
   // ── Section 4: Get involved ──────────────────────────────────────────────

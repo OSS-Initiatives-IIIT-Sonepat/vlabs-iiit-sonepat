@@ -17,13 +17,7 @@ import { FolderTree } from "./FolderTree";
 // ── Helpers ───────────────────────────────────────────────────────────────
 
 /** Inline link used inside story prose. */
-function L({
-  href,
-  children,
-}: {
-  href: string;
-  children: ReactNode;
-}) {
+function L({ href, children }: { href: string; children: ReactNode }) {
   return (
     <a
       className="text-[var(--color-blue)] underline decoration-[var(--color-blue)]/30 underline-offset-[3px] hover:decoration-[var(--color-blue)] transition-[text-decoration-color] duration-150"
@@ -166,25 +160,28 @@ function StorySection() {
           <div className="flex flex-col gap-[calc(var(--spacing-base)*5)] w-full">
             <P>
               There was already a virtual lab platform — the well-known{" "}
-              <L href="https://www.vlab.co.in/">Virtual Labs by IIT Kharagpur</L>
+              <L href="https://www.vlab.co.in/">
+                Virtual Labs by IIT Kharagpur
+              </L>
               . But it was largely <U>2D</U>, had <U>no voice modules</U>, and
               felt monotonous. Most importantly, there was no way to teach
-              students <U>which wire actually goes where on a real
-              breadboard</U>. The disconnect between a flat diagram and a
-              physical prototyping board was the gap nobody had closed.
+              students{" "}
+              <U>which wire actually goes where on a real breadboard</U>. The
+              disconnect between a flat diagram and a physical prototyping board
+              was the gap nobody had closed.
             </P>
 
             <P>
               That gap became the starting point.{" "}
               <L href="https://github.com/FirePheonix">Shubham Singh</L>,
-              president of the Technical Society at{" "}
-              <U>IIIT Sonepat</U>, wanted to build something different — a{" "}
-              <U>fully 3D, interactive lab</U> where students could see every
-              component on a breadboard, route jumper wires with their own
-              hands, and understand the physical layout before ever touching
-              real hardware. What started as a breadboard renderer eventually
-              evolved to cover <U>multiple ECE undergraduate
-              experiments</U> across four semesters.
+              president of the Technical Society at <U>IIIT Sonepat</U>, wanted
+              to build something different — a <U>fully 3D, interactive lab</U>{" "}
+              where students could see every component on a breadboard, route
+              jumper wires with their own hands, and understand the physical
+              layout before ever touching real hardware. What started as a
+              breadboard renderer eventually evolved to cover{" "}
+              <U>multiple ECE undergraduate experiments</U> across four
+              semesters.
             </P>
 
             <P>
@@ -192,33 +189,31 @@ function StorySection() {
               <L href="https://github.com/OSS-Initiatives-IIIT-Sonepat">
                 OSS-Initiatives organisation
               </L>{" "}
-              and started writing code. There was no team, no funding, no
-              formal backing — just a{" "}
-              <L href="https://nextjs.org">Next.js</L> project, a{" "}
-              <L href="https://threejs.org">Three.js</L> canvas, and a lot of
+              and started writing code. There was no team, no funding, no formal
+              backing — just a <L href="https://nextjs.org">Next.js</L> project,
+              a <L href="https://threejs.org">Three.js</L> canvas, and a lot of
               caffeine.
             </P>
 
             <P>
               The first month was pure infrastructure: a{" "}
               <U>component geometry system</U> that could render breadboards,
-              resistors, LEDs, and ICs from{" "}
-              <U>raw Three.js primitives</U> — no GLTF models, no black-box
-              libraries. Every pin, every copper strip, every colour band on a
-              resistor is <U>procedurally generated</U>. The goal was for
-              contributors to be able to read the code and understand exactly
-              how a breadboard works, down to the geometry.
+              resistors, LEDs, and ICs from <U>raw Three.js primitives</U> — no
+              GLTF models, no black-box libraries. Every pin, every copper
+              strip, every colour band on a resistor is{" "}
+              <U>procedurally generated</U>. The goal was for contributors to be
+              able to read the code and understand exactly how a breadboard
+              works, down to the geometry.
             </P>
 
             <P>
               By July, the <U>circuit engine</U> was taking shape. Components
               could be placed on a breadboard, wired together, and validated
               against a truth table. The lab content pipeline —{" "}
-              <U>aim, theory, apparatus, procedure, observation,
-              conclusion</U>{" "}
-              — was formalised into a{" "}
-              <U>type-safe schema</U> so that adding a new experiment meant
-              filling in a data file, not writing new UI code.
+              <U>aim, theory, apparatus, procedure, observation, conclusion</U>{" "}
+              — was formalised into a <U>type-safe schema</U> so that adding a
+              new experiment meant filling in a data file, not writing new UI
+              code.
             </P>
 
             <P>
@@ -228,15 +223,15 @@ function StorySection() {
               <L href="/labs/cache-direct-mapped">direct-mapped</L> and{" "}
               <L href="/labs/cache-associative">set-associative</L>), an{" "}
               <L href="/labs/alu-simulation">ALU simulator</L>, and a simple{" "}
-              <L href="/labs/cpu-design">CPU model</L>. These don&apos;t use
-              3D — they&apos;re interactive React components with registers,
-              memory maps, and step-by-step controls. The platform was
-              starting to feel like <U>a real teaching tool</U>.
+              <L href="/labs/cpu-design">CPU model</L>. These don&apos;t use 3D
+              — they&apos;re interactive React components with registers, memory
+              maps, and step-by-step controls. The platform was starting to feel
+              like <U>a real teaching tool</U>.
             </P>
 
             <P>
-              The design system was another large piece. The initial
-              scaffolding was adapted from{" "}
+              The design system was another large piece. The initial scaffolding
+              was adapted from{" "}
               <L href="https://twenty.com/">Twenty CRM&apos;s</L>{" "}
               <L href="https://github.com/twentyhq/twenty">
                 open-source codebase
@@ -245,8 +240,8 @@ function StorySection() {
               project a head start. But the styling was in{" "}
               <U>Lunaria (CSS-in-JS)</U>, which didn&apos;t fit the stack, so
               Shubham migrated every component to{" "}
-              <L href="https://tailwindcss.com">Tailwind CSS v4</L> and
-              rebuilt the visual identity to match the project&apos;s own{" "}
+              <L href="https://tailwindcss.com">Tailwind CSS v4</L> and rebuilt
+              the visual identity to match the project&apos;s own{" "}
               <L href="https://www.figma.com/design/8OKl25CDzj9DO9b0VCjEVq/Open-Source-Initiatives?node-id=0-1&t=3cuqh6GhRT47vFps-1">
                 Figma design system
               </L>
@@ -260,13 +255,16 @@ function StorySection() {
             </P>
 
             <P>
-              But there was a deeper idea behind the architecture. Shubham
-              knew that <U>undergraduate students are not meant to be writing
-              raw Three.js geometry by hand</U> — that&apos;s not a
-              reasonable ask. The whole point was that a student who
-              understands the experiment should be able to contribute it,
-              even if they&apos;ve never touched a 3D renderer. So the
-              codebase was deliberately structured around{" "}
+              But there was a deeper idea behind the architecture. Shubham knew
+              that{" "}
+              <U>
+                undergraduate students are not meant to be writing raw Three.js
+                geometry by hand
+              </U>{" "}
+              — that&apos;s not a reasonable ask. The whole point was that a
+              student who understands the experiment should be able to
+              contribute it, even if they&apos;ve never touched a 3D renderer.
+              So the codebase was deliberately structured around{" "}
               <U>plain data files</U>:
             </P>
 
@@ -278,31 +276,31 @@ function StorySection() {
               <L href="/docs/components">components.ts</L> describes{" "}
               <U>what goes on the breadboard and where</U> — which row, which
               column, which pins connect. The{" "}
-              <L href="/docs/steps">procedure folder</L> is a sequence of
-              steps, each a small data file that says &quot;place this
-              component here&quot; or &quot;wire pin A to pin B.&quot; The{" "}
+              <L href="/docs/steps">procedure folder</L> is a sequence of steps,
+              each a small data file that says &quot;place this component
+              here&quot; or &quot;wire pin A to pin B.&quot; The{" "}
               <L href="/docs/types">type system</L> enforces the structure, so
               you get errors at build time if something is missing.{" "}
-              <U>No JSX, no rendering logic, no Three.js</U> — just
-              structured TypeScript objects.
+              <U>No JSX, no rendering logic, no Three.js</U> — just structured
+              TypeScript objects.
             </P>
 
             <P>
-              The 3D scene, the wiring visualisation, the step navigation,
-              the floating info cards — all of that is handled automatically
-              by the platform&apos;s{" "}
-              <L href="/docs/circuits">circuit engine</L> and{" "}
+              The 3D scene, the wiring visualisation, the step navigation, the
+              floating info cards — all of that is handled automatically by the
+              platform&apos;s <L href="/docs/circuits">circuit engine</L> and{" "}
               <L href="/docs/registry">component registry</L>. Shubham built
               this architecture so that{" "}
-              <U>a UG student, assisted by an AI agent, can add a complete
-              missing experiment</U> — or fix a wrong procedure — without
-              ever touching the renderer. If a lab is missing or a method is
-              incorrect, a contributor just fills in the data files. AI tools
-              like coding assistants can{" "}
-              <U>generate entire lab definitions</U> when guided by a human
-              who understands the experiment, making contributions accessible
-              to students who know their electronics but don&apos;t know
-              Three.js.
+              <U>
+                a UG student, assisted by an AI agent, can add a complete
+                missing experiment
+              </U>{" "}
+              — or fix a wrong procedure — without ever touching the renderer.
+              If a lab is missing or a method is incorrect, a contributor just
+              fills in the data files. AI tools like coding assistants can{" "}
+              <U>generate entire lab definitions</U> when guided by a human who
+              understands the experiment, making contributions accessible to
+              students who know their electronics but don&apos;t know Three.js.
             </P>
 
             <P>
@@ -314,15 +312,14 @@ function StorySection() {
             </P>
 
             <P>
-              <L href="https://github.com/FirePheonix">Shubham Singh</L>{" "}
-              still maintains the project as president of the{" "}
-              <U>Technical Society</U>, and all organisational decisions —
-              roadmap, releases, repository rights — rest with whoever holds
-              that seat. But the whole point of building in the open was to{" "}
+              <L href="https://github.com/FirePheonix">Shubham Singh</L> still
+              maintains the project as president of the <U>Technical Society</U>
+              , and all organisational decisions — roadmap, releases, repository
+              rights — rest with whoever holds that seat. But the whole point of
+              building in the open was to{" "}
               <U>make this bigger than one person</U>. Whether you&apos;re a
-              student, an educator, or just someone who likes writing
-              TypeScript and building 3D things —{" "}
-              <U>you&apos;re welcome here</U>.
+              student, an educator, or just someone who likes writing TypeScript
+              and building 3D things — <U>you&apos;re welcome here</U>.
             </P>
           </div>
 
@@ -356,8 +353,7 @@ function StorySection() {
             rel="noopener noreferrer"
             target="_blank"
           >
-            <GitHubMark size={14} />
-            @{story.author.githubHandle}
+            <GitHubMark size={14} />@{story.author.githubHandle}
             <ArrowUpRight sizePx={8} />
           </a>
         </div>
@@ -477,10 +473,8 @@ function AcknowledgmentsSection() {
               <h3
                 className="text-[var(--ink)] font-[family-name:var(--font-sans),sans-serif] font-medium tracking-[-0.02em] m-0"
                 style={{
-                  fontSize:
-                    "clamp(1.125rem, 0.9415rem + 0.753vw, 1.375rem)",
-                  lineHeight:
-                    "clamp(1.5rem, 1.3165rem + 0.753vw, 1.75rem)",
+                  fontSize: "clamp(1.125rem, 0.9415rem + 0.753vw, 1.375rem)",
+                  lineHeight: "clamp(1.5rem, 1.3165rem + 0.753vw, 1.75rem)",
                 }}
               >
                 {item.title}

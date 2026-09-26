@@ -105,7 +105,8 @@ type FolderNode = {
   children: TreeNode[];
 };
 
-type TreeNode = (FileNode & { type: "file" }) | (FolderNode & { type: "folder" });
+type TreeNode =
+  (FileNode & { type: "file" }) | (FolderNode & { type: "folder" });
 
 // ── Folder component ─────────────────────────────────────────────────────
 
@@ -160,7 +161,9 @@ function File({ node, depth }: { node: FileNode; depth: number }) {
       className="flex items-center gap-[6px] py-[3px]"
       style={{ paddingLeft: `${depth * 16 + 16}px` }}
     >
-      <FileIcon className={node.color ? `text-[${node.color}]` : "text-[#89fc9a]"} />
+      <FileIcon
+        className={node.color ? `text-[${node.color}]` : "text-[#89fc9a]"}
+      />
       <span className={node.color ? `text-[${node.color}]` : "text-[#89fc9a]"}>
         {node.name}
       </span>
@@ -191,9 +194,21 @@ const TREE: TreeNode[] = [
             name: "half-wave-rectifier/",
             defaultOpen: true,
             children: [
-              { type: "file", name: "01-aim.ts", annotation: "what the experiment teaches" },
-              { type: "file", name: "02-theory.ts", annotation: "background concepts" },
-              { type: "file", name: "03-apparatus.ts", annotation: "components list" },
+              {
+                type: "file",
+                name: "01-aim.ts",
+                annotation: "what the experiment teaches",
+              },
+              {
+                type: "file",
+                name: "02-theory.ts",
+                annotation: "background concepts",
+              },
+              {
+                type: "file",
+                name: "03-apparatus.ts",
+                annotation: "components list",
+              },
               {
                 type: "folder",
                 name: "04-procedure/",
@@ -208,10 +223,24 @@ const TREE: TreeNode[] = [
                   { type: "file", name: "index.ts" },
                 ],
               },
-              { type: "file", name: "05-observations.ts", annotation: "expected results" },
+              {
+                type: "file",
+                name: "05-observations.ts",
+                annotation: "expected results",
+              },
               { type: "file", name: "06-conclusion.ts", annotation: "summary" },
-              { type: "file", name: "components.ts", annotation: "circuit layout on the board", color: "#ed87fc" },
-              { type: "file", name: "index.ts", annotation: "ExperimentDefinition", color: "#ed87fc" },
+              {
+                type: "file",
+                name: "components.ts",
+                annotation: "circuit layout on the board",
+                color: "#ed87fc",
+              },
+              {
+                type: "file",
+                name: "index.ts",
+                annotation: "ExperimentDefinition",
+                color: "#ed87fc",
+              },
             ],
           },
           { type: "folder", name: "full-wave-rectifier/", children: [] },

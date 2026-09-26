@@ -55,9 +55,14 @@ export default async function BlogPostPage({
   const allWithContent = getAllBlogSlugs();
   const idx = allWithContent.indexOf(slug);
   const prevSlug = idx > 0 ? allWithContent[idx - 1] : null;
-  const nextSlug = idx < allWithContent.length - 1 ? allWithContent[idx + 1] : null;
-  const prevPost = prevSlug ? BLOG_POSTS.find((p) => p.slug === prevSlug) : null;
-  const nextPost = nextSlug ? BLOG_POSTS.find((p) => p.slug === nextSlug) : null;
+  const nextSlug =
+    idx < allWithContent.length - 1 ? allWithContent[idx + 1] : null;
+  const prevPost = prevSlug
+    ? BLOG_POSTS.find((p) => p.slug === prevSlug)
+    : null;
+  const nextPost = nextSlug
+    ? BLOG_POSTS.find((p) => p.slug === nextSlug)
+    : null;
 
   return (
     <MenuStyleProvider>
@@ -77,7 +82,6 @@ export default async function BlogPostPage({
       >
         <main className="mx-auto max-w-[1280px] px-[calc(var(--spacing-base)*4)] min-[921px]:px-[calc(var(--spacing-base)*10)] pt-[calc(var(--spacing-base)*14)] pb-[calc(var(--spacing-base)*20)]">
           <div className="grid grid-cols-1 gap-[calc(var(--spacing-base)*12)] min-[921px]:grid-cols-[minmax(0,1fr)_280px] min-[921px]:items-start">
-
             {/* ── Main column ─────────────────────────────────────── */}
             <article>
               {/* Tag */}
@@ -154,23 +158,31 @@ export default async function BlogPostPage({
                       href={`/blog/${prevPost.slug}`}
                       className="flex flex-col gap-[calc(var(--spacing-base)*1)] no-underline group max-w-[240px]"
                     >
-                      <span className="text-[var(--ink-subtle)] font-[family-name:var(--font-sans),sans-serif] text-[11px] tracking-[0.06em] uppercase">← Previous</span>
+                      <span className="text-[var(--ink-subtle)] font-[family-name:var(--font-sans),sans-serif] text-[11px] tracking-[0.06em] uppercase">
+                        ← Previous
+                      </span>
                       <span className="text-[var(--color-blue)] font-[family-name:var(--font-sans),sans-serif] text-[14px] font-medium group-hover:underline">
                         {prevPost.title}
                       </span>
                     </a>
-                  ) : <span />}
+                  ) : (
+                    <span />
+                  )}
                   {nextPost ? (
                     <a
                       href={`/blog/${nextPost.slug}`}
                       className="flex flex-col gap-[calc(var(--spacing-base)*1)] no-underline group max-w-[240px] text-right"
                     >
-                      <span className="text-[var(--ink-subtle)] font-[family-name:var(--font-sans),sans-serif] text-[11px] tracking-[0.06em] uppercase">Next →</span>
+                      <span className="text-[var(--ink-subtle)] font-[family-name:var(--font-sans),sans-serif] text-[11px] tracking-[0.06em] uppercase">
+                        Next →
+                      </span>
                       <span className="text-[var(--color-blue)] font-[family-name:var(--font-sans),sans-serif] text-[14px] font-medium group-hover:underline">
                         {nextPost.title}
                       </span>
                     </a>
-                  ) : <span />}
+                  ) : (
+                    <span />
+                  )}
                 </div>
               )}
             </article>
@@ -200,7 +212,9 @@ export default async function BlogPostPage({
                   </div>
                 </div>
                 <p className="text-[var(--ink-muted)] font-[family-name:var(--font-sans),sans-serif] text-[13px] leading-[1.6] m-0">
-                  Built VLabs from scratch between June and September 2026. Maintains the project as president of the Technical Society of IIIT Sonepat.
+                  Built VLabs from scratch between June and September 2026.
+                  Maintains the project as president of the Technical Society of
+                  IIIT Sonepat.
                 </p>
                 <a
                   className={[
@@ -264,7 +278,6 @@ export default async function BlogPostPage({
                 <ArrowUpRight sizePx={9} />
               </a>
             </aside>
-
           </div>
         </main>
       </div>

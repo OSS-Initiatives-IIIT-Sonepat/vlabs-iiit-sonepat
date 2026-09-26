@@ -18,7 +18,13 @@ function L({ href, children }: { href: string; children: ReactNode }) {
 
 // ── YouTube embed ─────────────────────────────────────────────────────────
 
-function YouTubeEmbed({ videoId, caption }: { videoId: string; caption?: string }) {
+function YouTubeEmbed({
+  videoId,
+  caption,
+}: {
+  videoId: string;
+  caption?: string;
+}) {
   return (
     <figure className="my-[calc(var(--spacing-base)*8)] flex flex-col gap-[calc(var(--spacing-base)*2)]">
       <div
@@ -88,11 +94,18 @@ function BlogImage({
 
 // ── Two-column image grid ─────────────────────────────────────────────────
 
-function ImageGrid({ images }: { images: { src: string; alt: string; caption?: string }[] }) {
+function ImageGrid({
+  images,
+}: {
+  images: { src: string; alt: string; caption?: string }[];
+}) {
   return (
     <div className="my-[calc(var(--spacing-base)*8)] grid grid-cols-2 gap-[calc(var(--spacing-base)*3)]">
       {images.map((img) => (
-        <figure key={img.src} className="flex flex-col gap-[calc(var(--spacing-base)*1.5)]">
+        <figure
+          key={img.src}
+          className="flex flex-col gap-[calc(var(--spacing-base)*1.5)]"
+        >
           <img
             src={img.src}
             alt={img.alt}
@@ -205,7 +218,8 @@ const COMMITS: Commit[] = [
   {
     hash: "4f5a6b7",
     date: "Sep 18, 2026",
-    message: "feat: CONTRIBUTING.md, COMPONENTS.md, docs site — open for contributions",
+    message:
+      "feat: CONTRIBUTING.md, COMPONENTS.md, docs site — open for contributions",
     description:
       "The documentation that makes it possible for someone who wasn't there from day one to still add a full lab. Repository opened.",
   },
@@ -226,7 +240,8 @@ const COMMITS: Commit[] = [
   {
     hash: "5d6e7f8",
     date: "Sep 22, 2026",
-    message: "feat: blog/[slug] post pages with commit timeline + YouTube embed",
+    message:
+      "feat: blog/[slug] post pages with commit timeline + YouTube embed",
     description:
       "Dynamic blog post route. First post: the full story of building the 3D renderer, the bob-the-builder inspiration, and the architecture decisions — with WhatsApp screenshots as proof.",
   },
@@ -356,7 +371,9 @@ export function PostBuildingEceLabs() {
 
       <p>
         The{" "}
-        <L href="https://www.vlab.co.in/">Virtual Labs platform by IIT Kharagpur</L>{" "}
+        <L href="https://www.vlab.co.in/">
+          Virtual Labs platform by IIT Kharagpur
+        </L>{" "}
         already existed and was widely used. But it was 2D, had no voice
         modules, and felt static. Most critically, it couldn't show a student{" "}
         <strong>which wire physically goes where on a breadboard</strong>. The
@@ -365,10 +382,10 @@ export function PostBuildingEceLabs() {
       </p>
 
       <p>
-        VLabs set out to close that gap with a fully 3D, interactive
-        breadboard where every component — resistor, LED, IC, capacitor — is
-        rendered in its correct physical form, placed in its correct column,
-        and revealed one step at a time as the student follows the procedure.
+        VLabs set out to close that gap with a fully 3D, interactive breadboard
+        where every component — resistor, LED, IC, capacitor — is rendered in
+        its correct physical form, placed in its correct column, and revealed
+        one step at a time as the student follows the procedure.
       </p>
 
       <h2>Building the renderer from scratch</h2>
@@ -378,22 +395,22 @@ export function PostBuildingEceLabs() {
         procedurally generated cylinder. The power rails are extruded meshes.
         The copper strip connections are thin rectangular geometries with a
         metallic material. No GLTF models, no imported assets — all{" "}
-        <L href="https://threejs.org">Three.js</L>{" "}
-        <code>BufferGeometry</code> written by hand.
+        <L href="https://threejs.org">Three.js</L> <code>BufferGeometry</code>{" "}
+        written by hand.
       </p>
 
       <p>
         Resistors came next. A four-band colour code system maps resistance
-        values to the correct band colours procedurally. Pass{" "}
-        <code>330</code> and you get orange-orange-brown-gold. The colour
-        mapping is a lookup table — contributors can read it and understand
-        exactly how a real resistor's colour bands work.
+        values to the correct band colours procedurally. Pass <code>330</code>{" "}
+        and you get orange-orange-brown-gold. The colour mapping is a lookup
+        table — contributors can read it and understand exactly how a real
+        resistor's colour bands work.
       </p>
 
       <p>
         LEDs have emissive dome materials that respond to a circuit state
-        boolean — the same component renders as either lit or unlit depending
-        on whether current is flowing in the current procedure step.
+        boolean — the same component renders as either lit or unlit depending on
+        whether current is flowing in the current procedure step.
       </p>
 
       <h2>The architecture that makes AI-assisted contributions possible</h2>
@@ -401,8 +418,10 @@ export function PostBuildingEceLabs() {
       <p>
         The most important design decision wasn't visual — it was structural.
         The codebase is split so that{" "}
-        <strong>adding a new experiment never requires touching the renderer</strong>.
-        Every experiment is a set of plain TypeScript data files:
+        <strong>
+          adding a new experiment never requires touching the renderer
+        </strong>
+        . Every experiment is a set of plain TypeScript data files:
       </p>
 
       <ul>
@@ -416,8 +435,8 @@ export function PostBuildingEceLabs() {
         </li>
         <li>
           <code>01-aim.ts</code>, <code>02-theory.ts</code>,{" "}
-          <code>05-observations.ts</code>, <code>06-conclusion.ts</code> —
-          the pedagogical content, completely separate from rendering
+          <code>05-observations.ts</code>, <code>06-conclusion.ts</code> — the
+          pedagogical content, completely separate from rendering
         </li>
         <li>
           <code>index.ts</code> — assembles everything into an{" "}
@@ -428,11 +447,11 @@ export function PostBuildingEceLabs() {
       <p>
         The 3D scene, step navigation, floating info cards, and audio playback
         are all handled automatically. A UG student who understands the
-        experiment — but has never written Three.js — can work with an AI
-        coding assistant to generate a complete, working lab definition. The
-        context files (<code>COMPONENTS.md</code>, <code>APPARATUS.md</code>)
-        give AI agents everything they need to know about pin syntax, column
-        layout rules, and component types.
+        experiment — but has never written Three.js — can work with an AI coding
+        assistant to generate a complete, working lab definition. The context
+        files (<code>COMPONENTS.md</code>, <code>APPARATUS.md</code>) give AI
+        agents everything they need to know about pin syntax, column layout
+        rules, and component types.
       </p>
 
       <blockquote>

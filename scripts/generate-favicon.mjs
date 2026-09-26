@@ -46,14 +46,14 @@ const SIZES = [16, 32, 48];
 // ── Rasterise each size via sharp ─────────────────────────────────────────
 const pngBuffers = await Promise.all(
   SIZES.map((size) =>
-    sharp(Buffer.from(WHITE_SVG))
-      .resize(size, size)
-      .png()
-      .toBuffer()
-  )
+    sharp(Buffer.from(WHITE_SVG)).resize(size, size).png().toBuffer(),
+  ),
 );
 
-console.log("PNG sizes:", pngBuffers.map((b, i) => `${SIZES[i]}×${SIZES[i]}: ${b.length}B`));
+console.log(
+  "PNG sizes:",
+  pngBuffers.map((b, i) => `${SIZES[i]}×${SIZES[i]}: ${b.length}B`),
+);
 
 // ── Build ICO binary ──────────────────────────────────────────────────────
 // ICO format:
@@ -79,21 +79,21 @@ const ico = Buffer.alloc(totalSize);
 let pos = 0;
 
 // Header
-ico.writeUInt16LE(0, pos);      // reserved
-ico.writeUInt16LE(1, pos + 2);  // type = 1 (ICO)
+ico.writeUInt16LE(0, pos); // reserved
+ico.writeUInt16LE(1, pos + 2); // type = 1 (ICO)
 ico.writeUInt16LE(count, pos + 4);
 pos += 6;
 
 // Directory entries
 SIZES.forEach((size, i) => {
-  ico.writeUInt8(size === 256 ? 0 : size, pos);      // width (0 = 256)
-  ico.writeUInt8(size === 256 ? 0 : size, pos + 1);  // height
-  ico.writeUInt8(0, pos + 2);   // color count (0 = no palette)
-  ico.writeUInt8(0, pos + 3);   // reserved
+  ico.writeUInt8(size === 256 ? 0 : size, pos); // width (0 = 256)
+  ico.writeUInt8(size === 256 ? 0 : size, pos + 1); // height
+  ico.writeUInt8(0, pos + 2); // color count (0 = no palette)
+  ico.writeUInt8(0, pos + 3); // reserved
   ico.writeUInt16LE(1, pos + 4); // color planes
   ico.writeUInt16LE(32, pos + 6); // bits per pixel
-  ico.writeUInt32LE(pngBuffers[i].length, pos + 8);  // data size
-  ico.writeUInt32LE(offsets[i], pos + 12);            // data offset
+  ico.writeUInt32LE(pngBuffers[i].length, pos + 8); // data size
+  ico.writeUInt32LE(offsets[i], pos + 12); // data offset
   pos += 16;
 });
 

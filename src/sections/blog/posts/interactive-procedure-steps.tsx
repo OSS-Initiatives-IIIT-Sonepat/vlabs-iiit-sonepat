@@ -15,13 +15,7 @@ function L({ href, children }: { href: string; children: ReactNode }) {
 }
 
 // ── X / Twitter embed ────────────────────────────────────────────────────
-function XEmbed({
-  tweetId,
-  caption,
-}: {
-  tweetId: string;
-  caption?: string;
-}) {
+function XEmbed({ tweetId, caption }: { tweetId: string; caption?: string }) {
   return (
     <figure className="my-[calc(var(--spacing-base)*8)] flex flex-col gap-[calc(var(--spacing-base)*2)] not-prose">
       <div className="overflow-hidden rounded-[calc(var(--radius-base)*2)] border border-[rgba(0,0,0,0.07)]">
@@ -44,13 +38,7 @@ function XEmbed({
 }
 
 // ── Local video player ────────────────────────────────────────────────────
-function LocalVideo({
-  src,
-  caption,
-}: {
-  src: string;
-  caption?: string;
-}) {
+function LocalVideo({ src, caption }: { src: string; caption?: string }) {
   return (
     <figure className="my-[calc(var(--spacing-base)*8)] flex flex-col gap-[calc(var(--spacing-base)*2)] not-prose">
       <div className="overflow-hidden rounded-[calc(var(--radius-base)*2)] border border-[rgba(0,0,0,0.07)] bg-[#0f0e0d]">
@@ -74,8 +62,8 @@ export function PostInteractiveProcedureSteps() {
   return (
     <Prose>
       <p>
-        Every electronics lab experiment follows the same structure. It has
-        been the same structure for decades: aim, theory, apparatus, procedure,
+        Every electronics lab experiment follows the same structure. It has been
+        the same structure for decades: aim, theory, apparatus, procedure,
         observations, conclusion. That structure isn't arbitrary — it mirrors
         how a real engineer approaches a circuit. You state what you're trying
         to find out, understand the underlying theory, gather your components,
@@ -87,26 +75,22 @@ export function PostInteractiveProcedureSteps() {
         different requirements. Theory needs formatted text and mathematical
         expressions. Procedure needs to be tightly coupled to the 3D scene —
         each step should reveal exactly the components relevant to that step,
-        nothing more. Observations need structured tables. The whole thing
-        needs audio narration for accessibility and independent study.
+        nothing more. Observations need structured tables. The whole thing needs
+        audio narration for accessibility and independent study.
       </p>
 
-      <p>
-        Here is how we built it.
-      </p>
+      <p>Here is how we built it.</p>
 
       <h2>The data schema</h2>
 
       <p>
         The first decision was to keep content completely separate from
-        rendering. Every section of every experiment is a TypeScript data file
-        — a plain object with typed fields. The renderer reads these; it never
-        has experiment-specific logic baked in.
+        rendering. Every section of every experiment is a TypeScript data file —
+        a plain object with typed fields. The renderer reads these; it never has
+        experiment-specific logic baked in.
       </p>
 
-      <p>
-        A procedure step looks like this:
-      </p>
+      <p>A procedure step looks like this:</p>
 
       <pre>{`// 04-procedure/01-place-the-breadboard.ts
 export const step: ProcedureStep = {
@@ -145,12 +129,12 @@ export const step: ProcedureStep = {
       <Callout $tone="info">
         <strong>Progressive disclosure</strong>
         <p>
-          Students see exactly the components relevant to the current step.
-          A half-wave rectifier has 9 procedure steps. At step 1, only the
+          Students see exactly the components relevant to the current step. A
+          half-wave rectifier has 9 procedure steps. At step 1, only the
           breadboard is visible. At step 4 (wire source to diode), the
-          breadboard, AC source, and diode are all present — and the wire
-          being placed is highlighted. The full circuit only appears at the
-          final step.
+          breadboard, AC source, and diode are all present — and the wire being
+          placed is highlighted. The full circuit only appears at the final
+          step.
         </p>
       </Callout>
 
@@ -158,8 +142,8 @@ export const step: ProcedureStep = {
 
       <p>
         These clips from the{" "}
-        <L href="https://x.com/shubhamm069">@shubhamm069</L> X account show
-        the procedure step system at different stages of development.
+        <L href="https://x.com/shubhamm069">@shubhamm069</L> X account show the
+        procedure step system at different stages of development.
       </p>
 
       <XEmbed
@@ -187,10 +171,10 @@ export const step: ProcedureStep = {
       </p>
 
       <p>
-        The step indicator — a row of dots, one per step, the current one
-        filled — gives students a sense of progress without breaking their
-        focus on the 3D scene. It was a small detail but noticeably improved
-        completion rates in early testing.
+        The step indicator — a row of dots, one per step, the current one filled
+        — gives students a sense of progress without breaking their focus on the
+        3D scene. It was a small detail but noticeably improved completion rates
+        in early testing.
       </p>
 
       <LocalVideo
@@ -212,10 +196,10 @@ export const step: ProcedureStep = {
       </p>
 
       <p>
-        The audio player is minimal — play/pause, a progress bar, current
-        time. It doesn't autoplay. It doesn't interrupt the procedure. It's
-        there for students who want to listen to an explanation before they
-        start wiring, or who prefer audio over reading dense theory text.
+        The audio player is minimal — play/pause, a progress bar, current time.
+        It doesn't autoplay. It doesn't interrupt the procedure. It's there for
+        students who want to listen to an explanation before they start wiring,
+        or who prefer audio over reading dense theory text.
       </p>
 
       <h2>Observations and conclusion</h2>
@@ -232,8 +216,8 @@ export const step: ProcedureStep = {
         the procedure navigator, in the theory view rather than the step view.
         The lab page has two modes: <em>theory mode</em> (aim, theory,
         apparatus, observations, conclusion — all static sections) and{" "}
-        <em>procedure mode</em> (the interactive 3D step-by-step). Students
-        can switch between them at any point.
+        <em>procedure mode</em> (the interactive 3D step-by-step). Students can
+        switch between them at any point.
       </p>
 
       <h2>Adding a new experiment</h2>
