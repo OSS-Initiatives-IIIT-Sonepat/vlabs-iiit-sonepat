@@ -132,26 +132,28 @@ export function SemesterAccordion({ semesters }: Props) {
         aria-label="Explore by semester"
       >
         <Container>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: spacing(1.5),
-            }}
-          >
-            {semesters.map((semester, index) => (
-              <SemesterItem
-                key={semester.id}
-                semester={semester}
-                open={openSemester === semester.id}
-                onToggle={() => {
-                  setOpenSemester((current) =>
-                    current === semester.id ? null : semester.id,
-                  );
-                }}
-                onSubjectClick={setActiveSubject}
-              />
-            ))}
+          <div className="max-w-[860px] mx-auto">
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: spacing(1.5),
+              }}
+            >
+              {semesters.map((semester) => (
+                <SemesterItem
+                  key={semester.id}
+                  semester={semester}
+                  open={openSemester === semester.id}
+                  onToggle={() => {
+                    setOpenSemester((current) =>
+                      current === semester.id ? null : semester.id,
+                    );
+                  }}
+                  onSubjectClick={setActiveSubject}
+                />
+              ))}
+            </div>
           </div>
         </Container>
       </section>
