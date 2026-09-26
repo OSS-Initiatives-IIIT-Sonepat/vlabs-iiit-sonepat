@@ -33,6 +33,10 @@ VLabs is a browser-based platform that recreates real electronics lab sessions a
 
 Every 3D component — breadboard, resistor, LED, IC, capacitor, wire — is built from **raw Three.js geometry**. No GLTF models. No black-box 3D engines. Every pin, copper strip, and colour band is procedurally generated code you can read and understand.
 
+<div align="center">
+  <img width="750" alt="image-of-vlabs-landing-page" src="https://github.com/user-attachments/assets/5ccecc86-f3d3-4d86-873b-895b8f7d857a" />
+</div>
+
 The platform currently covers **70+ lab experiments** across four semesters of the ECE undergraduate curriculum at IIIT Sonepat, including:
 
 - Analog electronics (rectifiers, diodes, Thevenin, Norton, Kirchhoff)
