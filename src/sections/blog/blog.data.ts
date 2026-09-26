@@ -48,7 +48,7 @@ export const BLOG_POSTS: readonly BlogPostRecord[] = [
     excerpt:
       "We inherited a Linaria-based CSS-in-JS setup and moved the entire codebase to Tailwind CSS v4. Here is what went well, what broke, and what we learned.",
     date: "2026-08-28",
-    author: { name: "Shubham Singhngh", role: "Founder" },
+    author: { name: "Shubham Singh", role: "Founder" },
     tag: "Design",
     slug: "lunaria-to-tailwind",
     readTime: "7 min read",
