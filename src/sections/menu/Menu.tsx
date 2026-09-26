@@ -64,7 +64,7 @@ export function Menu({ scheme = "light" }: MenuProps) {
                 />
               }
             >
-              <VLabsLogo sizePx={40} />
+              <VLabsLogo sizePx={52} />
             </Drawer.Close>
             <MenuNav items={MENU.navItems} />
             <div className="hidden md:block">
