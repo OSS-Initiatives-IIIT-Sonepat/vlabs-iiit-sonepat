@@ -1,0 +1,153 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f7f6f4"/>
+      <stop offset="100%" stop-color="#eeecea"/>
+    </linearGradient>
+    <linearGradient id="step-active" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4a38f5"/>
+      <stop offset="100%" stop-color="#6c5ff7"/>
+    </linearGradient>
+    <filter id="shadow-card">
+      <feDropShadow dx="0" dy="4" stdDeviation="16" flood-color="#000" flood-opacity="0.07"/>
+    </filter>
+    <filter id="shadow-step">
+      <feDropShadow dx="0" dy="2" stdDeviation="8" flood-color="#4a38f5" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- Background + grid -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M40 0L0 0 0 40" fill="none" stroke="rgba(0,0,0,0.04)" stroke-width="1"/>
+  </pattern>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+
+  <!-- ── Step sidebar (left panel) ── -->
+  <g filter="url(#shadow-card)">
+    <rect x="72" y="80" width="240" height="470" rx="12" fill="white" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+  </g>
+
+  <!-- Sidebar header -->
+  <text x="100" y="120" font-family="sans-serif" font-size="10" fill="rgba(0,0,0,0.35)" letter-spacing="2" font-weight="500">PROCEDURE</text>
+  <line x1="92" y1="132" x2="292" y2="132" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+
+  <!-- Step items -->
+  <!-- Step 1 active -->
+  <g filter="url(#shadow-step)">
+    <rect x="92" y="148" width="200" height="44" rx="8" fill="url(#step-active)"/>
+  </g>
+  <circle cx="112" cy="170" r="10" fill="rgba(255,255,255,0.2)"/>
+  <text x="112" y="174" font-family="monospace" font-size="10" fill="white" text-anchor="middle" font-weight="700">1</text>
+  <text x="130" y="167" font-family="sans-serif" font-size="12" fill="white" font-weight="500">Place breadboard</text>
+  <text x="130" y="182" font-family="sans-serif" font-size="10" fill="rgba(255,255,255,0.7)">Build surface</text>
+
+  <!-- Step 2 -->
+  <rect x="92" y="202" width="200" height="44" rx="8" fill="rgba(0,0,0,0.02)" stroke="rgba(0,0,0,0.05)" stroke-width="1"/>
+  <circle cx="112" cy="224" r="10" fill="rgba(74,56,245,0.1)"/>
+  <text x="112" y="228" font-family="monospace" font-size="10" fill="#4a38f5" text-anchor="middle" font-weight="700">2</text>
+  <text x="130" y="221" font-family="sans-serif" font-size="12" fill="rgba(0,0,0,0.7)" font-weight="500">Place AC source</text>
+  <text x="130" y="236" font-family="sans-serif" font-size="10" fill="rgba(0,0,0,0.35)">Input signal</text>
+
+  <!-- Step 3 -->
+  <rect x="92" y="256" width="200" height="44" rx="8" fill="rgba(0,0,0,0.02)" stroke="rgba(0,0,0,0.05)" stroke-width="1"/>
+  <circle cx="112" cy="278" r="10" fill="rgba(74,56,245,0.08)"/>
+  <text x="112" y="282" font-family="monospace" font-size="10" fill="#4a38f5" text-anchor="middle" font-weight="700">3</text>
+  <text x="130" y="275" font-family="sans-serif" font-size="12" fill="rgba(0,0,0,0.7)" font-weight="500">Place diode</text>
+  <text x="130" y="290" font-family="sans-serif" font-size="10" fill="rgba(0,0,0,0.35)">Rectifier element</text>
+
+  <!-- Step 4 -->
+  <rect x="92" y="310" width="200" height="44" rx="8" fill="rgba(0,0,0,0.02)" stroke="rgba(0,0,0,0.05)" stroke-width="1"/>
+  <circle cx="112" cy="332" r="10" fill="rgba(0,0,0,0.05)"/>
+  <text x="112" y="336" font-family="monospace" font-size="10" fill="rgba(0,0,0,0.35)" text-anchor="middle" font-weight="700">4</text>
+  <text x="130" y="329" font-family="sans-serif" font-size="12" fill="rgba(0,0,0,0.45)">Wire source → diode</text>
+  <text x="130" y="344" font-family="sans-serif" font-size="10" fill="rgba(0,0,0,0.25)">Red wire</text>
+
+  <!-- Step 5 -->
+  <rect x="92" y="364" width="200" height="44" rx="8" fill="rgba(0,0,0,0.02)" stroke="rgba(0,0,0,0.05)" stroke-width="1"/>
+  <circle cx="112" cy="386" r="10" fill="rgba(0,0,0,0.04)"/>
+  <text x="112" y="390" font-family="monospace" font-size="10" fill="rgba(0,0,0,0.3)" text-anchor="middle">5</text>
+  <text x="130" y="383" font-family="sans-serif" font-size="12" fill="rgba(0,0,0,0.35)">Load resistor</text>
+  <text x="130" y="398" font-family="sans-serif" font-size="10" fill="rgba(0,0,0,0.2)">220Ω</text>
+
+  <text x="182" y="448" font-family="sans-serif" font-size="11" fill="rgba(0,0,0,0.25)" text-anchor="middle">+ 4 more steps</text>
+
+  <!-- Progress bar -->
+  <rect x="92" y="490" width="200" height="4" rx="2" fill="rgba(0,0,0,0.07)"/>
+  <rect x="92" y="490" width="44" height="4" rx="2" fill="#4a38f5"/>
+  <text x="192" y="514" font-family="sans-serif" font-size="11" fill="rgba(0,0,0,0.35)" text-anchor="middle">Step 1 of 9</text>
+
+  <!-- ── Main 3D scene panel ── -->
+  <g filter="url(#shadow-card)">
+    <rect x="340" y="80" width="500" height="380" rx="12" fill="#1c1c1c"/>
+  </g>
+
+  <!-- Breadboard silhouette (simple top-view) -->
+  <rect x="380" y="140" width="420" height="260" rx="6" fill="#2a2927"/>
+  <!-- Power rails -->
+  <rect x="390" y="150" width="400" height="12" rx="2" fill="#3a2020" stroke="rgba(255,0,0,0.2)" stroke-width="1"/>
+  <rect x="390" y="168" width="400" height="12" rx="2" fill="#1e2a1e" stroke="rgba(0,255,0,0.15)" stroke-width="1"/>
+  <!-- Center gap -->
+  <rect x="390" y="248" width="400" height="8" rx="0" fill="#1c1c1c"/>
+  <!-- Tie points (dots) -->
+  <g fill="rgba(255,255,255,0.07)">
+    <rect x="395" y="190" width="390" height="50" rx="2"/>
+    <rect x="395" y="265" width="390" height="50" rx="2"/>
+  </g>
+  <!-- Highlighted component at step 1 -->
+  <rect x="445" y="218" width="80" height="20" rx="3" fill="rgba(74,56,245,0.4)" stroke="#4a38f5" stroke-width="1.5"/>
+  <text x="485" y="232" font-family="monospace" font-size="9" fill="#8b80f8" text-anchor="middle">BREADBOARD</text>
+  <!-- Glow ring around highlighted area -->
+  <rect x="440" y="213" width="90" height="30" rx="5" fill="none" stroke="#4a38f5" stroke-width="1" stroke-dasharray="4 3" opacity="0.6"/>
+
+  <!-- Scene label -->
+  <text x="590" y="118" font-family="monospace" font-size="10" fill="rgba(255,255,255,0.3)" text-anchor="middle" letter-spacing="2">3D SCENE</text>
+
+  <!-- Step info floating card -->
+  <g filter="url(#shadow-card)">
+    <rect x="355" y="388" width="465" height="56" rx="8" fill="white"/>
+  </g>
+  <rect x="355" y="388" width="4" height="56" rx="2" fill="#4a38f5"/>
+  <text x="374" y="408" font-family="sans-serif" font-size="13" fill="#1c1c1c" font-weight="500">Step 1 — Place the breadboard</text>
+  <text x="374" y="428" font-family="sans-serif" font-size="11" fill="rgba(0,0,0,0.45)">Your build surface. Columns share a node across tie-point rows.</text>
+
+  <!-- ── Right side: content tabs ── -->
+  <g filter="url(#shadow-card)">
+    <rect x="868" y="80" width="264" height="470" rx="12" fill="white" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+  </g>
+
+  <!-- Tab row -->
+  <rect x="878" y="96" width="60" height="26" rx="6" fill="#4a38f5"/>
+  <text x="908" y="113" font-family="sans-serif" font-size="11" fill="white" text-anchor="middle" font-weight="500">Theory</text>
+  <text x="964" y="113" font-family="sans-serif" font-size="11" fill="rgba(0,0,0,0.4)" text-anchor="middle">Aim</text>
+  <text x="1020" y="113" font-family="sans-serif" font-size="11" fill="rgba(0,0,0,0.4)" text-anchor="middle">Obs.</text>
+  <line x1="878" y1="130" x2="1112" y2="130" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+
+  <!-- Theory content lines -->
+  <rect x="890" y="148" width="160" height="9" rx="3" fill="rgba(0,0,0,0.08)"/>
+  <rect x="890" y="164" width="200" height="9" rx="3" fill="rgba(0,0,0,0.06)"/>
+  <rect x="890" y="180" width="180" height="9" rx="3" fill="rgba(0,0,0,0.06)"/>
+  <rect x="890" y="196" width="140" height="9" rx="3" fill="rgba(0,0,0,0.05)"/>
+  <rect x="890" y="212" width="190" height="9" rx="3" fill="rgba(0,0,0,0.05)"/>
+
+  <!-- Math formula block -->
+  <rect x="890" y="234" width="212" height="36" rx="6" fill="rgba(74,56,245,0.06)" stroke="rgba(74,56,245,0.15)" stroke-width="1"/>
+  <text x="996" y="250" font-family="monospace" font-size="11" fill="#4a38f5" text-anchor="middle">Vout = Vin × (1 - e</text>
+  <text x="996" y="264" font-family="monospace" font-size="10" fill="rgba(74,56,245,0.7)" text-anchor="middle">Half-wave rectifier</text>
+
+  <rect x="890" y="282" width="200" height="9" rx="3" fill="rgba(0,0,0,0.05)"/>
+  <rect x="890" y="298" width="170" height="9" rx="3" fill="rgba(0,0,0,0.04)"/>
+  <rect x="890" y="314" width="185" height="9" rx="3" fill="rgba(0,0,0,0.04)"/>
+
+  <!-- Audio player -->
+  <rect x="890" y="380" width="212" height="36" rx="8" fill="#f7f6f3" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+  <circle cx="910" cy="398" r="10" fill="#4a38f5"/>
+  <polygon points="906,393 906,403 916,398" fill="white"/>
+  <rect x="926" y="393" width="100" height="3" rx="2" fill="rgba(0,0,0,0.1)"/>
+  <rect x="926" y="393" width="35" height="3" rx="2" fill="#4a38f5"/>
+  <text x="926" y="408" font-family="monospace" font-size="9" fill="rgba(0,0,0,0.35)">0:34 / 1:12</text>
+  <text x="1090" y="402" font-family="monospace" font-size="9" fill="rgba(0,0,0,0.35)">♪</text>
+
+  <!-- Bottom label -->
+  <text x="600" y="598" font-family="sans-serif" font-size="12" fill="rgba(0,0,0,0.25)" text-anchor="middle" letter-spacing="2">VLABS · INTERACTIVE PROCEDURE STEPS</text>
+</svg>
