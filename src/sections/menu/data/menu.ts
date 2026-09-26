@@ -14,6 +14,8 @@ export const MENU: {
   appUrl: SITE_URLS.appWelcome,
   navItems: [
     { href: "/", label: "Home" },
+    { href: "/blog", label: "Blog" },
+    { href: "/community", label: "Community" },
     {
       label: "Resources",
       children: [

@@ -159,6 +159,18 @@ export function Footer() {
             <div className="flex flex-col gap-[calc(var(--spacing-base)*3)]">
               <a
                 className="text-[#6b6a68] font-[family-name:var(--font-sans),sans-serif] text-[15px] no-underline w-fit transition-colors duration-150 ease-[cubic-bezier(0.22,1,0.36,1)] hover:text-[#111110]"
+                href="/blog"
+              >
+                Blog
+              </a>
+              <a
+                className="text-[#6b6a68] font-[family-name:var(--font-sans),sans-serif] text-[15px] no-underline w-fit transition-colors duration-150 ease-[cubic-bezier(0.22,1,0.36,1)] hover:text-[#111110]"
+                href="/community"
+              >
+                Community
+              </a>
+              <a
+                className="text-[#6b6a68] font-[family-name:var(--font-sans),sans-serif] text-[15px] no-underline w-fit transition-colors duration-150 ease-[cubic-bezier(0.22,1,0.36,1)] hover:text-[#111110]"
                 href="https://github.com/OSS-Initiatives-IIIT-Sonepat/vlabs-iiit-sonepat"
                 rel="noopener noreferrer"
                 target="_blank"
@@ -175,15 +187,11 @@ export function Footer() {
               </a>
               <a
                 className="text-[#6b6a68] font-[family-name:var(--font-sans),sans-serif] text-[15px] no-underline w-fit transition-colors duration-150 ease-[cubic-bezier(0.22,1,0.36,1)] hover:text-[#111110]"
-                href="#"
+                href="https://github.com/OSS-Initiatives-IIIT-Sonepat/vlabs-iiit-sonepat/blob/master/CONTRIBUTING.md"
+                rel="noopener noreferrer"
+                target="_blank"
               >
-                Contributing
-              </a>
-              <a
-                className="text-[#6b6a68] font-[family-name:var(--font-sans),sans-serif] text-[15px] no-underline w-fit transition-colors duration-150 ease-[cubic-bezier(0.22,1,0.36,1)] hover:text-[#111110]"
-                href="#"
-              >
-                CONTRIBUTING.md
+                Contributing ↗
               </a>
             </div>
           </div>
