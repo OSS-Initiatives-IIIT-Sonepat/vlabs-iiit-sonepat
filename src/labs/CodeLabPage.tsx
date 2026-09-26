@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useCallback, useEffect } from "react";
+import Link from "next/link";
 import { type LabContent } from "@/labs/lab-content.types";
 import { CPU8085, assemble } from "@/labs/emulator";
 import type { CPU8085State, AssemblerResult } from "@/labs/emulator";
@@ -399,6 +400,26 @@ export function CodeLabPage({ content }: Props) {
     <div style={styles.root}>
       {/* ── Sidebar ─────────────────────────────────────────────────────────── */}
       <div style={styles.sidebar}>
+        <div style={{ padding: '0 16px 12px' }}>
+          <Link
+            href="/explore"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              fontSize: '11px',
+              color: '#8b949e',
+              textDecoration: 'none',
+              padding: '4px 8px',
+              borderRadius: '6px',
+              background: '#21262d',
+              border: '1px solid #30363d',
+              marginBottom: '10px',
+            }}
+          >
+            ← Back to Labs
+          </Link>
+        </div>
         <div style={styles.sidebarTitle}>{content.title}</div>
         {sidebarSections.map((sec) => (
           <div
