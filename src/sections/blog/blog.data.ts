@@ -52,6 +52,7 @@ export const BLOG_POSTS: readonly BlogPostRecord[] = [
     tag: "Design",
     slug: "lunaria-to-tailwind",
     readTime: "7 min read",
+    thumbnail: "/blog/02-lunaria-to-tailwind/thumbnail.svg",
   },
   {
     title: "Designing interactive procedure steps for circuit experiments",
