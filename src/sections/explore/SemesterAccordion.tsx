@@ -50,9 +50,9 @@ function SemesterItem({
       <button
         className={[
           "flex items-center w-full bg-white border border-[#DADADA] rounded-sm cursor-pointer px-4",
-          "gap-[calc(var(--spacing-base)*3)] justify-between text-left",
-          "pt-[calc(var(--spacing-base)*4)] pb-[calc(var(--spacing-base)*3)]",
-          "[clip-path:polygon(0_0,calc(100%-36px)_0,100%_18px,100%_100%,0_100%)]",
+          "gap-[calc(var(--spacing-base)*4)] justify-between text-left",
+          "pt-[calc(var(--spacing-base)*5)] pb-[calc(var(--spacing-base)*4)]",
+          "[clip-path:polygon(0_0,calc(100%-48px)_0,100%_24px,100%_100%,0_100%)]",
           "focus-visible:outline focus-visible:outline-1 focus-visible:outline-[var(--color-blue)]",
           "focus-visible:outline-offset-2 focus-visible:rounded-[4px]",
         ].join(" ")}
@@ -63,8 +63,8 @@ function SemesterItem({
         <span
           className="text-[var(--ink-muted)] font-[family-name:var(--font-sans),sans-serif] font-normal"
           style={{
-            fontSize: "clamp(1.875rem, 1.3rem + 2.1vw, 2.25rem)",
-            lineHeight: "clamp(2.125rem, 1.45rem + 2.65vw, 2.625rem)",
+            fontSize: "clamp(2.5rem, 1.7453rem + 2.8195vw, 3rem)",
+            lineHeight: "clamp(2.875rem, 1.9326rem + 3.5244vw, 3.5rem)",
           }}
         >
           {semester.label}
@@ -88,7 +88,7 @@ function SemesterItem({
           "grid overflow-hidden origin-top",
           "transition-[grid-template-rows,opacity,transform,filter] duration-500",
           "ease-[cubic-bezier(0.16,1,0.3,1)]",
-          "py-3 transition-all duration-500",
+          "py-4 transition-all duration-500",
           open
             ? "grid-rows-[1fr] opacity-100 scale-y-100 translate-y-0 blur-0"
             : "grid-rows-[0fr] opacity-0 scale-y-[0.92] -translate-y-2 blur-[4px]",
@@ -97,8 +97,8 @@ function SemesterItem({
         <div className="min-h-0 overflow-hidden">
           <div
             className={[
-              "grid gap-[calc(var(--spacing-base)*4)] grid-cols-1",
-              "pb-[calc(var(--spacing-base)*1.5)]",
+              "grid gap-[calc(var(--spacing-base)*6)] grid-cols-1",
+              "pb-[calc(var(--spacing-base)*2)]",
               "min-[921px]:grid-cols-3",
             ].join(" ")}
           >
@@ -128,32 +128,30 @@ export function SemesterAccordion({ semesters }: Props) {
   return (
     <>
       <section
-        className="flex flex-col gap-[calc(var(--spacing-base)*4)] pb-[calc(var(--spacing-base)*15)]"
+        className="flex flex-col gap-[calc(var(--spacing-base)*6)] pb-[calc(var(--spacing-base)*20)]"
         aria-label="Explore by semester"
       >
         <Container>
-          <div className="max-w-[860px] mx-auto">
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: spacing(1.5),
-              }}
-            >
-              {semesters.map((semester) => (
-                <SemesterItem
-                  key={semester.id}
-                  semester={semester}
-                  open={openSemester === semester.id}
-                  onToggle={() => {
-                    setOpenSemester((current) =>
-                      current === semester.id ? null : semester.id,
-                    );
-                  }}
-                  onSubjectClick={setActiveSubject}
-                />
-              ))}
-            </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: spacing(2),
+            }}
+          >
+            {semesters.map((semester, index) => (
+              <SemesterItem
+                key={semester.id}
+                semester={semester}
+                open={openSemester === semester.id}
+                onToggle={() => {
+                  setOpenSemester((current) =>
+                    current === semester.id ? null : semester.id,
+                  );
+                }}
+                onSubjectClick={setActiveSubject}
+              />
+            ))}
           </div>
         </Container>
       </section>
