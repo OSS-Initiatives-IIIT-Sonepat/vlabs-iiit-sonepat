@@ -86,17 +86,17 @@ See the [quickstart guide](https://vlabs-iiit-sonepat.vercel.app/docs/quickstart
 
 ## Tech stack
 
-| Layer | Technology |
-|---|---|
-| Framework | Next.js 16 (App Router, RSC) |
-| Language | TypeScript 5 |
-| 3D rendering | **Raw Three.js** — procedural geometry, no models |
-| Styling | Tailwind CSS v4 (CSS-first config) |
-| UI primitives | Custom design system (migrated from Twenty CRM's Linaria base) |
-| Search | Build-time full-text index (1486+ entries) |
-| Fonts | Host Grotesk · Aleo · Azeret Mono · Inria Serif |
-| Deployment | Vercel |
-| Package manager | npm |
+| Layer           | Technology                                                     |
+| --------------- | -------------------------------------------------------------- |
+| Framework       | Next.js 16 (App Router, RSC)                                   |
+| Language        | TypeScript 5                                                   |
+| 3D rendering    | **Raw Three.js** — procedural geometry, no models              |
+| Styling         | Tailwind CSS v4 (CSS-first config)                             |
+| UI primitives   | Custom design system (migrated from Twenty CRM's Linaria base) |
+| Search          | Build-time full-text index (1486+ entries)                     |
+| Fonts           | Host Grotesk · Aleo · Azeret Mono · Inria Serif                |
+| Deployment      | Vercel                                                         |
+| Package manager | npm                                                            |
 
 ---
 

@@ -400,21 +400,21 @@ export function CodeLabPage({ content }: Props) {
     <div style={styles.root}>
       {/* ── Sidebar ─────────────────────────────────────────────────────────── */}
       <div style={styles.sidebar}>
-        <div style={{ padding: '0 16px 12px' }}>
+        <div style={{ padding: "0 16px 12px" }}>
           <Link
             href="/explore"
             style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              fontSize: '11px',
-              color: '#8b949e',
-              textDecoration: 'none',
-              padding: '4px 8px',
-              borderRadius: '6px',
-              background: '#21262d',
-              border: '1px solid #30363d',
-              marginBottom: '10px',
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              fontSize: "11px",
+              color: "#8b949e",
+              textDecoration: "none",
+              padding: "4px 8px",
+              borderRadius: "6px",
+              background: "#21262d",
+              border: "1px solid #30363d",
+              marginBottom: "10px",
             }}
           >
             ← Back to Labs
