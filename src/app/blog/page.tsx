@@ -6,7 +6,7 @@ import { BlogHero } from "@/sections/blog";
 export const metadata = {
   title: "Blog — VLabs",
   description:
-    "Stories, updates, and engineering notes from the VLabs team. " +
+    "Stories, updates, and engineering notes from the VLabs Team. " +
     "Behind-the-scenes looks at 3D rendering, circuit simulation, and open-source education.",
 };
 

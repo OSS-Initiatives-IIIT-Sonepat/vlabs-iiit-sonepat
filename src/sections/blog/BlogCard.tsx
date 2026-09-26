@@ -26,26 +26,22 @@ export function BlogFeaturedCard({ post }: { post: BlogPostRecord }) {
         "hover:border-[rgba(0,0,0,0.14)] hover:shadow-[0_2px_12px_rgba(0,0,0,0.06)]",
       ].join(" ")}
     >
-      {/* Image placeholder */}
-      <div className="bg-[#eeecea] rounded-[calc(var(--radius-base)*2)] h-[240px] min-[921px]:h-[320px] w-full flex items-center justify-center overflow-hidden">
-        <div className="flex flex-col items-center gap-3 text-[#b0aea8]">
-          <svg
-            width="48"
-            height="48"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-            <polyline points="22,6 12,13 2,6" />
-          </svg>
-          <span className="font-[family-name:var(--font-mono),monospace] text-[11px] tracking-[0.06em] uppercase">
-            Featured
-          </span>
-        </div>
+      {/* Thumbnail / placeholder */}
+      <div className="rounded-[calc(var(--radius-base)*2)] h-[240px] min-[921px]:h-[320px] w-full overflow-hidden bg-[#eeecea]">
+        {post.thumbnail ? (
+          <img
+            src={post.thumbnail}
+            alt={post.title}
+            className="w-full h-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.03]"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-[#b0aea8]">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+              <polyline points="22,6 12,13 2,6" />
+            </svg>
+          </div>
+        )}
       </div>
 
       {/* Copy */}

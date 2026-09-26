@@ -130,6 +130,17 @@ export default async function BlogPostPage({
               {/* Divider */}
               <div className="border-t border-dashed border-[rgba(0,0,0,0.08)] mb-[calc(var(--spacing-base)*10)]" />
 
+              {/* Thumbnail hero */}
+              {post.thumbnail && (
+                <div className="mb-[calc(var(--spacing-base)*10)] rounded-[calc(var(--radius-base)*2)] overflow-hidden border border-[rgba(0,0,0,0.07)]">
+                  <img
+                    src={post.thumbnail}
+                    alt={post.title}
+                    className="w-full object-cover max-h-[480px]"
+                  />
+                </div>
+              )}
+
               {/* Content */}
               <div className="bg-white rounded-[calc(var(--radius-base)*2)] border border-[rgba(0,0,0,0.06)] p-[calc(var(--spacing-base)*8)] min-[921px]:p-[calc(var(--spacing-base)*12)]">
                 {post.content}

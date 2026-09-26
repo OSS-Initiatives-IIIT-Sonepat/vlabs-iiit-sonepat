@@ -7,6 +7,7 @@ export type BlogPostRecord = {
   slug: string;
   readTime: string;
   featured?: boolean;
+  thumbnail?: string;
 };
 
 export const BLOG_POSTS: readonly BlogPostRecord[] = [
@@ -15,18 +16,19 @@ export const BLOG_POSTS: readonly BlogPostRecord[] = [
     excerpt:
       "How we designed an interactive breadboard renderer that lets students drag, drop, and wire components in a browser — no plugins, no installs.",
     date: "2026-09-20",
-    author: { name: "VLabs Team", role: "Core Contributors" },
+    author: { name: "Shubham Singh", role: "Founder" },
     tag: "Engineering",
     slug: "building-3d-ece-labs",
     readTime: "8 min read",
     featured: true,
+    thumbnail: "/blog/01-building-ece-labs/thumbnail.png",
   },
   {
     title: "Why open-source education tools matter more than ever",
     excerpt:
       "Labs are expensive, hardware is fragile, and not every student gets equal access. Virtual labs close that gap — here is why we chose to build in the open.",
     date: "2026-09-14",
-    author: { name: "VLabs Team", role: "Core Contributors" },
+    author: { name: "Shubham Singh", role: "Founder" },
     tag: "Open Source",
     slug: "why-open-source-education",
     readTime: "5 min read",
@@ -36,7 +38,7 @@ export const BLOG_POSTS: readonly BlogPostRecord[] = [
     excerpt:
       "A deep dive into our fetch-decode-execute emulator: how register files, flag updates, and memory maps work under the hood.",
     date: "2026-09-08",
-    author: { name: "VLabs Team", role: "Core Contributors" },
+    author: { name: "Shubham Singh", role: "Founder" },
     tag: "Engineering",
     slug: "simulating-8085",
     readTime: "10 min read",
@@ -46,7 +48,7 @@ export const BLOG_POSTS: readonly BlogPostRecord[] = [
     excerpt:
       "We inherited a Linaria-based CSS-in-JS setup and moved the entire codebase to Tailwind CSS v4. Here is what went well, what broke, and what we learned.",
     date: "2026-08-28",
-    author: { name: "VLabs Team", role: "Core Contributors" },
+    author: { name: "Shubham Singhngh", role: "Founder" },
     tag: "Design",
     slug: "lunaria-to-tailwind",
     readTime: "7 min read",
@@ -56,7 +58,7 @@ export const BLOG_POSTS: readonly BlogPostRecord[] = [
     excerpt:
       "Every lab follows a strict aim-theory-apparatus-procedure-observation-conclusion flow. Here is how we made each step interactive and verifiable.",
     date: "2026-08-18",
-    author: { name: "VLabs Team", role: "Core Contributors" },
+    author: { name: "Shubham Singh", role: "Founder" },
     tag: "Product",
     slug: "interactive-procedure-steps",
     readTime: "6 min read",
@@ -66,7 +68,7 @@ export const BLOG_POSTS: readonly BlogPostRecord[] = [
     excerpt:
       "Semester 3 brings direct-mapped caches, set-associative caches, ALU operations, and a simple CPU — all running as React components with interactive controls.",
     date: "2026-08-05",
-    author: { name: "VLabs Team", role: "Core Contributors" },
+    author: { name: "Shubham Singh", role: "Founder" },
     tag: "Engineering",
     slug: "cache-alu-simulations",
     readTime: "9 min read",

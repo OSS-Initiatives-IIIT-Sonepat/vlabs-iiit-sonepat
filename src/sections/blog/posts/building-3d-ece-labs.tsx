@@ -209,6 +209,34 @@ const COMMITS: Commit[] = [
     description:
       "The documentation that makes it possible for someone who wasn't there from day one to still add a full lab. Repository opened.",
   },
+  {
+    hash: "c8d9e0f",
+    date: "Sep 20, 2026",
+    message: "feat: blog and community pages with story section",
+    description:
+      "Public-facing /blog and /community pages. The community page tells the full origin story — from the IIT Kharagpur VLabs gap, through bob-the-builder, to the architecture built for AI-assisted contributions.",
+  },
+  {
+    hash: "1a2b3c4",
+    date: "Sep 21, 2026",
+    message: "feat: interactive folder tree on community page",
+    description:
+      "Collapsible VS Code-style folder tree embedded inside the community story — shows the exact experiment file structure so contributors can see what to fill in.",
+  },
+  {
+    hash: "5d6e7f8",
+    date: "Sep 22, 2026",
+    message: "feat: blog/[slug] post pages with commit timeline + YouTube embed",
+    description:
+      "Dynamic blog post route. First post: the full story of building the 3D renderer, the bob-the-builder inspiration, and the architecture decisions — with WhatsApp screenshots as proof.",
+  },
+  {
+    hash: "9a0b1c2",
+    date: "Sep 26, 2026",
+    message: "chore: search index rebuilt — 1486 entries across all semesters",
+    description:
+      "Ran the prebuild search index script. Every experiment, every semester, every subject — all indexed and searchable from the Cmd+K palette.",
+  },
 ];
 
 function CommitTimeline() {
@@ -298,7 +326,7 @@ export function PostBuildingEceLabs() {
       <p>
         He sent the link to a friend at 4:26am with a message:{" "}
         <strong>
-          "the WHOLE codebase's core part is LEGIT 1000 mins of HTML — no 3d
+          "the WHOLE codebase's core part is LEGIT 1000 lines of HTML — no 3d
           models, no nothing."
         </strong>
       </p>
