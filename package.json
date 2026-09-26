@@ -23,7 +23,7 @@
     "katex": "^0.18.4",
     "next": "^16.3.6",
     "package-lock.json": "^1.0.0",
-    "react": "19.0.0",
+    "react": "19.3.0",
     "react-dom": "19.3.0",
     "three": "^0.184.0",
     "vlabs-iiitsonepat-shared": "file:./stubs/vlabs-iiitsonepat-shared",
