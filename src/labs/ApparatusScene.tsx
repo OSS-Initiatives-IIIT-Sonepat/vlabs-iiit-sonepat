@@ -16,52 +16,183 @@ import {
   buildWireStandalone,
   buildBreadboardStandalone,
   buildPotentiometerStandalone,
+  buildSwitchStandalone,
+  buildPushButtonStandalone,
+  buildMcuTrainerStandalone,
+  buildDiodeStandalone,
+  buildZenerDiodeStandalone,
+  buildAmmeterStandalone,
+  buildVoltmeterStandalone,
+  buildBjtStandalone,
+  buildMosfetStandalone,
+  buildOpAmpStandalone,
+  buildSevenSegmentStandalone,
+  buildOscilloscopeStandalone,
+  buildFunctionGeneratorStandalone,
+  buildTransformerStandalone,
+  buildDipSwitchStandalone,
+  buildLogicAnalyserStandalone,
+  buildUnknownApparatusStandalone,
 } from "@/components";
 
 // ── Model builder ─────────────────────────────────────────────────────────
-function buildItemModel(item: ApparatusItem): THREE.Group {
+export function buildItemModel(item: ApparatusItem): THREE.Group {
   const n = item.name.toLowerCase();
 
-  if (n.includes("resistor") || n.includes("ω") || n.includes("ohm")) {
-    return buildResistorStandalone(parseOhms(item.name) ?? 470);
+  // 1. Zener Diode (must precede generic diode matching)
+  if (n.includes("zener") || n.includes("1n4733")) {
+    return buildZenerDiodeStandalone();
   }
+
+  // 2. Rectifier & Signal Diodes (1N4007 / 1N4148 / generic diode, excluding LED)
   if (
-    n.includes("zener") ||
-    n.includes("1n4") ||
-    (n.includes("diode") && !n.includes("led"))
+    (n.includes("diode") && !n.includes("led")) ||
+    n.includes("1n4148") ||
+    n.includes("1n4007")
   ) {
-    return buildLedStandalone("yellow");
+    const is4148 = n.includes("4148");
+    return buildDiodeStandalone(is4148 ? "1N4148" : "1N4007");
   }
+
+  // 3. LED indicator (separate from diodes)
   if (n.includes("led")) {
     return buildLedStandalone(
-      n.includes("red") ? "red" : n.includes("blue") ? "blue" : "green",
+      n.includes("red")
+        ? "red"
+        : n.includes("blue")
+          ? "blue"
+          : n.includes("yellow")
+            ? "yellow"
+            : "green",
     );
   }
-  if (n.includes("capacitor") || n.includes("µf") || n.includes("nf")) {
+
+  // 4. Analog meters (narrowed so 'meter' does not blindly route to DMM)
+  if (n.includes("ammeter") || n.includes("milliammeter")) {
+    return buildAmmeterStandalone();
+  }
+  if (n.includes("voltmeter")) {
+    return buildVoltmeterStandalone();
+  }
+  if (n.includes("multimeter") || n.includes("dmm")) {
+    return buildIcMeterStandalone();
+  }
+
+  // 5. Transistors (BJT & MOSFET)
+  if (
+    n.includes("bc547") ||
+    (n.includes("bjt") && !n.includes("sheet")) ||
+    (n.includes("transistor") && !n.includes("mosfet"))
+  ) {
+    return buildBjtStandalone("BC547");
+  }
+  if (n.includes("2n7000") || n.includes("mosfet")) {
+    return buildMosfetStandalone("2N7000");
+  }
+
+  // 6. Op-Amp (LM741 DIP-8)
+  if (
+    n.includes("lm741") ||
+    n.includes("op-amp") ||
+    n.includes("opamp") ||
+    n.includes("operational amplifier")
+  ) {
+    return buildOpAmpStandalone("LM741");
+  }
+
+  // 7. 7-Segment Display (Common Cathode)
+  if (
+    n.includes("7-segment") ||
+    n.includes("7 segment") ||
+    n.includes("seven segment")
+  ) {
+    return buildSevenSegmentStandalone();
+  }
+
+  // 8. Oscilloscope / CRO
+  if (n.includes("oscilloscope") || n.includes("cro")) {
+    return buildOscilloscopeStandalone();
+  }
+
+  // 9. Function / Signal Generator
+  if (
+    n.includes("function generator") ||
+    n.includes("signal generator")
+  ) {
+    return buildFunctionGeneratorStandalone();
+  }
+
+  // 10. Step-Down Centre-Tap Transformer
+  if (n.includes("transformer")) {
+    return buildTransformerStandalone();
+  }
+
+  // 11. DIP Switch (supports 2, 4, 6, 8 poles)
+  if (n.includes("dip switch") || (n.includes("dip") && n.includes("switch"))) {
+    const polesMatch = n.match(/(\d+)\s*(?:pole|position|pos|way)/);
+    const poles = polesMatch ? parseInt(polesMatch[1], 10) : 4;
+    return buildDipSwitchStandalone(poles);
+  }
+
+  // 12. Logic Analyser
+  if (n.includes("logic analyser") || n.includes("logic analyzer")) {
+    return buildLogicAnalyserStandalone();
+  }
+
+  // 13. Discrete switches and buttons
+  if (n.includes("button") || n.includes("push-button")) {
+    return buildPushButtonStandalone();
+  }
+  if (n.includes("switch")) {
+    return buildSwitchStandalone();
+  }
+
+  // 14. Microcontroller / Logic Trainer
+  if (
+    n.includes("trainer") ||
+    n.includes("microcontroller") ||
+    n.includes("mcu")
+  ) {
+    return buildMcuTrainerStandalone();
+  }
+
+  // 15. Passives: Resistors & Capacitors
+  if (n.includes("resistor") || n.includes("ω") || n.includes("ohm") || n.includes("rheostat")) {
+    return buildResistorStandalone(parseOhms(item.name) ?? 470);
+  }
+  if (n.includes("capacitor") || n.includes("µf") || n.includes("nf") || n.includes("pf")) {
     return buildCapacitorStandalone(47e-6);
   }
+  if (n.includes("potentiometer") || n.includes("variable")) {
+    return buildPotentiometerStandalone();
+  }
+
+  // 16. Power & System boards
   if (n.includes("power supply") || n.includes("supply") || n.includes("psu")) {
     return buildDcPowerSupplyStandalone();
-  }
-  if (n.includes("multimeter") || n.includes("dmm") || n.includes("meter")) {
-    return buildIcMeterStandalone(); // proper DMM model
   }
   if (n.includes("battery")) {
     return buildBatteryStandalone();
   }
-  if (n.includes("breadboard")) {
+  if (n.includes("breadboard") || n.includes("bread board")) {
     const g = buildBreadboardStandalone();
     g.scale.setScalar(0.35);
     return g;
   }
+
+  // 17. Integrated circuits (DIP logic ICs)
   if (
     n.includes("74hc") ||
     n.includes("ic ") ||
     n.includes("gate") ||
-    n.includes("chip")
+    n.includes("chip") ||
+    n.includes("adc0804")
   ) {
-    return buildDip14Standalone("IC");
+    const icMatch = item.name.match(/74hc\d+|adc0804/i);
+    return buildDip14Standalone(icMatch ? icMatch[0].toUpperCase() : "IC");
   }
+
+  // 18. Wiring
   if (n.includes("wire") || n.includes("jumper")) {
     return buildWireStandalone(
       n.includes("black")
@@ -73,11 +204,9 @@ function buildItemModel(item: ApparatusItem): THREE.Group {
             : "red",
     );
   }
-  if (n.includes("potentiometer") || n.includes("variable")) {
-    return buildPotentiometerStandalone();
-  }
 
-  return buildResistorStandalone(470);
+  // Visible unknown apparatus fallback (replaces silent resistor fallback)
+  return buildUnknownApparatusStandalone(item.name);
 }
 
 function parseOhms(name: string): number | null {
