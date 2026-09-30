@@ -18,6 +18,21 @@ import {
   buildIcMeterStandalone,
   buildDcPowerSupplyStandalone,
   buildMcuTrainerStandalone,
+  buildLongBreadboardStandalone,
+  buildDiodeStandalone,
+  buildZenerDiodeStandalone,
+  buildAmmeterStandalone,
+  buildVoltmeterStandalone,
+  buildBjtStandalone,
+  buildMosfetStandalone,
+  buildOpAmpStandalone,
+  buildSevenSegmentStandalone,
+  buildOscilloscopeStandalone,
+  buildFunctionGeneratorStandalone,
+  buildTransformerStandalone,
+  buildDipSwitchStandalone,
+  buildLogicAnalyserStandalone,
+  buildUnknownApparatusStandalone,
 } from "@/components";
 
 // ── Component kind type ───────────────────────────────────────────────────
@@ -35,7 +50,23 @@ export type EceComponentKind =
   | "and-gate"
   | "ic-meter"
   | "dc-power-supply"
-  | "mcu-trainer";
+  | "mcu-trainer"
+  | "long-breadboard"
+  | "wire"
+  | "diode"
+  | "zener-diode"
+  | "ammeter"
+  | "voltmeter"
+  | "bjt"
+  | "mosfet"
+  | "op-amp"
+  | "seven-segment"
+  | "oscilloscope"
+  | "function-generator"
+  | "transformer"
+  | "dip-switch"
+  | "logic-analyser"
+  | "unknown-apparatus";
 
 // ── Builder dispatch ──────────────────────────────────────────────────────
 function buildStandalone(kind: EceComponentKind): THREE.Group {
@@ -68,6 +99,38 @@ function buildStandalone(kind: EceComponentKind): THREE.Group {
       return buildDcPowerSupplyStandalone();
     case "mcu-trainer":
       return buildMcuTrainerStandalone();
+    case "long-breadboard":
+      return buildLongBreadboardStandalone();
+    case "wire":
+      return buildWireStandalone("red");
+    case "diode":
+      return buildDiodeStandalone();
+    case "zener-diode":
+      return buildZenerDiodeStandalone();
+    case "ammeter":
+      return buildAmmeterStandalone();
+    case "voltmeter":
+      return buildVoltmeterStandalone();
+    case "bjt":
+      return buildBjtStandalone();
+    case "mosfet":
+      return buildMosfetStandalone();
+    case "op-amp":
+      return buildOpAmpStandalone();
+    case "seven-segment":
+      return buildSevenSegmentStandalone();
+    case "oscilloscope":
+      return buildOscilloscopeStandalone();
+    case "function-generator":
+      return buildFunctionGeneratorStandalone();
+    case "transformer":
+      return buildTransformerStandalone();
+    case "dip-switch":
+      return buildDipSwitchStandalone();
+    case "logic-analyser":
+      return buildLogicAnalyserStandalone();
+    case "unknown-apparatus":
+      return buildUnknownApparatusStandalone();
   }
 }
 
@@ -87,12 +150,33 @@ const CAM: Record<EceComponentKind, [number, number, number]> = {
   "ic-meter": [1.4, 0.6, 3.2],
   "dc-power-supply": [2.2, 2.2, 3.2],
   "mcu-trainer": [2.0, 2.4, 3.2],
+  "long-breadboard": [1.5, 2.5, 3.5],
+  wire: [1.2, 1.5, 1.8],
+  diode: [1.2, 1.2, 1.8],
+  "zener-diode": [1.2, 1.2, 1.8],
+  ammeter: [1.4, 0.6, 3.2],
+  voltmeter: [1.4, 0.6, 3.2],
+  bjt: [1.4, 1.8, 2.2],
+  mosfet: [1.4, 1.8, 2.2],
+  "op-amp": [1.6, 1.8, 2.4],
+  "seven-segment": [1.6, 2.0, 2.4],
+  oscilloscope: [2.5, 2.5, 3.5],
+  "function-generator": [2.2, 2.2, 3.2],
+  transformer: [1.8, 2.0, 2.5],
+  "dip-switch": [1.6, 2.0, 2.4],
+  "logic-analyser": [2.2, 2.2, 3.2],
+  "unknown-apparatus": [1.8, 1.8, 2.4],
 };
 
 // Initial X tilt — upright components get a front-facing angle
 const TILT: Partial<Record<EceComponentKind, number>> = {
   "ic-meter": 0.1,
   "dc-power-supply": 0.1,
+  ammeter: 0.1,
+  voltmeter: 0.1,
+  oscilloscope: 0.1,
+  "function-generator": 0.1,
+  "logic-analyser": 0.1,
 };
 
 // Zoom bounds — a dolly on the preset camera position, so the perspective of the
