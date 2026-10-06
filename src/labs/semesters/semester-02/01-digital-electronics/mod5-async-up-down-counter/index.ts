@@ -21,5 +21,9 @@ export const mod5AsyncUpDownCounterExperiment: ExperimentDefinition = {
   procedureSteps,
 };
 
-export const Mod5AsyncUpDownCounterCircuit = buildCircuit(mod5AsyncUpDownCounterExperiment);
-export const Mod5AsyncUpDownCounterContent = buildLabContent(mod5AsyncUpDownCounterExperiment);
+export const Mod5AsyncUpDownCounterCircuit = buildCircuit(
+  mod5AsyncUpDownCounterExperiment,
+);
+export const Mod5AsyncUpDownCounterContent = buildLabContent(
+  mod5AsyncUpDownCounterExperiment,
+);

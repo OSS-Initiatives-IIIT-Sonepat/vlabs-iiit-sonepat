@@ -5,7 +5,11 @@ export const apparatus: LabSection = {
   type: "apparatus",
   title: "Apparatus",
   items: [
-    { name: "Digital IC trainer / +5 V DC supply", specification: "Regulated 5 V", quantity: "1" },
+    {
+      name: "Digital IC trainer / +5 V DC supply",
+      specification: "Regulated 5 V",
+      quantity: "1",
+    },
     { name: "Breadboard", specification: "Long, 60 columns", quantity: "1" },
     { name: "NOT gate IC", specification: "74HC04", quantity: "1" },
     { name: "AND gate IC", specification: "74HC08", quantity: "1" },
@@ -16,6 +20,10 @@ export const apparatus: LabSection = {
     { name: "EX-NOR gate IC", specification: "74HC266", quantity: "1" },
     { name: "Resistor", specification: "330 Ω, 1/4 W", quantity: "7" },
     { name: "LED", specification: "5 mm, assorted colours", quantity: "7" },
-    { name: "Connecting wires", specification: "Single-core, jumper type", quantity: "As required" },
+    {
+      name: "Connecting wires",
+      specification: "Single-core, jumper type",
+      quantity: "As required",
+    },
   ],
 };

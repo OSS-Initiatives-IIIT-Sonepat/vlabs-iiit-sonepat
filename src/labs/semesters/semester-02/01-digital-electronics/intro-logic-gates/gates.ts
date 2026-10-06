@@ -4,13 +4,69 @@
 // Each gate gets a 330 Ω resistor + LED indicator on row `h` under its own IC columns.
 
 export const GATES = [
-  { key: "not", name: "NOT", type: "not-gate", chip: "74HC04", col: 4, twoInput: false, led: "red" },
-  { key: "and", name: "AND", type: "and-gate", chip: "74HC08", col: 12, twoInput: true, led: "green" },
-  { key: "or", name: "OR", type: "or-gate", chip: "74HC32", col: 20, twoInput: true, led: "yellow" },
-  { key: "nand", name: "NAND", type: "nand-gate", chip: "74HC00", col: 28, twoInput: true, led: "blue" },
-  { key: "nor", name: "NOR", type: "nor-gate", chip: "74HC02", col: 36, twoInput: true, led: "white" },
-  { key: "xor", name: "EX-OR", type: "xor-gate", chip: "74HC86", col: 44, twoInput: true, led: "red" },
-  { key: "xnor", name: "EX-NOR", type: "xnor-gate", chip: "74HC266", col: 52, twoInput: true, led: "green" },
+  {
+    key: "not",
+    name: "NOT",
+    type: "not-gate",
+    chip: "74HC04",
+    col: 4,
+    twoInput: false,
+    led: "red",
+  },
+  {
+    key: "and",
+    name: "AND",
+    type: "and-gate",
+    chip: "74HC08",
+    col: 12,
+    twoInput: true,
+    led: "green",
+  },
+  {
+    key: "or",
+    name: "OR",
+    type: "or-gate",
+    chip: "74HC32",
+    col: 20,
+    twoInput: true,
+    led: "yellow",
+  },
+  {
+    key: "nand",
+    name: "NAND",
+    type: "nand-gate",
+    chip: "74HC00",
+    col: 28,
+    twoInput: true,
+    led: "blue",
+  },
+  {
+    key: "nor",
+    name: "NOR",
+    type: "nor-gate",
+    chip: "74HC02",
+    col: 36,
+    twoInput: true,
+    led: "white",
+  },
+  {
+    key: "xor",
+    name: "EX-OR",
+    type: "xor-gate",
+    chip: "74HC86",
+    col: 44,
+    twoInput: true,
+    led: "red",
+  },
+  {
+    key: "xnor",
+    name: "EX-NOR",
+    type: "xnor-gate",
+    chip: "74HC266",
+    col: 52,
+    twoInput: true,
+    led: "green",
+  },
 ] as const;
 
 export type GateKey = (typeof GATES)[number]["key"];
@@ -41,7 +97,13 @@ export const outputWireIds = GATES.flatMap((g) => [
 ]);
 
 /** Every component id in the circuit, in build order. */
-export const everyId = [BB, ...allIcIds, ...inputWireIds, ...indicatorIds, ...outputWireIds];
+export const everyId = [
+  BB,
+  ...allIcIds,
+  ...inputWireIds,
+  ...indicatorIds,
+  ...outputWireIds,
+];
 
 /** Boolean output of every gate for inputs (a, b). NOT uses A only. */
 export function gateOutputs(a: 0 | 1, b: 0 | 1): Record<GateKey, 0 | 1> {

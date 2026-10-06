@@ -42,4 +42,6 @@ export const introLogicGatesExperiment: ExperimentDefinition = {
 };
 
 export const IntroLogicGatesCircuit = buildCircuit(introLogicGatesExperiment);
-export const IntroLogicGatesContent = buildLabContent(introLogicGatesExperiment);
+export const IntroLogicGatesContent = buildLabContent(
+  introLogicGatesExperiment,
+);
