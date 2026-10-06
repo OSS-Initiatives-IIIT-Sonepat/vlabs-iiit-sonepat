@@ -8,439 +8,439 @@ import {
   StudyBasicComponentsCircuit,
   StudyBasicComponentsContent,
   studyBasicComponentsExperiment,
-} from "./semester-01/01-analog-electronics/study-basic-components";
+} from "./semester-01/01-analog-electronics";
 
 import {
   PnJunctionDiodeCircuit,
   PnJunctionDiodeContent,
   pnJunctionDiodeExperiment,
-} from "./semester-01/01-analog-electronics/pn-junction-diode";
+} from "./semester-01/01-analog-electronics";
 
 import {
   ZenerDiodeCircuit,
   ZenerDiodeContent,
   zenerDiodeExperiment,
-} from "./semester-01/01-analog-electronics/zener-diode";
+} from "./semester-01/01-analog-electronics";
 
 import {
   HalfWaveRectifierCircuit,
   HalfWaveRectifierContent,
   halfWaveRectifierExperiment,
-} from "./semester-01/01-analog-electronics/half-wave-rectifier";
+} from "./semester-01/01-analog-electronics";
 
 import {
   FullWaveRectifierCircuit,
   FullWaveRectifierContent,
   fullWaveRectifierExperiment,
-} from "./semester-01/01-analog-electronics/full-wave-rectifier";
+} from "./semester-01/01-analog-electronics";
 
 import {
   RectifiersCapacitorFiltersCircuit,
   RectifiersCapacitorFiltersContent,
   rectifiersCapacitorFiltersExperiment,
-} from "./semester-01/01-analog-electronics/rectifiers-capacitor-filters";
+} from "./semester-01/01-analog-electronics";
 
 import {
   OhmsLawCircuit,
   OhmsLawContent,
   ohmsLawExperiment,
-} from "./semester-01/01-analog-electronics/ohms-law";
+} from "./semester-01/01-analog-electronics";
 
 import {
   KirchhoffLawsCircuit,
   KirchhoffLawsContent,
   kirchhoffLawsExperiment,
-} from "./semester-01/01-analog-electronics/kirchhoff-laws";
+} from "./semester-01/01-analog-electronics";
 
 import {
   SuperpositionTheoremCircuit,
   SuperpositionTheoremContent,
   superpositionTheoremExperiment,
-} from "./semester-01/01-analog-electronics/superposition-theorem";
+} from "./semester-01/01-analog-electronics";
 
 import {
   TheveninTheoremCircuit,
   TheveninTheoremContent,
   theveninTheoremExperiment,
-} from "./semester-01/01-analog-electronics/thevenin-theorem";
+} from "./semester-01/01-analog-electronics";
 
 import {
   NortonTheoremCircuit,
   NortonTheoremContent,
   nortonTheoremExperiment,
-} from "./semester-01/01-analog-electronics/norton-theorem";
+} from "./semester-01/01-analog-electronics";
 
 import {
   LogicGatesCircuit,
   LogicGatesContent,
   logicGatesExperiment,
-} from "./semester-01/02-computer-application/logic-gates";
+} from "./semester-01/02-computer-application";
 
 import {
   FullAdderCircuit,
   FullAdderContent,
   fullAdderExperiment,
-} from "./semester-01/02-computer-application/full-adder";
+} from "./semester-01/02-computer-application";
 
 import {
   HalfSubtractorCircuit,
   HalfSubtractorContent,
   halfSubtractorExperiment,
-} from "./semester-01/02-computer-application/half-subtractor";
+} from "./semester-01/02-computer-application";
 
 import {
   FullSubtractorCircuit,
   FullSubtractorContent,
   fullSubtractorExperiment,
-} from "./semester-01/02-computer-application/full-subtractor";
+} from "./semester-01/02-computer-application";
 
 import {
   Mux2to1Circuit,
   Mux2to1Content,
   mux2to1Experiment,
-} from "./semester-01/02-computer-application/mux-2to1";
+} from "./semester-01/02-computer-application";
 
 import {
   Demux1to2Circuit,
   Demux1to2Content,
   demux1to2Experiment,
-} from "./semester-01/02-computer-application/demux-1to2";
+} from "./semester-01/02-computer-application";
 
 import {
   ZenerVoltageRegulatorCircuit,
   ZenerVoltageRegulatorContent,
   zenerVoltageRegulatorExperiment,
-} from "./semester-01/03-analog-electronics-advanced/zener-voltage-regulator";
+} from "./semester-01/03-analog-electronics-advanced";
 
 import {
   CeAmplifierCircuit,
   CeAmplifierContent,
   ceAmplifierExperiment,
-} from "./semester-01/03-analog-electronics-advanced/ce-amplifier";
+} from "./semester-01/03-analog-electronics-advanced";
 
 import {
   CbAmplifierCircuit,
   CbAmplifierContent,
   cbAmplifierExperiment,
-} from "./semester-01/03-analog-electronics-advanced/cb-amplifier";
+} from "./semester-01/03-analog-electronics-advanced";
 
 import {
   CbTransistorCharacteristicsCircuit,
   CbTransistorCharacteristicsContent,
   cbTransistorCharacteristicsExperiment,
-} from "./semester-01/03-analog-electronics-advanced/cb-transistor-characteristics";
+} from "./semester-01/03-analog-electronics-advanced";
 
 import {
   BjtBiasCircuit,
   BjtBiasContent,
   bjtBiasExperiment,
-} from "./semester-01/03-analog-electronics-advanced/bjt-bias";
+} from "./semester-01/03-analog-electronics-advanced";
 
 import {
   MosfetCharacteristicsCircuit,
   MosfetCharacteristicsContent,
   mosfetCharacteristicsExperiment,
-} from "./semester-01/03-analog-electronics-advanced/mosfet-characteristics";
+} from "./semester-01/03-analog-electronics-advanced";
 
 import {
   OpampCircuitsCircuit,
   OpampCircuitsContent,
   opampCircuitsExperiment,
-} from "./semester-01/03-analog-electronics-advanced/opamp-circuits";
+} from "./semester-01/03-analog-electronics-advanced";
 
 import {
   Encoder4to2Circuit,
   Encoder4to2Content,
   encoder4to2Experiment,
-} from "./semester-02/01-digital-electronics/encoder-4to2";
+} from "./semester-02/01-digital-electronics";
 
 import {
   Decoder2to4Circuit,
   Decoder2to4Content,
   decoder2to4Experiment,
-} from "./semester-02/01-digital-electronics/decoder-2to4";
+} from "./semester-02/01-digital-electronics";
 
 import {
   MuxBasedLogicCircuit,
   MuxBasedLogicContent,
   muxBasedLogicExperiment,
-} from "./semester-02/01-digital-electronics/mux-based-logic";
+} from "./semester-02/01-digital-electronics";
 
 import {
   DemuxAddressDecoderCircuit,
   DemuxAddressDecoderContent,
   demuxAddressDecoderExperiment,
-} from "./semester-02/01-digital-electronics/demux-address-decoder";
+} from "./semester-02/01-digital-electronics";
 
 import {
   HalfAdderSubtractorCircuit,
   HalfAdderSubtractorContent,
   halfAdderSubtractorExperiment,
-} from "./semester-02/01-digital-electronics/half-adder-subtractor";
+} from "./semester-02/01-digital-electronics";
 
 import {
   HalfAdderRevisitCircuit,
   HalfAdderRevisitContent,
   halfAdderRevisitExperiment,
-} from "./semester-02/02-advanced-adders/half-adder-revisit";
+} from "./semester-02/02-advanced-adders";
 
 import {
   FullAdderRippleCircuit,
   FullAdderRippleContent,
   fullAdderRippleExperiment,
-} from "./semester-02/02-advanced-adders/full-adder-ripple";
+} from "./semester-02/02-advanced-adders";
 
 import {
   BcdXs3ConverterCircuit,
   BcdXs3ConverterContent,
   bcdXs3ConverterExperiment,
-} from "./semester-02/03-combinational-logic/bcd-xs3-converter";
+} from "./semester-02/03-combinational-logic";
 
 import {
   GrayBinaryConverterCircuit,
   GrayBinaryConverterContent,
   grayBinaryConverterExperiment,
-} from "./semester-02/03-combinational-logic/gray-binary-converter";
+} from "./semester-02/03-combinational-logic";
 
 import {
   Mux4to1IcCircuit,
   Mux4to1IcContent,
   mux4to1IcExperiment,
-} from "./semester-02/03-combinational-logic/mux-4to1-ic";
+} from "./semester-02/03-combinational-logic";
 
 import {
   Demux1to4IcCircuit,
   Demux1to4IcContent,
   demux1to4IcExperiment,
-} from "./semester-02/03-combinational-logic/demux-1to4-ic";
+} from "./semester-02/03-combinational-logic";
 
 import {
   BinaryAdder4bitCircuit,
   BinaryAdder4bitContent,
   binaryAdder4bitExperiment,
-} from "./semester-02/03-combinational-logic/binary-adder-4bit";
+} from "./semester-02/03-combinational-logic";
 
 import {
   BinarySubtractor4bitCircuit,
   BinarySubtractor4bitContent,
   binarySubtractor4bitExperiment,
-} from "./semester-02/03-combinational-logic/binary-subtractor-4bit";
+} from "./semester-02/03-combinational-logic";
 
 import {
   SrLatchCircuit,
   SrLatchContent,
   srLatchExperiment,
-} from "./semester-02/04-sequential-logic/sr-latch";
+} from "./semester-02/04-sequential-logic";
 
 import {
   DFlipFlopCircuit,
   DFlipFlopContent,
   dFlipFlopExperiment,
-} from "./semester-02/04-sequential-logic/d-flip-flop";
+} from "./semester-02/04-sequential-logic";
 
 import {
   JkTFlipFlopCircuit,
   JkTFlipFlopContent,
   jkTFlipFlopExperiment,
-} from "./semester-02/04-sequential-logic/jk-t-flip-flop";
+} from "./semester-02/04-sequential-logic";
 
 import {
   Mod5CounterCircuit,
   Mod5CounterContent,
   mod5CounterExperiment,
-} from "./semester-02/04-sequential-logic/mod5-counter";
+} from "./semester-02/04-sequential-logic";
 
 import {
   ParityCheckerCircuit,
   ParityCheckerContent,
   parityCheckerExperiment,
-} from "./semester-02/05-digital-logic-design/parity-checker";
+} from "./semester-02/05-digital-logic-design";
 
 import {
   DigitalComparatorCircuit,
   DigitalComparatorContent,
   digitalComparatorExperiment,
-} from "./semester-02/05-digital-logic-design/digital-comparator";
+} from "./semester-02/05-digital-logic-design";
 
 import {
   ShiftRegisterCircuit,
   ShiftRegisterContent,
   shiftRegisterExperiment,
-} from "./semester-02/05-digital-logic-design/shift-register";
+} from "./semester-02/05-digital-logic-design";
 
 import {
   GateLevelMinimizationCircuit,
   GateLevelMinimizationContent,
   gateLevelMinimizationExperiment,
-} from "./semester-02/05-digital-logic-design/gate-level-minimization";
+} from "./semester-02/05-digital-logic-design";
 
 import {
   IntroGatesReviewCircuit,
   IntroGatesReviewContent,
   introGatesReviewExperiment,
-} from "./semester-03/01-combinational-arithmetic/intro-gates-review";
+} from "./semester-03/01-combinational-arithmetic";
 
 import {
   ClaAdderCircuit,
   ClaAdderContent,
   claAdderExperiment,
-} from "./semester-03/01-combinational-arithmetic/cla-adder";
+} from "./semester-03/01-combinational-arithmetic";
 
 import {
   RegistersCountersTheoryCircuit,
   RegistersCountersTheoryContent,
   registersCountersTheoryExperiment,
-} from "./semester-03/01-combinational-arithmetic/registers-counters-theory";
+} from "./semester-03/01-combinational-arithmetic";
 
 import {
   WallaceTreeCircuit,
   WallaceTreeContent,
   wallaceTreeExperiment,
-} from "./semester-03/01-combinational-arithmetic/wallace-tree";
+} from "./semester-03/01-combinational-arithmetic";
 
 import {
   CombinationalMultipliersCircuit,
   CombinationalMultipliersContent,
   combinationalMultipliersExperiment,
-} from "./semester-03/01-combinational-arithmetic/combinational-multipliers";
+} from "./semester-03/01-combinational-arithmetic";
 
 import {
   BoothsMultiplierCircuit,
   BoothsMultiplierContent,
   boothsMultiplierExperiment,
-} from "./semester-03/01-combinational-arithmetic/booths-multiplier";
+} from "./semester-03/01-combinational-arithmetic";
 
 import {
   AluSimulationCircuit,
   AluSimulationContent,
   aluSimulationExperiment,
-} from "./semester-03/02-memory-cpu-systems/alu-simulation";
+} from "./semester-03/02-memory-cpu-systems";
 
 import {
   MemoryDesignCircuit,
   MemoryDesignContent,
   memoryDesignExperiment,
-} from "./semester-03/02-memory-cpu-systems/memory-design";
+} from "./semester-03/02-memory-cpu-systems";
 
 import {
   CacheDirectMappedCircuit,
   CacheDirectMappedContent,
   cacheDirectMappedExperiment,
-} from "./semester-03/02-memory-cpu-systems/cache-direct-mapped";
+} from "./semester-03/02-memory-cpu-systems";
 
 import {
   CacheAssociativeCircuit,
   CacheAssociativeContent,
   cacheAssociativeExperiment,
-} from "./semester-03/02-memory-cpu-systems/cache-associative";
+} from "./semester-03/02-memory-cpu-systems";
 
 import {
   CpuDesignCircuit,
   CpuDesignContent,
   cpuDesignExperiment,
-} from "./semester-03/02-memory-cpu-systems/cpu-design";
+} from "./semester-03/02-memory-cpu-systems";
 
 import {
   CExpressionsCircuit,
   CExpressionsContent,
   cExpressionsExperiment,
-} from "./semester-03/03-programming-fundamentals/c-expressions";
+} from "./semester-03/03-programming-fundamentals";
 
 import {
   CFileOperations1Circuit,
   CFileOperations1Content,
   cFileOperations1Experiment,
-} from "./semester-03/03-programming-fundamentals/c-file-operations-1";
+} from "./semester-03/03-programming-fundamentals";
 
 import {
   CFileOperations2Circuit,
   CFileOperations2Content,
   cFileOperations2Experiment,
-} from "./semester-03/03-programming-fundamentals/c-file-operations-2";
+} from "./semester-03/03-programming-fundamentals";
 
 import {
   Exp8085AddSub8bitCircuit,
   Exp8085AddSub8bitContent,
   exp8085AddSub8bitExperiment,
-} from "./semester-04/01-8085-assembly-programming/8085-add-sub-8bit";
+} from "./semester-04/01-8085-assembly-programming";
 
 import {
   Exp8085AddSubCarryCircuit,
   Exp8085AddSubCarryContent,
   exp8085AddSubCarryExperiment,
-} from "./semester-04/01-8085-assembly-programming/8085-add-sub-carry";
+} from "./semester-04/01-8085-assembly-programming";
 
 import {
   Exp8085BcdAdditionCircuit,
   Exp8085BcdAdditionContent,
   exp8085BcdAdditionExperiment,
-} from "./semester-04/01-8085-assembly-programming/8085-bcd-addition";
+} from "./semester-04/01-8085-assembly-programming";
 
 import {
   Exp8085Multiply8bitCircuit,
   Exp8085Multiply8bitContent,
   exp8085Multiply8bitExperiment,
-} from "./semester-04/01-8085-assembly-programming/8085-multiply-8bit";
+} from "./semester-04/01-8085-assembly-programming";
 
 import {
   Exp8085Divide8bitCircuit,
   Exp8085Divide8bitContent,
   exp8085Divide8bitExperiment,
-} from "./semester-04/01-8085-assembly-programming/8085-divide-8bit";
+} from "./semester-04/01-8085-assembly-programming";
 
 import {
   Exp8085ArraySumCircuit,
   Exp8085ArraySumContent,
   exp8085ArraySumExperiment,
-} from "./semester-04/01-8085-assembly-programming/8085-array-sum";
+} from "./semester-04/01-8085-assembly-programming";
 
 import {
   Exp8085ArraySquareCircuit,
   Exp8085ArraySquareContent,
   exp8085ArraySquareExperiment,
-} from "./semester-04/01-8085-assembly-programming/8085-array-square";
+} from "./semester-04/01-8085-assembly-programming";
 
 import {
   Exp8085MinMaxCircuit,
   Exp8085MinMaxContent,
   exp8085MinMaxExperiment,
-} from "./semester-04/01-8085-assembly-programming/8085-min-max";
+} from "./semester-04/01-8085-assembly-programming";
 
 import {
   Exp8085BubbleSortCircuit,
   Exp8085BubbleSortContent,
   exp8085BubbleSortExperiment,
-} from "./semester-04/01-8085-assembly-programming/8085-bubble-sort";
+} from "./semester-04/01-8085-assembly-programming";
 
 import {
   Exp8085BcdBinaryConvCircuit,
   Exp8085BcdBinaryConvContent,
   exp8085BcdBinaryConvExperiment,
-} from "./semester-04/01-8085-assembly-programming/8085-bcd-binary-conv";
+} from "./semester-04/01-8085-assembly-programming";
 
 import {
   Exp8085SqrtCircuit,
   Exp8085SqrtContent,
   exp8085SqrtExperiment,
-} from "./semester-04/01-8085-assembly-programming/8085-sqrt";
+} from "./semester-04/01-8085-assembly-programming";
 
 import {
   GpioInterfacingCircuit,
   GpioInterfacingContent,
   gpioInterfacingExperiment,
-} from "./semester-04/02-peripheral-interfacing/gpio-interfacing";
+} from "./semester-04/02-peripheral-interfacing";
 
 import {
   SevenSegmentDisplayCircuit,
   SevenSegmentDisplayContent,
   sevenSegmentDisplayExperiment,
-} from "./semester-04/02-peripheral-interfacing/seven-segment-display";
+} from "./semester-04/02-peripheral-interfacing";
 
 import {
   AdcDacCircuit,
   AdcDacContent,
   adcDacExperiment,
-} from "./semester-04/02-peripheral-interfacing/adc-dac";
+} from "./semester-04/02-peripheral-interfacing";
 
 export type SemesterExperimentEntry = {
   experiment: ExperimentDefinition;
