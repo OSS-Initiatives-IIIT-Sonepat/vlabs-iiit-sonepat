@@ -3,6 +3,7 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { type ComponentData, COMPONENTS_DATA } from "./components.data";
+import { ComponentDockIcon } from "./ComponentDockIcon";
 import { useRef } from "react";
 
 // Dynamically import the 3D viewer with SSR disabled
@@ -146,21 +147,20 @@ export function ComponentShowcase({ data }: { data: ComponentData }) {
                 <Link
                   key={comp.slug}
                   href={`/components/${comp.slug}`}
-                  className={`relative w-[64px] h-[64px] rounded-lg overflow-hidden flex-shrink-0 transition-all ${
+                  className={`relative w-[64px] h-[64px] rounded-lg overflow-hidden flex-shrink-0 transition-all flex flex-col items-center justify-center p-1.5 text-center ${
                     isActive
-                      ? "bg-white/80 border border-black/10 ring-1 ring-black/5 opacity-100 shadow-sm"
-                      : "bg-white/40 border border-black/5 hover:border-black/10 hover:bg-white/70 opacity-60 hover:opacity-100"
+                      ? "bg-white/95 border border-black/15 ring-2 ring-black/10 opacity-100 shadow-sm text-black"
+                      : "bg-white/50 border border-black/5 hover:border-black/15 hover:bg-white/80 opacity-70 hover:opacity-100 text-black/70 hover:text-black"
                   }`}
                   title={comp.name}
                 >
-                  <div className="absolute inset-0 pointer-events-none">
-                    <EceComponentViewer
-                      kind={comp.kind}
-                      background={isActive ? "#f7f6f3" : "#f7f6f3"}
-                      autoRotate={isActive}
-                      zoom={false}
-                    />
-                  </div>
+                  <ComponentDockIcon
+                    kind={comp.kind}
+                    className="w-5 h-5 mb-1"
+                  />
+                  <span className="text-[9px] font-sans font-medium truncate max-w-full leading-tight select-none">
+                    {comp.name.split(" ")[0]}
+                  </span>
                 </Link>
               );
             })}
