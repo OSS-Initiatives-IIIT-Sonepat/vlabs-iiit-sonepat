@@ -1,10 +1,10 @@
-import { type TheorySection } from "@/labs/lab-content.types";
+import { type LabSection } from "@/labs/lab-content.types";
 
-export const aim: TheorySection = {
+export const aim: LabSection = {
   id: "aim",
   type: "text",
   title: "Aim",
   paragraphs: [
-    "To study and verify 4:1 multiplexer using 74hc153 on a breadboard.",
+    "To design, construct and verify the operation of a 4:1 multiplexer (74HC153) and to tabulate its output for every combination of the select lines $S_1$ and $S_0$.",
   ],
 };

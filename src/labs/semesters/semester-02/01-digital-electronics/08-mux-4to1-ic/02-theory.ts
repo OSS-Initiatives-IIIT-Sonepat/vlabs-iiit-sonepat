@@ -5,9 +5,10 @@ export const theory: TheorySection = {
   type: "text",
   title: "Theory",
   paragraphs: [
-    "A multiplexer (MUX) is a combinational circuit that selects one of several input data lines and routes it to a single output. A 4:1 MUX has four data inputs (I0–I3), two select inputs (S1, S0), and one output (Y). The select lines encode a 2-bit binary address that determines which input is connected to the output: Y = I(S1·2 + S0).",
-    "The Boolean expression for a 4:1 MUX output is: Y = S1'·S0'·I0 + S1'·S0·I1 + S1·S0'·I2 + S1·S0·I3. Each term is a minterm of the select inputs ANDed with the corresponding data input. MUXes are universal logic elements: any Boolean function of n variables can be implemented with a 2ⁿ-to-1 MUX by applying function values to data inputs.",
-    "The 74HC153 is a dual 4:1 multiplexer in a DIP-16 package. It contains two independent 4:1 MUX channels sharing the same select lines S1 and S0. Each channel has its own enable input (EN1_bar, EN2_bar) that is active-LOW. When EN_bar = LOW (enabled), Y = selected input; when EN_bar = HIGH, Y = LOW regardless of S and I. In this experiment, EN1_bar is tied permanently to GND to enable channel 1.",
-    "Multiplexers find use in data routing, bus control, function generators, and parallel-to-serial conversion. The 74HC153 operates from 2 V to 6 V with propagation delays under 10 ns at 5 V, making it suitable for high-speed digital switching applications.",
+    "A multiplexer (MUX) is a combinational circuit that selects one of several data inputs and forwards it to a single output. The choice is made by the select lines. A $2^n$:1 multiplexer has $2^n$ data inputs and $n$ select lines.",
+    "A 4:1 multiplexer has four data inputs $I_0$–$I_3$, two select lines $S_1, S_0$ and one output $Y$. The output equals the data input whose index matches the binary value on the select lines.",
+    "Boolean expression: $Y = \\overline{S_1}\\,\\overline{S_0}\\,I_0 + \\overline{S_1}\\,S_0\\,I_1 + S_1\\,\\overline{S_0}\\,I_2 + S_1\\,S_0\\,I_3$",
+    "Each product term is a 3-input AND gate, so the gate-level circuit is 2 NOT gates, 4 three-input AND gates and one 4-input OR gate. In this experiment the 74HC153 dual 4:1 multiplexer is used, with only section 1 (pins 1C0–1C3, 1Y) connected. The enable input $\\overline{1G}$ is active LOW and is tied to ground so the output stays enabled.",
+    "Applications: data routing, parallel-to-serial conversion, implementing Boolean functions, and bus selection in CPUs.",
   ],
 };
