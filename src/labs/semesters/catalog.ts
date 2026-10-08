@@ -233,10 +233,10 @@ import {
 } from "./semester-02/01-digital-electronics/14-binary-subtractor-4bit";
 
 import {
-  SrLatchCircuit,
-  SrLatchContent,
-  srLatchExperiment,
-} from "./semester-02/01-digital-electronics/sr-latch";
+  SrFlipFlopCircuit,
+  SrFlipFlopContent,
+  srFlipFlopExperiment,
+} from "./semester-02/01-digital-electronics/sr-flip-flop";
 
 import {
   DFlipFlopCircuit,
@@ -867,7 +867,7 @@ export const SEMESTER_SUBJECTS: readonly SemesterSubjectCatalog[] = [
         MuxBasedLogicContent,
         ["mux", "lut", "fpga", "boolean function", "universal gate"],
       ),
-      fromBuilt(srLatchExperiment, SrLatchCircuit, SrLatchContent, [
+      fromBuilt(srFlipFlopExperiment, SrFlipFlopCircuit, SrFlipFlopContent, [
         "latch",
         "sr latch",
         "74hc279",

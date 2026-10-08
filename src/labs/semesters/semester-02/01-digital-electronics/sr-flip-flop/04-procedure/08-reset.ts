@@ -1,0 +1,30 @@
+import { type SceneProcedureStep } from "@/labs/experiments/types";
+
+export const step: SceneProcedureStep = {
+  label: "Reset: S = 0, R = 1",
+  body: "Set S = 0 and R = 1. Gate 1 output Q goes to 0 and gate 2 output Q̄ goes to 1. The yellow LED glows and the green LED is OFF.",
+  show: [
+    "bb",
+    "psu",
+    "nor1",
+    "nor2",
+    "w_fb1",
+    "w_fb2",
+    "w_s",
+    "w_r",
+    "r_q",
+    "led_q",
+    "r_qb",
+    "led_qb",
+    "w_q_r",
+    "w_r_led_q",
+    "w_qb_r",
+    "w_r_led_qb",
+    "w_gnd_q",
+    "w_gnd_qb",
+  ],
+  highlight: "led_qb",
+  activeInputs: { S: 0, R: 1 },
+  supplyVoltage: 5.0,
+  ledBrightness: { led_q: 0, led_qb: 1 },
+};
