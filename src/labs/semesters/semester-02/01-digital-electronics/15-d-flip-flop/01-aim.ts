@@ -1,10 +1,10 @@
-import { type TheorySection } from "@/labs/lab-content.types";
+import { type LabSection } from "@/labs/lab-content.types";
 
-export const aim: TheorySection = {
+export const aim: LabSection = {
   id: "aim",
   type: "text",
   title: "Aim",
   paragraphs: [
-    "To study and verify d flip-flop using 74hc74 (rising-edge triggered) on a breadboard.",
+    "To study the operation of a positive-edge-triggered D flip-flop (74HC74) and to verify that the output $Q$ takes the value of the data input $D$ only on the rising edge of the clock.",
   ],
 };
