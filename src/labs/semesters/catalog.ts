@@ -245,10 +245,10 @@ import {
 } from "./semester-02/01-digital-electronics/15-d-flip-flop";
 
 import {
-  JkTFlipFlopCircuit,
-  JkTFlipFlopContent,
-  jkTFlipFlopExperiment,
-} from "./semester-02/01-digital-electronics/16-jk-t-flip-flop";
+  JkAndTFlipFlopCircuit,
+  JkAndTFlipFlopContent,
+  jkAndTFlipFlopExperiment,
+} from "./semester-02/01-digital-electronics/16-jk-and-t-flip-flop";
 
 import {
   Mod5AsyncUpDownCounterCircuit,
@@ -840,7 +840,7 @@ export const SEMESTER_SUBJECTS: readonly SemesterSubjectCatalog[] = [
         "clock edge",
         "sequential",
       ]),
-      fromBuilt(jkTFlipFlopExperiment, JkTFlipFlopCircuit, JkTFlipFlopContent, [
+      fromBuilt(jkAndTFlipFlopExperiment, JkAndTFlipFlopCircuit, JkAndTFlipFlopContent, [
         "flip-flop",
         "jk flip-flop",
         "t flip-flop",
