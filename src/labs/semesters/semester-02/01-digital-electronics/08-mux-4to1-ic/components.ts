@@ -1,175 +1,120 @@
 import { type ComponentInstance } from "@/labs/types";
 
+/*
+ * Layout (30-col breadboard)
+ *   cols 2–3  : select tie-points  S0 (red, col 2)  S1 (blue, col 3)
+ *   cols 8–14 : 74HC153 (mux-4to1) at row e
+ *   cols 18–21: resistor (col 18) + LED (col 20)
+ * Data inputs are hard-wired from the rails: I0=0, I1=1, I2=1, I3=0  (Y = S1 XOR S0)
+ *
+ * NOTE: pin names for mux-4to1 (1C0..1C3, S0, S1, 1G, 1Y) follow the 74HC153 datasheet.
+ */
 export const components: ComponentInstance[] = [
+  { id: "bb", type: "breadboard" },
   {
-    id: "bb",
-    type: "breadboard",
+    id: "psu",
+    type: "dc-jack",
+    mountedAt: { board: "bb", col: 1, row: "a" },
+    terminals: [
+      { board: "bb", rail: "vcc_top", col: 5 },
+      { board: "bb", rail: "gnd_top", col: 5 },
+    ],
   },
   {
-    id: "mux41",
+    id: "mux1",
     type: "mux-4to1",
-    mountedAt: {
-      board: "bb",
-      col: 8,
-      row: "e",
-    },
+    mountedAt: { board: "bb", col: 8, row: "e" },
   },
+
+  // output stage
   {
-    id: "r_out",
+    id: "r_y",
     type: "resistor",
     ohms: 330,
-    mountedAt: {
-      board: "bb",
-      col: 20,
-      row: "c",
-    },
+    mountedAt: { board: "bb", col: 18, row: "c" },
   },
   {
-    id: "led_out",
+    id: "led_y",
     type: "led",
     color: "green",
-    mountedAt: {
-      board: "bb",
-      col: 24,
-      row: "c",
-    },
+    mountedAt: { board: "bb", col: 20, row: "c" },
+  },
+
+  // enable tied LOW
+  {
+    id: "w_en",
+    type: "wire",
+    color: "black",
+    from: { ic: "mux1", pin: "1G" },
+    to: { board: "bb", rail: "gnd_top", col: 8 },
+  },
+
+  // data inputs
+  {
+    id: "w_i0",
+    type: "wire",
+    color: "black",
+    from: { board: "bb", rail: "gnd_top", col: 10 },
+    to: { ic: "mux1", pin: "1C0" },
   },
   {
-    id: "w_s0_mux41",
+    id: "w_i1",
+    type: "wire",
+    color: "white",
+    from: { board: "bb", rail: "vcc_top", col: 11 },
+    to: { ic: "mux1", pin: "1C1" },
+  },
+  {
+    id: "w_i2",
+    type: "wire",
+    color: "white",
+    from: { board: "bb", rail: "vcc_top", col: 12 },
+    to: { ic: "mux1", pin: "1C2" },
+  },
+  {
+    id: "w_i3",
+    type: "wire",
+    color: "black",
+    from: { board: "bb", rail: "gnd_top", col: 13 },
+    to: { ic: "mux1", pin: "1C3" },
+  },
+
+  // select lines
+  {
+    id: "w_s0",
     type: "wire",
     color: "red",
-    from: {
-      board: "bb",
-      col: 5,
-      row: "a",
-    },
-    to: {
-      ic: "mux41",
-      pin: "s0",
-    },
+    from: { board: "bb", col: 2, row: "a" },
+    to: { ic: "mux1", pin: "S0" },
   },
   {
-    id: "w_s1_mux41",
+    id: "w_s1",
     type: "wire",
-    color: "orange",
-    from: {
-      board: "bb",
-      col: 6,
-      row: "a",
-    },
-    to: {
-      ic: "mux41",
-      pin: "s1",
-    },
+    color: "blue",
+    from: { board: "bb", col: 3, row: "a" },
+    to: { ic: "mux1", pin: "S1" },
   },
+
+  // output
   {
-    id: "w_i0_mux41",
-    type: "wire",
-    color: "white",
-    from: {
-      board: "bb",
-      col: 1,
-      row: "a",
-    },
-    to: {
-      ic: "mux41",
-      pin: "i0_1",
-    },
-  },
-  {
-    id: "w_i1_mux41",
-    type: "wire",
-    color: "white",
-    from: {
-      board: "bb",
-      col: 2,
-      row: "a",
-    },
-    to: {
-      ic: "mux41",
-      pin: "i1_1",
-    },
-  },
-  {
-    id: "w_i2_mux41",
-    type: "wire",
-    color: "white",
-    from: {
-      board: "bb",
-      col: 3,
-      row: "a",
-    },
-    to: {
-      ic: "mux41",
-      pin: "i2_1",
-    },
-  },
-  {
-    id: "w_i3_mux41",
-    type: "wire",
-    color: "white",
-    from: {
-      board: "bb",
-      col: 4,
-      row: "a",
-    },
-    to: {
-      ic: "mux41",
-      pin: "i3_1",
-    },
-  },
-  {
-    id: "w_en_gnd",
-    type: "wire",
-    color: "black",
-    from: {
-      ic: "mux41",
-      pin: "en1_bar",
-    },
-    to: {
-      board: "bb",
-      rail: "gnd_top",
-      col: 8,
-    },
-  },
-  {
-    id: "w_y1_r",
+    id: "w_y_r",
     type: "wire",
     color: "green",
-    from: {
-      ic: "mux41",
-      pin: "y1",
-    },
-    to: {
-      component: "r_out",
-      end: "p1",
-    },
+    from: { ic: "mux1", pin: "1Y" },
+    to: { component: "r_y", end: "p1" },
   },
   {
-    id: "w_out_led",
+    id: "w_r_led",
     type: "wire",
     color: "green",
-    from: {
-      component: "r_out",
-      end: "p2",
-    },
-    to: {
-      led: "led_out",
-      end: "anode",
-    },
+    from: { component: "r_y", end: "p2" },
+    to: { led: "led_y", end: "anode" },
   },
   {
-    id: "w_out_gnd",
+    id: "w_gnd_led",
     type: "wire",
     color: "black",
-    from: {
-      led: "led_out",
-      end: "cathode",
-    },
-    to: {
-      board: "bb",
-      rail: "gnd_top",
-      col: 1,
-    },
+    from: { led: "led_y", end: "cathode" },
+    to: { board: "bb", rail: "gnd_top", col: 1 },
   },
 ];

@@ -1,21 +1,26 @@
-import { type ObservationSection } from "@/labs/lab-content.types";
+import { type LabSection } from "@/labs/lab-content.types";
 
-export const observations: ObservationSection = {
+export const observations: LabSection = {
   id: "observations",
   type: "observation",
   title: "Observations",
   paragraphs: [
-    "Supply voltage VCC = +5 V. 74HC153 enabled with EN1_bar = LOW.",
-    "Test data pattern: I0=1, I1=0, I2=1, I3=0.",
-    "LED state (ON = HIGH output) matches the value of the selected data input in all cases.",
+    "Data inputs are held at $I_0 = 0,\\ I_1 = 1,\\ I_2 = 1,\\ I_3 = 0$. Set the select lines and record the output and LED state.",
   ],
   table: {
-    headers: ["S1", "S0", "Selected Input", "I Value", "Y Output", "LED"],
+    headers: [
+      "S1",
+      "S0",
+      "Input selected",
+      "Y (expected)",
+      "LED state",
+      "Y (observed)",
+    ],
     rows: [
-      [0, 0, "I0", 1, 1, "ON"],
-      [0, 1, "I1", 0, 0, "OFF"],
-      [1, 0, "I2", 1, 1, "ON"],
-      [1, 1, "I3", 0, 0, "OFF"],
+      ["0", "0", "I0", "0", "OFF", ""],
+      ["0", "1", "I1", "1", "ON", ""],
+      ["1", "0", "I2", "1", "ON", ""],
+      ["1", "1", "I3", "0", "OFF", ""],
     ],
   },
 };
