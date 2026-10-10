@@ -300,7 +300,6 @@ export function resolveIcPin(
     }
   }
 
-
   // Power pins
   if (p === "GND") {
     return hole(startCol + (pinsPerSide - 1), sideA, cols);
