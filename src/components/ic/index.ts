@@ -273,6 +273,34 @@ export function resolveIcPin(
   // Aliases
   const p = pin === "A" ? "1A" : pin === "B" ? "1B" : pin === "Y" ? "1Y" : pin;
 
+  // LM741 / 8-pin op-amp
+  if (icType === "op-amp") {
+    switch (p) {
+      case "2":
+      case "IN-":
+      case "-IN":
+        return hole(startCol + 1, sideA, cols);
+
+      case "3":
+      case "IN+":
+      case "+IN":
+        return hole(startCol + 2, sideA, cols);
+
+      case "4":
+      case "V-":
+        return hole(startCol + 3, sideA, cols);
+
+      case "6":
+      case "OUT":
+        return hole(startCol + 1, sideB, cols);
+
+      case "7":
+      case "V+":
+        return hole(startCol + 0, sideB, cols);
+    }
+  }
+
+
   // Power pins
   if (p === "GND") {
     return hole(startCol + (pinsPerSide - 1), sideA, cols);

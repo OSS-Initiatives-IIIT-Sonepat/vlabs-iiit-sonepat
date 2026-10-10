@@ -66,7 +66,7 @@ export const components: ComponentInstance[] = [
     ohms: 10000,
     mountedAt: {
       board: "bb",
-      col: 15,
+      col: 8,
       row: "c",
     },
   },
@@ -77,7 +77,7 @@ export const components: ComponentInstance[] = [
     ohms: 100000,
     mountedAt: {
       board: "bb",
-      col: 35,
+      col: 14,
       row: "c",
     },
   },
@@ -88,7 +88,7 @@ export const components: ComponentInstance[] = [
     ohms: 10000,
     mountedAt: {
       board: "bb",
-      col: 35,
+      col: 14,
       row: "g",
     },
   },
@@ -99,7 +99,7 @@ export const components: ComponentInstance[] = [
     probes: [
       {
         board: "bb",
-        col: 10,
+        col: 28,
         row: "c",
       },
       {
@@ -121,7 +121,7 @@ export const components: ComponentInstance[] = [
     probes: [
       {
         board: "bb",
-        col: 45,
+        col: 28,
         row: "c",
       },
       {
@@ -252,8 +252,30 @@ export const components: ComponentInstance[] = [
     },
     to: {
       board: "bb",
-      col: 45,
+      col: 28,
       row: "c",
     },
+  },
+
+  {
+    id: "w_fg_noninv",
+    type: "wire",
+    color: "blue",
+    from: { board: "bb", col: 10, row: "c" },
+    to: { ic: "opamp1", pin: "3" },
+  },
+  {
+    id: "w_r1_pin2",
+    type: "wire",
+    color: "orange",
+    from: { ic: "opamp1", pin: "2" },
+    to: { component: "r_1", end: "p1" },
+  },
+  {
+    id: "w_r1_gnd",
+    type: "wire",
+    color: "black",
+    from: { component: "r_1", end: "p2" },
+    to: { board: "bb", rail: "gnd_top", col: 14 },
   },
 ];

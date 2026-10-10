@@ -17,7 +17,6 @@ export const invertingNonInvertingOpampExperiment: ExperimentDefinition = {
   components,
   sections: [aim, theory, apparatus, observations, conclusion],
   procedureSteps,
-  labType: "text",
 };
 
 export const InvertingNonInvertingOpampCircuit = buildCircuit(
