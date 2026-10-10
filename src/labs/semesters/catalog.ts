@@ -143,12 +143,6 @@ import {
 } from "./semester-01/01-analog-electronics/12-mosfet-common-source";
 
 import {
-  OpampCircuitsCircuit,
-  OpampCircuitsContent,
-  opampCircuitsExperiment,
-} from "./semester-01/01-analog-electronics/13-opamp-circuits";
-
-import {
   FullAdderCircuit,
   FullAdderContent,
   fullAdderExperiment,
@@ -644,12 +638,6 @@ export const SEMESTER_SUBJECTS: readonly SemesterSubjectCatalog[] = [
           "phase shift",
           "2N7000",
         ],
-      ),
-      fromBuilt(
-        opampCircuitsExperiment,
-        OpampCircuitsCircuit,
-        OpampCircuitsContent,
-        ["op-amp", "lm741", "inverting", "non-inverting", "voltage gain"],
       ),
       // fromBuilt(
       //   rectifiersCapacitorFiltersExperiment,
