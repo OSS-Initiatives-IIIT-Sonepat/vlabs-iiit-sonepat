@@ -1,0 +1,30 @@
+import { type SceneProcedureStep } from "@/labs/experiments/types";
+
+export const step: SceneProcedureStep = {
+  label: "Hold: S = 0, R = 0",
+  body: "Return S to 0 so that S = 0 and R = 0. The flip-flop holds Q = 1, Q̄ = 0. Compare this with the earlier hold step: the same inputs give a different output because of the stored state.",
+  show: [
+    "bb",
+    "psu",
+    "nor1",
+    "nor2",
+    "w_fb1",
+    "w_fb2",
+    "w_s",
+    "w_r",
+    "r_q",
+    "led_q",
+    "r_qb",
+    "led_qb",
+    "w_q_r",
+    "w_r_led_q",
+    "w_qb_r",
+    "w_r_led_qb",
+    "w_gnd_q",
+    "w_gnd_qb",
+  ],
+  highlight: "led_q",
+  activeInputs: { S: 0, R: 0 },
+  supplyVoltage: 5.0,
+  ledBrightness: { led_q: 1, led_qb: 0 },
+};

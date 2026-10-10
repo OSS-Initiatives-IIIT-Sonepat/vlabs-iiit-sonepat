@@ -245,10 +245,10 @@ import {
 } from "./semester-02/01-digital-electronics/14-binary-subtractor-4bit";
 
 import {
-  SrLatchCircuit,
-  SrLatchContent,
-  srLatchExperiment,
-} from "./semester-02/01-digital-electronics/sr-latch";
+  SrFlipFlopCircuit,
+  SrFlipFlopContent,
+  srFlipFlopExperiment,
+} from "./semester-02/01-digital-electronics/sr-flip-flop";
 
 import {
   DFlipFlopCircuit,
@@ -257,10 +257,10 @@ import {
 } from "./semester-02/01-digital-electronics/15-d-flip-flop";
 
 import {
-  JkTFlipFlopCircuit,
-  JkTFlipFlopContent,
-  jkTFlipFlopExperiment,
-} from "./semester-02/01-digital-electronics/16-jk-t-flip-flop";
+  JkAndTFlipFlopCircuit,
+  JkAndTFlipFlopContent,
+  jkAndTFlipFlopExperiment,
+} from "./semester-02/01-digital-electronics/16-jk-and-t-flip-flop";
 
 import {
   Mod5AsyncUpDownCounterCircuit,
@@ -892,7 +892,7 @@ export const SEMESTER_SUBJECTS: readonly SemesterSubjectCatalog[] = [
         "clock edge",
         "sequential",
       ]),
-      fromBuilt(jkTFlipFlopExperiment, JkTFlipFlopCircuit, JkTFlipFlopContent, [
+      fromBuilt(jkAndTFlipFlopExperiment, JkAndTFlipFlopCircuit, JkAndTFlipFlopContent, [
         "flip-flop",
         "jk flip-flop",
         "t flip-flop",
@@ -919,7 +919,7 @@ export const SEMESTER_SUBJECTS: readonly SemesterSubjectCatalog[] = [
         MuxBasedLogicContent,
         ["mux", "lut", "fpga", "boolean function", "universal gate"],
       ),
-      fromBuilt(srLatchExperiment, SrLatchCircuit, SrLatchContent, [
+      fromBuilt(srFlipFlopExperiment, SrFlipFlopCircuit, SrFlipFlopContent, [
         "latch",
         "sr latch",
         "74hc279",

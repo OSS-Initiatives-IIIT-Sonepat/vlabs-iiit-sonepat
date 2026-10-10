@@ -27,7 +27,7 @@ import { BinaryAdder4bit } from "../src/labs/circuits/binary-adder-4bit";
 import { BinarySubtractor4bit } from "../src/labs/circuits/binary-subtractor-4bit";
 import { SRLatchCircuit } from "../src/labs/circuits/sr-latch";
 import { DFlipFlopCircuit } from "../src/labs/circuits/d-flip-flop";
-import { JKTFlipFlopCircuit } from "../src/labs/circuits/jk-t-flip-flop";
+import { JkAndTFlipFlopCircuit } from "../src/labs/circuits/jk-t-flip-flop";
 import { Mod5CounterCircuit } from "../src/labs/circuits/mod5-counter";
 import { ParityChecker } from "../src/labs/circuits/parity-checker";
 import { DigitalComparator } from "../src/labs/circuits/digital-comparator";
@@ -664,8 +664,8 @@ runCircuitMigration(
 runCircuitMigration(
   "04-sequential-logic",
   "semester-02/04-sequential-logic",
-  JKTFlipFlopCircuit,
-  JkTFlipFlopContent,
+  JkAndTFlipFlopCircuit,
+  JkAndTFlipFlopContent,
   [
     "flip-flop",
     "jk flip-flop",
