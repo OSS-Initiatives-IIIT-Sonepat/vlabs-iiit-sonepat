@@ -14,6 +14,16 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: "/labs/opamp-circuits",
+        destination: "/labs/inverting-non-inverting-opamp",
+        permanent: true,
+      },
+    ];
+  },
+
   async headers() {
     return [
       {
