@@ -1,49 +1,27 @@
-import { type ApparatusSection } from "@/labs/lab-content.types";
+import { type LabSection } from "@/labs/lab-content.types";
 
-export const apparatus: ApparatusSection = {
+export const apparatus: LabSection = {
   id: "apparatus",
   type: "apparatus",
-  title: "Apparatus Required",
+  title: "Apparatus",
   items: [
     {
-      name: "74HC32 Quad 2-input OR IC",
-      specification: "DIP-14 (two OR gates used)",
+      name: "Breadboard",
+      specification: "30-column solderless",
       quantity: "1",
     },
     {
-      name: "LED",
-      specification: "Red, 5 mm (output A — MSB)",
-      quantity: "1",
-    },
-    {
-      name: "LED",
-      specification: "Green, 5 mm (output B — LSB)",
-      quantity: "1",
-    },
-    {
-      name: "Resistor (current limiting)",
-      specification: "330 Ω, 0.25 W",
+      name: "OR gate IC",
+      specification: "74HC32 (quad 2-input OR) – one gate used per IC",
       quantity: "2",
     },
+    { name: "Resistor", specification: "330 Ω, 1/4 W", quantity: "2" },
+    { name: "LED", specification: "Green and yellow, 5 mm", quantity: "2" },
+    { name: "DC power supply", specification: "+5 V", quantity: "1" },
     {
-      name: "SPDT Switch / Jumper",
-      specification: "Logic input (I0, I1, I2, I3 — one active at a time)",
-      quantity: "4",
-    },
-    {
-      name: "DC Power Supply",
-      specification: "5 V regulated",
-      quantity: "1",
-    },
-    {
-      name: "Bread Board",
-      specification: "Full size, 830 tie-points",
-      quantity: "1",
-    },
-    {
-      name: "Connecting Wires",
-      specification: "22 AWG solid-core jumper wires",
-      quantity: "15",
+      name: "Jumper wires",
+      specification: "Assorted colours",
+      quantity: "As required",
     },
   ],
 };

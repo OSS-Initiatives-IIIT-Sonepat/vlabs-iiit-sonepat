@@ -1,8 +1,8 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
 
 export const step: SceneProcedureStep = {
-  label: "Connect the load resistor RL.",
-  body: "Mount the load resistor RL = 1 kΩ (columns 13 to 16, row c). Join its left lead to the output node (the Zener cathode) with a green wire and its right lead to the ground rail with a black wire. RL is now in parallel with the Zener diode, so the output voltage Vout is the voltage across both.",
+  label: "Connect the load resistor RL1.",
+  body: "Mount the load resistor RL1 = 1 kΩ (columns 13 to 16, row c). Join its left lead to the output node — the junction of Rs and the Zener cathode, column 12 — with a green wire and its right lead to the ground rail with a black wire. RL1 is now in parallel with the Zener diode, so the output voltage Vout is the voltage across both.",
   show: [
     "bb",
     "psu",

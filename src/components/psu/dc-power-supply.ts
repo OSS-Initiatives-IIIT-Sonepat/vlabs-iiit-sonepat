@@ -3,6 +3,7 @@ import { PITCH, BOARD_H, BOARD_W, BOARD_D, TOP_Y } from "@/labs/coords";
 import { M } from "@/components/shared/materials";
 import { solidBox, solidCyl, textLabel } from "@/components/shared/primitives";
 import { instrumentWire } from "@/components/shared/instrument-wire";
+import { benchPlacement, BENCH_SLOTS } from "@/components/shared/bench-layout";
 // ── DC POWER SUPPLY ──────────────────────────────────────────────────────
 export function buildDcPowerSupplyStandalone(): THREE.Group {
   const root = new THREE.Group();
@@ -84,7 +85,7 @@ export function buildDcPowerSupplyStandalone(): THREE.Group {
 
 // ── BOARD-PLACED DC POWER SUPPLY ─────────────────────────────────────────
 export function buildDcPowerSupply(
-  position: "left" | "right" = "left",
+  position: "left" | "right" | number = "left",
   displayValue: string = "--",
   targets?: { vcc: THREE.Vector3; gnd: THREE.Vector3 },
 ): THREE.Group {
@@ -104,29 +105,31 @@ export function buildDcPowerSupply(
     model.add(lcdLabel);
   }
 
+  // Slot index: a number selects a bench slot directly; "left"/"right" map to
+  // the two ends of the bench row for back-compat.
+  const slot =
+    typeof position === "number"
+      ? position
+      : position === "left"
+        ? 0
+        : BENCH_SLOTS - 1;
+  const { position: slotPos, scale } = benchPlacement(slot);
+
   const wrapper = new THREE.Group();
   wrapper.add(model);
-  wrapper.scale.setScalar(0.22);
-
-  // Position behind-left of the breadboard — like it's sitting at the back of the bench
-  // Z is negative = behind the board (away from viewer)
-  // X is offset left or right
-  const xSign = position === "left" ? -1 : 1;
-  wrapper.position.set(xSign * (BOARD_W / 2 - 1.2), 0, -(BOARD_D / 2 + 0.5));
+  wrapper.scale.setScalar(scale);
+  wrapper.position.copy(slotPos);
 
   const root = new THREE.Group();
   root.add(wrapper);
 
   // ── Connection wires to specific board holes ──────────────────────────
   if (targets) {
-    const xSign = position === "left" ? -1 : 1;
-    const wrapperX = xSign * (BOARD_W / 2 - 1.2);
-    const wrapperZ = -(BOARD_D / 2 + 0.5);
     const psuY = TOP_Y + PITCH * 0.5;
-    const psuOrigin = new THREE.Vector3(wrapperX, psuY, wrapperZ);
+    const psuOrigin = new THREE.Vector3(slotPos.x, psuY, slotPos.z);
     root.add(instrumentWire(psuOrigin, targets.vcc, 0xd63b2a));
     const psuOrigin2 = psuOrigin.clone();
-    psuOrigin2.x += xSign * 0.06;
+    psuOrigin2.x += 0.06;
     psuOrigin2.z += 0.05;
     root.add(instrumentWire(psuOrigin2, targets.gnd, 0x202020));
   }

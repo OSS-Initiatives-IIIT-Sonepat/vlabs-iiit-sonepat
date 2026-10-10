@@ -3,6 +3,8 @@ import { PITCH } from "@/labs/coords";
 import { M } from "@/components/shared/materials";
 import { solidBox, textLabel } from "@/components/shared/primitives";
 
+export const FG_OUT_ANCHOR = "socket-fg-out";
+
 // ─────────────────────────────────────────────────────────────────────────────
 // FUNCTION / SIGNAL GENERATOR — benchtop, 0.1 Hz – 1 MHz class
 //
@@ -81,7 +83,7 @@ const GLYPHS: Record<string, string> = {
   " ": "",
 };
 
-type Waveform = "sine" | "square" | "triangle";
+export type Waveform = "sine" | "square" | "triangle";
 
 const WAVE_BUTTONS: { wave: Waveform; text: string; u: number }[] = [
   { wave: "sine", text: "SINE", u: -105 },
@@ -568,6 +570,14 @@ export function buildFunctionGenerator(
     const bnc = makeBNC();
     bnc.position.set(b.u * MM, toY(-37) * MM, PANEL_Z);
     root.add(bnc);
+
+    if (b.text === "OUTPUT 50Ω") {
+      const anchor = new THREE.Object3D();
+      anchor.name = FG_OUT_ANCHOR;
+      anchor.position.set(b.u * MM, toY(-37) * MM, PANEL_Z + 14 * MM);
+      root.add(anchor);
+    }
+
     addLabel(b.text, b.u, -37 - 11.5);
   }
 
@@ -579,16 +589,21 @@ export function buildFunctionGenerator(
 /** Longest edge (the depth) of the standalone model, in world units. */
 const STANDALONE_LENGTH = 2.0;
 
-export function buildFunctionGeneratorStandalone(): THREE.Group {
+export function buildFunctionGeneratorStandalone(
+  waveform: Waveform = "sine",
+  display = "1.000",
+  range = 3,
+  powerOn = true,
+): THREE.Group {
   // Shrink to a small, fixed size so it matches the other standalone parts
   // no matter what PITCH is, and centre it on the origin for the viewer.
   const s = STANDALONE_LENGTH / (D * MM);
   const root = buildFunctionGenerator(
     new THREE.Vector3(0, 0, 0),
-    "sine",
-    "1.000",
-    3,
-    true,
+    waveform,
+    display,
+    range,
+    powerOn,
     s,
   );
   root.position.y = -V_C * MM * s;

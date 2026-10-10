@@ -12,7 +12,7 @@ still needs Three.js geometry.
 ```
 03-apparatus.ts        ApparatusSection { items: [{name, specification, quantity}] }
         ↓
-ApparatusScene.tsx     buildItemModel(item)  ← string-matches item.name  (line 22)
+ApparatusScene.tsx     buildItemModel(item)  ← matches item.name + specification
         ↓
 src/components/<x>/    buildXStandalone()    ← actual Three.js geometry
 ```
@@ -55,15 +55,15 @@ resistor fallback (or a wrong part — see Known mis-mappings).
 
 ### Discretes, diodes & displays
 
-| Object                                         | Status   | Labs | Notes                                 |
-| ---------------------------------------------- | -------- | ---- | ------------------------------------- |
-| LED 5 mm (red / green / yellow / blue / white) | YES      | 29   | `src/components/led`                  |
-| Diode — 1N4148, 1N4007                         | **MISS** | 4    | currently renders as a **yellow LED** |
-| BJT BC547 (TO-92)                              | **MISS** | 4    | currently renders as a resistor       |
-| Zener diode 1N4733A (1 W)                      | **MISS** | 1    | currently renders as a **yellow LED** |
-| 7-segment display, common cathode 0.56"        | **MISS** | 1    | 74HC4511 lab                          |
-| MOSFET 2N7000 (TO-92)                          | **MISS** | 1    | currently renders as a resistor       |
-| Op-amp LM741 (DIP-8)                           | **MISS** | 1    | currently renders as a resistor       |
+| Object                                         | Status   | Labs | Notes                                                          |
+| ---------------------------------------------- | -------- | ---- | -------------------------------------------------------------- |
+| LED 5 mm (red / green / yellow / blue / white) | YES      | 29   | `src/components/led`                                           |
+| Diode — 1N4148, 1N4007                         | YES      | 4    | standalone diode geometry; identified by name or specification |
+| BJT BC547 (TO-92)                              | **MISS** | 4    | currently renders as a resistor                                |
+| Zener diode 1N4733A (1 W)                      | **MISS** | 1    | currently renders as a **yellow LED**                          |
+| 7-segment display, common cathode 0.56"        | **MISS** | 1    | 74HC4511 lab                                                   |
+| MOSFET 2N7000 (TO-92)                          | **MISS** | 1    | currently renders as a resistor                                |
+| Op-amp LM741 (DIP-8)                           | **MISS** | 1    | currently renders as a resistor                                |
 
 ### Passives
 
@@ -103,9 +103,8 @@ One parametric DIP builder keyed on pin count + label would cover the whole fami
 
 These are live bugs, not just missing art — the wrong model is already being drawn:
 
-1. `ApparatusScene.tsx:28` — Zener / 1N4148 / any non-LED diode → `buildLedStandalone('yellow')`.
-   A diode is being shown as an LED.
-2. `ApparatusScene.tsx:40` — the `meter` substring means ammeter and voltmeter both match
+1. A generic diode apparatus item without a recognized part number now defaults to a 1N4148 model.
+2. `ApparatusScene.tsx` — the `meter` substring means ammeter and voltmeter both match
    and render as a full digital multimeter.
 3. No branch for transistor / MOSFET / op-amp / 7-segment / transformer / CRO / function
    generator / DIP switch / logic analyser → all fall to the resistor fallback.

@@ -7,6 +7,8 @@ export const step: SceneProcedureStep = {
     "bb",
     "psu",
     "mux1",
+    "w_vcc",
+    "w_gnd",
     "w_en",
     "w_i0",
     "w_i1",

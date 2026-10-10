@@ -5,7 +5,7 @@ export const aim: LabSection = {
   type: "text",
   title: "Aim",
   paragraphs: [
-    "To study the working of a full-wave bridge rectifier and verify that it converts an alternating (AC) input into a pulsating direct current (DC) output using four diodes.",
-    "To measure the average DC output voltage across a load resistor, and to observe how adding a filter capacitor reduces ripple in the rectified output.",
+    "To construct and study the working of a center-tapped full-wave rectifier using two silicon p-n junction diodes (1N4007) and a center-tapped step-down transformer.",
+    "To observe and analyze the full-wave rectified output waveform on a cathode ray oscilloscope (CRO), measure the DC and RMS output voltages across the load resistor with a digital multimeter (DMM), and observe ripple reduction using a parallel capacitor filter.",
   ],
 };

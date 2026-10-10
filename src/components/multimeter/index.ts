@@ -3,6 +3,7 @@ import { PITCH, BOARD_H, BOARD_W, BOARD_D, TOP_Y } from "@/labs/coords";
 import { M } from "@/components/shared/materials";
 import { solidBox, solidCyl, textLabel } from "@/components/shared/primitives";
 import { instrumentWire } from "@/components/shared/instrument-wire";
+import { benchPlacement, BENCH_SLOTS } from "@/components/shared/bench-layout";
 // ── IC METER ─────────────────────────────────────────────────────────────
 export function buildIcMeterStandalone(): THREE.Group {
   const root = new THREE.Group();
@@ -133,7 +134,7 @@ export function buildIcMeterStandalone(): THREE.Group {
 }
 
 export function buildIcMeter(
-  position: "left" | "right" = "right",
+  position: "left" | "right" | number = "right",
   displayValue: string = "--",
   targets?: { probe1: THREE.Vector3; probe2: THREE.Vector3 },
 ): THREE.Group {
@@ -153,24 +154,28 @@ export function buildIcMeter(
     model.add(lcdLabel);
   }
 
+  const slot =
+    typeof position === "number"
+      ? position
+      : position === "right"
+        ? 0
+        : BENCH_SLOTS - 1;
+  const { position: slotPos, scale } = benchPlacement(slot);
+
   const wrapper = new THREE.Group();
   wrapper.add(model);
-  wrapper.scale.setScalar(0.18);
-
-  const xSign = position === "right" ? 1 : -1;
-  wrapper.position.set(xSign * (BOARD_W / 2 - 1.2), 0, -(BOARD_D / 2 + 0.5));
+  wrapper.scale.setScalar(scale);
+  wrapper.position.copy(slotPos);
 
   const root = new THREE.Group();
   root.add(wrapper);
 
   if (targets) {
-    const wrapperX = xSign * (BOARD_W / 2 - 1.2);
-    const wrapperZ = -(BOARD_D / 2 + 0.5);
     const dmmY = TOP_Y + PITCH * 0.5;
-    const dmmOrigin = new THREE.Vector3(wrapperX, dmmY, wrapperZ);
+    const dmmOrigin = new THREE.Vector3(slotPos.x, dmmY, slotPos.z);
     root.add(instrumentWire(dmmOrigin, targets.probe1, 0xe07020));
     const dmmOrigin2 = dmmOrigin.clone();
-    dmmOrigin2.x -= xSign * 0.06;
+    dmmOrigin2.x -= 0.06;
     dmmOrigin2.z += 0.05;
     root.add(instrumentWire(dmmOrigin2, targets.probe2, 0x202020));
   }

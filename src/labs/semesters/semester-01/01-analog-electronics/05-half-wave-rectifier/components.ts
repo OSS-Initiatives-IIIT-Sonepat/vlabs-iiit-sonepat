@@ -3,103 +3,130 @@ import { type ComponentInstance } from "@/labs/types";
 /**
  * Half-Wave Rectifier
  * ---------------------------------------------------------------
- * AC source -> D1 (visual stand-in: yellow LED, per COMPONENTS.md
- * "diodes on the breadboard use type: 'led'") -> load resistor R_L
- * -> back to ground rail. C1 is added later as a parallel filter
- * capacitor across R_L to demonstrate ripple reduction.
- *
- * Column plan:
- *   col 1      ac_src (dc-jack stand-in for transformer/AC supply)
- *   col 1 (b)  dmm    (potentiometer stand-in for bench multimeter)
- *   col 5      vcc_top / gnd_top rail taps for ac_src terminals
- *   col 8–9    d1     (led, yellow — diode stand-in)
- *   col 11–14  r1     (resistor, load)
- *   col 18–19  c1     (capacitor, filter — added in a later step)
+ * Circuit Architecture (exact match to apparatus):
+ * - Step-Down Transformer (transformer):
+ *     Placed on the workbench beside the breadboard.
+ *     Secondary terminal S1 feeds Diode D1 anode via red wire (w_ac1_d1).
+ *     Secondary return / center tap terminal feeds common ground rail via black wire (w_ac_gnd).
+ * - Semiconductor Rectifier Diode D1 (1N4007):
+ *     Mounted at col 8, row c (anode at col 8, cathode at col 11).
+ * - Load Resistor R_load (1 kΩ):
+ *     Mounted at col 14, row c (spans col 14 -> 17).
+ *     Terminal p1 receives rectified positive half-cycles from D1 cathode.
+ *     Terminal p2 returns to the top ground rail (gnd_top) via w_load_gnd.
+ * - Electrolytic Filter Capacitor C1 (100 µF):
+ *     Mounted at col 19, row c in parallel across R_load.
+ * - Digital Multimeter (dmm):
+ *     Measures unfiltered and filtered DC output voltage across R_load.
+ * - Cathode Ray Oscilloscope (cro):
+ *     Displays input AC and rectified/filtered output waveforms across R_load.
  */
+
 export const components: ComponentInstance[] = [
   { id: "bb", type: "breadboard" },
 
-  // AC input source (transformer secondary / function generator).
-  // terminals[] wire the jack's own +/- leads straight to the rails.
+  // Step-down transformer placed separately on the bench beside the breadboard
   {
-    id: "ac_src",
-    type: "dc-jack",
-    mountedAt: { board: "bb", col: 1, row: "a" },
-    terminals: [
-      { board: "bb", rail: "vcc_top", col: 5 },
-      { board: "bb", rail: "gnd_top", col: 5 },
-    ],
+    id: "transformer",
+    type: "transformer",
   },
 
-  // D1 — rectifying diode (1N4007), rendered as a yellow LED stand-in.
+  // Semiconductor Rectifier Diode D1 (1N4007 silicon diode, spans col 8 -> 11)
   {
     id: "d1",
-    type: "led",
-    color: "yellow",
+    type: "diode",
     mountedAt: { board: "bb", col: 8, row: "c" },
   },
 
-  // R_L — load resistor across which the rectified output is read.
+  // Load resistor R_load (1 kΩ, spans col 14 -> 17)
   {
-    id: "r1",
+    id: "r_load",
     type: "resistor",
     ohms: 1000,
-    mountedAt: { board: "bb", col: 11, row: "c" },
+    mountedAt: { board: "bb", col: 14, row: "c" },
   },
 
-  // Bench multimeter, probing across R_L (p1 = input side, p2 = ground side).
-  {
-    id: "dmm",
-    type: "potentiometer",
-    mountedAt: { board: "bb", col: 1, row: "b" },
-    probes: [
-      { board: "bb", col: 11, row: "c" },
-      { board: "bb", col: 14, row: "c" },
-    ],
-  },
-
-  // C1 — filter capacitor, wired in parallel with R_L (added mid-procedure).
+  // Filter capacitor C1 (100 µF, spans col 19 -> 20)
   {
     id: "c1",
     type: "capacitor",
     capacitance: 100,
-    mountedAt: { board: "bb", col: 18, row: "c" },
+    mountedAt: { board: "bb", col: 19, row: "c" },
   },
 
-  // Wires
+  // Digital Multimeter (DMM) measuring rectified DC voltage across R_load
   {
-    id: "w_src_d1",
-    type: "wire",
-    color: "red",
-    from: { board: "bb", rail: "vcc_top", col: 5 },
-    to: { led: "d1", end: "anode" },
+    id: "dmm",
+    type: "potentiometer",
+    mountedAt: { board: "bb", col: 1, row: "c" },
+    probes: [
+      { board: "bb", col: 14, row: "c" }, // R_load positive side
+      { board: "bb", rail: "gnd_top", col: 17 }, // Ground side
+    ],
   },
+
+  // Cathode Ray Oscilloscope (CRO) displaying output waveforms
   {
-    id: "w_d1_r1",
-    type: "wire",
-    color: "white",
-    from: { led: "d1", end: "cathode" },
-    to: { component: "r1", end: "p1" },
+    id: "cro",
+    type: "oscilloscope",
+    mountedAt: { board: "bb", col: 1, row: "f" },
+    probes: [
+      { board: "bb", col: 14, row: "b" }, // CH1 probe
+      { board: "bb", rail: "gnd_top", col: 17 }, // GND reference
+    ],
   },
+
+  // Secondary return to ground rail (black lead from transformer CT terminal to top ground rail)
   {
-    id: "w_r1_gnd",
+    id: "w_ac_gnd",
     type: "wire",
     color: "black",
-    from: { component: "r1", end: "p2" },
+    from: { component: "transformer", end: "ct" },
     to: { board: "bb", rail: "gnd_top", col: 5 },
   },
+
+  // Secondary AC1 (red lead from transformer S1 terminal to Diode D1 anode)
   {
-    id: "w_c1_top",
+    id: "w_ac1_d1",
+    type: "wire",
+    color: "red",
+    from: { component: "transformer", end: "s1" },
+    to: { component: "d1", end: "p1" },
+  },
+
+  // D1 cathode (p2) to R_load input (p1)
+  {
+    id: "w_d1_load",
+    type: "wire",
+    color: "yellow",
+    from: { component: "d1", end: "p2" },
+    to: { component: "r_load", end: "p1" },
+  },
+
+  // R_load return (p2) to ground rail
+  {
+    id: "w_load_gnd",
+    type: "wire",
+    color: "black",
+    from: { component: "r_load", end: "p2" },
+    to: { board: "bb", rail: "gnd_top", col: 17 },
+  },
+
+  // Filter capacitor C1 positive lead to R_load input (p1)
+  {
+    id: "w_c1_pos",
     type: "wire",
     color: "white",
     from: { component: "c1", end: "p1" },
-    to: { component: "r1", end: "p1" },
+    to: { component: "r_load", end: "p1" },
   },
+
+  // Filter capacitor C1 negative lead to ground rail
   {
-    id: "w_c1_bot",
+    id: "w_c1_gnd",
     type: "wire",
     color: "black",
     from: { component: "c1", end: "p2" },
-    to: { component: "r1", end: "p2" },
+    to: { board: "bb", rail: "gnd_top", col: 20 },
   },
 ];

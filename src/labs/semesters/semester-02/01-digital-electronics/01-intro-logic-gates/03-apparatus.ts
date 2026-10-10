@@ -21,6 +21,11 @@ export const apparatus: LabSection = {
     { name: "Resistor", specification: "330 Ω, 1/4 W", quantity: "7" },
     { name: "LED", specification: "5 mm, assorted colours", quantity: "7" },
     {
+      name: "DC supply",
+      specification: "+5 V (trainer kit)",
+      quantity: "1",
+    },
+    {
       name: "Connecting wires",
       specification: "Single-core, jumper type",
       quantity: "As required",

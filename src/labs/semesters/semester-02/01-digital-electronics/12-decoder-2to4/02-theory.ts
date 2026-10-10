@@ -1,13 +1,14 @@
-import { type TheorySection } from "@/labs/lab-content.types";
+import { type LabSection } from "@/labs/lab-content.types";
 
-export const theory: TheorySection = {
+export const theory: LabSection = {
   id: "theory",
   type: "text",
   title: "Theory",
   paragraphs: [
-    "A binary decoder converts an n-bit binary input code into one of 2ⁿ output lines. A 2:4 decoder takes a 2-bit input (A, B) and asserts exactly one of four output lines (Y0, Y1, Y2, Y3) corresponding to the decimal value of the binary input. At any given time, exactly one output is HIGH (active-high decoder) and the remaining three are LOW. Alternatively, an active-low decoder has exactly one output LOW while the others are HIGH.",
-    "The Boolean expressions for an active-high 2:4 decoder are derived from minterms: Y0 = A'·B' (minterm 0 — inputs 00); Y1 = A'·B (minterm 1 — inputs 01); Y2 = A·B' (minterm 2 — inputs 10); Y3 = A·B (minterm 3 — inputs 11). Each output is a unique minterm of the two input variables. Four AND gates and two NOT gates implement the decoder.",
-    "Gate-level implementation: two NOT gates (74HC04) generate A' and B'; four AND gates (74HC08 — uses all four gates in one IC) each implement one minterm (Y0=A'B', Y1=A'B, Y2=AB', Y3=AB). Total ICs: 1× 74HC04, 1× 74HC08. This is a complete one-IC-each solution. Commercial decoders such as the 74HC139 (dual 2:4) or 74HC138 (3:8) include an active-low enable input for chip-select and cascading.",
-    "Applications of 2:4 decoders include: memory address decoding (selecting one of four memory chips based on two address lines), instruction decoding in CPUs (activating one of four functional units), display digit selection in multiplexed 7-segment displays, and as a fundamental sub-block in larger decoders (two 2:4 decoders plus an inverter form a 3:8 decoder).",
+    "A **decoder** is a combinational circuit that converts an $n$-bit binary code into $2^n$ output lines, of which exactly one is active for each input combination. A 2-to-4 decoder has two inputs $A_1$, $A_0$ and four outputs $Y_0$–$Y_3$. It is the reverse of an encoder, and each output is a *minterm* of the inputs.",
+    "Truth table: $A_1A_0 = 00 \\Rightarrow Y_0 = 1$, $01 \\Rightarrow Y_1 = 1$, $10 \\Rightarrow Y_2 = 1$, $11 \\Rightarrow Y_3 = 1$; all other outputs are 0.",
+    "Standard minterm expressions: $Y_0 = \\overline{A_1}\\,\\overline{A_0}$, $Y_1 = \\overline{A_1}\\,A_0$, $Y_2 = A_1\\,\\overline{A_0}$, $Y_3 = A_1\\,A_0$. This needs two NOT gates and four AND gates.",
+    "**Breadboard realisation.** To save board space and ICs, the same functions are built without inverters: $Y_0 = \\overline{A_1 + A_0}$ (NOR), $Y_3 = A_1 A_0$ (AND), and with $X = A_1 \\oplus A_0$ (XOR): $Y_1 = A_0 \\cdot X$ and $Y_2 = A_1 \\cdot X$. For example, when $A_1A_0 = 01$, $X = 1$ and $Y_1 = 1\\cdot1 = 1$, while for $11$, $X = 0$ so $Y_1 = 0$. These are logically identical to the minterm expressions.",
+    "Decoders are used for address decoding, memory chip-select generation, and display drivers. With an *enable* input, decoders can also be cascaded or used as demultiplexers.",
   ],
 };

@@ -5,7 +5,8 @@ export const conclusion: LabSection = {
   type: "conclusion",
   title: "Conclusion",
   paragraphs: [
-    "The full-wave bridge rectifier successfully converted the AC input into a pulsating DC output by using all four diodes to conduct on both half-cycles, giving a higher average output voltage and twice the ripple frequency compared to a half-wave rectifier.",
-    "Adding the filter capacitor significantly reduced the ripple in the output, producing a much steadier DC voltage suitable for powering DC loads — demonstrating the combined role of rectification and filtering in a basic DC power supply.",
+    "The center-tapped full-wave rectifier was successfully constructed and analyzed. By utilizing a center-tapped step-down transformer and two diodes conducting alternately on opposite half-cycles, continuous unidirectional load current is maintained throughout both half-cycles.",
+    "The measured average DC output voltage ($V_{dc} \\approx 10.30\\text{ V}$) is approximately twice that of a half-wave rectifier, with a ripple frequency of $100\\text{ Hz}$ ($2f_{in}$) and an unfiltered ripple factor of $0.485$, closely agreeing with theoretical predictions.",
+    "Connecting the $100\\ \\mu\\text{F}$ electrolytic filter capacitor across the load significantly suppressed ripple voltage down to $\\approx 0.029$ and boosted the DC voltage to $15.80\\text{ V}$, demonstrating an efficient DC power supply stage.",
   ],
 };

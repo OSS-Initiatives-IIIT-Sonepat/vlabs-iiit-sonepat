@@ -17,7 +17,10 @@ export type RailPin = {
   col: number;
 };
 export type IcPin = { ic: string; pin: string }; // pin is any named pin on the IC
-export type PassivePin = { component: string; end: "p1" | "p2" };
+export type PassivePin = {
+  component: string;
+  end: "p1" | "p2" | "s1" | "s2" | "ct";
+};
 export type LedPin = { led: string; end: "anode" | "cathode" };
 
 export type PinRef = TiePin | RailPin | IcPin | PassivePin | LedPin;
@@ -313,7 +316,11 @@ export type ComponentInstance =
   | {
       id: string;
       type: "oscilloscope";
-      mountedAt: MountPoint;
+      /**
+       * OPTIONAL. The oscilloscope stands on the bench, outside the breadboard,
+       * so it needs no breadboard hole. Only `probes` touch the board.
+       */
+      mountedAt?: MountPoint;
       /** Probe wire targets [CH1, GND] — resolved to Vector3 by LabScene */
       probes?: [PinRef, PinRef];
     }
@@ -333,7 +340,7 @@ export type ComponentInstance =
   | {
       id: string;
       type: "transformer";
-      mountedAt: MountPoint;
+      mountedAt?: MountPoint;
       terminals?: [PinRef, PinRef];
     }
   | {

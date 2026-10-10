@@ -1,0 +1,30 @@
+import { type SceneProcedureStep } from "@/labs/experiments/types";
+
+export const step: SceneProcedureStep = {
+  label: "Test: only D1 = 1",
+  body: "Apply logic 1 to **D1** only and logic 0 to the other three inputs. Expected output $Y_1Y_0 = 01$ — only the yellow LED ($Y_0$) glows.",
+  show: [
+    "bb",
+    "psu",
+    "or_y1",
+    "or_y0",
+    "r_y1",
+    "led_y1",
+    "r_y0",
+    "led_y0",
+    "w_d1_or0",
+    "w_d2_or1",
+    "w_d3_or1",
+    "w_d3_or0",
+    "w_or1_r",
+    "w_r_led1",
+    "w_or0_r",
+    "w_r_led0",
+    "w_gnd1",
+    "w_gnd0",
+  ],
+  highlight: "led_y0",
+  activeInputs: { D0: 0, D1: 1, D2: 0, D3: 0 },
+  supplyVoltage: 5.0,
+  ledBrightness: { led_y1: 0.0, led_y0: 1.0 },
+};

@@ -40,6 +40,22 @@ export const components: ComponentInstance[] = [
     mountedAt: { board: "bb", col: 20, row: "c" },
   },
 
+  // IC power
+  {
+    id: "w_vcc",
+    type: "wire",
+    color: "red",
+    from: { ic: "mux1", pin: "VCC" },
+    to: { board: "bb", rail: "vcc_top", col: 8 },
+  },
+  {
+    id: "w_gnd",
+    type: "wire",
+    color: "black",
+    from: { ic: "mux1", pin: "GND" },
+    to: { board: "bb", rail: "gnd_top", col: 15 },
+  },
+
   // enable tied LOW
   {
     id: "w_en",

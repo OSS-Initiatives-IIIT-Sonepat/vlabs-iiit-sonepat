@@ -4,9 +4,8 @@ export const aim: TheorySection = {
   id: "aim",
   type: "text",
   title: "Aim",
-  audioPath:
-    "/semesters/semester-01/01-analog-electronics-advanced/cb-transistor-characteristics/01_aim_english.mp3",
   paragraphs: [
-    "To study the input and output characteristics of a transistor in the common-base (CB) configuration, and to determine its input resistance, output resistance and current gain (α).",
+    "To study the input and output characteristics of an NPN transistor (BC547) in the common-base (CB) configuration.",
+    "To determine the dynamic input resistance $r_i$, the dynamic output resistance $r_o$ and the current gain $\\alpha$ from the plotted characteristics.",
   ],
 };

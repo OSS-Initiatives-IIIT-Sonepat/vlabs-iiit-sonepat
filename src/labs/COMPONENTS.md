@@ -252,7 +252,31 @@ Every entry below is a valid `ComponentInstance` variant from `src/labs/types.ts
 - `row: 'e'` — IC straddles the centre gap
 - Do not place anything past col 29 on a standard 30-col board
 
-#### Reducing gates (N-bit → 1-bit)
+### Op-Amp
+
+```ts
+{ id: 'op1', type: 'op-amp', mountedAt: { board: 'bb', col: 10, row: 'e' } }  // LM741, DIP-8
+```
+
+- DIP-8 package, spans **4 columns**, straddling the centre gap
+
+---
+
+### Displays
+
+```ts
+{ id: 'seg1', type: '7seg-display', mountedAt: { board: 'bb', col: 10, row: 'e' } }  // DIP-10
+```
+
+---
+
+## Simulation-Only Components (No 3D Mesh)
+
+> [!CAUTION]
+> The components in this section **DO NOT HAVE 3D MESHES**. They are strictly for simulation logic. `LabScene` will ignore them and return `null`. Do not attempt to use them in standard breadboard labs.
+> Note: The `mountedAt` property is often required by TypeScript (`types.ts`), but it is completely ignored by the 3D engine for these components.
+
+### Reducing gates (N-bit → 1-bit)
 
 ```ts
 { id: 'ar1', type: 'and-reduce',  bits: 4, mountedAt: { board: 'bb', col: 5, row: 'e' } }
@@ -378,16 +402,6 @@ Every entry below is a valid `ComponentInstance` variant from `src/labs/types.ts
 
 ---
 
-### Op-Amp
-
-```ts
-{ id: 'op1', type: 'op-amp', mountedAt: { board: 'bb', col: 10, row: 'e' } }  // LM741, DIP-8
-```
-
-- DIP-8 package, spans **4 columns**, straddling the centre gap
-
----
-
 ### I/O nodes (DigitalJS virtual, for logic simulations)
 
 ```ts
@@ -399,10 +413,9 @@ Every entry below is a valid `ComponentInstance` variant from `src/labs/types.ts
 
 ---
 
-### Displays
+### Simulation-Only Displays
 
 ```ts
-{ id: 'seg1', type: '7seg-display', mountedAt: { board: 'bb', col: 10, row: 'e' } }  // DIP-10
 { id: 'rgb1', type: 'rgb-led',      mountedAt: { board: 'bb', col: 20, row: 'c' } }  // 4-pin (R, G, B, GND)
 ```
 

@@ -15,8 +15,8 @@ const HERO_PREVIEW_CIRCUIT_IDS = [
   "full-subtractor",
   "mux-2to1",
   "demux-1to2",
-  "encoder-4to2",
-  "decoder-2to4",
+  "11-encoder-4to2",
+  "12-decoder-2to4",
   "zener-diode",
   "logic-gates",
 ] as const;

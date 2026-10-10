@@ -1,35 +1,44 @@
-import { type ApparatusSection } from "@/labs/lab-content.types";
+import { type LabSection } from "@/labs/lab-content.types";
 
-export const apparatus: ApparatusSection = {
+export const apparatus: LabSection = {
   id: "apparatus",
   type: "apparatus",
-  title: "Apparatus Required",
+  title: "Apparatus",
   items: [
-    { name: "Breadboard", specification: "830 tie-point", quantity: "1" },
     {
-      name: "1N4148 Silicon Diode",
-      specification: "$V_{BR} = 75\\,\\text{V}$, $I_F = 200\\,\\text{mA}$",
+      name: "Breadboard",
+      specification: "830-point solderless breadboard",
       quantity: "1",
     },
     {
-      name: "Resistor 470 $\\Omega$",
-      specification: "¼ W, series current-limiter",
+      name: "P-N junction diode",
+      specification: "1N4148 silicon diode",
       quantity: "1",
     },
     {
-      name: "Regulated DC Power Supply",
-      specification: "0–12 V variable, 1 A",
+      name: "Series resistor",
+      specification: "1 kΩ",
       quantity: "1",
     },
     {
-      name: "Digital Multimeter (×2)",
-      specification: "One for voltage, one for current",
-      quantity: "2",
+      name: "DC power supply",
+      specification: "Variable DC source",
+      quantity: "1",
     },
     {
-      name: "Connecting Wires",
-      specification: "M-M jumper wires",
-      quantity: "1 set",
+      name: "Milliammeter",
+      specification: "0–100 mA DC",
+      quantity: "1",
+    },
+    {
+      name: "Voltmeter",
+      specification: "0–15 V DC",
+      quantity: "1",
+    },
+    {
+      name: "Connecting wires",
+      specification: "Breadboard jumper wires",
+      quantity: "As required",
     },
   ],
 };

@@ -7,8 +7,8 @@ import { HalfSubtractorCircuit as HalfSubtractor } from "@/labs/semesters/semest
 import { FullSubtractorCircuit as FullSubtractor } from "@/labs/semesters/semester-01/02-computer-application/full-subtractor";
 import { Mux2to1Circuit as Mux2to1 } from "@/labs/semesters/semester-01/02-computer-application/mux-2to1";
 import { Demux1to2Circuit as Demux1to2 } from "@/labs/semesters/semester-01/02-computer-application/demux-1to2";
-import { Encoder4to2Circuit as Encoder4to2 } from "@/labs/semesters/semester-02/01-digital-electronics/11-encoder-4to2";
-import { Decoder2to4Circuit as Decoder2to4 } from "@/labs/semesters/semester-02/01-digital-electronics/12-decoder-2to4";
+import { Exp11Encoder4to2Circuit as Encoder4to2 } from "@/labs/semesters/semester-02/01-digital-electronics/11-encoder-4to2";
+import { Exp12Decoder2to4Circuit as Decoder2to4 } from "@/labs/semesters/semester-02/01-digital-electronics/12-decoder-2to4";
 import { FullAdderRippleCircuit } from "@/labs/semesters/semester-02/02-advanced-adders/full-adder-ripple";
 
 // ── helpers ───────────────────────────────────────────────────────────────
@@ -155,62 +155,46 @@ describe("1:2 Demultiplexer", () => {
     expectLed(run(1, 1), ["led_y1"], ["led_y0"]));
 });
 
-// ── 4:2 Priority Encoder ─────────────────────────────────────────────────
+// ── 4:2 Line Encoder ────────────────────────────────────────────────────
 
-describe("4:2 Priority Encoder", () => {
-  // I0→code00, I1→code01, I2→code10, I3→code11
-  // led_a = green (MSB), led_b = yellow (LSB)
-  const run = (I0: 0 | 1, I1: 0 | 1, I2: 0 | 1, I3: 0 | 1) =>
-    simulate(Encoder4to2, { I0, I1, I2, I3 }).ledOn;
+describe("4:2 Line Encoder", () => {
+  // Y1 = D2 + D3; Y0 = D1 + D3.
+  const run = (D0: 0 | 1, D1: 0 | 1, D2: 0 | 1, D3: 0 | 1) =>
+    simulate(Encoder4to2, { D0, D1, D2, D3 }).ledOn;
 
-  it("I0 active → A=0, B=0", () =>
-    expectLed(run(1, 0, 0, 0), [], ["led_a", "led_b"]));
-  it("I1 active → A=0, B=1", () =>
-    expectLed(run(0, 1, 0, 0), ["led_b"], ["led_a"]));
-  it("I2 active → A=1, B=0", () =>
-    expectLed(run(0, 0, 1, 0), ["led_a"], ["led_b"]));
-  it("I3 active → A=1, B=1", () =>
-    expectLed(run(0, 0, 0, 1), ["led_a", "led_b"], []));
+  it("D0 active → Y1=0, Y0=0", () =>
+    expectLed(run(1, 0, 0, 0), [], ["led_y1", "led_y0"]));
+  it("D1 active → Y1=0, Y0=1", () =>
+    expectLed(run(0, 1, 0, 0), ["led_y0"], ["led_y1"]));
+  it("D2 active → Y1=1, Y0=0", () =>
+    expectLed(run(0, 0, 1, 0), ["led_y1"], ["led_y0"]));
+  it("D3 active → Y1=1, Y0=1", () =>
+    expectLed(run(0, 0, 0, 1), ["led_y1", "led_y0"], []));
 });
 
 // ── 2:4 Binary Decoder ────────────────────────────────────────────────────
 
 describe("2:4 Binary Decoder", () => {
-  // A=0,B=0 → Y0; A=1,B=0 → Y2; A=0,B=1 → Y1; A=1,B=1 → Y3
-  // led0=red, led1=yellow, led2=green, led3=blue
-  const run = (A: 0 | 1, B: 0 | 1) => simulate(Decoder2to4, { A, B }).ledOn;
-  const allLeds = ["led0", "led1", "led2", "led3"];
+  // A1A0 selects the active output; each Y output drives its matching LED.
+  const run = (A1: 0 | 1, A0: 0 | 1) => simulate(Decoder2to4, { A1, A0 }).ledOn;
+  const allLeds = ["led_y0", "led_y1", "led_y2", "led_y3"];
 
-  it("A=0,B=0 → only Y0 (led0) ON", () => {
-    const l = run(0, 0);
-    expect(l.get("led0")).toBe(true);
-    expect(l.get("led1")).toBe(false);
-    expect(l.get("led2")).toBe(false);
-    expect(l.get("led3")).toBe(false);
-  });
-  it("A=1,B=0 → only Y2 (led2) ON", () => {
-    const l = run(1, 0);
-    expect(l.get("led0")).toBe(false);
-    expect(l.get("led2")).toBe(true);
-  });
-  it("A=0,B=1 → only Y1 (led1) ON", () => {
-    const l = run(0, 1);
-    expect(l.get("led1")).toBe(true);
-    expect(l.get("led0")).toBe(false);
-    expect(l.get("led3")).toBe(false);
-  });
-  it("A=1,B=1 → only Y3 (led3) ON", () => {
-    const l = run(1, 1);
-    expect(l.get("led3")).toBe(true);
-    expect(l.get("led0")).toBe(false);
-    expect(l.get("led2")).toBe(false);
-  });
+  it("A1=0,A0=0 → only Y0 ON", () =>
+    expectLed(run(0, 0), ["led_y0"], ["led_y1", "led_y2", "led_y3"]));
+  it("A1=0,A0=1 → only Y1 ON", () =>
+    expectLed(run(0, 1), ["led_y1"], ["led_y0", "led_y2", "led_y3"]));
+  it("A1=1,A0=0 → only Y2 ON", () =>
+    expectLed(run(1, 0), ["led_y2"], ["led_y0", "led_y1", "led_y3"]));
+  it("A1=1,A0=1 → only Y3 ON", () =>
+    expectLed(run(1, 1), ["led_y3"], ["led_y0", "led_y1", "led_y2"]));
   it("exactly one LED is ON for each input combo", () => {
-    for (const A of [0, 1] as const) {
-      for (const B of [0, 1] as const) {
-        const l = run(A, B);
+    for (const A1 of [0, 1] as const) {
+      for (const A0 of [0, 1] as const) {
+        const l = run(A1, A0);
         const onCount = allLeds.filter((id) => l.get(id)).length;
-        expect(onCount, `A=${A},B=${B}: exactly 1 LED should be ON`).toBe(1);
+        expect(onCount, `A1=${A1},A0=${A0}: exactly 1 LED should be ON`).toBe(
+          1,
+        );
       }
     }
   });

@@ -5,8 +5,6 @@ export const aim: TheorySection = {
   type: "text",
   title: "Aim",
   paragraphs: [
-    "To identify and characterise fundamental electronic components (resistors, capacitors, diodes, LEDs, transistors) " +
-      "and to develop proficiency with laboratory instruments — the digital multimeter, regulated DC power supply, " +
-      "function generator, and oscilloscope.",
+    "To get familiar with the working knowledge of the following equipment: (a) Cathode Ray Oscilloscope (CRO), (b) Multimeter, (c) Function Generator, (d) Regulated Power Supply, (e) Bread Board, and (f) Active and Passive Components.",
   ],
 };

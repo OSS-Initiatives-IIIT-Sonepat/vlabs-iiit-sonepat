@@ -5,10 +5,11 @@ export const theory: LabSection = {
   type: "text",
   title: "Theory",
   paragraphs: [
-    "A rectifier converts AC into DC. A full-wave bridge rectifier uses four diodes (D1–D4) arranged so that current is routed through the load in the same direction during both the positive and negative half-cycles of the input, unlike a half-wave rectifier which uses only one half-cycle.",
-    "During the positive half-cycle, terminal a1 of the AC source is at a higher potential than a2. D1 and D4 are forward-biased, so current flows: a1 -> D1 -> load (top to bottom) -> D4 -> a2. During the negative half-cycle, a2 is higher than a1, so D2 and D3 conduct instead: a2 -> D2 -> load (top to bottom, same direction) -> D3 -> a1. Because the load always sees current flowing the same way, the output is a series of positive pulses at twice the input frequency.",
-    "Average (DC) output voltage: Vdc ≈ (2 x Vm - 1.4 V) / pi, where Vm is the peak of the secondary AC voltage and 1.4 V represents the two diode drops in the conduction path.",
-    "Ripple frequency: for a 50 Hz mains supply, the rectified output pulses at 100 Hz (2x the input frequency) — twice the ripple frequency of a half-wave rectifier, which makes it much easier to filter.",
-    "A filter capacitor placed across the load charges up to near the peak voltage and then discharges slowly through the load resistor as each diode pair cuts off, smoothing the pulsating waveform into a much steadier DC level. A commonly used approximation for the resulting ripple factor is r ~= 1 / (4 x sqrt(3) x f x R x C), where f is the ripple frequency, R is the load resistance, and C is the filter capacitance.",
+    "A full-wave rectifier converts both positive and negative half-cycles of the AC input voltage into unidirectional direct current (DC) pulses across the load.",
+    "In a center-tapped full-wave rectifier, a step-down transformer with a center-tapped secondary winding is used. The center tap (CT) is grounded, providing a common 0 V reference node, while the two outer secondary terminals (S1 and S2) develop AC voltages that are equal in magnitude but $180^\\circ$ out of phase.",
+    "During the positive half-cycle of the AC input, terminal S1 is positive with respect to the center tap while S2 is negative. Diode D1 becomes forward biased and conducts current through the load resistor $R_L$, while diode D2 is reverse biased and remains OFF.",
+    "During the negative half-cycle, the polarities invert: terminal S2 becomes positive with respect to the center tap while S1 is negative. Diode D2 becomes forward biased and conducts through $R_L$ in the same direction, while D1 is reverse biased and OFF. Thus, load current flows unidirectionally during both half-cycles.",
+    "The theoretical average (DC) output voltage across the load without a filter is $V_{dc} = \\dfrac{2(V_m - V_D)}{\\pi} \\approx 0.636\\,V_m$, which is double that of a half-wave rectifier. The fundamental ripple frequency is twice the supply frequency ($2f = 100\\text{ Hz}$ for a 50 Hz line).",
+    "Adding an electrolytic filter capacitor $C_1$ in parallel with $R_L$ charges to near peak voltage $V_m$ during conduction peaks and slowly discharges into $R_L$ between peaks, dramatically reducing the ripple factor to $r = \\dfrac{1}{4\\sqrt{3} f C_1 R_L}$.",
   ],
 };

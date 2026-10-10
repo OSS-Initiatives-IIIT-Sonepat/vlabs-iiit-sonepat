@@ -246,13 +246,13 @@ export class Netlist {
           break;
         }
 
-        // ── MOSFETs (TO-92: S-G-D left to right) ──────────────────────
+        // ── MOSFETs (Visual: G-D-S left to right) ──────────────────────
         case "n-mosfet":
         case "p-mosfet": {
           const { col, row } = inst.mountedAt;
-          this.registerPin(inst.id, "S", tieKey(col, row as Row));
-          this.registerPin(inst.id, "G", tieKey(col + 1, row as Row));
-          this.registerPin(inst.id, "D", tieKey(col + 2, row as Row));
+          this.registerPin(inst.id, "G", tieKey(col - 1, row as Row));
+          this.registerPin(inst.id, "D", tieKey(col, row as Row));
+          this.registerPin(inst.id, "S", tieKey(col + 1, row as Row));
           break;
         }
 

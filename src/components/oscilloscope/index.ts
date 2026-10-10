@@ -20,6 +20,10 @@ const KNOB_DEPTH = PITCH * 0.1;
 
 const BUTTON_R = PITCH * 0.075;
 
+/** Names of the anchor objects LabScene uses to start the probe cables. */
+export const OSCILLOSCOPE_CH1_ANCHOR = "socket-ch1";
+export const OSCILLOSCOPE_GND_ANCHOR = "socket-gnd";
+
 function buildScreen(): THREE.Group {
   const screen = new THREE.Group();
 
@@ -242,6 +246,27 @@ export function buildOscilloscope(
   // ── Ground input ─────────────────────────────────────────────────────────
 
   root.add(buildInput(BODY_W * 0.42, "GND"));
+
+  // ── Probe cable anchors (invisible) ─────────────────────────────────────
+  // LabScene reads the world position of these to start the CH1 / GND cables.
+
+  const ch1Anchor = new THREE.Object3D();
+  ch1Anchor.name = OSCILLOSCOPE_CH1_ANCHOR;
+  ch1Anchor.position.set(
+    BODY_W * 0.3,
+    BODY_H * 0.18,
+    BODY_D / 2 + PITCH * 0.22,
+  );
+  root.add(ch1Anchor);
+
+  const gndAnchor = new THREE.Object3D();
+  gndAnchor.name = OSCILLOSCOPE_GND_ANCHOR;
+  gndAnchor.position.set(
+    BODY_W * 0.42,
+    BODY_H * 0.18,
+    BODY_D / 2 + PITCH * 0.22,
+  );
+  root.add(gndAnchor);
 
   // ── Power button ─────────────────────────────────────────────────────────
 

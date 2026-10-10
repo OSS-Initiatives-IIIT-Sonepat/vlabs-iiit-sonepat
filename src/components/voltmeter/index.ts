@@ -1,7 +1,9 @@
 import * as THREE from "three";
-import { PITCH, BOARD_H, TOP_Y } from "@/labs/coords";
+import { PITCH, BOARD_H, BOARD_W, BOARD_D, TOP_Y } from "@/labs/coords";
 import { M } from "@/components/shared/materials";
 import { solidBox, solidCyl, textLabel } from "@/components/shared/primitives";
+import { instrumentWire } from "@/components/shared/instrument-wire";
+import { benchPlacement, BENCH_SLOTS } from "@/components/shared/bench-layout";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // VOLTMETER
@@ -306,6 +308,45 @@ export function buildVoltmeterStandalone(): THREE.Group {
   const root = buildVoltmeter(new THREE.Vector3(0, 0, 0));
 
   root.position.y = TOP_Y + BOARD_H * 0.04;
+
+  return root;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BENCH-PLACED VOLTMETER (stands behind the board like the PSU / DMM)
+// ─────────────────────────────────────────────────────────────────────────────
+
+export function buildVoltmeterSide(
+  position: "left" | "right" | number = "left",
+  targets?: { probe1: THREE.Vector3; probe2: THREE.Vector3 },
+): THREE.Group {
+  const model = buildVoltmeterStandalone();
+
+  const slot =
+    typeof position === "number"
+      ? position
+      : position === "right"
+        ? 0
+        : BENCH_SLOTS - 1;
+  const { position: slotPos, scale } = benchPlacement(slot);
+
+  const wrapper = new THREE.Group();
+  wrapper.add(model);
+  wrapper.scale.setScalar(scale);
+  wrapper.position.copy(slotPos);
+
+  const root = new THREE.Group();
+  root.add(wrapper);
+
+  if (targets) {
+    const meterY = TOP_Y + PITCH * 0.5;
+    const origin = new THREE.Vector3(slotPos.x, meterY, slotPos.z);
+    root.add(instrumentWire(origin, targets.probe1, 0xd63b2a));
+    const origin2 = origin.clone();
+    origin2.x -= 0.06;
+    origin2.z += 0.05;
+    root.add(instrumentWire(origin2, targets.probe2, 0x202020));
+  }
 
   return root;
 }

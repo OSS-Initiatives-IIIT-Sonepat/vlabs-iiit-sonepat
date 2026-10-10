@@ -1,7 +1,5 @@
 import { type ComponentInstance } from "@/labs/types";
 
-// q1 is a visual stand-in (yellow LED): anode = Drain, cathode = Source.
-// The Gate is the tie hole at column 12, row b.
 export const components: ComponentInstance[] = [
   { id: "bb", type: "breadboard" },
   {
@@ -30,8 +28,7 @@ export const components: ComponentInstance[] = [
   },
   {
     id: "q1",
-    type: "led",
-    color: "yellow",
+    type: "n-mosfet",
     mountedAt: { board: "bb", col: 14, row: "c" },
   },
   {
@@ -46,13 +43,13 @@ export const components: ComponentInstance[] = [
     type: "wire",
     color: "green",
     from: { component: "r_d", end: "p2" },
-    to: { led: "q1", end: "anode" },
+    to: { board: "bb", col: 14, row: "a" },
   },
   {
     id: "w_source_gnd",
     type: "wire",
     color: "black",
-    from: { led: "q1", end: "cathode" },
+    from: { board: "bb", col: 15, row: "a" },
     to: { board: "bb", rail: "gnd_top", col: 4 },
   },
   {
@@ -60,7 +57,7 @@ export const components: ComponentInstance[] = [
     type: "wire",
     color: "blue",
     from: { board: "bb", rail: "vcc_bot", col: 3 },
-    to: { board: "bb", col: 12, row: "b" },
+    to: { board: "bb", col: 13, row: "b" },
   },
   {
     id: "w_gnd_common",
@@ -92,7 +89,7 @@ export const components: ComponentInstance[] = [
     type: "potentiometer",
     mountedAt: { board: "bb", col: 2, row: "c" },
     probes: [
-      { board: "bb", col: 12, row: "a" },
+      { board: "bb", col: 13, row: "a" },
       { board: "bb", col: 15, row: "a" },
     ],
   },

@@ -79,8 +79,16 @@ export const wireBId = (k: GateKey) => `w_b_${k}`;
 export const wireYId = (k: GateKey) => `w_y_${k}`;
 export const wireRId = (k: GateKey) => `w_r_${k}`;
 export const wireGndId = (k: GateKey) => `w_gnd_${k}`;
+export const wireVccId = (k: GateKey) => `w_vcc_${k}`;
+export const wireIcGndId = (k: GateKey) => `w_icgnd_${k}`;
 
 export const BB = "bb";
+
+// ── Power ─────────────────────────────────────────────────────────────────
+// The bench supply is a dc-jack: its `terminals` wire it to the rails, so it
+// must never be connected with ordinary `wire` components.
+export const PSU_ID = "psu";
+export const RAIL_LINK_ID = "w_rail_link";
 
 export const allIcIds = GATES.map((g) => icId(g.key));
 
@@ -96,13 +104,27 @@ export const outputWireIds = GATES.flatMap((g) => [
   wireGndId(g.key),
 ]);
 
+/** VCC + GND wires for every IC. */
+export const powerWireIds = GATES.flatMap((g) => [
+  wireVccId(g.key),
+  wireIcGndId(g.key),
+]);
+
+/**
+ * Power ids shown as soon as the board is on the bench: the supply itself and
+ * the link that carries +5 V to the bottom rail (where each IC's VCC pin sits).
+ */
+export const powerIds = [PSU_ID, RAIL_LINK_ID];
+
 /** Every component id in the circuit, in build order. */
 export const everyId = [
   BB,
+  ...powerIds,
   ...allIcIds,
   ...inputWireIds,
   ...indicatorIds,
   ...outputWireIds,
+  ...powerWireIds,
 ];
 
 /** Boolean output of every gate for inputs (a, b). NOT uses A only. */

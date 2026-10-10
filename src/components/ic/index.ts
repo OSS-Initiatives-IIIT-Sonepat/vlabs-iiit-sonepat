@@ -28,7 +28,7 @@ import { solidBox, solidCyl, textLabel } from "@/components/shared/primitives";
 // We only model pins 1–3 (gate 1) and 7/14 (power) for circuit wiring.
 // The visual body fills columns col..col+6, straddling e/f.
 
-const PIN_COUNT = 7; // per side
+const DEFAULT_PIN_COUNT = 7; // per side (14-pin)
 
 function chipCode(label: string): string {
   const table: Record<string, string> = {
@@ -118,17 +118,34 @@ export function buildDip14(
   label = "",
   cols = COLS,
 ): THREE.Group {
-  const pinPositions = Array.from({ length: PIN_COUNT }, (_, i) => ({
+  return buildDip(startCol, 7, label, cols);
+}
+
+export function buildDip16(
+  startCol: number,
+  label = "",
+  cols = COLS,
+): THREE.Group {
+  return buildDip(startCol, 8, label, cols);
+}
+
+function buildDip(
+  startCol: number,
+  pinsPerSide: number,
+  label: string,
+  cols: any,
+): THREE.Group {
+  const pinPositions = Array.from({ length: pinsPerSide }, (_, i) => ({
     ex: colToX(startCol + i, cols), // pin (i+1) — top side, row e
     ez: Z["e"],
-    fx: colToX(startCol + i, cols), // pin (14-i) — bottom side, row f
+    fx: colToX(startCol + i, cols), // pin (2*pinsPerSide-i) — bottom side, row f
     fz: Z["f"],
   }));
 
   const bodyX =
-    (colToX(startCol, cols) + colToX(startCol + PIN_COUNT - 1, cols)) / 2;
+    (colToX(startCol, cols) + colToX(startCol + pinsPerSide - 1, cols)) / 2;
   const bodyZ = (Z["e"] + Z["f"]) / 2;
-  const bodyW = (PIN_COUNT - 1) * PITCH + PITCH * 0.65;
+  const bodyW = (pinsPerSide - 1) * PITCH + PITCH * 0.65;
   // Body depth = distance between the two pin rows, slightly narrower than full gap
   const bodyD = Math.abs(Z["f"] - Z["e"]) * 0.72;
   const bodyH = PITCH * 1.25;
@@ -138,8 +155,16 @@ export function buildDip14(
 
 // ── Standalone DIP-14 (for display/apparatus scene) ───────────────────────
 export function buildDip14Standalone(label = ""): THREE.Group {
+  return buildDipStandalone(7, label);
+}
+
+export function buildDip16Standalone(label = ""): THREE.Group {
+  return buildDipStandalone(8, label);
+}
+
+function buildDipStandalone(pinsPerSide: number, label: string): THREE.Group {
   const P = PITCH;
-  const bodyW = (PIN_COUNT - 1) * P + P * 0.65;
+  const bodyW = (pinsPerSide - 1) * P + P * 0.65;
   const bodyH = P * 1.3;
   const bodyD = P * 2.2;
 
@@ -158,10 +183,10 @@ export function buildDip14Standalone(label = ""): THREE.Group {
   notch.position.set(-bodyW / 2 + P * 0.22, 0, 0);
   root.add(notch);
 
-  // Pins: 7 per side
+  // Pins
   const pinGeo = new THREE.BoxGeometry(P * 0.17, P * 0.72, P * 0.17);
-  for (let i = 0; i < PIN_COUNT; i++) {
-    const x = -((PIN_COUNT - 1) / 2) * P + i * P;
+  for (let i = 0; i < pinsPerSide; i++) {
+    const x = -((pinsPerSide - 1) / 2) * P + i * P;
     for (const zSign of [-1, 1]) {
       const pin = new THREE.Mesh(pinGeo, M.silver());
       pin.position.set(
@@ -222,7 +247,16 @@ export function resolveIcPin(
   startCol: number,
   mountRow: string = "e",
   cols = COLS,
+  icType?: string,
 ): THREE.Vector3 | null {
+  const is16Pin =
+    icType === "mux-4to1" ||
+    icType === "mux-8to1" ||
+    icType === "decoder-3to8" ||
+    icType === "counter-4bit" ||
+    icType === "shift-register";
+  const pinsPerSide = is16Pin ? 8 : 7;
+
   // Determine the two rows this IC straddles, based on its mountedAt row
   const sideA = mountRow as string;
   const sideB =
@@ -239,6 +273,66 @@ export function resolveIcPin(
   // Aliases
   const p = pin === "A" ? "1A" : pin === "B" ? "1B" : pin === "Y" ? "1Y" : pin;
 
+  // Power pins
+  if (p === "GND") {
+    return hole(startCol + (pinsPerSide - 1), sideA, cols);
+  }
+  if (p === "VCC") {
+    return hole(startCol + 0, sideB, cols);
+  }
+
+  // 16-pin mux-4to1 specific pins
+  if (is16Pin) {
+    switch (p) {
+      case "1G":
+        return hole(startCol + 0, sideA, cols);
+      case "S1":
+        return hole(startCol + 1, sideA, cols);
+      case "1C3":
+        return hole(startCol + 2, sideA, cols);
+      case "1C2":
+        return hole(startCol + 3, sideA, cols);
+      case "1C1":
+        return hole(startCol + 4, sideA, cols);
+      case "1C0":
+        return hole(startCol + 5, sideA, cols);
+      case "1Y":
+        return hole(startCol + 6, sideA, cols);
+
+      case "2Y":
+        return hole(startCol + 6, sideB, cols); // Pin 9
+      case "2C0":
+        return hole(startCol + 5, sideB, cols); // Pin 10
+      case "2C1":
+        return hole(startCol + 4, sideB, cols); // Pin 11
+      case "2C2":
+        return hole(startCol + 3, sideB, cols); // Pin 12
+      case "2C3":
+        return hole(startCol + 2, sideB, cols); // Pin 13
+      case "S0":
+        return hole(startCol + 1, sideB, cols); // Pin 14
+      case "2G":
+        return hole(startCol + 0, sideB, cols); // Pin 15 (wait, VCC is 16, wait... pin 15 is col+1, pin 16 is col+0 on sideB)
+    }
+    // Correct sideB pins:
+    // Pin 16 is VCC (col+0).
+    // Pin 15 is 2G (col+1).
+    // Pin 14 is S0 (col+2).
+    // Pin 13 is 2C3 (col+3).
+    // Pin 12 is 2C2 (col+4).
+    // Pin 11 is 2C1 (col+5).
+    // Pin 10 is 2C0 (col+6).
+    // Pin 9 is 2Y (col+7).
+    if (p === "2G") return hole(startCol + 1, sideB, cols);
+    if (p === "S0") return hole(startCol + 2, sideB, cols);
+    if (p === "2C3") return hole(startCol + 3, sideB, cols);
+    if (p === "2C2") return hole(startCol + 4, sideB, cols);
+    if (p === "2C1") return hole(startCol + 5, sideB, cols);
+    if (p === "2C0") return hole(startCol + 6, sideB, cols);
+    if (p === "2Y") return hole(startCol + 7, sideB, cols);
+  }
+
+  // 14-pin gate pins
   switch (p) {
     // Gate 1 — sideA bank
     case "1A":
@@ -254,12 +348,6 @@ export function resolveIcPin(
       return hole(startCol + 4, sideA, cols);
     case "2Y":
       return hole(startCol + 5, sideA, cols);
-    // GND — sideA bank rightmost
-    case "GND":
-      return hole(startCol + 6, sideA, cols);
-    // VCC — sideB bank leftmost
-    case "VCC":
-      return hole(startCol + 0, sideB, cols);
     // Gate 4 — sideB bank (mirrored)
     case "4Y":
       return hole(startCol + 1, sideB, cols);

@@ -9,69 +9,27 @@ import { conclusion } from "./06-conclusion";
 import { components } from "./components";
 import { procedureSteps } from "./04-procedure";
 
-export const decoder2to4Experiment: ExperimentDefinition = {
-  id: "decoder-2to4",
-  title: "2:4 Binary Decoder",
+export const exp12Decoder2to4Experiment: ExperimentDefinition = {
+  id: "12-decoder-2to4",
+  title: "2-to-4 Line Decoder",
   description:
-    "A 2-to-4 decoder takes a 2-bit binary input (A,B) and activates exactly one of 4 outputs. 00→Y0, 01→Y1, 10→Y2, 11→Y3. Built from two NOT gates and four AND gates.",
-  truthTable: {
-    inputs: ["A", "B"],
-    outputs: ["Y0", "Y1", "Y2", "Y3"],
-    rows: [
-      {
-        inputs: {
-          A: 0,
-          B: 0,
-        },
-        outputs: {
-          Y0: 1,
-          Y1: 0,
-          Y2: 0,
-          Y3: 0,
-        },
-      },
-      {
-        inputs: {
-          A: 0,
-          B: 1,
-        },
-        outputs: {
-          Y0: 0,
-          Y1: 1,
-          Y2: 0,
-          Y3: 0,
-        },
-      },
-      {
-        inputs: {
-          A: 1,
-          B: 0,
-        },
-        outputs: {
-          Y0: 0,
-          Y1: 0,
-          Y2: 1,
-          Y3: 0,
-        },
-      },
-      {
-        inputs: {
-          A: 1,
-          B: 1,
-        },
-        outputs: {
-          Y0: 0,
-          Y1: 0,
-          Y2: 0,
-          Y3: 1,
-        },
-      },
-    ],
-  },
+    "Designs a 2-to-4 line decoder with logic gates. Each of the four outputs goes high for exactly one combination of the two address inputs A1 and A0.",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],
   procedureSteps,
+  truthTable: {
+    inputs: ["A1", "A0"],
+    outputs: ["Y0", "Y1", "Y2", "Y3"],
+    rows: [
+      { inputs: { A1: 0, A0: 0 }, outputs: { Y0: 1, Y1: 0, Y2: 0, Y3: 0 } },
+      { inputs: { A1: 0, A0: 1 }, outputs: { Y0: 0, Y1: 1, Y2: 0, Y3: 0 } },
+      { inputs: { A1: 1, A0: 0 }, outputs: { Y0: 0, Y1: 0, Y2: 1, Y3: 0 } },
+      { inputs: { A1: 1, A0: 1 }, outputs: { Y0: 0, Y1: 0, Y2: 0, Y3: 1 } },
+    ],
+  },
 };
 
-export const Decoder2to4Circuit = buildCircuit(decoder2to4Experiment);
-export const Decoder2to4Content = buildLabContent(decoder2to4Experiment);
+export const Exp12Decoder2to4Circuit = buildCircuit(exp12Decoder2to4Experiment);
+export const Exp12Decoder2to4Content = buildLabContent(
+  exp12Decoder2to4Experiment,
+);

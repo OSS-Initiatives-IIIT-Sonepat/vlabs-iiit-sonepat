@@ -1,9 +1,0 @@
-import { type SceneProcedureStep } from "@/labs/experiments/types";
-
-export const step: SceneProcedureStep = {
-  label: "Connect the AC input source",
-  body: "Bring in the AC supply (step-down transformer secondary or function generator) with a peak amplitude $V_m = 12\\,V$ at $50\\,Hz$. Its two leads feed the top VCC and GND rails.",
-  show: ["bb", "ac_src"],
-  highlight: "ac_src",
-  supplyVoltage: 12.0,
-};

@@ -33,10 +33,21 @@ import {
 
 // ── Model builder ─────────────────────────────────────────────────────────
 function buildItemModel(item: ApparatusItem): THREE.Group {
-  const n = item.name.toLowerCase();
+  const n = `${item.name} ${item.specification ?? ""}`.toLowerCase();
 
+  if (n.includes("wire") || n.includes("jumper")) {
+    return buildWireStandalone(
+      n.includes("black")
+        ? "black"
+        : n.includes("blue")
+          ? "blue"
+          : n.includes("orange")
+            ? "orange"
+            : "red",
+    );
+  }
   if (n.includes("resistor") || n.includes("ω") || n.includes("ohm")) {
-    return buildResistorStandalone(parseOhms(item.name) ?? 470);
+    return buildResistorStandalone(parseOhms(n) ?? 470);
   }
   if (n.includes("1n4148")) {
     return buildDiodeStandalone("1N4148");
@@ -46,6 +57,9 @@ function buildItemModel(item: ApparatusItem): THREE.Group {
   }
   if (n.includes("1n4733a") || n.includes("zener")) {
     return buildZenerDiodeStandalone();
+  }
+  if (n.includes("diode")) {
+    return buildDiodeStandalone("1N4148");
   }
   if (n.includes("led")) {
     return buildLedStandalone(
@@ -109,17 +123,6 @@ function buildItemModel(item: ApparatusItem): THREE.Group {
     n.includes("chip")
   ) {
     return buildDip14Standalone("IC");
-  }
-  if (n.includes("wire") || n.includes("jumper")) {
-    return buildWireStandalone(
-      n.includes("black")
-        ? "black"
-        : n.includes("blue")
-          ? "blue"
-          : n.includes("orange")
-            ? "orange"
-            : "red",
-    );
   }
   if (n.includes("potentiometer") || n.includes("variable")) {
     return buildPotentiometerStandalone();

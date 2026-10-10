@@ -1,17 +1,16 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
 
-import { step as s01 } from "./01-breadboard";
-import { step as s02 } from "./02-power-supplies";
-import { step as s03 } from "./03-resistors";
-import { step as s04 } from "./04-transistor";
-import { step as s05 } from "./05-ground-the-base";
-import { step as s06 } from "./06-input-loop";
-import { step as s07 } from "./07-output-loop";
-import { step as s08 } from "./08-meters";
-import { step as s09 } from "./09-input-vcb-0";
-import { step as s10 } from "./10-input-vcb-4";
-import { step as s11 } from "./11-output-characteristics";
-import { step as s12 } from "./12-parameters";
+import { step as s01 } from "./01-place-transistor";
+import { step as s02 } from "./02-ground-base";
+import { step as s03 } from "./03-emitter-resistor";
+import { step as s04 } from "./04-emitter-supply-and-ammeter";
+import { step as s05 } from "./05-measure-veb";
+import { step as s06 } from "./06-collector-supply-and-ammeter";
+import { step as s07 } from "./07-measure-vcb";
+import { step as s08 } from "./08-input-vcb-0";
+import { step as s09 } from "./09-input-vcb-5";
+import { step as s10 } from "./10-output-characteristics";
+import { step as s11 } from "./11-calculate-parameters";
 
 export const procedureSteps: SceneProcedureStep[] = [
   s01,
@@ -25,5 +24,4 @@ export const procedureSteps: SceneProcedureStep[] = [
   s09,
   s10,
   s11,
-  s12,
 ];

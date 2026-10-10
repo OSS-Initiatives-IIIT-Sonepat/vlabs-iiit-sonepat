@@ -1,202 +1,118 @@
 import { type ComponentInstance } from "@/labs/types";
 
 export const components: ComponentInstance[] = [
+  { id: "bb", type: "breadboard" },
   {
-    id: "bb",
-    type: "breadboard",
+    id: "psu",
+    type: "dc-jack",
+    mountedAt: { board: "bb", col: 1, row: "a" },
+    terminals: [
+      { board: "bb", rail: "vcc_top", col: 6 },
+      { board: "bb", rail: "gnd_top", col: 6 },
+    ],
   },
   {
-    id: "or_a",
+    id: "or_y1",
     type: "or-gate",
-    mountedAt: {
-      board: "bb",
-      col: 8,
-      row: "e",
-    },
+    mountedAt: { board: "bb", col: 7, row: "e" },
   },
   {
-    id: "or_b",
+    id: "or_y0",
     type: "or-gate",
-    mountedAt: {
-      board: "bb",
-      col: 16,
-      row: "e",
-    },
+    mountedAt: { board: "bb", col: 16, row: "e" },
   },
   {
-    id: "r_a",
+    id: "r_y1",
     type: "resistor",
     ohms: 330,
-    mountedAt: {
-      board: "bb",
-      col: 22,
-      row: "c",
-    },
+    mountedAt: { board: "bb", col: 22, row: "c" },
   },
   {
-    id: "r_b",
-    type: "resistor",
-    ohms: 330,
-    mountedAt: {
-      board: "bb",
-      col: 22,
-      row: "h",
-    },
-  },
-  {
-    id: "led_a",
+    id: "led_y1",
     type: "led",
     color: "green",
-    mountedAt: {
-      board: "bb",
-      col: 26,
-      row: "c",
-    },
+    mountedAt: { board: "bb", col: 24, row: "c" },
   },
   {
-    id: "led_b",
+    id: "r_y0",
+    type: "resistor",
+    ohms: 330,
+    mountedAt: { board: "bb", col: 26, row: "c" },
+  },
+  {
+    id: "led_y0",
     type: "led",
     color: "yellow",
-    mountedAt: {
-      board: "bb",
-      col: 26,
-      row: "h",
-    },
+    mountedAt: { board: "bb", col: 28, row: "c" },
   },
   {
-    id: "w_i2_ora",
-    type: "wire",
-    color: "blue",
-    from: {
-      board: "bb",
-      col: 3,
-      row: "a",
-    },
-    to: {
-      ic: "or_a",
-      pin: "A",
-    },
-  },
-  {
-    id: "w_i3_ora",
-    type: "wire",
-    color: "orange",
-    from: {
-      board: "bb",
-      col: 4,
-      row: "a",
-    },
-    to: {
-      ic: "or_a",
-      pin: "B",
-    },
-  },
-  {
-    id: "w_i3_orb",
-    type: "wire",
-    color: "orange",
-    from: {
-      board: "bb",
-      col: 4,
-      row: "b",
-    },
-    to: {
-      ic: "or_b",
-      pin: "B",
-    },
-  },
-  {
-    id: "w_i1_orb",
+    id: "w_d1_or0",
     type: "wire",
     color: "red",
-    from: {
-      board: "bb",
-      col: 2,
-      row: "a",
-    },
-    to: {
-      ic: "or_b",
-      pin: "A",
-    },
+    from: { board: "bb", col: 1, row: "a" },
+    to: { board: "bb", col: 16, row: "d" },
   },
   {
-    id: "w_a_r",
+    id: "w_d2_or1",
+    type: "wire",
+    color: "blue",
+    from: { board: "bb", col: 2, row: "a" },
+    to: { board: "bb", col: 7, row: "d" },
+  },
+  {
+    id: "w_d3_or1",
+    type: "wire",
+    color: "orange",
+    from: { board: "bb", col: 3, row: "a" },
+    to: { board: "bb", col: 8, row: "d" },
+  },
+  {
+    id: "w_d3_or0",
+    type: "wire",
+    color: "orange",
+    from: { board: "bb", col: 3, row: "b" },
+    to: { board: "bb", col: 17, row: "d" },
+  },
+  {
+    id: "w_or1_r",
     type: "wire",
     color: "green",
-    from: {
-      ic: "or_a",
-      pin: "Y",
-    },
-    to: {
-      component: "r_a",
-      end: "p1",
-    },
+    from: { board: "bb", col: 9, row: "d" },
+    to: { component: "r_y1", end: "p1" },
   },
   {
-    id: "w_a_led",
+    id: "w_r_led1",
     type: "wire",
     color: "green",
-    from: {
-      component: "r_a",
-      end: "p2",
-    },
-    to: {
-      led: "led_a",
-      end: "anode",
-    },
+    from: { component: "r_y1", end: "p2" },
+    to: { led: "led_y1", end: "anode" },
   },
   {
-    id: "w_b_r",
+    id: "w_or0_r",
     type: "wire",
     color: "yellow",
-    from: {
-      ic: "or_b",
-      pin: "Y",
-    },
-    to: {
-      component: "r_b",
-      end: "p1",
-    },
+    from: { board: "bb", col: 18, row: "d" },
+    to: { component: "r_y0", end: "p1" },
   },
   {
-    id: "w_b_led",
+    id: "w_r_led0",
     type: "wire",
     color: "yellow",
-    from: {
-      component: "r_b",
-      end: "p2",
-    },
-    to: {
-      led: "led_b",
-      end: "anode",
-    },
+    from: { component: "r_y0", end: "p2" },
+    to: { led: "led_y0", end: "anode" },
   },
   {
     id: "w_gnd1",
     type: "wire",
     color: "black",
-    from: {
-      led: "led_a",
-      end: "cathode",
-    },
-    to: {
-      board: "bb",
-      rail: "gnd_top",
-      col: 1,
-    },
+    from: { led: "led_y1", end: "cathode" },
+    to: { board: "bb", rail: "gnd_top", col: 1 },
   },
   {
-    id: "w_gnd2",
+    id: "w_gnd0",
     type: "wire",
     color: "black",
-    from: {
-      led: "led_b",
-      end: "cathode",
-    },
-    to: {
-      board: "bb",
-      rail: "gnd_top",
-      col: 2,
-    },
+    from: { led: "led_y0", end: "cathode" },
+    to: { board: "bb", rail: "gnd_top", col: 2 },
   },
 ];

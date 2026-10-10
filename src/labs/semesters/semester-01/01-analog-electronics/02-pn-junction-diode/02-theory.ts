@@ -1,22 +1,14 @@
-import { type TheorySection } from "@/labs/lab-content.types";
+import { type LabSection } from "@/labs/lab-content.types";
 
-export const theory: TheorySection = {
+export const theory: LabSection = {
   id: "theory",
   type: "text",
   title: "Theory",
   paragraphs: [
-    "A PN junction diode is formed by joining P-type (excess holes) and N-type (excess electrons) semiconductors. " +
-      "At the junction, carriers recombine to form a **depletion region** with a built-in barrier of ~0.6–0.7 V for silicon.",
-
-    "In **forward bias**, the applied voltage reduces the barrier. Above the threshold $V_{th} \\approx 0.6\\text{–}0.7\\,\\text{V}$, " +
-      "current rises exponentially: $I = I_s(e^{qV/nkT} - 1)$. " +
-      "In **reverse bias**, only a tiny leakage current $I_s$ flows until breakdown.",
-
-    "The V-I characteristic has three regions: forward active (exponential rise), " +
-      "reverse pre-breakdown (near-zero leakage), and reverse breakdown (sharp current rise at $V_{BR}$). " +
-      "The 1N4148 has $V_{th} \\approx 0.65\\,\\text{V}$, leakage $< 25\\,\\text{nA}$, $V_{BR} = 75\\,\\text{V}$.",
-
-    "Dynamic resistance $r_d = dV/dI = nkT/qI$ decreases as current increases. " +
-      "At room temperature $kT/q \\approx 26\\,\\text{mV}$, so at $I = 1\\,\\text{mA}$, $r_d \\approx 26\\,\\Omega$.",
+    "A P-N junction diode is a two-terminal semiconductor device that conducts current predominantly in one direction.",
+    "In forward bias, the P-side (anode) is connected to the positive terminal and the N-side (cathode) to the negative terminal. The depletion region narrows and the forward current remains small until the applied voltage reaches the knee or cut-in voltage. For a silicon diode, the cut-in voltage is typically around 0.7 V.",
+    "In reverse bias, the P-side is connected to the negative terminal and the N-side to the positive terminal. The depletion region widens and only a small reverse saturation current flows until breakdown is reached.",
+    "The V-I characteristic is obtained by varying the applied diode voltage and recording the corresponding diode current.",
+    "For the forward characteristic, plot diode voltage V_D on the X-axis and diode current I_D on the Y-axis. The reverse characteristic is obtained similarly using reverse voltage and reverse current.",
   ],
 };

@@ -1,44 +1,28 @@
 import * as THREE from "three";
 import { PITCH, BOARD_H, TOP_Y } from "@/labs/coords";
 import { M } from "@/components/shared/materials";
-import { solidBox, textLabel } from "@/components/shared/primitives";
+import { solidBox, solidCyl, textLabel } from "@/components/shared/primitives";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // MOSFET — TO-220F (fully isolated full-pack), modelled from the photo
-//
-//   ┌───────┐   ← tab: thinner, chamfered top corners, real mounting hole
-//   │   O   │
-//   ├───────┤   ← step where the thin tab meets the thick body
-//   │ WG  ○ │   ← logo + pin-1 dimple
-//   │ K3878 │   ← part number
-//   └─┬─┬─┬─┘
-//     │ │ │     ← 3 flat blade leads: wide shoulder, narrower shaft
-//
-// Origin = bottom-centre of the plastic body. +Y up, leads point to -Y,
-// printed face toward +Z.
+// Scaled down slightly to fit better on a breadboard visually.
 // ─────────────────────────────────────────────────────────────────────────────
 
-// PITCH = 2.54 mm (0.1"), so 1 mm in world units:
 const MM = PITCH / 2.54;
 
-// ── Real TO-220F dimensions (mm) ────────────────────────────────────────────
-const BODY_W = 10.2; // width of whole package
-const BODY_D = 4.5; // thickness of the lower (thick) body
-const MAIN_H = 9.4; // height of the thick lower body
-const TAB_D = 2.9; // thickness of the thin upper tab
-const TOTAL_H = 15.9; // overall height (body + tab)
-const HOLE_D = 3.2; // mounting hole diameter
-const HOLE_Y = 12.9; // hole centre height from bottom
-const TAB_CHAMFER = 1.4; // chamfer on the tab's top corners
-const BEVEL = 0.18; // soft moulded edge
+const SCALE = 0.65; // Scale down so it doesn't look massive
+const BODY_W = 10.2 * SCALE;
+const BODY_D = 4.5 * SCALE;
+const MAIN_H = 9.4 * SCALE;
+const TAB_D = 2.9 * SCALE;
+const TOTAL_H = 15.9 * SCALE;
+const HOLE_D = 3.2 * SCALE;
+const HOLE_Y = 12.9 * SCALE;
+const TAB_CHAMFER = 1.4 * SCALE;
+const BEVEL = 0.18 * SCALE;
 
-// Leads
-const LEAD_PITCH = 2.54;
-const SHOULDER_W = 1.3;
-const SHOULDER_LEN = 3.2;
-const SHAFT_W = 0.8;
-const LEAD_T = 0.5;
-const LEAD_LEN = 13.0; // total, measured from body bottom
+const BODY_LIFT = 5.0 * MM; // How high the body sits above the breadboard
+const LEAD_RADIUS = PITCH * 0.045; // Match BJT lead thickness for consistency
 
 function extrude(shape: THREE.Shape, depthMM: number): THREE.ExtrudeGeometry {
   return new THREE.ExtrudeGeometry(shape, {
@@ -51,7 +35,6 @@ function extrude(shape: THREE.Shape, depthMM: number): THREE.ExtrudeGeometry {
   });
 }
 
-// ── Thick lower body (carries the printing) ─────────────────────────────────
 function makeMainBody(): THREE.Mesh {
   const w = (BODY_W / 2) * MM;
   const shape = new THREE.Shape();
@@ -62,15 +45,14 @@ function makeMainBody(): THREE.Mesh {
   shape.closePath();
 
   const geo = extrude(shape, BODY_D);
-  geo.translate(0, 0, -(BODY_D * MM) / 2); // centred on z = 0
+  geo.translate(0, 0, -(BODY_D * MM) / 2);
   return new THREE.Mesh(geo, M.dark());
 }
 
-// ── Thin upper tab with the mounting hole ───────────────────────────────────
 function makeTab(): THREE.Mesh {
   const w = (BODY_W / 2) * MM;
   const c = TAB_CHAMFER * MM;
-  const yBottom = (MAIN_H - 0.4) * MM; // overlaps the body to avoid a seam
+  const yBottom = (MAIN_H - 0.4) * MM;
   const yTop = TOTAL_H * MM;
 
   const shape = new THREE.Shape();
@@ -87,33 +69,41 @@ function makeTab(): THREE.Mesh {
   shape.holes.push(hole);
 
   const geo = extrude(shape, TAB_D);
-  // Front faces of tab and body are flush; the step is on the back side.
   geo.translate(0, 0, (BODY_D / 2) * MM - TAB_D * MM);
   return new THREE.Mesh(geo, M.dark());
 }
 
-// ── Flat blade lead: wide shoulder at the body, narrower shaft below ────────
-function makeLead(x: number): THREE.Group {
+// Draw a cylindrical lead from the bottom of the lifted body down to the hole
+function makeLead(targetX: number, naturalX: number): THREE.Group {
   const g = new THREE.Group();
 
-  // Shoulder (starts slightly inside the body)
-  const shoulderLen = SHOULDER_LEN + 0.4;
-  const shoulder = solidBox(
-    SHOULDER_W * MM,
-    shoulderLen * MM,
-    LEAD_T * MM,
-    M.metal(),
-  );
-  shoulder.position.set(0, -(SHOULDER_LEN * MM) / 2 + 0.2 * MM, 0);
-  g.add(shoulder);
+  // Leads drop from the lifted body (Y=BODY_LIFT) down to the board (Y=0)
+  const drop1 = BODY_LIFT * 0.3;
+  const drop2 = BODY_LIFT - drop1;
 
-  // Shaft
-  const shaftLen = LEAD_LEN - SHOULDER_LEN;
-  const shaft = solidBox(SHAFT_W * MM, shaftLen * MM, LEAD_T * MM, M.metal());
-  shaft.position.set(0, -(SHOULDER_LEN + shaftLen / 2) * MM, 0);
-  g.add(shaft);
+  if (Math.abs(targetX - naturalX) < 0.001) {
+    const lead = solidCyl(LEAD_RADIUS, BODY_LIFT, M.metal(), 10);
+    // Center of cylinder spanning from Y=0 to Y=BODY_LIFT is BODY_LIFT / 2
+    lead.position.set(targetX, BODY_LIFT / 2, 0);
+    g.add(lead);
+    return g;
+  }
 
-  g.position.x = x;
+  // Bent lead
+  const stub = solidCyl(LEAD_RADIUS, drop1, M.metal(), 10);
+  stub.position.set(naturalX, BODY_LIFT - drop1 / 2, 0);
+  g.add(stub);
+
+  const horizLen = Math.abs(targetX - naturalX);
+  const horiz = solidCyl(LEAD_RADIUS, horizLen, M.metal(), 10);
+  horiz.rotation.z = Math.PI / 2;
+  horiz.position.set((naturalX + targetX) / 2, BODY_LIFT - drop1, 0);
+  g.add(horiz);
+
+  const leg = solidCyl(LEAD_RADIUS, drop2, M.metal(), 10);
+  leg.position.set(targetX, drop2 / 2, 0);
+  g.add(leg);
+
   return g;
 }
 
@@ -123,62 +113,67 @@ export function buildMosfet(
 ): THREE.Group {
   const root = new THREE.Group();
 
-  // ── Plastic body: thick lower block + thin tab with hole ─────────────────
-  root.add(makeMainBody());
-  root.add(makeTab());
+  // The physical body group, lifted above the board
+  const bodyGroup = new THREE.Group();
+  bodyGroup.position.y = BODY_LIFT;
 
-  // ── Front-face printing ──────────────────────────────────────────────────
+  bodyGroup.add(makeMainBody());
+  bodyGroup.add(makeTab());
+
   const frontZ = (BODY_D / 2 + BEVEL) * MM + 0.02 * MM;
 
-  // Manufacturer logo (top-left of the printed area)
-  const logo = textLabel("WG", 3.2 * MM, 1.8 * MM, {
+  const logo = textLabel("WG", 3.2 * SCALE * MM, 1.8 * SCALE * MM, {
     textColor: "#eeeeee",
-    fontSize: 32,
+    fontSize: 24,
   });
   if (logo) {
-    logo.position.set(-1.8 * MM, 7.0 * MM, frontZ);
-    root.add(logo);
+    logo.position.set(-1.8 * SCALE * MM, 7.0 * SCALE * MM, frontZ);
+    bodyGroup.add(logo);
   }
 
-  // Pin-1 dimple (small ring, top-right of the printed area)
   const dimple = new THREE.Mesh(
-    new THREE.TorusGeometry(0.55 * MM, 0.09 * MM, 8, 28),
+    new THREE.TorusGeometry(0.55 * SCALE * MM, 0.09 * SCALE * MM, 8, 28),
     M.metal(),
   );
-  dimple.position.set(3.4 * MM, 7.2 * MM, frontZ);
-  root.add(dimple);
+  dimple.position.set(3.4 * SCALE * MM, 7.2 * SCALE * MM, frontZ);
+  bodyGroup.add(dimple);
 
-  // Part number
-  const marking = textLabel(partNumber, BODY_W * 0.75 * MM, 2.0 * MM, {
+  const marking = textLabel(partNumber, BODY_W * 0.75 * MM, 2.0 * SCALE * MM, {
     textColor: "#eeeeee",
-    fontSize: 26,
+    fontSize: 20,
   });
   if (marking) {
-    marking.position.set(0, 4.6 * MM, frontZ);
-    root.add(marking);
+    marking.position.set(0, 4.6 * SCALE * MM, frontZ);
+    bodyGroup.add(marking);
   }
 
-  // ── Leads: facing the print, left → right = Gate, Drain, Source ──────────
+  root.add(bodyGroup);
+
+  // Leads go from BODY_LIFT down to 0 (breadboard surface)
+  // Natural TO-220 pitch is 2.54mm (PITCH), but we scaled the body.
+  // We'll just drop the leads straight down since they perfectly match breadboard holes.
   root.add(
-    makeLead(-LEAD_PITCH * MM), // Gate
-    makeLead(0), //                Drain
-    makeLead(LEAD_PITCH * MM), //  Source
+    makeLead(-PITCH, -PITCH), // Gate
+    makeLead(0, 0), // Drain
+    makeLead(PITCH, PITCH), // Source
   );
 
-  // ── Pin labels ───────────────────────────────────────────────────────────
+  // Pin labels
   const labels = [
-    { text: "G", x: -LEAD_PITCH },
+    { text: "G", x: -PITCH },
     { text: "D", x: 0 },
-    { text: "S", x: LEAD_PITCH },
+    { text: "S", x: PITCH },
   ];
 
   for (const item of labels) {
-    const label = textLabel(item.text, 4.5 * MM, 3.6 * MM, {
+    const label = textLabel(item.text, PITCH * 0.32, PITCH * 0.22, {
       textColor: "#222222",
-      fontSize: 56,
+      fontSize: 24,
     });
     if (!label) continue;
-    label.position.set(item.x * MM, -LEAD_LEN * MM - 2.6 * MM, 0.3 * MM);
+    // Place label slightly in front of the leg hole
+    label.position.set(item.x, PITCH * 0.1, PITCH * 0.3);
+    label.rotation.x = -Math.PI / 8;
     root.add(label);
   }
 

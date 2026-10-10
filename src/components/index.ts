@@ -23,7 +23,13 @@ export { buildWire, buildWireStandalone } from "./wire";
 export { buildResistor, buildResistorStandalone } from "./resistor";
 export { buildCapacitor, buildCapacitorStandalone } from "./capacitor";
 export { buildLed, buildLedStandalone } from "./led";
-export { buildDip14, buildDip14Standalone, resolveIcPin } from "./ic";
+export {
+  buildDip14,
+  buildDip14Standalone,
+  buildDip16,
+  buildDip16Standalone,
+  resolveIcPin,
+} from "./ic";
 export {
   buildDcPowerSupply,
   buildDcPowerSupplyStandalone,
@@ -41,8 +47,16 @@ export {
   buildZenerDiode,
   buildZenerDiodeStandalone,
 } from "./diode";
-export { buildAmmeter, buildAmmeterStandalone } from "./ammeter";
-export { buildVoltmeter, buildVoltmeterStandalone } from "./voltmeter";
+export {
+  buildAmmeter,
+  buildAmmeterStandalone,
+  buildAmmeterSide,
+} from "./ammeter";
+export {
+  buildVoltmeter,
+  buildVoltmeterStandalone,
+  buildVoltmeterSide,
+} from "./voltmeter";
 export { buildBjt, buildBjtStandalone } from "./bjt";
 export { buildMosfet, buildMosfetStandalone } from "./mosfet";
 export { buildOpAmpStandalone, buildOpAmp } from "./op-amp";
@@ -51,6 +65,7 @@ export { buildOscilloscopeStandalone, buildOscilloscope } from "./oscilloscope";
 export {
   buildFunctionGeneratorStandalone,
   buildFunctionGenerator,
+  FG_OUT_ANCHOR,
 } from "./function-generater";
 export { buildTransformerStandalone, buildTransformer } from "./transformer";
 export { buildDipSwitchStandalone, buildDipSwitch } from "./dip-switch";

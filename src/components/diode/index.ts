@@ -219,21 +219,9 @@ export function buildDiode(
   type: DiodeType = "1N4148",
 ): THREE.Group {
   const root = new THREE.Group();
-
   const spec = DIODE_SPECS[type];
-
-  /*
-   * Center of diode.
-   */
   const cx = (anodePos.x + cathodePos.x) / 2;
-
   const cz = (anodePos.z + cathodePos.z) / 2;
-
-  /*
-   * ───────────────────────────────────────────────────────────────────────
-   * BODY
-   * ───────────────────────────────────────────────────────────────────────
-   */
 
   const bodyGeo = new THREE.CylinderGeometry(
     spec.bodyRadius,
@@ -241,99 +229,76 @@ export function buildDiode(
     spec.bodyLength,
     14,
   );
-
-  const body = new THREE.Mesh(bodyGeo, M.white());
-
+  const bodyMaterial = type === "zener" ? M.red() : M.dark();
+  const body = new THREE.Mesh(bodyGeo, bodyMaterial);
   body.rotation.z = Math.PI / 2;
-
   body.position.set(cx, TOP_Y + spec.bodyRadius, cz);
-
   body.add(
     new THREE.LineSegments(new THREE.EdgesGeometry(bodyGeo, 12), M.edge()),
   );
-
   root.add(body);
 
-  /*
-   * ───────────────────────────────────────────────────────────────────────
-   * CATHODE BAND
-   * ───────────────────────────────────────────────────────────────────────
-   */
-
   const bandWidth = spec.bodyLength * 0.16;
-
   const bandGeo = new THREE.CylinderGeometry(
     spec.bodyRadius + 0.006,
     spec.bodyRadius + 0.006,
     bandWidth,
     14,
   );
-
-  const band = new THREE.Mesh(bandGeo, M.silver());
-
+  const band = new THREE.Mesh(
+    bandGeo,
+    type === "zener" ? M.dark() : M.silver(),
+  );
   band.rotation.z = Math.PI / 2;
-
   const bandX = spec.bodyLength / 2 - bandWidth / 2;
-
   band.position.set(cx + bandX, TOP_Y + spec.bodyRadius, cz);
-
   band.add(
     new THREE.LineSegments(new THREE.EdgesGeometry(bandGeo, 12), M.edge()),
   );
-
   root.add(band);
 
-  /*
-   * ───────────────────────────────────────────────────────────────────────
-   * LEADS
-   * ───────────────────────────────────────────────────────────────────────
-   */
+  if (type === "zener") {
+    const markerGeo = new THREE.BoxGeometry(
+      PITCH * 0.06,
+      spec.bodyRadius * 1.9,
+      spec.bodyRadius * 0.5,
+    );
+    const marker = new THREE.Mesh(markerGeo, M.edge());
+    marker.position.set(
+      cx + bandX,
+      TOP_Y + spec.bodyRadius,
+      cz + spec.bodyRadius * 0.7,
+    );
+    root.add(marker);
+  }
 
   const leadRadius = PITCH * 0.07;
-
-  const leftLeadLength = Math.max(
-    PITCH * 0.4,
-    Math.abs(cx - spec.bodyLength / 2 - anodePos.x),
+  const bodyY = TOP_Y + spec.bodyRadius;
+  const holeY = TOP_Y - BOARD_H * 0.2;
+  const verticalLeadLength = bodyY - holeY;
+  const verticalLeadGeometry = new THREE.CylinderGeometry(
+    leadRadius,
+    leadRadius,
+    verticalLeadLength,
+    6,
   );
 
-  const rightLeadLength = Math.max(
-    PITCH * 0.4,
-    Math.abs(cathodePos.x - (cx + spec.bodyLength / 2)),
-  );
+  for (const [holePos, bodyEndX] of [
+    [anodePos, cx - spec.bodyLength / 2],
+    [cathodePos, cx + spec.bodyLength / 2],
+  ] as const) {
+    const verticalLead = new THREE.Mesh(verticalLeadGeometry, M.gold());
+    verticalLead.position.set(holePos.x, (bodyY + holeY) / 2, holePos.z);
+    root.add(verticalLead);
 
-  /*
-   * Anode lead
-   */
-  const leftLead = solidCyl(leadRadius, leftLeadLength, M.gold(), 6);
-
-  leftLead.rotation.z = Math.PI / 2;
-
-  leftLead.position.set(
-    (anodePos.x + cx - spec.bodyLength / 2) / 2,
-
-    TOP_Y - BOARD_H * 0.2,
-
-    anodePos.z,
-  );
-
-  root.add(leftLead);
-
-  /*
-   * Cathode lead
-   */
-  const rightLead = solidCyl(leadRadius, rightLeadLength, M.gold(), 6);
-
-  rightLead.rotation.z = Math.PI / 2;
-
-  rightLead.position.set(
-    (cathodePos.x + cx + spec.bodyLength / 2) / 2,
-
-    TOP_Y - BOARD_H * 0.2,
-
-    cathodePos.z,
-  );
-
-  root.add(rightLead);
+    const dx = bodyEndX - holePos.x;
+    if (Math.abs(dx) > 0.001) {
+      const horizontalLead = solidCyl(leadRadius, Math.abs(dx), M.gold(), 6);
+      horizontalLead.rotation.z = Math.PI / 2;
+      horizontalLead.position.set((holePos.x + bodyEndX) / 2, bodyY, holePos.z);
+      root.add(horizontalLead);
+    }
+  }
 
   return root;
 }

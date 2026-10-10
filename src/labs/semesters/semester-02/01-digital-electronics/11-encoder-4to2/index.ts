@@ -9,69 +9,27 @@ import { conclusion } from "./06-conclusion";
 import { components } from "./components";
 import { procedureSteps } from "./04-procedure";
 
-export const encoder4to2Experiment: ExperimentDefinition = {
-  id: "encoder-4to2",
-  title: "4:2 Priority Encoder",
+export const exp11Encoder4to2Experiment: ExperimentDefinition = {
+  id: "11-encoder-4to2",
+  title: "4-to-2 Line Encoder",
   description:
-    "A 4-to-2 encoder takes 4 input lines (only one HIGH at a time) and outputs a 2-bit binary code. Input I0→00, I1→01, I2→10, I3→11. Built from two OR gates.",
-  truthTable: {
-    inputs: ["I3", "I2", "I1", "I0"],
-    outputs: ["A", "B"],
-    rows: [
-      {
-        inputs: {
-          I3: 0,
-          I2: 0,
-          I1: 0,
-          I0: 1,
-        },
-        outputs: {
-          A: 0,
-          B: 0,
-        },
-      },
-      {
-        inputs: {
-          I3: 0,
-          I2: 0,
-          I1: 1,
-          I0: 0,
-        },
-        outputs: {
-          A: 0,
-          B: 1,
-        },
-      },
-      {
-        inputs: {
-          I3: 0,
-          I2: 1,
-          I1: 0,
-          I0: 0,
-        },
-        outputs: {
-          A: 1,
-          B: 0,
-        },
-      },
-      {
-        inputs: {
-          I3: 1,
-          I2: 0,
-          I1: 0,
-          I0: 0,
-        },
-        outputs: {
-          A: 1,
-          B: 1,
-        },
-      },
-    ],
-  },
+    "Designs a 4-to-2 line encoder using two OR gates: Y1 = D2 + D3 and Y0 = D1 + D3. Verifies the truth table on a breadboard with LED outputs.",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],
   procedureSteps,
+  truthTable: {
+    inputs: ["D0", "D1", "D2", "D3"],
+    outputs: ["Y1", "Y0"],
+    rows: [
+      { inputs: { D0: 1, D1: 0, D2: 0, D3: 0 }, outputs: { Y1: 0, Y0: 0 } },
+      { inputs: { D0: 0, D1: 1, D2: 0, D3: 0 }, outputs: { Y1: 0, Y0: 1 } },
+      { inputs: { D0: 0, D1: 0, D2: 1, D3: 0 }, outputs: { Y1: 1, Y0: 0 } },
+      { inputs: { D0: 0, D1: 0, D2: 0, D3: 1 }, outputs: { Y1: 1, Y0: 1 } },
+    ],
+  },
 };
 
-export const Encoder4to2Circuit = buildCircuit(encoder4to2Experiment);
-export const Encoder4to2Content = buildLabContent(encoder4to2Experiment);
+export const Exp11Encoder4to2Circuit = buildCircuit(exp11Encoder4to2Experiment);
+export const Exp11Encoder4to2Content = buildLabContent(
+  exp11Encoder4to2Experiment,
+);

@@ -5,6 +5,6 @@ export const aim: LabSection = {
   type: "text",
   title: "Aim",
   paragraphs: [
-    "To design, construct and verify a MOD-5 asynchronous (ripple) UP counter and a MOD-5 asynchronous DOWN counter using JK flip-flops (74HC76) and NAND gates.",
+    "To design, build and verify a MOD-5 asynchronous (ripple) up/down counter using D flip-flops and basic logic gates.",
   ],
 };

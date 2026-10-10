@@ -11,7 +11,7 @@ export const apparatus: LabSection = {
     },
     {
       name: "Zener diode",
-      specification: "5.1 V, 500 mW, BZX55C5V1 or equivalent (1 piece)",
+      specification: "5.1 V, 500 mW, 1N4733A or BZX55C5V1 (1 piece)",
     },
     { name: "Resistor Rs", specification: "330 Ω, 1/4 W, ±5 % (1 piece)" },
     {

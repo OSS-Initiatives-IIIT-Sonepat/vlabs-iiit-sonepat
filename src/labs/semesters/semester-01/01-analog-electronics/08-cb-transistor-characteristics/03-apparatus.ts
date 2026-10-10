@@ -4,32 +4,26 @@ export const apparatus: ApparatusSection = {
   id: "apparatus",
   type: "apparatus",
   title: "Apparatus",
-  audioPath:
-    "/semesters/semester-01/01-analog-electronics-advanced/cb-transistor-characteristics/03_apparatus_english.mp3",
   items: [
+    { name: "NPN transistor", specification: "BC547", quantity: "1" },
+    { name: "Resistor (R_E)", specification: "470 Ω, 0.25 W", quantity: "1" },
     {
-      name: "NPN transistor",
-      specification:
-        "BC547, TO-92 (drawn on the board as two junction markers)",
-      quantity: "1",
-    },
-    { name: "Resistor RE", specification: "1 kΩ, ¼ W", quantity: "1" },
-    {
-      name: "Resistor RC",
-      specification: "100 Ω, ¼ W (current-sense resistor)",
-      quantity: "1",
-    },
-    {
-      name: "Regulated DC power supply",
-      specification: "0–20 V (used as VEE and VCC)",
+      name: "Variable DC power supply",
+      specification: "V_EE: 0-5 V, V_CC: 0-12 V",
       quantity: "2",
     },
     {
+      name: "Milliammeter",
+      specification: "0-100 mA, analogue",
+      quantity: "2",
+    },
+    { name: "Voltmeter", specification: "0-15 V DC, analogue", quantity: "1" },
+    {
       name: "Digital multimeter",
       specification: "DC volts range",
-      quantity: "3",
+      quantity: "1",
     },
-    { name: "Breadboard", specification: "830 tie-point", quantity: "1" },
-    { name: "Connecting wires", quantity: "1" },
+    { name: "Breadboard", specification: "30 columns", quantity: "1" },
+    { name: "Connecting wires", specification: "single-core", quantity: "3" },
   ],
 };

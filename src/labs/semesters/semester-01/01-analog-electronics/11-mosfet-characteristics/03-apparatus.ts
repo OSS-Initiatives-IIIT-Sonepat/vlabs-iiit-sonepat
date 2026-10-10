@@ -7,8 +7,7 @@ export const apparatus: LabSection = {
   items: [
     {
       name: "N-channel enhancement MOSFET",
-      specification:
-        "2N7000 or equivalent (drawn as a yellow stand-in on the virtual breadboard: anode = Drain, cathode = Source, separate hole = Gate)",
+      specification: "2N7000 or equivalent",
       quantity: "1",
     },
     {
