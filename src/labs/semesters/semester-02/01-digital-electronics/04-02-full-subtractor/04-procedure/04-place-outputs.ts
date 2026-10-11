@@ -1,0 +1,31 @@
+import { type SceneProcedureStep } from "@/labs/experiments/types";
+
+export const step: SceneProcedureStep = {
+  label: "Place the output resistors and LEDs",
+  body: "Mount a 330 Ω resistor and an LED for each output: green LED for Difference and yellow LED for Borrow. Each resistor limits the LED current to a safe value.",
+  show: [
+    "bb",
+    "xor1",
+    "xor2",
+    "xor3",
+    "and1",
+    "xor4",
+    "r_diff",
+    "led_diff",
+    "r_bout",
+    "led_bout",
+    "psu",
+    "w_rail_link",
+    "w_vcc_xor1",
+    "w_gnd_xor1",
+    "w_vcc_xor2",
+    "w_gnd_xor2",
+    "w_vcc_xor3",
+    "w_gnd_xor3",
+    "w_vcc_and1",
+    "w_gnd_and1",
+    "w_vcc_xor4",
+    "w_gnd_xor4",
+  ],
+  highlight: "led_bout",
+};
