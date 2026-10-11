@@ -137,10 +137,10 @@ import {
 } from "./semester-01/01-analog-electronics/12-mosfet-common-source";
 
 import {
-  OpampCircuitsCircuit,
-  OpampCircuitsContent,
-  opampCircuitsExperiment,
-} from "./semester-01/01-analog-electronics/13-opamp-circuits";
+  InvertingNonInvertingOpampCircuit,
+  InvertingNonInvertingOpampContent,
+  invertingNonInvertingOpampExperiment,
+} from "./semester-01/01-analog-electronics/10-inverting-non-inverting-opamp";
 
 import {
   IntroLogicGatesCircuit,
@@ -592,9 +592,9 @@ export const SEMESTER_SUBJECTS: readonly SemesterSubjectCatalog[] = [
         ],
       ),
       fromBuilt(
-        opampCircuitsExperiment,
-        OpampCircuitsCircuit,
-        OpampCircuitsContent,
+        invertingNonInvertingOpampExperiment,
+        InvertingNonInvertingOpampCircuit,
+        InvertingNonInvertingOpampContent,
         ["op-amp", "lm741", "inverting", "non-inverting", "voltage gain"],
       ),
       // fromBuilt(
