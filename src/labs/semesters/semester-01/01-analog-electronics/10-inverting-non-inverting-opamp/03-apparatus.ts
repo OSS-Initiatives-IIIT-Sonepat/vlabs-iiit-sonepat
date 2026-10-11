@@ -9,22 +9,23 @@ export const apparatus: Section = {
   items: [
     {
       name: "Op-amp IC LM741",
-      specification: "General-purpose op-amp, 8-pin DIP. Quantity: 1",
+      specification:
+        "General-purpose op-amp, 8-pin DIP. Quantity: 2 (one for each amplifier, built side by side)",
     },
     {
       name: "Dual DC regulated power supply",
       specification:
-        "Two channels, 0–30 V, set to +12 V and −12 V about a common ground. Quantity: 1",
+        "Two channels, 0–30 V: channel 1 set to +12 V and channel 2 to −12 V about a common ground. Quantity: 1",
     },
     {
       name: "Function generator",
       specification:
-        "Sine wave output, 1 kHz, adjustable to 1 V peak-to-peak. Quantity: 1",
+        "Sine wave output, 1 kHz, adjustable to 1 V peak-to-peak. Quantity: 1 (one connection per amplifier)",
     },
     {
       name: "Cathode ray oscilloscope (CRO)",
       specification:
-        "Dual-trace, 20 MHz or higher, with two probes. Quantity: 1",
+        "Dual-trace, 20 MHz or higher, with two probes. Quantity: 1 (one connection per amplifier)",
     },
     {
       name: "Resistors",
@@ -38,7 +39,8 @@ export const apparatus: Section = {
     },
     {
       name: "Breadboard",
-      specification: "Solderless, 830 tie-points. Quantity: 1",
+      specification:
+        "Solderless, 60-column long breadboard with power rails. Quantity: 1",
     },
     {
       name: "Connecting wires and probe leads",
