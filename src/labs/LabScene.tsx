@@ -164,7 +164,15 @@ function benchSlotMap(all: ComponentInstance[]): Map<string, number> {
   withCol.sort((a, b) => a.col - b.col || a.id.localeCompare(b.id));
 
   const map = new Map<string, number>();
-  withCol.forEach((entry, i) => map.set(entry.id, i));
+
+  // Give bench instruments more horizontal breathing room.
+  // The placement function uses the slot index as the horizontal position.
+  const SLOT_GAP = 2;
+
+  withCol.forEach((entry, i) => {
+    map.set(entry.id, i * SLOT_GAP);
+  });
+
   return map;
 }
 
@@ -316,7 +324,16 @@ function buildInstance(
     case "op-amp": {
       const { col, row, board } = inst.mountedAt;
       const cols = colsForBoardId(board, all);
-      return buildOpAmp(hole(col, row, cols));
+      const pin1Hole = hole(col, row, cols);
+
+      // buildOpAmp() is centered on the IC body, while mountedAt
+      // represents the pin-1 hole. Shift the model so all DIP-8
+      // leads land exactly on the breadboard holes.
+      const mountPos = pin1Hole.clone();
+      mountPos.x += PITCH * 1.5;
+      mountPos.z -= PITCH * 1.5;
+
+      return buildOpAmp(mountPos);
     }
 
     case "7seg-display": {

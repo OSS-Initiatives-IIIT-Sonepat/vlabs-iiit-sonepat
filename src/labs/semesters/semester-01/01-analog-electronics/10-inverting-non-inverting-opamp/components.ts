@@ -261,7 +261,7 @@ export const components: ComponentInstance[] = [
     id: "w_fg_noninv",
     type: "wire",
     color: "blue",
-    from: { board: "bb", col: 10, row: "c" },
+    from: { board: "bb", col: 12, row: "c" },
     to: { ic: "opamp1", pin: "3" },
   },
   {
