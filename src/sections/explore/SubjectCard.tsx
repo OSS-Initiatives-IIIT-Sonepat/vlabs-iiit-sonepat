@@ -80,7 +80,8 @@ export function SubjectCard({ subject, onClick }: Props) {
                 lineHeight: 1,
               }}
             >
-              POLICE LINE • COMING SOON • DO NOT CROSS • COMING SOON • DO NOT CROSS
+              POLICE LINE • COMING SOON • DO NOT CROSS • COMING SOON • DO NOT
+              CROSS
             </span>
           </div>
         </div>
