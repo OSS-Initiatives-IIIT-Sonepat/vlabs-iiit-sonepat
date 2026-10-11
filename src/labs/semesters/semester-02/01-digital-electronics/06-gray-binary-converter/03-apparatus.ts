@@ -6,54 +6,49 @@ export const apparatus: ApparatusSection = {
   title: "Apparatus Required",
   items: [
     {
+      name: "Digital IC trainer / +5 V DC power supply",
+      specification: "Regulated +5 V DC, 500 mA",
+      quantity: "1",
+    },
+    {
       name: "Breadboard",
-      specification: "Standard 830-tie-point solderless breadboard",
+      specification: "Long solderless breadboard (60 columns)",
       quantity: "1",
     },
     {
       name: "74HC86 XOR Gate IC",
-      specification: "Quad 2-input XOR, DIP-14, 5 V CMOS",
+      specification: "Quad 2-input XOR gate, DIP-14, 5 V CMOS",
       quantity: "1",
     },
     {
       name: "Red LED",
-      specification: "5 mm, Vf ≈ 2.0 V (G3 output)",
+      specification: "5 mm, Vf ≈ 2.0 V (G₃ output bit)",
       quantity: "1",
     },
     {
       name: "Yellow LED",
-      specification: "5 mm, Vf ≈ 2.1 V (G2 output)",
+      specification: "5 mm, Vf ≈ 2.1 V (G₂ output bit)",
       quantity: "1",
     },
     {
       name: "Green LED",
-      specification: "5 mm, Vf ≈ 2.0 V (G1 output)",
+      specification: "5 mm, Vf ≈ 2.0 V (G₁ output bit)",
       quantity: "1",
     },
     {
       name: "Blue LED",
-      specification: "5 mm, Vf ≈ 3.0 V (G0 output)",
+      specification: "5 mm, Vf ≈ 3.0 V (G₀ output bit)",
       quantity: "1",
     },
     {
-      name: "Resistor 330 Ω",
-      specification: "¼ W, carbon film",
+      name: "Resistor",
+      specification: "330 Ω, 1/4 W carbon film (current limiter)",
       quantity: "4",
     },
     {
-      name: "DIP Switch (4-pole)",
-      specification: "For toggling binary inputs B3, B2, B1, B0",
-      quantity: "1",
-    },
-    {
-      name: "Regulated DC Power Supply",
-      specification: "+5 V DC, 500 mA",
-      quantity: "1",
-    },
-    {
-      name: "Connecting Wires",
-      specification: "M-M jumper wires, assorted colours",
-      quantity: "1 set",
+      name: "Connecting wires",
+      specification: "Single-core jumper wires, assorted colours",
+      quantity: "As required",
     },
   ],
 };

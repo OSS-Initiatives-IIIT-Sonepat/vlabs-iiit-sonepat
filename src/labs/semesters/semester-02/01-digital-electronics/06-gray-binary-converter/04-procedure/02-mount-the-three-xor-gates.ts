@@ -1,8 +1,24 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
 
 export const step: SceneProcedureStep = {
-  label: "Mount the three XOR gates.",
-  body: "Mount xor1 (74HC86) at column 5 row e — produces G2 = B3 ⊕ B2. Mount xor2 at column 12 row e — produces G1 = B2 ⊕ B1. Mount xor3 at column 19 row e — produces G0 = B1 ⊕ B0. All three gates may come from a single 74HC86 IC (quad package). Connect pin 14 to VCC and pin 7 to GND.",
-  show: ["bb", "xor1", "xor2", "xor3"],
+  label: "Mount the three 74HC86 XOR gate ICs and wire power rails.",
+  body:
+    "Insert three 74HC86 XOR gate IC packages onto row e straddling the central isolation groove: " +
+    "xor1 at column 8 (produces G₂), xor2 at column 22 (produces G₁), and xor3 at column 36 (produces G₀). " +
+    "Connect pin 14 of each IC to the bottom +5 V rail using purple wires, and pin 7 of each IC to the top GND rail using black wires.",
+  show: [
+    "bb",
+    "psu",
+    "w_rail_link",
+    "xor1",
+    "xor2",
+    "xor3",
+    "w_vcc_xor1",
+    "w_gnd_xor1",
+    "w_vcc_xor2",
+    "w_gnd_xor2",
+    "w_vcc_xor3",
+    "w_gnd_xor3",
+  ],
   highlight: "xor1",
 };

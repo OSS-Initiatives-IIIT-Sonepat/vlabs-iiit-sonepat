@@ -13,150 +13,50 @@ export const bcdXs3ConverterExperiment: ExperimentDefinition = {
   id: "bcd-xs3-converter",
   title: "BCD to Excess-3 Code Converter",
   description:
-    "Converts a 4-bit BCD input (0–9) to its Excess-3 (XS3) equivalent by adding 3 to each digit. Implemented using NOT, AND, OR, and XOR gates on a breadboard. Demonstrates K-map minimisation for a multi-output combinational circuit.",
+    "Design and verify BCD to Excess-3 code converter using standard 74HC series logic gate ICs on a solderless breadboard.",
   truthTable: {
     inputs: ["A", "B", "C", "D"],
     outputs: ["W", "X", "Y", "Z"],
     rows: [
       {
-        inputs: {
-          A: 0,
-          B: 0,
-          C: 0,
-          D: 0,
-        },
-        outputs: {
-          W: 0,
-          X: 0,
-          Y: 1,
-          Z: 1,
-        },
+        inputs: { A: 0, B: 0, C: 0, D: 0 },
+        outputs: { W: 0, X: 0, Y: 1, Z: 1 },
       },
       {
-        inputs: {
-          A: 0,
-          B: 0,
-          C: 0,
-          D: 1,
-        },
-        outputs: {
-          W: 0,
-          X: 1,
-          Y: 0,
-          Z: 0,
-        },
+        inputs: { A: 0, B: 0, C: 0, D: 1 },
+        outputs: { W: 0, X: 1, Y: 0, Z: 0 },
       },
       {
-        inputs: {
-          A: 0,
-          B: 0,
-          C: 1,
-          D: 0,
-        },
-        outputs: {
-          W: 0,
-          X: 1,
-          Y: 0,
-          Z: 1,
-        },
+        inputs: { A: 0, B: 0, C: 1, D: 0 },
+        outputs: { W: 0, X: 1, Y: 0, Z: 1 },
       },
       {
-        inputs: {
-          A: 0,
-          B: 0,
-          C: 1,
-          D: 1,
-        },
-        outputs: {
-          W: 0,
-          X: 1,
-          Y: 1,
-          Z: 0,
-        },
+        inputs: { A: 0, B: 0, C: 1, D: 1 },
+        outputs: { W: 0, X: 1, Y: 1, Z: 0 },
       },
       {
-        inputs: {
-          A: 0,
-          B: 1,
-          C: 0,
-          D: 0,
-        },
-        outputs: {
-          W: 0,
-          X: 1,
-          Y: 1,
-          Z: 1,
-        },
+        inputs: { A: 0, B: 1, C: 0, D: 0 },
+        outputs: { W: 0, X: 1, Y: 1, Z: 1 },
       },
       {
-        inputs: {
-          A: 0,
-          B: 1,
-          C: 0,
-          D: 1,
-        },
-        outputs: {
-          W: 1,
-          X: 0,
-          Y: 0,
-          Z: 0,
-        },
+        inputs: { A: 0, B: 1, C: 0, D: 1 },
+        outputs: { W: 1, X: 0, Y: 0, Z: 0 },
       },
       {
-        inputs: {
-          A: 0,
-          B: 1,
-          C: 1,
-          D: 0,
-        },
-        outputs: {
-          W: 1,
-          X: 0,
-          Y: 0,
-          Z: 1,
-        },
+        inputs: { A: 0, B: 1, C: 1, D: 0 },
+        outputs: { W: 1, X: 0, Y: 0, Z: 1 },
       },
       {
-        inputs: {
-          A: 0,
-          B: 1,
-          C: 1,
-          D: 1,
-        },
-        outputs: {
-          W: 1,
-          X: 0,
-          Y: 1,
-          Z: 0,
-        },
+        inputs: { A: 0, B: 1, C: 1, D: 1 },
+        outputs: { W: 1, X: 0, Y: 1, Z: 0 },
       },
       {
-        inputs: {
-          A: 1,
-          B: 0,
-          C: 0,
-          D: 0,
-        },
-        outputs: {
-          W: 1,
-          X: 0,
-          Y: 1,
-          Z: 1,
-        },
+        inputs: { A: 1, B: 0, C: 0, D: 0 },
+        outputs: { W: 1, X: 0, Y: 1, Z: 1 },
       },
       {
-        inputs: {
-          A: 1,
-          B: 0,
-          C: 0,
-          D: 1,
-        },
-        outputs: {
-          W: 1,
-          X: 1,
-          Y: 0,
-          Z: 0,
-        },
+        inputs: { A: 1, B: 0, C: 0, D: 1 },
+        outputs: { W: 1, X: 1, Y: 0, Z: 0 },
       },
     ],
   },

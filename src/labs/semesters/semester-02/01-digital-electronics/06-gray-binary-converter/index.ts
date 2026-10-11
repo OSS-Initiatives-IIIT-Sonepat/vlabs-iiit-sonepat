@@ -13,122 +13,74 @@ export const grayBinaryConverterExperiment: ExperimentDefinition = {
   id: "gray-binary-converter",
   title: "Gray Code to Binary and Binary to Gray Code Converters",
   description:
-    "Demonstrates the Binary-to-Gray code conversion using three XOR gates. G3=B3 (pass-through), G2=B3⊕B2, G1=B2⊕B1, G0=B1⊕B0. Gray code has the property that adjacent values differ by exactly one bit.",
+    "Design and verify 4-bit Binary to Gray code converter and Gray code to binary converter using 74HC86 XOR gate ICs on a solderless breadboard.",
   truthTable: {
     inputs: ["B3", "B2", "B1", "B0"],
     outputs: ["G3", "G2", "G1", "G0"],
     rows: [
       {
-        inputs: {
-          B3: 0,
-          B2: 0,
-          B1: 0,
-          B0: 0,
-        },
-        outputs: {
-          G3: 0,
-          G2: 0,
-          G1: 0,
-          G0: 0,
-        },
+        inputs: { B3: 0, B2: 0, B1: 0, B0: 0 },
+        outputs: { G3: 0, G2: 0, G1: 0, G0: 0 },
       },
       {
-        inputs: {
-          B3: 0,
-          B2: 0,
-          B1: 0,
-          B0: 1,
-        },
-        outputs: {
-          G3: 0,
-          G2: 0,
-          G1: 0,
-          G0: 1,
-        },
+        inputs: { B3: 0, B2: 0, B1: 0, B0: 1 },
+        outputs: { G3: 0, G2: 0, G1: 0, G0: 1 },
       },
       {
-        inputs: {
-          B3: 0,
-          B2: 0,
-          B1: 1,
-          B0: 0,
-        },
-        outputs: {
-          G3: 0,
-          G2: 0,
-          G1: 1,
-          G0: 1,
-        },
+        inputs: { B3: 0, B2: 0, B1: 1, B0: 0 },
+        outputs: { G3: 0, G2: 0, G1: 1, G0: 1 },
       },
       {
-        inputs: {
-          B3: 0,
-          B2: 0,
-          B1: 1,
-          B0: 1,
-        },
-        outputs: {
-          G3: 0,
-          G2: 0,
-          G1: 1,
-          G0: 0,
-        },
+        inputs: { B3: 0, B2: 0, B1: 1, B0: 1 },
+        outputs: { G3: 0, G2: 0, G1: 1, G0: 0 },
       },
       {
-        inputs: {
-          B3: 0,
-          B2: 1,
-          B1: 0,
-          B0: 0,
-        },
-        outputs: {
-          G3: 0,
-          G2: 1,
-          G1: 1,
-          G0: 0,
-        },
+        inputs: { B3: 0, B2: 1, B1: 0, B0: 0 },
+        outputs: { G3: 0, G2: 1, G1: 1, G0: 0 },
       },
       {
-        inputs: {
-          B3: 0,
-          B2: 1,
-          B1: 0,
-          B0: 1,
-        },
-        outputs: {
-          G3: 0,
-          G2: 1,
-          G1: 1,
-          G0: 1,
-        },
+        inputs: { B3: 0, B2: 1, B1: 0, B0: 1 },
+        outputs: { G3: 0, G2: 1, G1: 1, G0: 1 },
       },
       {
-        inputs: {
-          B3: 0,
-          B2: 1,
-          B1: 1,
-          B0: 0,
-        },
-        outputs: {
-          G3: 0,
-          G2: 1,
-          G1: 0,
-          G0: 1,
-        },
+        inputs: { B3: 0, B2: 1, B1: 1, B0: 0 },
+        outputs: { G3: 0, G2: 1, G1: 0, G0: 1 },
       },
       {
-        inputs: {
-          B3: 0,
-          B2: 1,
-          B1: 1,
-          B0: 1,
-        },
-        outputs: {
-          G3: 0,
-          G2: 1,
-          G1: 0,
-          G0: 0,
-        },
+        inputs: { B3: 0, B2: 1, B1: 1, B0: 1 },
+        outputs: { G3: 0, G2: 1, G1: 0, G0: 0 },
+      },
+      {
+        inputs: { B3: 1, B2: 0, B1: 0, B0: 0 },
+        outputs: { G3: 1, G2: 1, G1: 0, G0: 0 },
+      },
+      {
+        inputs: { B3: 1, B2: 0, B1: 0, B0: 1 },
+        outputs: { G3: 1, G2: 1, G1: 0, G0: 1 },
+      },
+      {
+        inputs: { B3: 1, B2: 0, B1: 1, B0: 0 },
+        outputs: { G3: 1, G2: 1, G1: 1, G0: 1 },
+      },
+      {
+        inputs: { B3: 1, B2: 0, B1: 1, B0: 1 },
+        outputs: { G3: 1, G2: 1, G1: 1, G0: 0 },
+      },
+      {
+        inputs: { B3: 1, B2: 1, B1: 0, B0: 0 },
+        outputs: { G3: 1, G2: 0, G1: 1, G0: 0 },
+      },
+      {
+        inputs: { B3: 1, B2: 1, B1: 0, B0: 1 },
+        outputs: { G3: 1, G2: 0, G1: 1, G0: 1 },
+      },
+      {
+        inputs: { B3: 1, B2: 1, B1: 1, B0: 0 },
+        outputs: { G3: 1, G2: 0, G1: 0, G0: 1 },
+      },
+      {
+        inputs: { B3: 1, B2: 1, B1: 1, B0: 1 },
+        outputs: { G3: 1, G2: 0, G1: 0, G0: 0 },
       },
     ],
   },

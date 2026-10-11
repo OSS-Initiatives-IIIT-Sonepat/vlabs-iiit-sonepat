@@ -1,21 +1,36 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
 
 export const step: SceneProcedureStep = {
-  label: "Wire all binary inputs.",
-  body: "B3 (col 1): red wire to xor1.A, plus a separate red wire to r_g3.p1 (G3 pass-through). B2 (col 2): orange wires to xor1.B and xor2.A. B1 (col 3): blue wires to xor2.B and xor3.A. B0 (col 4): green wire to xor3.B only. Set all inputs LOW to start.",
+  label: "Wire binary inputs B₃, B₂, B₁, and B₀.",
+  body:
+    "Distribute 4-bit binary inputs from tie-point columns 1–4: " +
+    "B₃ (red wires) to xor1.A (col 8) and tie-point column 12 for the G₃ pass-through line; " +
+    "B₂ (orange wires) to xor1.B (col 9) and xor2.A (col 22); " +
+    "B₁ (blue wires) to xor2.B (col 23) and xor3.A (col 36); " +
+    "and B₀ (green wire) to xor3.B (col 37).",
   show: [
     "bb",
+    "psu",
+    "w_rail_link",
     "xor1",
     "xor2",
     "xor3",
+    "w_vcc_xor1",
+    "w_gnd_xor1",
+    "w_vcc_xor2",
+    "w_gnd_xor2",
+    "w_vcc_xor3",
+    "w_gnd_xor3",
     "w_b3_xor1",
     "w_b3_g3",
+    "w_b3_to_r",
     "w_b2_xor1",
     "w_b2_xor2",
     "w_b1_xor2",
     "w_b1_xor3",
     "w_b0_xor3",
   ],
+  highlight: "w_b3_xor1",
   activeInputs: {
     B3: 0,
     B2: 0,

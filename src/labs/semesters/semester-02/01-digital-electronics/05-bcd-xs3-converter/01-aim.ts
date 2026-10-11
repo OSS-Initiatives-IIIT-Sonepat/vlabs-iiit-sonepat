@@ -5,6 +5,6 @@ export const aim: TheorySection = {
   type: "text",
   title: "Aim",
   paragraphs: [
-    "To study and verify bcd to excess-3 code converter on a breadboard.",
+    "To design and verify BCD to Excess-3 code converter on a solderless breadboard using digital logic gate ICs.",
   ],
 };

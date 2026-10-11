@@ -5,8 +5,9 @@ export const conclusion: ConclusionSection = {
   type: "conclusion",
   title: "Conclusion",
   paragraphs: [
-    "The Binary-to-Gray converter was successfully built using three 74HC86 XOR gates. The output LEDs correctly displayed the Gray code for all 8 tested binary inputs, matching the truth table and confirming the equations G3=B3, G2=B3⊕B2, G1=B2⊕B1, G0=B1⊕B0.",
-    "The unit-distance property was verified: consecutive Gray code values differed in exactly one LED state change, whereas direct binary counting shows multiple simultaneous transitions. This makes Gray code ideal for position encoders where multi-bit glitches during transitions could cause large transient errors.",
-    "The reverse Gray-to-Binary conversion requires cascading XOR operations (each binary bit depends on all higher Gray bits), which can be implemented with the same XOR gate IC by chaining outputs instead of fanning out from independent inputs.",
+    "The 4-bit Binary-to-Gray code converter was successfully designed, constructed on the solderless breadboard, and experimentally verified using 74HC86 XOR gate ICs.",
+    "The measured output LED logic levels perfectly matched the theoretical truth table for all sixteen binary combinations (0000₂ through 1111₂), confirming the core equations G₃ = B₃, G₂ = B₃ ⊕ B₂, G₁ = B₂ ⊕ B₁, and G₀ = B₁ ⊕ B₀.",
+    "The unit-distance property of Gray code was experimentally validated: consecutive count states produced exactly one bit transition at a time, preventing multi-bit asynchronous race conditions and eliminating transient switching noise.",
+    "The complementary reverse operation (Gray-to-Binary conversion) was analyzed and proven mathematically (B₃ = G₃, B₂ = B₃ ⊕ G₂, B₁ = B₂ ⊕ G₁, B₀ = B₁ ⊕ G₀), demonstrating the duality and importance of unit-distance codes in precision digital measurement systems.",
   ],
 };
