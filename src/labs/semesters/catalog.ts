@@ -77,22 +77,10 @@ import {
 } from "./semester-01/02-computer-application/logic-gates";
 
 import {
-  FullAdderCircuit,
-  FullAdderContent,
-  fullAdderExperiment,
-} from "./semester-01/02-computer-application/full-adder";
-
-import {
   HalfSubtractorCircuit,
   HalfSubtractorContent,
   halfSubtractorExperiment,
 } from "./semester-01/02-computer-application/half-subtractor";
-
-import {
-  FullSubtractorCircuit,
-  FullSubtractorContent,
-  fullSubtractorExperiment,
-} from "./semester-01/02-computer-application/full-subtractor";
 
 import {
   Mux2to1Circuit,
@@ -191,16 +179,16 @@ import {
 } from "./semester-02/01-digital-electronics/03-half-adder-subtractor";
 
 import {
-  HalfAdderRevisitCircuit,
-  HalfAdderRevisitContent,
-  halfAdderRevisitExperiment,
-} from "./semester-02/02-advanced-adders/half-adder-revisit";
+  FullAdderCircuit,
+  FullAdderContent,
+  fullAdderExperiment,
+} from "./semester-02/01-digital-electronics/04-01-full-adder";
 
 import {
-  FullAdderRippleCircuit,
-  FullAdderRippleContent,
-  fullAdderRippleExperiment,
-} from "./semester-02/02-advanced-adders/full-adder-ripple";
+  FullSubtractorCircuit,
+  FullSubtractorContent,
+  fullSubtractorExperiment,
+} from "./semester-02/01-digital-electronics/04-02-full-subtractor";
 
 import {
   BcdXs3ConverterCircuit,
@@ -672,25 +660,14 @@ export const SEMESTER_SUBJECTS: readonly SemesterSubjectCatalog[] = [
         "xor",
         "74hc",
       ]),
-      fromBuilt(fullAdderExperiment, FullAdderCircuit, FullAdderContent, [
-        "adder",
-        "carry-in",
-        "sum",
-        "carry-out",
-        "combinational logic",
-      ]),
+
       fromBuilt(
         halfSubtractorExperiment,
         HalfSubtractorCircuit,
         HalfSubtractorContent,
         ["subtractor", "difference", "borrow", "xor", "not", "and"],
       ),
-      fromBuilt(
-        fullSubtractorExperiment,
-        FullSubtractorCircuit,
-        FullSubtractorContent,
-        ["subtractor", "borrow-in", "difference", "borrow-out", "multi-bit"],
-      ),
+
       fromBuilt(mux2to1Experiment, Mux2to1Circuit, Mux2to1Content, [
         "mux",
         "multiplexer",
@@ -792,6 +769,19 @@ export const SEMESTER_SUBJECTS: readonly SemesterSubjectCatalog[] = [
           "xor",
           "combinational logic",
         ],
+      ),
+      fromBuilt(fullAdderExperiment, FullAdderCircuit, FullAdderContent, [
+        "adder",
+        "carry-in",
+        "sum",
+        "carry-out",
+        "combinational logic",
+      ]),
+      fromBuilt(
+        fullSubtractorExperiment,
+        FullSubtractorCircuit,
+        FullSubtractorContent,
+        ["subtractor", "borrow-in", "difference", "borrow-out", "multi-bit"],
       ),
       fromBuilt(
         bcdXs3ConverterExperiment,
@@ -905,25 +895,25 @@ export const SEMESTER_SUBJECTS: readonly SemesterSubjectCatalog[] = [
       "Revisit the half adder with focus on propagation delay and timing, then extend to a 4-bit ripple-carry adder.",
     defaultCircuitId: "half-adder-revisit",
     experiments: [
-      fromBuilt(
-        halfAdderRevisitExperiment,
-        HalfAdderRevisitCircuit,
-        HalfAdderRevisitContent,
-        [
-          "adder",
-          "propagation delay",
-          "fan-out",
-          "74hc",
-          "timing",
-          "oscilloscope",
-        ],
-      ),
-      fromBuilt(
-        fullAdderRippleExperiment,
-        FullAdderRippleCircuit,
-        FullAdderRippleContent,
-        ["ripple carry", "4-bit adder", "carry propagation", "alu", "delay"],
-      ),
+      // fromBuilt(
+      //   halfAdderRevisitExperiment,
+      //   HalfAdderRevisitCircuit,
+      //   HalfAdderRevisitContent,
+      //   [
+      //     "adder",
+      //     "propagation delay",
+      //     "fan-out",
+      //     "74hc",
+      //     "timing",
+      //     "oscilloscope",
+      //   ],
+      // ),
+      // fromBuilt(
+      //   fullAdderRippleExperiment,
+      //   FullAdderRippleCircuit,
+      //   FullAdderRippleContent,
+      //   ["ripple carry", "4-bit adder", "carry propagation", "alu", "delay"],
+      // ),
     ],
   },
   {
@@ -982,12 +972,12 @@ export const SEMESTER_SUBJECTS: readonly SemesterSubjectCatalog[] = [
         IntroGatesReviewContent,
         ["gates", "review", "boolean algebra", "de morgan", "theory"],
       ),
-      fromBuilt(
-        fullAdderRippleExperiment,
-        FullAdderRippleCircuit,
-        FullAdderRippleContent,
-        ["ripple carry", "4-bit adder", "carry propagation", "alu", "delay"],
-      ),
+      // fromBuilt(
+      //   fullAdderRippleExperiment,
+      //   FullAdderRippleCircuit,
+      //   FullAdderRippleContent,
+      //   ["ripple carry", "4-bit adder", "carry propagation", "alu", "delay"],
+      // ),
       fromBuilt(claAdderExperiment, ClaAdderCircuit, ClaAdderContent, [
         "carry lookahead",
         "cla",
