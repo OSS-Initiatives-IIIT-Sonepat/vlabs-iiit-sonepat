@@ -1,0 +1,31 @@
+import { type SceneProcedureStep } from "@/labs/experiments/types";
+
+export const step: SceneProcedureStep = {
+  label: "Connect the LED supply",
+  body: "Connect each resistor to the VCC rail and then to the anode of its LED. The LEDs are supplied from VCC and will be switched on by the IC outputs sinking current.",
+  show: [
+    "bb",
+    "psu",
+    "dmx1",
+    "w_s0",
+    "w_s1",
+    "w_d",
+    "r_y0",
+    "led_y0",
+    "r_y1",
+    "led_y1",
+    "r_y2",
+    "led_y2",
+    "r_y3",
+    "led_y3",
+    "w_vcc_r0",
+    "w_r0_led",
+    "w_vcc_r1",
+    "w_r1_led",
+    "w_vcc_r2",
+    "w_r2_led",
+    "w_vcc_r3",
+    "w_r3_led",
+  ],
+  highlight: "r_y0",
+};

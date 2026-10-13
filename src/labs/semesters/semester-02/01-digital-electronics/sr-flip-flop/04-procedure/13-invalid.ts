@@ -1,0 +1,30 @@
+import { type SceneProcedureStep } from "@/labs/experiments/types";
+
+export const step: SceneProcedureStep = {
+  label: "Invalid: S = 1, R = 1",
+  body: "Apply S = 1 and R = 1 briefly. Both outputs go to 0, so both LEDs are OFF and Q is no longer the complement of Q̄. This condition is not allowed. Do not release S and R together, because the next state would be unpredictable.",
+  show: [
+    "bb",
+    "psu",
+    "nor1",
+    "nor2",
+    "w_fb1",
+    "w_fb2",
+    "w_s",
+    "w_r",
+    "r_q",
+    "led_q",
+    "r_qb",
+    "led_qb",
+    "w_q_r",
+    "w_r_led_q",
+    "w_qb_r",
+    "w_r_led_qb",
+    "w_gnd_q",
+    "w_gnd_qb",
+  ],
+  highlight: "led_qb",
+  activeInputs: { S: 1, R: 1 },
+  supplyVoltage: 5.0,
+  ledBrightness: { led_q: 0, led_qb: 0 },
+};

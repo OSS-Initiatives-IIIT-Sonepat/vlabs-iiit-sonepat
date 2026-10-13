@@ -4,49 +4,18 @@ import { type ExperimentDefinition } from "@/labs/experiments/types";
 import { aim } from "./01-aim";
 import { theory } from "./02-theory";
 import { apparatus } from "./03-apparatus";
+import { procedureSteps } from "./04-procedure";
 import { observations } from "./05-observations";
 import { conclusion } from "./06-conclusion";
 import { components } from "./components";
-import { procedureSteps } from "./04-procedure";
 
+// No truthTable: the D flip-flop is sequential (edge-triggered), so its output depends
+// on the stored state and on the clock edge. The characteristic table is in 05-observations.ts.
 export const dFlipFlopExperiment: ExperimentDefinition = {
   id: "d-flip-flop",
-  title: "D Flip-Flop using 74HC74 (Rising-Edge Triggered)",
+  title: "D Flip-Flop",
   description:
-    "Construct a D flip-flop using 74HC74 and demonstrate data capture on the rising clock edge, plus asynchronous preset and clear.",
-  truthTable: {
-    inputs: ["D", "CLK"],
-    outputs: ["Q"],
-    rows: [
-      {
-        inputs: {
-          D: 0,
-          CLK: 1,
-        },
-        outputs: {
-          Q: 0,
-        },
-      },
-      {
-        inputs: {
-          D: 1,
-          CLK: 1,
-        },
-        outputs: {
-          Q: 1,
-        },
-      },
-      {
-        inputs: {
-          D: 0,
-          CLK: 0,
-        },
-        outputs: {
-          Q: 1,
-        },
-      },
-    ],
-  },
+    "Verify the positive-edge-triggered D flip-flop (74HC74): Q copies D only on the rising clock edge.",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],
   procedureSteps,

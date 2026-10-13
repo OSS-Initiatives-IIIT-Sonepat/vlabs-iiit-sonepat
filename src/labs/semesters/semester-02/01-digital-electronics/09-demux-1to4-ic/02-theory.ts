@@ -5,9 +5,10 @@ export const theory: TheorySection = {
   type: "text",
   title: "Theory",
   paragraphs: [
-    "A demultiplexer (DEMUX) is the inverse of a multiplexer: it takes a single input and routes it to one of several outputs based on select lines. A 1:4 DEMUX has one enable/data input, two select lines (A, B), and four outputs (Y0–Y3). Only the selected output reflects the input state; all other outputs remain in their inactive state.",
-    "The 74HC139 is a dual 2-to-4 decoder/demultiplexer in a DIP-16 package. It contains two independent 1:4 DEMUX channels, each with an active-LOW enable input (EN_bar), two address/select inputs (A, B), and four active-LOW outputs (Y0–Y3). When EN_bar = LOW (enabled) and the address is AB, the selected output Yn goes LOW while all other outputs remain HIGH. When EN_bar = HIGH, all outputs are HIGH.",
-    "The decoding logic for channel 1 is: Y0 = ¬(EN_bar' · A' · B'),  Y1 = ¬(EN_bar' · A · B'), Y2 = ¬(EN_bar' · A' · B),   Y3 = ¬(EN_bar' · A · B). The active-LOW outputs mean LEDs connected between output and GND illuminate when selected because the output sinks current to ground.",
-    "When used as a pure decoder, the enable input acts as the data line and the address selects which output carries the data. When EN_bar is data (pulsed), the circuit distributes the signal to the output channel addressed by A, B. The 74HC139 is commonly used in memory address decoding and I/O port selection.",
+    "A demultiplexer (DEMUX) does the reverse of a multiplexer: it takes one data input and routes it to one of several outputs, chosen by the select lines. A 1:$2^n$ demultiplexer has one data input, $n$ select lines and $2^n$ outputs.",
+    "For an ideal active-HIGH 1:4 demultiplexer: $Y_0 = D\\,\\overline{S_1}\\,\\overline{S_0}$, $Y_1 = D\\,\\overline{S_1}\\,S_0$, $Y_2 = D\\,S_1\\,\\overline{S_0}$, $Y_3 = D\\,S_1\\,S_0$. Only the output addressed by $S_1S_0$ follows $D$; the others stay at 0.",
+    "The 74HC139 is a dual 2-to-4 decoder/demultiplexer with active-LOW outputs. Section 1 is used here: the select inputs are 1A ($S_0$) and 1B ($S_1$), and the active-LOW enable input $\\overline{1G}$ carries the data $D$. The addressed output $\\overline{Y_n}$ follows $D$, while every other output stays HIGH.",
+    "Each output drives an LED connected between VCC (through a 330 Ω resistor) and the output pin. The output sinks the current, so an LED is ON when its output pin is LOW. With $D = 0$ the addressed LED lights; with $D = 1$ all LEDs are OFF.",
+    "Applications: data distribution, memory and I/O address decoding, serial-to-parallel conversion, and routing a clock or signal to one of several destinations.",
   ],
 };

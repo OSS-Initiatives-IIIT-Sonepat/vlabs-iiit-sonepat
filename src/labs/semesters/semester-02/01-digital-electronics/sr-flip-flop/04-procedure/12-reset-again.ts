@@ -1,0 +1,30 @@
+import { type SceneProcedureStep } from "@/labs/experiments/types";
+
+export const step: SceneProcedureStep = {
+  label: "Reset again: S = 0, R = 1",
+  body: "Apply R = 1 with S = 0 again. The state returns to Q = 0, Q̄ = 1.",
+  show: [
+    "bb",
+    "psu",
+    "nor1",
+    "nor2",
+    "w_fb1",
+    "w_fb2",
+    "w_s",
+    "w_r",
+    "r_q",
+    "led_q",
+    "r_qb",
+    "led_qb",
+    "w_q_r",
+    "w_r_led_q",
+    "w_qb_r",
+    "w_r_led_qb",
+    "w_gnd_q",
+    "w_gnd_qb",
+  ],
+  highlight: "led_qb",
+  activeInputs: { S: 0, R: 1 },
+  supplyVoltage: 5.0,
+  ledBrightness: { led_q: 0, led_qb: 1 },
+};

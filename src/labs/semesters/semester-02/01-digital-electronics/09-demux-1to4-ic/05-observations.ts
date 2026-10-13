@@ -1,21 +1,23 @@
-import { type ObservationSection } from "@/labs/lab-content.types";
+import { type LabSection } from "@/labs/lab-content.types";
 
-export const observations: ObservationSection = {
+export const observations: LabSection = {
   id: "observations",
   type: "observation",
   title: "Observations",
   paragraphs: [
-    "Supply voltage VCC = +5 V. 74HC139 EN_bar = LOW (permanently enabled).",
-    "Active-LOW outputs: selected output Y goes LOW (0 V), unselected outputs remain HIGH (+5 V).",
-    "LED current when ON: I = (VCC − Vf) / R ≈ (5 − 2.0) / 330 ≈ 9.1 mA (within safe range).",
+    "Set the select lines S1 S0 and the data input D, then record the logic level at each output pin of the 74HC139 (active-LOW outputs). An LED is ON when its output pin is LOW.",
   ],
   table: {
-    headers: ["A (LSB)", "B (MSB)", "Y0", "Y1", "Y2", "Y3", "Active LED"],
+    headers: ["S1", "S0", "D", "Y0", "Y1", "Y2", "Y3", "LED(s) ON", "Observed"],
     rows: [
-      [0, 0, "LOW", "HIGH", "HIGH", "HIGH", "Red (Y0)"],
-      [0, 1, "HIGH", "LOW", "HIGH", "HIGH", "Yellow (Y1)"],
-      [1, 0, "HIGH", "HIGH", "LOW", "HIGH", "Green (Y2)"],
-      [1, 1, "HIGH", "HIGH", "HIGH", "LOW", "Blue (Y3)"],
+      ["0", "0", "0", "0", "1", "1", "1", "Y0", ""],
+      ["0", "0", "1", "1", "1", "1", "1", "None", ""],
+      ["0", "1", "0", "1", "0", "1", "1", "Y1", ""],
+      ["0", "1", "1", "1", "1", "1", "1", "None", ""],
+      ["1", "0", "0", "1", "1", "0", "1", "Y2", ""],
+      ["1", "0", "1", "1", "1", "1", "1", "None", ""],
+      ["1", "1", "0", "1", "1", "1", "0", "Y3", ""],
+      ["1", "1", "1", "1", "1", "1", "1", "None", ""],
     ],
   },
 };

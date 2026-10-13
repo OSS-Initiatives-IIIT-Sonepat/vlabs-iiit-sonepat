@@ -1,12 +1,16 @@
-import { step as s01 } from "./01-inspect-and-place-the-breadboard";
-import { step as s02 } from "./02-mount-the-74hc139-ic";
-import { step as s03 } from "./03-tie-en-bar-to-gnd";
-import { step as s04 } from "./04-wire-select-inputs-a-and-b";
-import { step as s05 } from "./05-wire-outputs-y0-y3-to-leds";
-import { step as s06 } from "./06-test-a-0-b-0-y0-active";
-import { step as s07 } from "./07-test-a-1-b-1-y3-active";
-
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step as s01 } from "./01-breadboard-and-supply";
+import { step as s02 } from "./02-place-ic";
+import { step as s03 } from "./03-select-lines";
+import { step as s04 } from "./04-data-input";
+import { step as s05 } from "./05-place-leds";
+import { step as s06 } from "./06-led-supply";
+import { step as s07 } from "./07-outputs";
+import { step as s08 } from "./08-test-00";
+import { step as s09 } from "./09-test-01";
+import { step as s10 } from "./10-test-10";
+import { step as s11 } from "./11-test-11";
+import { step as s12 } from "./12-test-data-high";
 
 export const procedureSteps: SceneProcedureStep[] = [
   s01,
@@ -16,4 +20,9 @@ export const procedureSteps: SceneProcedureStep[] = [
   s05,
   s06,
   s07,
+  s08,
+  s09,
+  s10,
+  s11,
+  s12,
 ];
