@@ -13,6 +13,7 @@ import { MenuDrawer } from "./components/MenuDrawer";
 import { MenuNav } from "./components/MenuNav";
 import { CommandPalette } from "./components/MenuSearch";
 import { MenuSocial } from "./components/MenuSocial";
+import { LanguageSwitcher } from "./components/LanguageSwitcher";
 import { useMenuData } from "./hooks/use-menu-data";
 import { CloseDrawerOnDesktopEffect } from "./effect-components/CloseDrawerOnDesktopEffect";
 import { ScrollStateEffect } from "./effect-components/ScrollStateEffect";
@@ -72,6 +73,9 @@ export function Menu({ scheme = "light" }: MenuProps) {
               <CommandPalette />
             </div>
             <MenuSocial links={menuData.socialLinks} />
+            <div className="hidden md:block">
+              <LanguageSwitcher />
+            </div>
             <div className="hidden items-center gap-4 md:flex">
               <Button href={menuData.appUrl} label={menuData.getStartedLabel} size="small" />
             </div>
