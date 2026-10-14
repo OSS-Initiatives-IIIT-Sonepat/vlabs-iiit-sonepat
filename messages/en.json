@@ -70,23 +70,24 @@
       "cta": "Get started"
     },
     "threeCards": {
+      "eyebrow": "Core ECE components.",
+      "heading": "Explore the building blocks of every circuit",
+      "body": "From breadboard to LED to resistor — hands-on 3D interaction with the fundamentals of electronics.",
+      "cta": "Explore all the components",
       "breadboard": {
-        "heading": "Breadboard",
-        "body": "The solderless breadboard is the starting point for every electronics project. Learn how to wire components without soldering.",
+        "body": "The solderless breadboard is the starting point for every ECE prototype — snap in components, route jumper wires, and iterate without soldering.",
         "role": "Core component",
         "company": "Prototyping"
       },
       "resistor": {
-        "heading": "Resistor",
-        "body": "Control current flow in your circuits. Understanding resistance is fundamental to electronics design.",
+        "body": "Resistors limit current and set voltage levels. Read the four colour bands — orange, orange, brown, gold — to identify the value and tolerance.",
         "role": "Passive component",
-        "company": "Circuit design"
+        "company": "Circuit fundamentals"
       },
       "led": {
-        "heading": "LED",
-        "body": "Light Emitting Diodes are essential output components. Learn about forward voltage, current limiting, and applications.",
-        "role": "Output device",
-        "company": "Visual feedback"
+        "body": "A light-emitting diode converts current directly into light. Polarity matters: the longer anode lead goes to positive, the flat-side cathode to ground.",
+        "role": "Output component",
+        "company": "Optoelectronics"
       }
     },
     "featureCards": {

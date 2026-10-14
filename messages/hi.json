@@ -70,23 +70,24 @@
       "cta": "शुरू करें"
     },
     "threeCards": {
+      "eyebrow": "मुख्य ECE कंपोनेंट्स।",
+      "heading": "हर सर्किट के बिल्डिंग ब्लॉक्स को एक्सप्लोर करें",
+      "body": "Breadboard से LED से Resistor तक — इलेक्ट्रॉनिक्स के फंडामेंटल्स के साथ हैंड्स-ऑन 3D इंटरैक्शन।",
+      "cta": "सभी कंपोनेंट्स एक्सप्लोर करें",
       "breadboard": {
-        "heading": "ब्रेडबोर्ड",
-        "body": "सोल्डरलेस ब्रेडबोर्ड हर इलेक्ट्रॉनिक्स प्रोजेक्ट की शुरुआत है। सोल्डरिंग के बिना घटकों को वायर करना सीखें।",
-        "role": "मुख्य घटक",
-        "company": "प्रोटोटाइपिंग"
+        "body": "Solderless breadboard हर ECE प्रोटोटाइप की शुरुआत है — कंपोनेंट्स स्नैप करें, jumper wires रूट करें, और बिना soldering के iterate करें।",
+        "role": "मुख्य कंपोनेंट",
+        "company": "Prototyping"
       },
       "resistor": {
-        "heading": "रेजिस्टर",
-        "body": "अपने सर्किट में करंट फ्लो को नियंत्रित करें। प्रतिरोध को समझना इलेक्ट्रॉनिक्स डिजाइन के लिए बुनियादी है।",
-        "role": "पैसिव घटक",
-        "company": "सर्किट डिजाइन"
+        "body": "Resistors करंट को सीमित करते हैं और voltage levels सेट करते हैं। चार colour bands पढ़ें — orange, orange, brown, gold — value और tolerance की पहचान करने के लिए।",
+        "role": "Passive कंपोनेंट",
+        "company": "Circuit फंडामेंटल्स"
       },
       "led": {
-        "heading": "LED",
-        "body": "लाइट एमिटिंग डायोड आवश्यक आउटपुट घटक हैं। फॉरवर्ड वोल्टेज, करंट लिमिटिंग और अनुप्रयोगों के बारे में जानें।",
-        "role": "आउटपुट डिवाइस",
-        "company": "विजुअल फीडबैक"
+        "body": "Light-emitting diode करंट को सीधे light में बदलता है। Polarity मायने रखती है: लंबी anode lead positive में जाती है, flat-side cathode ground में।",
+        "role": "Output कंपोनेंट",
+        "company": "Optoelectronics"
       }
     },
     "featureCards": {
