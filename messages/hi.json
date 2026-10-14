@@ -97,29 +97,29 @@
     "testimonials": {
       "eyebrow": "शिक्षक और छात्र क्या कह रहे हैं।",
       "navigation": {
-        "previous": "पिछला testimonial",
-        "next": "अगला testimonial"
+        "previous": "पिछला",
+        "next": "अगला"
       },
       "quotes": {
         "0": {
-          "text": "VLabs से पहले, छात्र lab session का आधा समय सिर्फ hardware को behave कराने में खर्च कर देते थे। अब वे पहले से ही virtually circuit verify करके आते हैं, और हम पूरी तरह से इस पर focus कर सकते हैं कि experiment वास्तव में क्या सिखा रहा है।",
+          "text": "VLabs से पहले, छात्र लैब सत्र का आधा समय सिर्फ हार्डवेयर को ठीक करने में खर्च कर देते थे। अब वे पहले से ही वर्चुअली सर्किट वेरिफाई करके आते हैं, और हम पूरी तरह से इस पर ध्यान केंद्रित कर सकते हैं कि प्रयोग वास्तव में क्या सिखा रहा है।",
           "author": {
             "name": "John Doe 1",
-            "designation": "Associate Professor, Electronics Engineering"
+            "designation": "एसोसिएट प्रोफेसर, इलेक्ट्रॉनिक्स इंजीनियरिंग"
           }
         },
         "1": {
-          "text": "Physical breadboard पर full-wave bridge rectifier बनाने में 40 मिनट लगते हैं और कोई न कोई हमेशा LED burn कर देता है। VLabs पर मैंने circuit चलाया, sweep measure किया, और ripple factor दस मिनट से कम में calculate कर लिया।",
+          "text": "फिजिकल ब्रेडबोर्ड पर फुल-वेव ब्रिज रेक्टिफायर बनाने में 40 मिनट लगते हैं और कोई न कोई हमेशा एलईडी जला देता है। VLabs पर मैंने सर्किट चलाया, स्वीप मापा, और रिपल फैक्टर दस मिनट से कम में कैलकुलेट कर लिया।",
           "author": {
             "name": "John Doe 2",
-            "designation": "B.Tech Student, Electrical Engineering"
+            "designation": "बी.टेक छात्र, इलेक्ट्रिकल इंजीनियरिंग"
           }
         },
         "2": {
-          "text": "8085 emulator बिल्कुल वही था जो missing था। छात्र assembly के through single-step कर सकते हैं, registers change देख सकते हैं, और वास्तव में fetch-decode-execute cycle समझ सकते हैं बजाय इसे सिर्फ exam के लिए memorise करने के।",
+          "text": "8085 एमुलेटर बिल्कुल वही था जो गायब था। छात्र असेंबली के माध्यम से सिंगल-स्टेप कर सकते हैं, रजिस्टर बदलते देख सकते हैं, और वास्तव में फेच-डिकोड-एक्जीक्यूट साइकिल समझ सकते हैं बजाय इसे सिर्फ परीक्षा के लिए याद करने के।",
           "author": {
             "name": "John Doe 3",
-            "designation": "Head of Department, Computer Engineering"
+            "designation": "विभागाध्यक्ष, कंप्यूटर इंजीनियरिंग"
           }
         }
       }
