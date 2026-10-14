@@ -280,6 +280,33 @@
       "eco": "अर्थशास्त्र",
       "psy": "मनोविज्ञान",
       "edu": "शिक्षा"
+    },
+    "interests": {
+      "circuits": "Circuits & Electronics",
+      "signals": "Signals & Systems",
+      "embedded": "Embedded Systems",
+      "robotics": "Robotics & Automation",
+      "ml": "Machine Learning",
+      "cv": "Computer Vision",
+      "nlp": "NLP / LLMs",
+      "algo": "Algorithms & Data Structures",
+      "os": "Operating Systems",
+      "networks": "Computer Networks",
+      "db": "Databases",
+      "webdev": "Web Development",
+      "thermodynamics": "ऊष्मागतिकी",
+      "fluid": "Fluid Mechanics",
+      "mechanics": "Mechanics of Materials",
+      "quantum": "Quantum Mechanics",
+      "optics": "Optics & Photonics",
+      "chem_react": "रासायनिक प्रतिक्रियाएं",
+      "biotech": "Biotechnology",
+      "genetics": "Genetics & Genomics",
+      "materials": "Materials Science",
+      "control": "Control Systems",
+      "power": "Power Systems",
+      "vlsi": "VLSI Design",
+      "security": "Security & Cryptography"
     }
   },
   "errors": {
