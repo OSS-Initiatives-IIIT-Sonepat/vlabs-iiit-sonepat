@@ -5,6 +5,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
+import { locales } from "@/i18n/config";
 import "../globals.css";
 
 const hostGrotesk = localFont({
@@ -68,6 +69,10 @@ const inriaSerif = Inria_Serif({
   variable: "--font-inria",
   display: "swap",
 });
+
+export function generateStaticParams() {
+  return locales.map((locale) => ({ locale }));
+}
 
 export default async function LocaleLayout({
   children,
