@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import { HeroBackdrop } from "./HeroBackdrop";
 
 import { SITE_URLS } from "@/platform/site-urls";
@@ -9,6 +12,8 @@ import { HeroPreviewClient } from "./hero-preview/HeroPreviewClient";
 const MOCKUP_WIDTH_PX = APP_PREVIEW_STAGE.windowScene.widthPx;
 
 export function HomeHero() {
+  const t = useTranslations("home.hero");
+
   return (
     <SectionShell
       background={
@@ -30,19 +35,17 @@ export function HomeHero() {
         <HeadingPair>
           <div className="w-full max-w-[672px]">
             <Heading as="h1" size="lg" weight="light">
-              Experience Virtual Labs at a *Different Dimension*.
+              {t("title")}
             </Heading>
           </div>
           <div className="mx-auto max-w-[591px]">
             <Body muted size="sm">
-              Explore, interact, and experiment with complex engineering
-              concepts through immersive virtual experiences built for the
-              modern learner.
+              {t("description")}
             </Body>
           </div>
         </HeadingPair>
         <div className="flex flex-wrap justify-center gap-3">
-          <Button href={SITE_URLS.appWelcome} label="Get started" />
+          <Button href={SITE_URLS.appWelcome} label={t("cta")} />
         </div>
       </div>
 
