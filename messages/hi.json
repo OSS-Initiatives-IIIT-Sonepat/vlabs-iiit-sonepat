@@ -93,6 +93,36 @@
         "body": "Momentary tactile switch। Current केवल तभी flow करता है जब cap दबाया जाता है — चार corner pins centre gap को straddle करते हैं।",
         "label": "Input"
       }
+    },
+    "testimonials": {
+      "eyebrow": "शिक्षक और छात्र क्या कह रहे हैं।",
+      "navigation": {
+        "previous": "पिछला testimonial",
+        "next": "अगला testimonial"
+      },
+      "quotes": {
+        "0": {
+          "text": "VLabs से पहले, छात्र lab session का आधा समय सिर्फ hardware को behave कराने में खर्च कर देते थे। अब वे पहले से ही virtually circuit verify करके आते हैं, और हम पूरी तरह से इस पर focus कर सकते हैं कि experiment वास्तव में क्या सिखा रहा है।",
+          "author": {
+            "name": "John Doe 1",
+            "designation": "Associate Professor, Electronics Engineering"
+          }
+        },
+        "1": {
+          "text": "Physical breadboard पर full-wave bridge rectifier बनाने में 40 मिनट लगते हैं और कोई न कोई हमेशा LED burn कर देता है। VLabs पर मैंने circuit चलाया, sweep measure किया, और ripple factor दस मिनट से कम में calculate कर लिया।",
+          "author": {
+            "name": "John Doe 2",
+            "designation": "B.Tech Student, Electrical Engineering"
+          }
+        },
+        "2": {
+          "text": "8085 emulator बिल्कुल वही था जो missing था। छात्र assembly के through single-step कर सकते हैं, registers change देख सकते हैं, और वास्तव में fetch-decode-execute cycle समझ सकते हैं बजाय इसे सिर्फ exam के लिए memorise करने के।",
+          "author": {
+            "name": "John Doe 3",
+            "designation": "Head of Department, Computer Engineering"
+          }
+        }
+      }
     }
   },
   "explore": {
