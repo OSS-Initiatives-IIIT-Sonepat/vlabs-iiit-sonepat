@@ -145,9 +145,9 @@
   },
   "explore": {
     "hero": {
-      "title": "Explore all the tools you want here",
-      "subtitle": "Browse every circuit, component, and lab organised by semester and subject.",
-      "description": "Watch all tutorials step by step..."
+      "title": "Explore all the tools you want here, watch all tutorials step by step, enjoy your 3D experience.",
+      "description": "Browse every circuit, component, and lab organised by semester. Each card ships with a live 3D scene you can drag and rotate — no installation required.",
+      "try": "Try"
     },
     "backToExplore": "Explore Labs"
   },
