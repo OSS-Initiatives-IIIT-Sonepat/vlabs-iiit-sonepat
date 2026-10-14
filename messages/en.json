@@ -1,0 +1,131 @@
+{
+  "common": {
+    "buttons": {
+      "getStarted": "Get started",
+      "continue": "Continue",
+      "back": "Back",
+      "next": "Next",
+      "previous": "Previous",
+      "submit": "Submit",
+      "cancel": "Cancel",
+      "close": "Close",
+      "save": "Save"
+    },
+    "search": {
+      "placeholder": "Search",
+      "shortcut": "⌘S"
+    }
+  },
+  "menu": {
+    "nav": {
+      "home": "Home",
+      "blog": "Blog",
+      "community": "Community",
+      "resources": "Resources"
+    },
+    "resources": {
+      "userGuide": "User Guide",
+      "developers": "Developers",
+      "components": "Components"
+    }
+  },
+  "footer": {
+    "description": "Virtual ECE labs — explore components, build circuits, and learn electronics in a fully interactive 3D environment.",
+    "sections": {
+      "labs": "Labs",
+      "components": "Components",
+      "project": "Project"
+    },
+    "labs": {
+      "halfAdder": "Half Adder",
+      "fullAdder": "Full Adder",
+      "srLatch": "SR Latch",
+      "logicGates": "Logic Gates"
+    },
+    "components": {
+      "breadboard": "Breadboard",
+      "resistor": "Resistor",
+      "led": "LED",
+      "capacitor": "Capacitor"
+    },
+    "project": {
+      "github": "GitHub",
+      "documentation": "Documentation",
+      "contribute": "Contribute"
+    },
+    "copyright": "© 2026 vlabs — open source ECE labs"
+  },
+  "home": {
+    "hero": {
+      "title": "Experience Virtual Labs at a *Different Dimension*.",
+      "description": "Explore, interact, and experiment with complex engineering concepts through immersive 3D simulations—where theory meets hands-on learning.",
+      "cta": "Get started"
+    },
+    "threeCards": {
+      "breadboard": {
+        "heading": "Breadboard",
+        "body": "The solderless breadboard is the starting point for every electronics project. Learn how to wire components without soldering.",
+        "role": "Core component",
+        "company": "Prototyping"
+      },
+      "resistor": {
+        "heading": "Resistor",
+        "body": "Control current flow in your circuits. Understanding resistance is fundamental to electronics design.",
+        "role": "Passive component",
+        "company": "Circuit design"
+      },
+      "led": {
+        "heading": "LED",
+        "body": "Light Emitting Diodes are essential output components. Learn about forward voltage, current limiting, and applications.",
+        "role": "Output device",
+        "company": "Visual feedback"
+      }
+    },
+    "featureCards": {
+      "capacitor": {
+        "heading": "Capacitor",
+        "body": "Capacitors store and release charge. Essential for filtering, timing, and energy storage applications.",
+        "label": "Energy storage"
+      }
+    }
+  },
+  "explore": {
+    "hero": {
+      "title": "Explore all the tools you want here",
+      "subtitle": "Browse every circuit, component, and lab organised by semester and subject.",
+      "description": "Watch all tutorials step by step..."
+    },
+    "backToExplore": "Explore Labs"
+  },
+  "lab": {
+    "navigation": {
+      "previousStep": "Previous step",
+      "nextStep": "Next step"
+    },
+    "language": {
+      "label": "Language",
+      "english": "English",
+      "hindi": "Hindi"
+    }
+  },
+  "onboarding": {
+    "title": "Tell us about yourself",
+    "roles": {
+      "student": "Student",
+      "professor": "Professor / Educator",
+      "explorer": "Curious Explorer",
+      "other": "Other"
+    },
+    "questions": {
+      "institution": "Where do you study?",
+      "department": "Which department?",
+      "interests": "What interests you?"
+    }
+  },
+  "errors": {
+    "404": {
+      "title": "404 - Page Not Found",
+      "description": "The page you're looking for doesn't exist."
+    }
+  }
+}
