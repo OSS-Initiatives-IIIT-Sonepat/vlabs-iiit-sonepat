@@ -57,7 +57,59 @@
       "heading": "कहानियां, अपडेट्स, और इंजीनियरिंग नोट्स",
       "description": "VLabs बनाने के पीछे के दृश्य — 3D rendering और circuit simulation से लेकर open-source community और education तक।"
     },
-    "allPosts": "सभी पोस्ट्स।"
+    "allPosts": "सभी पोस्ट्स।",
+    "posts": {
+      "building3dLabs": {
+        "title": "Three.js और Next.js के साथ शून्य से 3D ECE labs बनाना",
+        "excerpt": "हमने एक इंटरैक्टिव breadboard renderer कैसे डिज़ाइन किया जो छात्रों को browser में components को drag, drop, और wire करने देता है — कोई plugins नहीं, कोई installs नहीं।",
+        "tag": "इंजीनियरिंग",
+        "readTime": "8 मिनट पढ़ें",
+        "author": {
+          "role": "संस्थापक",
+          "bio": "जून और सितंबर 2026 के बीच शून्य से VLabs बनाया। IIIT Sonepat की Technical Society के अध्यक्ष के रूप में परियोजना को maintain करते हैं।"
+        }
+      },
+      "whyOpenSource": {
+        "title": "Open-source education tools पहले से कहीं अधिक महत्वपूर्ण क्यों हैं",
+        "excerpt": "Labs महंगे हैं, hardware नाजुक है, और हर छात्र को समान पहुंच नहीं मिलती। Virtual labs उस अंतर को पाटते हैं — हमने खुले में निर्माण क्यों चुना यहाँ है।",
+        "tag": "Open Source",
+        "readTime": "5 मिनट पढ़ें",
+        "author": {
+          "role": "संस्थापक",
+          "bio": "जून और सितंबर 2026 के बीच शून्य से VLabs बनाया। IIIT Sonepat की Technical Society के अध्यक्ष के रूप में परियोजना को maintain करते हैं।"
+        }
+      },
+      "lunariaToTailwind": {
+        "title": "Lunaria से Tailwind तक: एक design system को migrate करना",
+        "excerpt": "हमें Linaria-based CSS-in-JS setup विरासत में मिला और पूरे codebase को Tailwind CSS v4 में स्थानांतरित किया। यहाँ वह है जो अच्छा हुआ, जो टूट गया, और हमने क्या सीखा।",
+        "tag": "Design",
+        "readTime": "7 मिनट पढ़ें",
+        "author": {
+          "role": "संस्थापक",
+          "bio": "जून और सितंबर 2026 के बीच शून्य से VLabs बनाया। IIIT Sonepat की Technical Society के अध्यक्ष के रूप में परियोजना को maintain करते हैं।"
+        }
+      },
+      "interactiveProcedure": {
+        "title": "Circuit experiments के लिए interactive procedure steps डिज़ाइन करना",
+        "excerpt": "हर lab एक सख्त aim–theory–apparatus–procedure–observation–conclusion flow का पालन करती है। हमने प्रत्येक step को interactive, verifiable, और live 3D scene से wired कैसे बनाया यहाँ है।",
+        "tag": "Product",
+        "readTime": "6 मिनट पढ़ें",
+        "author": {
+          "role": "संस्थापक",
+          "bio": "जून और सितंबर 2026 के बीच शून्य से VLabs बनाया। IIIT Sonepat की Technical Society के अध्यक्ष के रूप में परियोजना को maintain करते हैं।"
+        }
+      },
+      "searchOptimisation": {
+        "title": "जब एक search box एक architecture समस्या बन गया",
+        "excerpt": "पुराना VLab search experiments ढूंढ सकता था। हम चाहते थे कि यह उन्हें समझे। जो ⌘K redesign के रूप में शुरू हुआ वह build-time search index, client-side performance work, और मनुष्य वास्तव में कैसे search करते हैं इसका एक छोटा सा सबक बन गया।",
+        "tag": "इंजीनियरिंग",
+        "readTime": "7 मिनट पढ़ें",
+        "author": {
+          "role": "Core Contributor",
+          "bio": "2025 से 2026 तक VLabs पर काम किया। एक contributor के रूप में परियोजना में योगदान दिया।"
+        }
+      }
+    }
   },
   "home": {
     "hero": {
