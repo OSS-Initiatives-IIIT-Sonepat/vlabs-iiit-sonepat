@@ -57,7 +57,59 @@
       "heading": "Stories, updates, and engineering notes",
       "description": "Behind-the-scenes looks at how we build VLabs — from 3D rendering and circuit simulation to open-source community and education."
     },
-    "allPosts": "All posts."
+    "allPosts": "All posts.",
+    "posts": {
+      "building3dLabs": {
+        "title": "Building 3D ECE labs from scratch with Three.js and Next.js",
+        "excerpt": "How we designed an interactive breadboard renderer that lets students drag, drop, and wire components in a browser — no plugins, no installs.",
+        "tag": "Engineering",
+        "readTime": "8 min read",
+        "author": {
+          "role": "Founder",
+          "bio": "Built VLabs from scratch between June and September 2026. Maintains the project as president of the Technical Society of IIIT Sonepat."
+        }
+      },
+      "whyOpenSource": {
+        "title": "Why open-source education tools matter more than ever",
+        "excerpt": "Labs are expensive, hardware is fragile, and not every student gets equal access. Virtual labs close that gap — here is why we chose to build in the open.",
+        "tag": "Open Source",
+        "readTime": "5 min read",
+        "author": {
+          "role": "Founder",
+          "bio": "Built VLabs from scratch between June and September 2026. Maintains the project as president of the Technical Society of IIIT Sonepat."
+        }
+      },
+      "lunariaToTailwind": {
+        "title": "From Lunaria to Tailwind: migrating a design system",
+        "excerpt": "We inherited a Linaria-based CSS-in-JS setup and moved the entire codebase to Tailwind CSS v4. Here is what went well, what broke, and what we learned.",
+        "tag": "Design",
+        "readTime": "7 min read",
+        "author": {
+          "role": "Founder",
+          "bio": "Built VLabs from scratch between June and September 2026. Maintains the project as president of the Technical Society of IIIT Sonepat."
+        }
+      },
+      "interactiveProcedure": {
+        "title": "Designing interactive procedure steps for circuit experiments",
+        "excerpt": "Every lab follows a strict aim–theory–apparatus–procedure–observation–conclusion flow. Here is how we made each step interactive, verifiable, and wired to a live 3D scene.",
+        "tag": "Product",
+        "readTime": "6 min read",
+        "author": {
+          "role": "Founder",
+          "bio": "Built VLabs from scratch between June and September 2026. Maintains the project as president of the Technical Society of IIIT Sonepat."
+        }
+      },
+      "searchOptimisation": {
+        "title": "When a search box became an architecture problem",
+        "excerpt": "The old VLab search could find experiments. We wanted it to understand them. What started as a ⌘K redesign turned into a build-time search index, client-side performance work, and a small lesson in how humans actually search.",
+        "tag": "Engineering",
+        "readTime": "7 min read",
+        "author": {
+          "role": "Core Contributor",
+          "bio": "Worked on VLabs from 2025 to 2026. Contributed to the project as a contributor."
+        }
+      }
+    }
   },
   "home": {
     "hero": {
