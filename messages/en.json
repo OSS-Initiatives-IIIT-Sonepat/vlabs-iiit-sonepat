@@ -260,6 +260,26 @@
       "otherInstitution": "Where do you work?",
       "explorerCuriosity": "What sparks your curiosity?",
       "backgroundOptional": "Tell us a bit about your background (optional)"
+    },
+    "departments": {
+      "cs": "Computer Science",
+      "ee": "Electrical Engineering",
+      "me": "Mechanical Engineering",
+      "ce": "Civil Engineering",
+      "che": "Chemical Engineering",
+      "bio": "Biology / Life Sciences",
+      "chem": "Chemistry",
+      "phys": "Physics",
+      "math": "Mathematics",
+      "stats": "Statistics / Data Science",
+      "ai": "Artificial Intelligence / ML",
+      "cyber": "Cybersecurity",
+      "env": "Environmental Science",
+      "med": "Medicine / Health Sciences",
+      "arch": "Architecture",
+      "eco": "Economics",
+      "psy": "Psychology",
+      "edu": "Education"
     }
   },
   "errors": {

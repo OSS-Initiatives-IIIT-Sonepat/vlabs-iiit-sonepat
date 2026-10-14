@@ -260,6 +260,26 @@
       "otherInstitution": "आप कहाँ काम करते हैं?",
       "explorerCuriosity": "आपकी जिज्ञासा क्या जगाती है?",
       "backgroundOptional": "अपनी पृष्ठभूमि के बारे में थोड़ा बताएं (वैकल्पिक)"
+    },
+    "departments": {
+      "cs": "Computer Science",
+      "ee": "Electrical Engineering",
+      "me": "Mechanical Engineering",
+      "ce": "Civil Engineering",
+      "che": "Chemical Engineering",
+      "bio": "जीव विज्ञान / Life Sciences",
+      "chem": "रसायन विज्ञान",
+      "phys": "भौतिकी",
+      "math": "गणित",
+      "stats": "Statistics / Data Science",
+      "ai": "Artificial Intelligence / ML",
+      "cyber": "Cybersecurity",
+      "env": "पर्यावरण विज्ञान",
+      "med": "चिकित्सा / Health Sciences",
+      "arch": "वास्तुकला",
+      "eco": "अर्थशास्त्र",
+      "psy": "मनोविज्ञान",
+      "edu": "शिक्षा"
     }
   },
   "errors": {
