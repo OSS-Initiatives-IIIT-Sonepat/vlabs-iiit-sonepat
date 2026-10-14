@@ -152,6 +152,16 @@
     "backToExplore": "Labs एक्सप्लोर करें"
   },
   "lab": {
+    "sections": {
+      "aim": "उद्देश्य",
+      "theory": "सिद्धांत",
+      "apparatus": "आवश्यक उपकरण",
+      "procedure": "प्रक्रिया",
+      "observations": "अवलोकन",
+      "conclusion": "निष्कर्ष",
+      "simulation": "Simulation",
+      "code": "Code"
+    },
     "navigation": {
       "previousStep": "पिछला स्टेप",
       "nextStep": "अगला स्टेप"

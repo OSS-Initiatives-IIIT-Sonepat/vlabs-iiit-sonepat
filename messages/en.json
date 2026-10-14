@@ -152,6 +152,16 @@
     "backToExplore": "Explore Labs"
   },
   "lab": {
+    "sections": {
+      "aim": "Aim",
+      "theory": "Theory",
+      "apparatus": "Apparatus Required",
+      "procedure": "Procedure",
+      "observations": "Observations",
+      "conclusion": "Conclusion",
+      "simulation": "Simulation",
+      "code": "Code"
+    },
     "navigation": {
       "previousStep": "Previous step",
       "nextStep": "Next step"
