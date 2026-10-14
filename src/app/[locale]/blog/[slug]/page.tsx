@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { notFound } from "next/navigation";
 
 import { MenuStyleProvider } from "@/platform/menu-style";
@@ -103,7 +104,7 @@ export default async function BlogPostPage({
 
               {/* Author bar */}
               <div className="flex items-center gap-[calc(var(--spacing-base)*3)] mb-[calc(var(--spacing-base)*3)]">
-                <img
+                <Image
                   src={post.author.imageUrl}
                   alt={post.author.name}
                   width={36}
@@ -136,11 +137,13 @@ export default async function BlogPostPage({
 
               {/* Thumbnail hero */}
               {post.thumbnail && (
-                <div className="mb-[calc(var(--spacing-base)*10)] rounded-[calc(var(--radius-base)*2)] overflow-hidden border border-[rgba(0,0,0,0.07)]">
-                  <img
+                <div className="relative mb-[calc(var(--spacing-base)*10)] rounded-[calc(var(--radius-base)*2)] overflow-hidden border border-[rgba(0,0,0,0.07)] h-[min(480px,56vw)]">
+                  <Image
                     src={post.thumbnail}
                     alt={post.title}
-                    className="w-full object-cover max-h-[480px]"
+                    fill
+                    sizes="(max-width: 920px) 100vw, 720px"
+                    className="object-cover"
                   />
                 </div>
               )}
@@ -195,9 +198,9 @@ export default async function BlogPostPage({
                   Author
                 </p>
                 <div className="flex items-center gap-[calc(var(--spacing-base)*3)]">
-                  <img
+                  <Image
                     src={post.author.imageUrl}
-                    alt="Shubham Singh"
+                    alt={post.author.name}
                     width={44}
                     height={44}
                     className="rounded-full border border-[rgba(0,0,0,0.08)] shrink-0"

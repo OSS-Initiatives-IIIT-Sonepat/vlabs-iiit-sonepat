@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { type ReactNode } from "react";
 import { Prose } from "@/sections/docs/doc-primitives";
 
@@ -75,11 +76,14 @@ function BlogImage({
         .filter(Boolean)
         .join(" ")}
     >
-      <img
+      <Image
         src={src}
         alt={alt}
+        width={1600}
+        height={900}
+        sizes="(max-width: 920px) 100vw, 720px"
         className={[
-          "w-full object-cover rounded-[calc(var(--radius-base)*2)]",
+          "w-full h-auto object-cover rounded-[calc(var(--radius-base)*2)]",
           "border border-[rgba(0,0,0,0.07)]",
         ].join(" ")}
       />
@@ -106,10 +110,13 @@ function ImageGrid({
           key={img.src}
           className="flex flex-col gap-[calc(var(--spacing-base)*1.5)]"
         >
-          <img
+          <Image
             src={img.src}
             alt={img.alt}
-            className="w-full object-cover rounded-[calc(var(--radius-base)*2)] border border-[rgba(0,0,0,0.07)]"
+            width={800}
+            height={600}
+            sizes="(max-width: 920px) 50vw, 360px"
+            className="w-full h-auto object-cover rounded-[calc(var(--radius-base)*2)] border border-[rgba(0,0,0,0.07)]"
           />
           {img.caption && (
             <figcaption className="text-[var(--ink-subtle)] font-[family-name:var(--font-sans),sans-serif] text-[12px] text-center">

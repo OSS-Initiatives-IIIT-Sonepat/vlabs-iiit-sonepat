@@ -77,7 +77,11 @@ export function Menu({ scheme = "light" }: MenuProps) {
               <LanguageSwitcher />
             </div>
             <div className="hidden items-center gap-4 md:flex">
-              <Button href={menuData.appUrl} label={menuData.getStartedLabel} size="small" />
+              <Button
+                href={menuData.appUrl}
+                label={menuData.getStartedLabel}
+                size="small"
+              />
             </div>
             <div className="flex items-center gap-2 md:hidden">
               <Button href={menuData.appUrl} label={menuData.getStartedLabel} />

@@ -19,11 +19,11 @@ export function OnboardingFlow() {
   const t = useTranslations("onboarding");
   const tCommon = useTranslations("common.buttons");
   const router = useRouter();
-  
+
   const ROLES = useOnboardingRoles();
   const DEPARTMENTS = useOnboardingDepartments();
   const INTERESTS = useOnboardingInterests();
-  
+
   const [step, setStep] = useState(0);
   const [direction, setDirection] = useState<"forward" | "back" | "none">(
     "none",
