@@ -5,7 +5,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
-import "./globals.css";
+import "../globals.css";
 
 const hostGrotesk = localFont({
   src: "../../../public/fonts/host-grotesk-latin-variable.woff2",
