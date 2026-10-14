@@ -123,6 +123,24 @@
           }
         }
       }
+    },
+    "helped": {
+      "eyebrow": "आवश्यक lab equipment।",
+      "heading": "वे tools जो *हर lab bench* को power देते हैं",
+      "cards": {
+        "0": {
+          "heading": "अपने circuit में कुछ भी measure करें",
+          "body": "Digital multimeter voltage, current, और resistance पढ़ता है। Rotary dial measurement mode select करता है — probing से पहले हमेशा polarity चेक करें।"
+        },
+        "1": {
+          "heading": "Exact voltage dial करें",
+          "body": "Bench-top DC supply आपको clean, adjustable voltage और current देता है। Connect करने से पहले limits set करें — यह आपके components को accidental over-voltage से protect करता है।"
+        },
+        "2": {
+          "heading": "हर embedded system का brain",
+          "body": "Microcontroller trainer kit एक programmable chip, GPIO headers, LEDs, और USB port को एक PCB पर रखता है — firmware लिखना शुरू करने के लिए आपको जो कुछ भी चाहिए।"
+        }
+      }
     }
   },
   "explore": {

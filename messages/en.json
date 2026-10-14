@@ -123,6 +123,24 @@
           }
         }
       }
+    },
+    "helped": {
+      "eyebrow": "Essential lab equipment.",
+      "heading": "The tools that power *every lab bench*",
+      "cards": {
+        "0": {
+          "heading": "Measure anything in your circuit",
+          "body": "A digital multimeter reads voltage, current, and resistance. The rotary dial selects the measurement mode — always check polarity before probing."
+        },
+        "1": {
+          "heading": "Dial in the exact voltage",
+          "body": "A bench-top DC supply gives you clean, adjustable voltage and current. Set limits before connecting — it protects your components from accidental over-voltage."
+        },
+        "2": {
+          "heading": "The brain of every embedded system",
+          "body": "A microcontroller trainer kit puts a programmable chip, GPIO headers, LEDs, and a USB port on one PCB — everything you need to start writing firmware."
+        }
+      }
     }
   },
   "explore": {
