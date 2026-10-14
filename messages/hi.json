@@ -38,30 +38,18 @@
     }
   },
   "footer": {
-    "description": "वर्चुअल ईसीई लैब्स — पूर्णतः इंटरैक्टिव 3D वातावरण में घटकों को एक्सप्लोर करें, सर्किट बनाएं और इलेक्ट्रॉनिक्स सीखें।",
+    "description": "VLabs — interactive 3D के माध्यम से कंपोनेंट्स एक्सप्लोर करें, सर्किट बनाएं, और इलेक्ट्रॉनिक्स सीखें।",
     "sections": {
-      "labs": "लैब्स",
-      "components": "घटक",
-      "project": "प्रोजेक्ट"
-    },
-    "labs": {
-      "halfAdder": "हाफ एडर",
-      "fullAdder": "फुल एडर",
-      "srLatch": "SR लैच",
-      "logicGates": "लॉजिक गेट्स"
-    },
-    "components": {
-      "breadboard": "ब्रेडबोर्ड",
-      "resistor": "रेजिस्टर",
-      "led": "LED",
-      "capacitor": "कैपेसिटर"
+      "labs": "Labs",
+      "components": "Components",
+      "project": "Project"
     },
     "project": {
-      "github": "GitHub",
-      "documentation": "दस्तावेज़ीकरण",
-      "contribute": "योगदान दें"
+      "blog": "Blog",
+      "community": "Community",
+      "contributing": "Contributing"
     },
-    "copyright": "© 2026 vlabs — ओपन सोर्स ईसीई लैब्स"
+    "copyright": "© 2026 vlabs — open source ECE labs"
   },
   "home": {
     "hero": {

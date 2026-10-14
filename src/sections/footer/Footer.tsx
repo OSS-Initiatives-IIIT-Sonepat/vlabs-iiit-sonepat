@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import { DiscordMark, GitHubMark, VLabsLogo } from "@/icons";
 import { Container } from "@/ui";
 
@@ -6,6 +9,8 @@ const RULE = "rgba(0,0,0,0.08)";
 
 // ── Component ─────────────────────────────────────────────────────────────────
 export function Footer() {
+  const t = useTranslations("footer");
+
   return (
     <footer className="w-full bg-[#0f0e0d] pt-[calc(var(--spacing-base)*20)]">
       <div
@@ -42,8 +47,7 @@ export function Footer() {
           <div className="flex flex-col gap-[calc(var(--spacing-base)*5)] max-w-[300px]">
             <VLabsLogo sizePx={30} />
             <p className="text-[#6b6a68] font-[family-name:var(--font-sans),sans-serif] text-[15px] leading-[1.65] m-0">
-              Virtual ECE labs — explore components, build circuits, and learn
-              electronics through interactive 3D.
+              {t("description")}
             </p>
             <div className="flex gap-[calc(var(--spacing-base)*2)] mt-[calc(var(--spacing-base)*1)]">
               <a
@@ -82,7 +86,7 @@ export function Footer() {
           {/* Labs */}
           <div className="flex flex-col gap-[calc(var(--spacing-base)*5)]">
             <p className="text-[#a8a7a4] font-[family-name:var(--font-sans),sans-serif] text-[11px] font-medium tracking-[0.10em] m-0 uppercase">
-              Labs
+              {t("sections.labs")}
             </p>
             <div className="flex flex-col gap-[calc(var(--spacing-base)*3)]">
               <a
@@ -115,7 +119,7 @@ export function Footer() {
           {/* Components */}
           <div className="flex flex-col gap-[calc(var(--spacing-base)*5)]">
             <p className="text-[#a8a7a4] font-[family-name:var(--font-sans),sans-serif] text-[11px] font-medium tracking-[0.10em] m-0 uppercase">
-              Components
+              {t("sections.components")}
             </p>
             <div className="flex flex-col gap-[calc(var(--spacing-base)*3)]">
               <a
@@ -154,20 +158,20 @@ export function Footer() {
           {/* Project */}
           <div className="flex flex-col gap-[calc(var(--spacing-base)*5)]">
             <p className="text-[#a8a7a4] font-[family-name:var(--font-sans),sans-serif] text-[11px] font-medium tracking-[0.10em] m-0 uppercase">
-              Project
+              {t("sections.project")}
             </p>
             <div className="flex flex-col gap-[calc(var(--spacing-base)*3)]">
               <a
                 className="text-[#6b6a68] font-[family-name:var(--font-sans),sans-serif] text-[15px] no-underline w-fit transition-colors duration-150 ease-[cubic-bezier(0.22,1,0.36,1)] hover:text-[#111110]"
                 href="/blog"
               >
-                Blog
+                {t("project.blog")}
               </a>
               <a
                 className="text-[#6b6a68] font-[family-name:var(--font-sans),sans-serif] text-[15px] no-underline w-fit transition-colors duration-150 ease-[cubic-bezier(0.22,1,0.36,1)] hover:text-[#111110]"
                 href="/community"
               >
-                Community
+                {t("project.community")}
               </a>
               <a
                 className="text-[#6b6a68] font-[family-name:var(--font-sans),sans-serif] text-[15px] no-underline w-fit transition-colors duration-150 ease-[cubic-bezier(0.22,1,0.36,1)] hover:text-[#111110]"
@@ -191,7 +195,7 @@ export function Footer() {
                 rel="noopener noreferrer"
                 target="_blank"
               >
-                Contributing ↗
+                {t("project.contributing")} ↗
               </a>
             </div>
           </div>
@@ -209,7 +213,7 @@ export function Footer() {
           ].join(" ")}
         >
           <p className="text-[#a8a7a4] font-[family-name:var(--font-sans),sans-serif] text-[13px] m-0">
-            © 2026 vlabs — open source ECE labs
+            {t("copyright")}
           </p>
           {/* <span
             className={[

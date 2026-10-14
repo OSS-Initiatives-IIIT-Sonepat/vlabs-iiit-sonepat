@@ -38,28 +38,16 @@
     }
   },
   "footer": {
-    "description": "Virtual ECE labs — explore components, build circuits, and learn electronics in a fully interactive 3D environment.",
+    "description": "Virtual ECE labs — explore components, build circuits, and learn electronics through interactive 3D.",
     "sections": {
       "labs": "Labs",
       "components": "Components",
       "project": "Project"
     },
-    "labs": {
-      "halfAdder": "Half Adder",
-      "fullAdder": "Full Adder",
-      "srLatch": "SR Latch",
-      "logicGates": "Logic Gates"
-    },
-    "components": {
-      "breadboard": "Breadboard",
-      "resistor": "Resistor",
-      "led": "LED",
-      "capacitor": "Capacitor"
-    },
     "project": {
-      "github": "GitHub",
-      "documentation": "Documentation",
-      "contribute": "Contribute"
+      "blog": "Blog",
+      "community": "Community",
+      "contributing": "Contributing"
     },
     "copyright": "© 2026 vlabs — open source ECE labs"
   },
