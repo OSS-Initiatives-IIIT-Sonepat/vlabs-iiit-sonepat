@@ -51,6 +51,14 @@
     },
     "copyright": "© 2026 vlabs — open source ECE labs"
   },
+  "blog": {
+    "hero": {
+      "eyebrow": "ब्लॉग।",
+      "heading": "कहानियां, अपडेट्स, और इंजीनियरिंग नोट्स",
+      "description": "VLabs बनाने के पीछे के दृश्य — 3D rendering और circuit simulation से लेकर open-source community और education तक।"
+    },
+    "allPosts": "सभी पोस्ट्स।"
+  },
   "home": {
     "hero": {
       "title": "VLabs को एक *अलग आयाम* में अनुभव करें।",
