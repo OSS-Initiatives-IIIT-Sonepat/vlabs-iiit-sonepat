@@ -25,7 +25,15 @@
     },
     "resources": {
       "userGuide": "User Guide",
+      "userGuideDesc": "Learn how to use VLabs",
+      "userGuideAlt": "VLabs user guide preview",
+      "userGuideTitle": "Master every corner of VLabs",
+      "userGuidePreview": "Step-by-step guides and playbooks to help your team get the most out of their workspace.",
       "developers": "Developers",
+      "developersDesc": "Contribute to VLabs",
+      "developersAlt": "Blue developer illustration with branching arrows",
+      "developersTitle": "Build on an open platform",
+      "developersPreview": "Explore the source, open issues, and contribute to VLabs on GitHub.",
       "components": "Components"
     }
   },

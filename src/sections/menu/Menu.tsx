@@ -13,7 +13,7 @@ import { MenuDrawer } from "./components/MenuDrawer";
 import { MenuNav } from "./components/MenuNav";
 import { CommandPalette } from "./components/MenuSearch";
 import { MenuSocial } from "./components/MenuSocial";
-import { MENU } from "./data/menu";
+import { useMenuData } from "./hooks/use-menu-data";
 import { CloseDrawerOnDesktopEffect } from "./effect-components/CloseDrawerOnDesktopEffect";
 import { ScrollStateEffect } from "./effect-components/ScrollStateEffect";
 
@@ -23,6 +23,7 @@ export type MenuProps = {
 
 export function Menu({ scheme = "light" }: MenuProps) {
   const { activeScheme, override } = useMenuStyle();
+  const menuData = useMenuData();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isElevated, setIsElevated] = useState(false);
   const resolvedScheme = override.scheme ?? activeScheme ?? scheme;
@@ -66,16 +67,16 @@ export function Menu({ scheme = "light" }: MenuProps) {
             >
               <VLabsLogo sizePx={52} />
             </Drawer.Close>
-            <MenuNav items={MENU.navItems} />
+            <MenuNav items={menuData.navItems} />
             <div className="hidden md:block">
               <CommandPalette />
             </div>
-            <MenuSocial links={MENU.socialLinks} />
+            <MenuSocial links={menuData.socialLinks} />
             <div className="hidden items-center gap-4 md:flex">
-              <Button href={MENU.appUrl} label="Get started" size="small" />
+              <Button href={menuData.appUrl} label={menuData.getStartedLabel} size="small" />
             </div>
             <div className="flex items-center gap-2 md:hidden">
-              <Button href={MENU.appUrl} label="Get started" />
+              <Button href={menuData.appUrl} label={menuData.getStartedLabel} />
               <IconButton
                 ariaLabel={isDrawerOpen ? "Close menu" : "Open menu"}
                 onClick={() => setIsDrawerOpen((previous) => !previous)}
@@ -92,8 +93,8 @@ export function Menu({ scheme = "light" }: MenuProps) {
       </header>
       <MenuDrawer
         scheme={resolvedScheme}
-        navItems={MENU.navItems}
-        socialLinks={MENU.socialLinks}
+        navItems={menuData.navItems}
+        socialLinks={menuData.socialLinks}
       />
     </Drawer.Root>
   );

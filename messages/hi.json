@@ -25,7 +25,15 @@
     },
     "resources": {
       "userGuide": "उपयोगकर्ता गाइड",
+      "userGuideDesc": "VLabs का उपयोग करना सीखें",
+      "userGuideAlt": "VLabs उपयोगकर्ता गाइड पूर्वावलोकन",
+      "userGuideTitle": "VLabs के हर कोने में महारत हासिल करें",
+      "userGuidePreview": "स्टेप-बाय-स्टेप गाइड और प्लेबुक जो आपकी टीम को उनके वर्कस्पेस का अधिकतम लाभ उठाने में मदद करते हैं।",
       "developers": "डेवलपर्स",
+      "developersDesc": "VLabs में योगदान दें",
+      "developersAlt": "ब्रांचिंग एरो के साथ नीला डेवलपर इलस्ट्रेशन",
+      "developersTitle": "एक खुले प्लेटफॉर्म पर बनाएं",
+      "developersPreview": "सोर्स एक्सप्लोर करें, इश्यूज़ खोलें, और GitHub पर VLabs में योगदान दें।",
       "components": "घटक"
     }
   },
