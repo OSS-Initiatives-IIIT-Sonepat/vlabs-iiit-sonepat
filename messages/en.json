@@ -164,16 +164,23 @@
   },
   "onboarding": {
     "title": "Tell us about yourself",
+    "tellMore": "Tell us more",
+    "yourBackground": "Your background (optional)",
     "roles": {
       "student": "Student",
+      "studentDesc": "Learning through courses, labs, and research",
       "professor": "Professor / Educator",
+      "professorDesc": "Teaching courses and designing curricula",
       "explorer": "Curious Explorer",
-      "other": "Other"
+      "explorerDesc": "Self-directed learning out of pure curiosity",
+      "other": "Other",
+      "otherDesc": "Something else entirely"
     },
     "questions": {
-      "institution": "Where do you study?",
-      "department": "Which department?",
-      "interests": "What interests you?"
+      "studentInstitution": "Where do you study?",
+      "professorInstitution": "Where do you teach?",
+      "otherInstitution": "Where do you work?",
+      "backgroundOptional": "Tell us a bit about your background (optional)"
     }
   },
   "errors": {

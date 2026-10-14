@@ -164,16 +164,23 @@
   },
   "onboarding": {
     "title": "अपने बारे में बताएं",
+    "tellMore": "और बताएं",
+    "yourBackground": "आपकी पृष्ठभूमि (वैकल्पिक)",
     "roles": {
       "student": "छात्र",
+      "studentDesc": "कोर्सेज, labs, और research के माध्यम से सीखना",
       "professor": "प्रोफेसर / शिक्षक",
+      "professorDesc": "कोर्सेज पढ़ाना और curricula डिजाइन करना",
       "explorer": "जिज्ञासु एक्सप्लोरर",
-      "other": "अन्य"
+      "explorerDesc": "शुद्ध जिज्ञासा से स्व-निर्देशित सीखना",
+      "other": "अन्य",
+      "otherDesc": "कुछ और पूरी तरह से अलग"
     },
     "questions": {
-      "institution": "आप कहाँ पढ़ते हैं?",
-      "department": "कौन सा विभाग?",
-      "interests": "आपकी रुचि क्या है?"
+      "studentInstitution": "आप कहाँ पढ़ते हैं?",
+      "professorInstitution": "आप कहाँ पढ़ाते हैं?",
+      "otherInstitution": "आप कहाँ काम करते हैं?",
+      "backgroundOptional": "अपनी पृष्ठभूमि के बारे में थोड़ा बताएं (वैकल्पिक)"
     }
   },
   "errors": {
