@@ -1,94 +1,29 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 import { VLabsLogo } from "@/icons";
 import { Body, Button, Heading, StepIndicator } from "@/ui";
+import { useOnboardingRoles, type Role } from "./hooks/use-onboarding-roles";
+import { useOnboardingDepartments } from "./hooks/use-onboarding-departments";
+import { useOnboardingInterests } from "./hooks/use-onboarding-interests";
 
 // ─── Storage key ────────────────────────────────────────────────────────────
 const ONBOARDING_KEY = "vlabs_onboarding_done";
 
-// ─── Data ────────────────────────────────────────────────────────────────────
-
-type Role = "student" | "professor" | "explorer" | "other";
-
-const ROLES: { value: Role; label: string; description: string }[] = [
-  {
-    value: "student",
-    label: "Student",
-    description: "Learning through courses, labs, and research",
-  },
-  {
-    value: "professor",
-    label: "Professor / Educator",
-    description: "Teaching courses and designing curricula",
-  },
-  {
-    value: "explorer",
-    label: "Curious Explorer",
-    description: "Self-directed learning out of pure curiosity",
-  },
-  {
-    value: "other",
-    label: "Other",
-    description: "Something else entirely",
-  },
-];
-
-const DEPARTMENTS: { value: string; label: string }[] = [
-  { value: "cs", label: "Computer Science" },
-  { value: "ee", label: "Electrical Engineering" },
-  { value: "me", label: "Mechanical Engineering" },
-  { value: "ce", label: "Civil Engineering" },
-  { value: "che", label: "Chemical Engineering" },
-  { value: "bio", label: "Biology / Life Sciences" },
-  { value: "chem", label: "Chemistry" },
-  { value: "phys", label: "Physics" },
-  { value: "math", label: "Mathematics" },
-  { value: "stats", label: "Statistics / Data Science" },
-  { value: "ai", label: "Artificial Intelligence / ML" },
-  { value: "cyber", label: "Cybersecurity" },
-  { value: "env", label: "Environmental Science" },
-  { value: "med", label: "Medicine / Health Sciences" },
-  { value: "arch", label: "Architecture" },
-  { value: "eco", label: "Economics" },
-  { value: "psy", label: "Psychology" },
-  { value: "edu", label: "Education" },
-];
-
-const INTERESTS: { value: string; label: string }[] = [
-  { value: "circuits", label: "Circuits & Electronics" },
-  { value: "signals", label: "Signals & Systems" },
-  { value: "embedded", label: "Embedded Systems" },
-  { value: "robotics", label: "Robotics & Automation" },
-  { value: "ml", label: "Machine Learning" },
-  { value: "cv", label: "Computer Vision" },
-  { value: "nlp", label: "NLP / LLMs" },
-  { value: "algo", label: "Algorithms & Data Structures" },
-  { value: "os", label: "Operating Systems" },
-  { value: "networks", label: "Computer Networks" },
-  { value: "db", label: "Databases" },
-  { value: "webdev", label: "Web Development" },
-  { value: "thermodynamics", label: "Thermodynamics" },
-  { value: "fluid", label: "Fluid Mechanics" },
-  { value: "mechanics", label: "Mechanics of Materials" },
-  { value: "quantum", label: "Quantum Mechanics" },
-  { value: "optics", label: "Optics & Photonics" },
-  { value: "chem_react", label: "Chemical Reactions" },
-  { value: "biotech", label: "Biotechnology" },
-  { value: "genetics", label: "Genetics & Genomics" },
-  { value: "materials", label: "Materials Science" },
-  { value: "control", label: "Control Systems" },
-  { value: "power", label: "Power Systems" },
-  { value: "vlsi", label: "VLSI Design" },
-  { value: "security", label: "Security & Cryptography" },
-];
-
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export function OnboardingFlow() {
+  const t = useTranslations("onboarding");
+  const tCommon = useTranslations("common.buttons");
   const router = useRouter();
+
+  const ROLES = useOnboardingRoles();
+  const DEPARTMENTS = useOnboardingDepartments();
+  const INTERESTS = useOnboardingInterests();
+
   const [step, setStep] = useState(0);
   const [direction, setDirection] = useState<"forward" | "back" | "none">(
     "none",
@@ -144,12 +79,12 @@ export function OnboardingFlow() {
   const isExplorer = role === "explorer";
 
   const step1Title = isExplorer
-    ? "What sparks your curiosity?"
+    ? t("questions.explorerCuriosity")
     : role === "student"
-      ? "Where do you study?"
+      ? t("questions.studentInstitution")
       : role === "professor"
-        ? "Where do you teach?"
-        : "Where do you work?";
+        ? t("questions.professorInstitution")
+        : t("questions.otherInstitution");
 
   const step1Subtitle = isExplorer
     ? "Tell us a bit about your background (optional)"
@@ -205,7 +140,7 @@ export function OnboardingFlow() {
           <div className={slideAnimClass(direction)} key={`step-0-${animKey}`}>
             <div className="mb-[calc(var(--spacing-base)*6)] [&>*+*]:mt-[calc(var(--spacing-base)*2)]">
               <Heading as="h1" size="sm" weight="light" family="sans">
-                Tell us about yourself
+                {t("title")}
               </Heading>
               <Body muted size="sm">
                 Help us personalise your VLabs experience.
@@ -248,7 +183,7 @@ export function OnboardingFlow() {
                     htmlFor="other-role"
                     className="text-[var(--ink-muted)] block font-sans font-medium tracking-[0.04em] mb-[calc(var(--spacing-base)*1.5)] uppercase text-[0.75rem] leading-[1.55]"
                   >
-                    Tell us more
+                    {t("tellMore")}
                   </label>
                   <input
                     autoFocus
@@ -266,7 +201,7 @@ export function OnboardingFlow() {
                 <div className="mt-[calc(var(--spacing-base)*8)]">
                   <Button
                     disabled={otherRole.trim().length === 0}
-                    label="Continue"
+                    label={tCommon("continue")}
                     onClick={goForward}
                   />
                 </div>
@@ -405,7 +340,7 @@ export function OnboardingFlow() {
             </div>
 
             <div className="mt-[calc(var(--spacing-base)*8)]">
-              <Button label="Get started" onClick={finish} />
+              <Button label={tCommon("getStarted")} onClick={finish} />
               <button
                 onClick={goBack}
                 type="button"

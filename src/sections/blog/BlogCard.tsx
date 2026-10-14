@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import { ArrowUpRight } from "@/icons";
 
 import { type BlogPostRecord } from "./blog.data";
@@ -27,12 +29,14 @@ export function BlogFeaturedCard({ post }: { post: BlogPostRecord }) {
       ].join(" ")}
     >
       {/* Thumbnail / placeholder */}
-      <div className="rounded-[calc(var(--radius-base)*2)] h-[240px] min-[921px]:h-[320px] w-full overflow-hidden bg-[#eeecea]">
+      <div className="relative rounded-[calc(var(--radius-base)*2)] h-[240px] min-[921px]:h-[320px] w-full overflow-hidden bg-[#eeecea]">
         {post.thumbnail ? (
-          <img
+          <Image
             src={post.thumbnail}
             alt={post.title}
-            className="w-full h-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.03]"
+            fill
+            sizes="(max-width: 920px) 100vw, 50vw"
+            className="object-cover transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.03]"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-[#b0aea8]">
@@ -118,12 +122,14 @@ export function BlogCard({ post }: { post: BlogPostRecord }) {
       ].join(" ")}
     >
       {/* Thumbnail / placeholder */}
-      <div className="rounded-[calc(var(--radius-base)*2)] h-[180px] w-full overflow-hidden bg-[#eeecea] shrink-0">
+      <div className="relative rounded-[calc(var(--radius-base)*2)] h-[180px] w-full overflow-hidden bg-[#eeecea] shrink-0">
         {post.thumbnail ? (
-          <img
+          <Image
             src={post.thumbnail}
             alt={post.title}
-            className="w-full h-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.03]"
+            fill
+            sizes="(max-width: 920px) 100vw, 33vw"
+            className="object-cover transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.03]"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-[#b0aea8]">

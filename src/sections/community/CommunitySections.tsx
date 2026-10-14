@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { type ReactNode } from "react";
 import { GitHubMark, DiscordMark, ArrowUpRight } from "@/icons";
 import {
@@ -104,7 +105,7 @@ function StorySection() {
           {/* Author row */}
           <div className="flex items-center gap-[calc(var(--spacing-base)*3)]">
             {/* GitHub avatar */}
-            <img
+            <Image
               src="https://github.com/FirePheonix.png"
               alt="Shubham Singh"
               width={44}

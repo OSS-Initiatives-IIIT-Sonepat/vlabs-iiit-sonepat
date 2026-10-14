@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { ArrowLeft, ArrowRight } from "@/icons";
 import { useState } from "react";
 
@@ -14,6 +15,7 @@ export function TestimonialsCarousel({
 }: {
   testimonials: readonly TestimonialRecord[];
 }) {
+  const t = useTranslations("home.testimonials");
   const [index, setIndex] = useState(0);
   const total = testimonials.length;
   const hasPrevious = index > 0;
@@ -72,7 +74,7 @@ export function TestimonialsCarousel({
 
       {/* RightColumn */}
       <div className="grid grid-cols-1 grid-rows-[auto_1fr_auto] min-w-0 gap-y-[calc(var(--spacing-base)*6)] min-[921px]:py-[calc(var(--spacing-base)*8)] min-[921px]:gap-y-[calc(var(--spacing-base)*14)]">
-        <Eyebrow>What educators and students are saying.</Eyebrow>
+        <Eyebrow>{t("eyebrow")}</Eyebrow>
         {/* QuoteStack */}
         <div className="grid">
           {testimonials.map((testimonial, testimonialIndex) => (
@@ -98,7 +100,7 @@ export function TestimonialsCarousel({
           {/* NavGroup */}
           <div className="gap-x-[calc(var(--spacing-base)*2)] grid grid-flow-col justify-start order-2 min-[921px]:order-1">
             <IconButton
-              ariaLabel="Previous testimonial"
+              ariaLabel={t("navigation.previous")}
               disabled={!hasPrevious}
               onClick={() => hasPrevious && setIndex(index - 1)}
               sizePx={48}
@@ -106,7 +108,7 @@ export function TestimonialsCarousel({
               <ArrowLeft sizePx={14} />
             </IconButton>
             <IconButton
-              ariaLabel="Next testimonial"
+              ariaLabel={t("navigation.next")}
               disabled={!hasNext}
               onClick={() => hasNext && setIndex(index + 1)}
               sizePx={48}

@@ -1,0 +1,318 @@
+{
+  "common": {
+    "buttons": {
+      "getStarted": "शुरू करें",
+      "continue": "जारी रखें",
+      "back": "पीछे जाएँ",
+      "next": "अगला",
+      "previous": "पिछला",
+      "submit": "जमा करें",
+      "cancel": "रद्द करें",
+      "close": "बंद करें",
+      "save": "सहेजें"
+    },
+    "search": {
+      "placeholder": "खोजें",
+      "shortcut": "⌘S"
+    }
+  },
+  "menu": {
+    "nav": {
+      "home": "होम",
+      "blog": "ब्लॉग",
+      "community": "समुदाय",
+      "resources": "संसाधन"
+    },
+    "resources": {
+      "userGuide": "उपयोगकर्ता गाइड",
+      "userGuideDesc": "VLabs का उपयोग करना सीखें",
+      "userGuideAlt": "VLabs उपयोगकर्ता गाइड पूर्वावलोकन",
+      "userGuideTitle": "VLabs के हर कोने में महारत हासिल करें",
+      "userGuidePreview": "स्टेप-बाय-स्टेप गाइड और प्लेबुक जो आपकी टीम को उनके वर्कस्पेस का अधिकतम लाभ उठाने में मदद करते हैं।",
+      "developers": "डेवलपर्स",
+      "developersDesc": "VLabs में योगदान दें",
+      "developersAlt": "ब्रांचिंग एरो के साथ नीला डेवलपर इलस्ट्रेशन",
+      "developersTitle": "एक खुले प्लेटफॉर्म पर बनाएं",
+      "developersPreview": "सोर्स एक्सप्लोर करें, इश्यूज़ खोलें, और GitHub पर VLabs में योगदान दें।",
+      "components": "घटक"
+    }
+  },
+  "footer": {
+    "description": "VLabs — interactive 3D के माध्यम से कंपोनेंट्स एक्सप्लोर करें, सर्किट बनाएं, और इलेक्ट्रॉनिक्स सीखें।",
+    "sections": {
+      "labs": "Labs",
+      "components": "Components",
+      "project": "Project"
+    },
+    "project": {
+      "blog": "Blog",
+      "community": "Community",
+      "contributing": "Contributing"
+    },
+    "copyright": "© 2026 vlabs — open source ECE labs"
+  },
+  "blog": {
+    "hero": {
+      "eyebrow": "ब्लॉग।",
+      "heading": "कहानियां, अपडेट्स, और इंजीनियरिंग नोट्स",
+      "description": "VLabs बनाने के पीछे के दृश्य — 3D rendering और circuit simulation से लेकर open-source community और education तक।"
+    },
+    "allPosts": "सभी पोस्ट्स।",
+    "posts": {
+      "building3dLabs": {
+        "title": "Three.js और Next.js के साथ शून्य से 3D ECE labs बनाना",
+        "excerpt": "हमने एक इंटरैक्टिव breadboard renderer कैसे डिज़ाइन किया जो छात्रों को browser में components को drag, drop, और wire करने देता है — कोई plugins नहीं, कोई installs नहीं।",
+        "tag": "इंजीनियरिंग",
+        "readTime": "8 मिनट पढ़ें",
+        "author": {
+          "role": "संस्थापक",
+          "bio": "जून और सितंबर 2026 के बीच शून्य से VLabs बनाया। IIIT Sonepat की Technical Society के अध्यक्ष के रूप में परियोजना को maintain करते हैं।"
+        }
+      },
+      "whyOpenSource": {
+        "title": "Open-source education tools पहले से कहीं अधिक महत्वपूर्ण क्यों हैं",
+        "excerpt": "Labs महंगे हैं, hardware नाजुक है, और हर छात्र को समान पहुंच नहीं मिलती। Virtual labs उस अंतर को पाटते हैं — हमने खुले में निर्माण क्यों चुना यहाँ है।",
+        "tag": "Open Source",
+        "readTime": "5 मिनट पढ़ें",
+        "author": {
+          "role": "संस्थापक",
+          "bio": "जून और सितंबर 2026 के बीच शून्य से VLabs बनाया। IIIT Sonepat की Technical Society के अध्यक्ष के रूप में परियोजना को maintain करते हैं।"
+        }
+      },
+      "lunariaToTailwind": {
+        "title": "Lunaria से Tailwind तक: एक design system को migrate करना",
+        "excerpt": "हमें Linaria-based CSS-in-JS setup विरासत में मिला और पूरे codebase को Tailwind CSS v4 में स्थानांतरित किया। यहाँ वह है जो अच्छा हुआ, जो टूट गया, और हमने क्या सीखा।",
+        "tag": "Design",
+        "readTime": "7 मिनट पढ़ें",
+        "author": {
+          "role": "संस्थापक",
+          "bio": "जून और सितंबर 2026 के बीच शून्य से VLabs बनाया। IIIT Sonepat की Technical Society के अध्यक्ष के रूप में परियोजना को maintain करते हैं।"
+        }
+      },
+      "interactiveProcedure": {
+        "title": "Circuit experiments के लिए interactive procedure steps डिज़ाइन करना",
+        "excerpt": "हर lab एक सख्त aim–theory–apparatus–procedure–observation–conclusion flow का पालन करती है। हमने प्रत्येक step को interactive, verifiable, और live 3D scene से wired कैसे बनाया यहाँ है।",
+        "tag": "Product",
+        "readTime": "6 मिनट पढ़ें",
+        "author": {
+          "role": "संस्थापक",
+          "bio": "जून और सितंबर 2026 के बीच शून्य से VLabs बनाया। IIIT Sonepat की Technical Society के अध्यक्ष के रूप में परियोजना को maintain करते हैं।"
+        }
+      },
+      "searchOptimisation": {
+        "title": "जब एक search box एक architecture समस्या बन गया",
+        "excerpt": "पुराना VLab search experiments ढूंढ सकता था। हम चाहते थे कि यह उन्हें समझे। जो ⌘K redesign के रूप में शुरू हुआ वह build-time search index, client-side performance work, और मनुष्य वास्तव में कैसे search करते हैं इसका एक छोटा सा सबक बन गया।",
+        "tag": "इंजीनियरिंग",
+        "readTime": "7 मिनट पढ़ें",
+        "author": {
+          "role": "Core Contributor",
+          "bio": "2025 से 2026 तक VLabs पर काम किया। एक contributor के रूप में परियोजना में योगदान दिया।"
+        }
+      }
+    }
+  },
+  "home": {
+    "hero": {
+      "title": "VLabs को एक *अलग आयाम* में अनुभव करें।",
+      "description": "आधुनिक शिक्षार्थी के लिए बनाए गए इमर्सिव वर्चुअल अनुभवों के माध्यम से जटिल इंजीनियरिंग अवधारणाओं को एक्सप्लोर करें, इंटरैक्ट करें और एक्सपेरिमेंट करें।",
+      "cta": "शुरू करें"
+    },
+    "threeCards": {
+      "eyebrow": "मुख्य ECE कंपोनेंट्स।",
+      "heading": "हर सर्किट के बिल्डिंग ब्लॉक्स को एक्सप्लोर करें",
+      "body": "Breadboard से LED से Resistor तक — इलेक्ट्रॉनिक्स के फंडामेंटल्स के साथ हैंड्स-ऑन 3D इंटरैक्शन।",
+      "cta": "सभी कंपोनेंट्स एक्सप्लोर करें",
+      "breadboard": {
+        "body": "Solderless breadboard हर ECE प्रोटोटाइप की शुरुआत है — कंपोनेंट्स स्नैप करें, jumper wires रूट करें, और बिना soldering के iterate करें।",
+        "role": "मुख्य कंपोनेंट",
+        "company": "Prototyping"
+      },
+      "resistor": {
+        "body": "Resistors करंट को सीमित करते हैं और voltage levels सेट करते हैं। चार colour bands पढ़ें — orange, orange, brown, gold — value और tolerance की पहचान करने के लिए।",
+        "role": "Passive कंपोनेंट",
+        "company": "Circuit फंडामेंटल्स"
+      },
+      "led": {
+        "body": "Light-emitting diode करंट को सीधे light में बदलता है। Polarity मायने रखती है: लंबी anode lead positive में जाती है, flat-side cathode ground में।",
+        "role": "Output कंपोनेंट",
+        "company": "Optoelectronics"
+      }
+    },
+    "featureCards": {
+      "eyebrow": "एक्सप्लोर करने के लिए और कंपोनेंट्स।",
+      "heading": "Store करें, control करें और interact करें — *ECE की अगली परत*",
+      "capacitor": {
+        "body": "Capacitors चार्ज को स्टोर और रिलीज करते हैं। Stripe negative lead को mark करती है — electrolytics पर हमेशा polarity चेक करें।",
+        "label": "Energy स्टोरेज"
+      },
+      "potentiometer": {
+        "body": "Dial के साथ एक variable resistor। Wiper को दोनों end terminals के बीच sweep करने के लिए knob घुमाएं।",
+        "label": "Controls"
+      },
+      "pushButton": {
+        "body": "Momentary tactile switch। Current केवल तभी flow करता है जब cap दबाया जाता है — चार corner pins centre gap को straddle करते हैं।",
+        "label": "Input"
+      }
+    },
+    "testimonials": {
+      "eyebrow": "शिक्षक और छात्र क्या कह रहे हैं।",
+      "navigation": {
+        "previous": "पिछला",
+        "next": "अगला"
+      },
+      "quotes": {
+        "0": {
+          "text": "VLabs से पहले, छात्र लैब सत्र का आधा समय सिर्फ हार्डवेयर को ठीक करने में खर्च कर देते थे। अब वे पहले से ही वर्चुअली सर्किट वेरिफाई करके आते हैं, और हम पूरी तरह से इस पर ध्यान केंद्रित कर सकते हैं कि प्रयोग वास्तव में क्या सिखा रहा है।",
+          "author": {
+            "name": "John Doe 1",
+            "designation": "एसोसिएट प्रोफेसर, इलेक्ट्रॉनिक्स इंजीनियरिंग"
+          }
+        },
+        "1": {
+          "text": "फिजिकल ब्रेडबोर्ड पर फुल-वेव ब्रिज रेक्टिफायर बनाने में 40 मिनट लगते हैं और कोई न कोई हमेशा एलईडी जला देता है। VLabs पर मैंने सर्किट चलाया, स्वीप मापा, और रिपल फैक्टर दस मिनट से कम में कैलकुलेट कर लिया।",
+          "author": {
+            "name": "John Doe 2",
+            "designation": "बी.टेक छात्र, इलेक्ट्रिकल इंजीनियरिंग"
+          }
+        },
+        "2": {
+          "text": "8085 एमुलेटर बिल्कुल वही था जो गायब था। छात्र असेंबली के माध्यम से सिंगल-स्टेप कर सकते हैं, रजिस्टर बदलते देख सकते हैं, और वास्तव में फेच-डिकोड-एक्जीक्यूट साइकिल समझ सकते हैं बजाय इसे सिर्फ परीक्षा के लिए याद करने के।",
+          "author": {
+            "name": "John Doe 3",
+            "designation": "विभागाध्यक्ष, कंप्यूटर इंजीनियरिंग"
+          }
+        }
+      }
+    },
+    "helped": {
+      "eyebrow": "आवश्यक lab equipment।",
+      "heading": "वे tools जो *हर lab bench* को power देते हैं",
+      "cards": {
+        "0": {
+          "heading": "अपने circuit में कुछ भी measure करें",
+          "body": "Digital multimeter voltage, current, और resistance पढ़ता है। Rotary dial measurement mode select करता है — probing से पहले हमेशा polarity चेक करें।"
+        },
+        "1": {
+          "heading": "Exact voltage dial करें",
+          "body": "Bench-top DC supply आपको clean, adjustable voltage और current देता है। Connect करने से पहले limits set करें — यह आपके components को accidental over-voltage से protect करता है।"
+        },
+        "2": {
+          "heading": "हर embedded system का brain",
+          "body": "Microcontroller trainer kit एक programmable chip, GPIO headers, LEDs, और USB port को एक PCB पर रखता है — firmware लिखना शुरू करने के लिए आपको जो कुछ भी चाहिए।"
+        }
+      }
+    }
+  },
+  "explore": {
+    "hero": {
+      "title": "यहाँ सभी tools एक्सप्लोर करें, सभी tutorials को स्टेप बाय स्टेप देखें, अपने 3D अनुभव का आनंद लें।",
+      "description": "सेमेस्टर के अनुसार व्यवस्थित हर circuit, component, और lab को ब्राउज़ करें। हर card एक live 3D scene के साथ आता है जिसे आप drag और rotate कर सकते हैं — किसी installation की आवश्यकता नहीं।",
+      "try": "ट्राई करें"
+    },
+    "backToExplore": "Labs एक्सप्लोर करें"
+  },
+  "lab": {
+    "sections": {
+      "aim": "उद्देश्य",
+      "theory": "सिद्धांत",
+      "apparatus": "आवश्यक उपकरण",
+      "procedure": "प्रक्रिया",
+      "observations": "अवलोकन",
+      "conclusion": "निष्कर्ष",
+      "simulation": "Simulation",
+      "code": "Code"
+    },
+    "navigation": {
+      "previousStep": "पिछला स्टेप",
+      "nextStep": "अगला स्टेप"
+    },
+    "language": {
+      "label": "भाषा",
+      "english": "English",
+      "hindi": "हिन्दी"
+    }
+  },
+  "onboarding": {
+    "title": "अपने बारे में बताएं",
+    "tellMore": "और बताएं",
+    "yourBackground": "आपकी पृष्ठभूमि (वैकल्पिक)",
+    "roles": {
+      "student": {
+        "label": "छात्र",
+        "description": "पाठ्यक्रमों, labs, और अनुसंधान के माध्यम से सीखना"
+      },
+      "professor": {
+        "label": "प्रोफेसर / शिक्षक",
+        "description": "पाठ्यक्रम पढ़ाना और पाठ्यचर्या डिज़ाइन करना"
+      },
+      "explorer": {
+        "label": "जिज्ञासु खोजकर्ता",
+        "description": "शुद्ध जिज्ञासा से स्व-निर्देशित सीखना"
+      },
+      "other": {
+        "label": "अन्य",
+        "description": "कुछ पूरी तरह से अलग"
+      }
+    },
+    "questions": {
+      "studentInstitution": "आप कहाँ पढ़ते हैं?",
+      "professorInstitution": "आप कहाँ पढ़ाते हैं?",
+      "otherInstitution": "आप कहाँ काम करते हैं?",
+      "explorerCuriosity": "आपकी जिज्ञासा क्या जगाती है?",
+      "backgroundOptional": "अपनी पृष्ठभूमि के बारे में थोड़ा बताएं (वैकल्पिक)"
+    },
+    "departments": {
+      "cs": "Computer Science",
+      "ee": "Electrical Engineering",
+      "me": "Mechanical Engineering",
+      "ce": "Civil Engineering",
+      "che": "Chemical Engineering",
+      "bio": "जीव विज्ञान / Life Sciences",
+      "chem": "रसायन विज्ञान",
+      "phys": "भौतिकी",
+      "math": "गणित",
+      "stats": "Statistics / Data Science",
+      "ai": "Artificial Intelligence / ML",
+      "cyber": "Cybersecurity",
+      "env": "पर्यावरण विज्ञान",
+      "med": "चिकित्सा / Health Sciences",
+      "arch": "वास्तुकला",
+      "eco": "अर्थशास्त्र",
+      "psy": "मनोविज्ञान",
+      "edu": "शिक्षा"
+    },
+    "interests": {
+      "circuits": "Circuits & Electronics",
+      "signals": "Signals & Systems",
+      "embedded": "Embedded Systems",
+      "robotics": "Robotics & Automation",
+      "ml": "Machine Learning",
+      "cv": "Computer Vision",
+      "nlp": "NLP / LLMs",
+      "algo": "Algorithms & Data Structures",
+      "os": "Operating Systems",
+      "networks": "Computer Networks",
+      "db": "Databases",
+      "webdev": "Web Development",
+      "thermodynamics": "ऊष्मागतिकी",
+      "fluid": "Fluid Mechanics",
+      "mechanics": "Mechanics of Materials",
+      "quantum": "Quantum Mechanics",
+      "optics": "Optics & Photonics",
+      "chem_react": "रासायनिक प्रतिक्रियाएं",
+      "biotech": "Biotechnology",
+      "genetics": "Genetics & Genomics",
+      "materials": "Materials Science",
+      "control": "Control Systems",
+      "power": "Power Systems",
+      "vlsi": "VLSI Design",
+      "security": "Security & Cryptography"
+    }
+  },
+  "errors": {
+    "404": {
+      "title": "404 - पेज नहीं मिला",
+      "description": "आप जो पेज खोज रहे हैं वह मौजूद नहीं है।"
+    }
+  }
+}

@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import { Body } from "@/ui";
 import { Container } from "@/ui/Container";
 
@@ -9,6 +12,8 @@ import { type ExploreExperiment } from "./explore.data";
 type Props = { featured: ExploreExperiment & { category: string } };
 
 export function ExploreHero({ featured }: Props) {
+  const t = useTranslations("explore.hero");
+
   return (
     <section className="pt-[calc(var(--spacing-base)*14)] pb-[calc(var(--spacing-base)*10)]">
       <Container>
@@ -29,8 +34,7 @@ export function ExploreHero({ featured }: Props) {
                   "font-light tracking-[-0.07em] leading-[1.15] max-w-[22ch]",
                 ].join(" ")}
               >
-                Explore all the tools you want here, watch all tutorials step by
-                step, enjoy your 3D experience.
+                {t("title")}
               </h1>
             </div>
 
@@ -41,9 +45,7 @@ export function ExploreHero({ featured }: Props) {
               />
               <div className="py-[calc(var(--spacing-base)*5)] max-w-[52ch]">
                 <Body size="sm" muted>
-                  Browse every circuit, component, and lab organised by
-                  semester. Each card ships with a live 3D scene you can drag
-                  and rotate — no installation required.
+                  {t("description")}
                 </Body>
               </div>
               <div
@@ -57,7 +59,7 @@ export function ExploreHero({ featured }: Props) {
           <div className="relative flex flex-col gap-[calc(var(--spacing-base)*3)] isolate overflow-hidden p-[calc(var(--spacing-base)*4)] pb-0 pt-[calc(var(--spacing-base)*4)]">
             <CardShape />
             <p className="text-[var(--ink)] font-[family-name:var(--font-sans),sans-serif] text-[0.9rem] font-medium leading-[1.3] m-0">
-              Try {featured.title}
+              {t("try")} {featured.title}
             </p>
             <div
               className="border-t border-dotted border-[var(--divider)] h-0 w-full"

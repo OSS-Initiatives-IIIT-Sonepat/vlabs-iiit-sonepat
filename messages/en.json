@@ -1,0 +1,318 @@
+{
+  "common": {
+    "buttons": {
+      "getStarted": "Get started",
+      "continue": "Continue",
+      "back": "Back",
+      "next": "Next",
+      "previous": "Previous",
+      "submit": "Submit",
+      "cancel": "Cancel",
+      "close": "Close",
+      "save": "Save"
+    },
+    "search": {
+      "placeholder": "Search",
+      "shortcut": "⌘S"
+    }
+  },
+  "menu": {
+    "nav": {
+      "home": "Home",
+      "blog": "Blog",
+      "community": "Community",
+      "resources": "Resources"
+    },
+    "resources": {
+      "userGuide": "User Guide",
+      "userGuideDesc": "Learn how to use VLabs",
+      "userGuideAlt": "VLabs user guide preview",
+      "userGuideTitle": "Master every corner of VLabs",
+      "userGuidePreview": "Step-by-step guides and playbooks to help your team get the most out of their workspace.",
+      "developers": "Developers",
+      "developersDesc": "Contribute to VLabs",
+      "developersAlt": "Blue developer illustration with branching arrows",
+      "developersTitle": "Build on an open platform",
+      "developersPreview": "Explore the source, open issues, and contribute to VLabs on GitHub.",
+      "components": "Components"
+    }
+  },
+  "footer": {
+    "description": "Virtual ECE labs — explore components, build circuits, and learn electronics through interactive 3D.",
+    "sections": {
+      "labs": "Labs",
+      "components": "Components",
+      "project": "Project"
+    },
+    "project": {
+      "blog": "Blog",
+      "community": "Community",
+      "contributing": "Contributing"
+    },
+    "copyright": "© 2026 vlabs — open source ECE labs"
+  },
+  "blog": {
+    "hero": {
+      "eyebrow": "Blog.",
+      "heading": "Stories, updates, and engineering notes",
+      "description": "Behind-the-scenes looks at how we build VLabs — from 3D rendering and circuit simulation to open-source community and education."
+    },
+    "allPosts": "All posts.",
+    "posts": {
+      "building3dLabs": {
+        "title": "Building 3D ECE labs from scratch with Three.js and Next.js",
+        "excerpt": "How we designed an interactive breadboard renderer that lets students drag, drop, and wire components in a browser — no plugins, no installs.",
+        "tag": "Engineering",
+        "readTime": "8 min read",
+        "author": {
+          "role": "Founder",
+          "bio": "Built VLabs from scratch between June and September 2026. Maintains the project as president of the Technical Society of IIIT Sonepat."
+        }
+      },
+      "whyOpenSource": {
+        "title": "Why open-source education tools matter more than ever",
+        "excerpt": "Labs are expensive, hardware is fragile, and not every student gets equal access. Virtual labs close that gap — here is why we chose to build in the open.",
+        "tag": "Open Source",
+        "readTime": "5 min read",
+        "author": {
+          "role": "Founder",
+          "bio": "Built VLabs from scratch between June and September 2026. Maintains the project as president of the Technical Society of IIIT Sonepat."
+        }
+      },
+      "lunariaToTailwind": {
+        "title": "From Lunaria to Tailwind: migrating a design system",
+        "excerpt": "We inherited a Linaria-based CSS-in-JS setup and moved the entire codebase to Tailwind CSS v4. Here is what went well, what broke, and what we learned.",
+        "tag": "Design",
+        "readTime": "7 min read",
+        "author": {
+          "role": "Founder",
+          "bio": "Built VLabs from scratch between June and September 2026. Maintains the project as president of the Technical Society of IIIT Sonepat."
+        }
+      },
+      "interactiveProcedure": {
+        "title": "Designing interactive procedure steps for circuit experiments",
+        "excerpt": "Every lab follows a strict aim–theory–apparatus–procedure–observation–conclusion flow. Here is how we made each step interactive, verifiable, and wired to a live 3D scene.",
+        "tag": "Product",
+        "readTime": "6 min read",
+        "author": {
+          "role": "Founder",
+          "bio": "Built VLabs from scratch between June and September 2026. Maintains the project as president of the Technical Society of IIIT Sonepat."
+        }
+      },
+      "searchOptimisation": {
+        "title": "When a search box became an architecture problem",
+        "excerpt": "The old VLab search could find experiments. We wanted it to understand them. What started as a ⌘K redesign turned into a build-time search index, client-side performance work, and a small lesson in how humans actually search.",
+        "tag": "Engineering",
+        "readTime": "7 min read",
+        "author": {
+          "role": "Core Contributor",
+          "bio": "Worked on VLabs from 2025 to 2026. Contributed to the project as a contributor."
+        }
+      }
+    }
+  },
+  "home": {
+    "hero": {
+      "title": "Experience Virtual Labs at a *Different Dimension*.",
+      "description": "Explore, interact, and experiment with complex engineering concepts through immersive virtual experiences built for the modern learner.",
+      "cta": "Get started"
+    },
+    "threeCards": {
+      "eyebrow": "Core ECE components.",
+      "heading": "Explore the building blocks of every circuit",
+      "body": "From breadboard to LED to resistor — hands-on 3D interaction with the fundamentals of electronics.",
+      "cta": "Explore all the components",
+      "breadboard": {
+        "body": "The solderless breadboard is the starting point for every ECE prototype — snap in components, route jumper wires, and iterate without soldering.",
+        "role": "Core component",
+        "company": "Prototyping"
+      },
+      "resistor": {
+        "body": "Resistors limit current and set voltage levels. Read the four colour bands — orange, orange, brown, gold — to identify the value and tolerance.",
+        "role": "Passive component",
+        "company": "Circuit fundamentals"
+      },
+      "led": {
+        "body": "A light-emitting diode converts current directly into light. Polarity matters: the longer anode lead goes to positive, the flat-side cathode to ground.",
+        "role": "Output component",
+        "company": "Optoelectronics"
+      }
+    },
+    "featureCards": {
+      "eyebrow": "More components to explore.",
+      "heading": "Store, control and interact — *the next layer of ECE*",
+      "capacitor": {
+        "body": "Capacitors store and release charge. The stripe marks the negative lead — always check polarity on electrolytics.",
+        "label": "Energy storage"
+      },
+      "potentiometer": {
+        "body": "A variable resistor with a dial. Rotate the knob to sweep the wiper between the two end terminals.",
+        "label": "Controls"
+      },
+      "pushButton": {
+        "body": "A momentary tactile switch. Current only flows while the cap is pressed — four corner pins straddle the centre gap.",
+        "label": "Input"
+      }
+    },
+    "testimonials": {
+      "eyebrow": "What educators and students are saying.",
+      "navigation": {
+        "previous": "Previous testimonial",
+        "next": "Next testimonial"
+      },
+      "quotes": {
+        "0": {
+          "text": "Before VLabs, students would spend half the lab session just getting the hardware to behave. Now they walk in having already verified the circuit virtually, and we can focus entirely on what the experiment is actually teaching.",
+          "author": {
+            "name": "John Doe 1",
+            "designation": "Associate Professor, Electronics Engineering"
+          }
+        },
+        "1": {
+          "text": "Building a full-wave bridge rectifier on a physical breadboard takes 40 minutes and someone always burns an LED. On VLabs I had the circuit running, sweep measured, and ripple factor calculated in under ten minutes.",
+          "author": {
+            "name": "John Doe 2",
+            "designation": "B.Tech Student, Electrical Engineering"
+          }
+        },
+        "2": {
+          "text": "The 8085 emulator is exactly what was missing. Students can single-step through assembly, watch registers change, and actually understand the fetch-decode-execute cycle instead of just memorising it for the exam.",
+          "author": {
+            "name": "John Doe 3",
+            "designation": "Head of Department, Computer Engineering"
+          }
+        }
+      }
+    },
+    "helped": {
+      "eyebrow": "Essential lab equipment.",
+      "heading": "The tools that power *every lab bench*",
+      "cards": {
+        "0": {
+          "heading": "Measure anything in your circuit",
+          "body": "A digital multimeter reads voltage, current, and resistance. The rotary dial selects the measurement mode — always check polarity before probing."
+        },
+        "1": {
+          "heading": "Dial in the exact voltage",
+          "body": "A bench-top DC supply gives you clean, adjustable voltage and current. Set limits before connecting — it protects your components from accidental over-voltage."
+        },
+        "2": {
+          "heading": "The brain of every embedded system",
+          "body": "A microcontroller trainer kit puts a programmable chip, GPIO headers, LEDs, and a USB port on one PCB — everything you need to start writing firmware."
+        }
+      }
+    }
+  },
+  "explore": {
+    "hero": {
+      "title": "Explore all the tools you want here, watch all tutorials step by step, enjoy your 3D experience.",
+      "description": "Browse every circuit, component, and lab organised by semester. Each card ships with a live 3D scene you can drag and rotate — no installation required.",
+      "try": "Try"
+    },
+    "backToExplore": "Explore Labs"
+  },
+  "lab": {
+    "sections": {
+      "aim": "Aim",
+      "theory": "Theory",
+      "apparatus": "Apparatus Required",
+      "procedure": "Procedure",
+      "observations": "Observations",
+      "conclusion": "Conclusion",
+      "simulation": "Simulation",
+      "code": "Code"
+    },
+    "navigation": {
+      "previousStep": "Previous step",
+      "nextStep": "Next step"
+    },
+    "language": {
+      "label": "Language",
+      "english": "English",
+      "hindi": "Hindi"
+    }
+  },
+  "onboarding": {
+    "title": "Tell us about yourself",
+    "tellMore": "Tell us more",
+    "yourBackground": "Your background (optional)",
+    "roles": {
+      "student": {
+        "label": "Student",
+        "description": "Learning through courses, labs, and research"
+      },
+      "professor": {
+        "label": "Professor / Educator",
+        "description": "Teaching courses and designing curricula"
+      },
+      "explorer": {
+        "label": "Curious Explorer",
+        "description": "Self-directed learning out of pure curiosity"
+      },
+      "other": {
+        "label": "Other",
+        "description": "Something else entirely"
+      }
+    },
+    "questions": {
+      "studentInstitution": "Where do you study?",
+      "professorInstitution": "Where do you teach?",
+      "otherInstitution": "Where do you work?",
+      "explorerCuriosity": "What sparks your curiosity?",
+      "backgroundOptional": "Tell us a bit about your background (optional)"
+    },
+    "departments": {
+      "cs": "Computer Science",
+      "ee": "Electrical Engineering",
+      "me": "Mechanical Engineering",
+      "ce": "Civil Engineering",
+      "che": "Chemical Engineering",
+      "bio": "Biology / Life Sciences",
+      "chem": "Chemistry",
+      "phys": "Physics",
+      "math": "Mathematics",
+      "stats": "Statistics / Data Science",
+      "ai": "Artificial Intelligence / ML",
+      "cyber": "Cybersecurity",
+      "env": "Environmental Science",
+      "med": "Medicine / Health Sciences",
+      "arch": "Architecture",
+      "eco": "Economics",
+      "psy": "Psychology",
+      "edu": "Education"
+    },
+    "interests": {
+      "circuits": "Circuits & Electronics",
+      "signals": "Signals & Systems",
+      "embedded": "Embedded Systems",
+      "robotics": "Robotics & Automation",
+      "ml": "Machine Learning",
+      "cv": "Computer Vision",
+      "nlp": "NLP / LLMs",
+      "algo": "Algorithms & Data Structures",
+      "os": "Operating Systems",
+      "networks": "Computer Networks",
+      "db": "Databases",
+      "webdev": "Web Development",
+      "thermodynamics": "Thermodynamics",
+      "fluid": "Fluid Mechanics",
+      "mechanics": "Mechanics of Materials",
+      "quantum": "Quantum Mechanics",
+      "optics": "Optics & Photonics",
+      "chem_react": "Chemical Reactions",
+      "biotech": "Biotechnology",
+      "genetics": "Genetics & Genomics",
+      "materials": "Materials Science",
+      "control": "Control Systems",
+      "power": "Power Systems",
+      "vlsi": "VLSI Design",
+      "security": "Security & Cryptography"
+    }
+  },
+  "errors": {
+    "404": {
+      "title": "404 - Page Not Found",
+      "description": "The page you're looking for doesn't exist."
+    }
+  }
+}
