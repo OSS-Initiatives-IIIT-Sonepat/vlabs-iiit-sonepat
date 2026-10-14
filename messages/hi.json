@@ -237,19 +237,28 @@
     "tellMore": "और बताएं",
     "yourBackground": "आपकी पृष्ठभूमि (वैकल्पिक)",
     "roles": {
-      "student": "छात्र",
-      "studentDesc": "कोर्सेज, labs, और research के माध्यम से सीखना",
-      "professor": "प्रोफेसर / शिक्षक",
-      "professorDesc": "कोर्सेज पढ़ाना और curricula डिजाइन करना",
-      "explorer": "जिज्ञासु एक्सप्लोरर",
-      "explorerDesc": "शुद्ध जिज्ञासा से स्व-निर्देशित सीखना",
-      "other": "अन्य",
-      "otherDesc": "कुछ और पूरी तरह से अलग"
+      "student": {
+        "label": "छात्र",
+        "description": "पाठ्यक्रमों, labs, और अनुसंधान के माध्यम से सीखना"
+      },
+      "professor": {
+        "label": "प्रोफेसर / शिक्षक",
+        "description": "पाठ्यक्रम पढ़ाना और पाठ्यचर्या डिज़ाइन करना"
+      },
+      "explorer": {
+        "label": "जिज्ञासु खोजकर्ता",
+        "description": "शुद्ध जिज्ञासा से स्व-निर्देशित सीखना"
+      },
+      "other": {
+        "label": "अन्य",
+        "description": "कुछ पूरी तरह से अलग"
+      }
     },
     "questions": {
       "studentInstitution": "आप कहाँ पढ़ते हैं?",
       "professorInstitution": "आप कहाँ पढ़ाते हैं?",
       "otherInstitution": "आप कहाँ काम करते हैं?",
+      "explorerCuriosity": "आपकी जिज्ञासा क्या जगाती है?",
       "backgroundOptional": "अपनी पृष्ठभूमि के बारे में थोड़ा बताएं (वैकल्पिक)"
     }
   },

@@ -237,19 +237,28 @@
     "tellMore": "Tell us more",
     "yourBackground": "Your background (optional)",
     "roles": {
-      "student": "Student",
-      "studentDesc": "Learning through courses, labs, and research",
-      "professor": "Professor / Educator",
-      "professorDesc": "Teaching courses and designing curricula",
-      "explorer": "Curious Explorer",
-      "explorerDesc": "Self-directed learning out of pure curiosity",
-      "other": "Other",
-      "otherDesc": "Something else entirely"
+      "student": {
+        "label": "Student",
+        "description": "Learning through courses, labs, and research"
+      },
+      "professor": {
+        "label": "Professor / Educator",
+        "description": "Teaching courses and designing curricula"
+      },
+      "explorer": {
+        "label": "Curious Explorer",
+        "description": "Self-directed learning out of pure curiosity"
+      },
+      "other": {
+        "label": "Other",
+        "description": "Something else entirely"
+      }
     },
     "questions": {
       "studentInstitution": "Where do you study?",
       "professorInstitution": "Where do you teach?",
       "otherInstitution": "Where do you work?",
+      "explorerCuriosity": "What sparks your curiosity?",
       "backgroundOptional": "Tell us a bit about your background (optional)"
     }
   },
