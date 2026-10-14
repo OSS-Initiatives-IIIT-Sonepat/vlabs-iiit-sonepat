@@ -91,10 +91,19 @@
       }
     },
     "featureCards": {
+      "eyebrow": "एक्सप्लोर करने के लिए और कंपोनेंट्स।",
+      "heading": "Store करें, control करें और interact करें — *ECE की अगली परत*",
       "capacitor": {
-        "heading": "कैपेसिटर",
-        "body": "कैपेसिटर चार्ज को स्टोर और रिलीज करते हैं। फ़िल्टरिंग, टाइमिंग और एनर्जी स्टोरेज अनुप्रयोगों के लिए आवश्यक।",
-        "label": "ऊर्जा भंडारण"
+        "body": "Capacitors चार्ज को स्टोर और रिलीज करते हैं। Stripe negative lead को mark करती है — electrolytics पर हमेशा polarity चेक करें।",
+        "label": "Energy स्टोरेज"
+      },
+      "potentiometer": {
+        "body": "Dial के साथ एक variable resistor। Wiper को दोनों end terminals के बीच sweep करने के लिए knob घुमाएं।",
+        "label": "Controls"
+      },
+      "pushButton": {
+        "body": "Momentary tactile switch। Current केवल तभी flow करता है जब cap दबाया जाता है — चार corner pins centre gap को straddle करते हैं।",
+        "label": "Input"
       }
     }
   },

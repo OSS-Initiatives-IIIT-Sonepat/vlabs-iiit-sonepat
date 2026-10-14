@@ -91,10 +91,19 @@
       }
     },
     "featureCards": {
+      "eyebrow": "More components to explore.",
+      "heading": "Store, control and interact — *the next layer of ECE*",
       "capacitor": {
-        "heading": "Capacitor",
-        "body": "Capacitors store and release charge. Essential for filtering, timing, and energy storage applications.",
+        "body": "Capacitors store and release charge. The stripe marks the negative lead — always check polarity on electrolytics.",
         "label": "Energy storage"
+      },
+      "potentiometer": {
+        "body": "A variable resistor with a dial. Rotate the knob to sweep the wiper between the two end terminals.",
+        "label": "Controls"
+      },
+      "pushButton": {
+        "body": "A momentary tactile switch. Current only flows while the cap is pressed — four corner pins straddle the centre gap.",
+        "label": "Input"
       }
     }
   },
