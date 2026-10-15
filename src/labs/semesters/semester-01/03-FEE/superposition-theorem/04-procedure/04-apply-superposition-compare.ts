@@ -1,5 +1,7 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step04 as schematic } from "@/labs/schematics/superposition-theorem-schematics";
 export const step: SceneProcedureStep = {
+  schematic,
   label: "Apply superposition and compare.",
   body: "Compute $I_{super} = I_{R3,V1} + I_{R3,V2}$ (with signs). Compare with $I_{total}$ from Step 1. Percentage error should be $< 2\\%$. If larger, verify the short-circuit jumper replacement was performed correctly.",
   show: [
