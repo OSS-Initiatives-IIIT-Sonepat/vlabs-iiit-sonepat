@@ -5,5 +5,12 @@ import { step as s04 } from "./04-connect-input-lines-to-both-and-gates";
 import { step as s05 } from "./05-test-s-0-and-s-1-routing";
 
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { demux1to2StepSchematics } from "@/labs/schematics/demux-1to2-schematics";
 
-export const procedureSteps: SceneProcedureStep[] = [s01, s02, s03, s04, s05];
+export const procedureSteps: SceneProcedureStep[] = [
+  { ...s01, schematic: demux1to2StepSchematics[0] },
+  { ...s02, schematic: demux1to2StepSchematics[1] },
+  { ...s03, schematic: demux1to2StepSchematics[2] },
+  { ...s04, schematic: demux1to2StepSchematics[3] },
+  { ...s05, schematic: demux1to2StepSchematics[4] },
+];

@@ -1,4 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
+import { demux1to2TheoryDiagram } from "@/labs/schematics/demux-1to2-schematics";
 
 export const theory: TheorySection = {
   id: "theory",
@@ -10,4 +11,5 @@ export const theory: TheorySection = {
     "DEMUX circuits are used in digital systems for data distribution (one transmitter to multiple receivers), address decoding (selecting one of N memory banks), time-division demultiplexing (reconstructing parallel data from a serial stream), and display driving (sequentially addressing rows or columns of a multiplexed display matrix).",
     "The 1:2 DEMUX is the smallest DEMUX and serves as the primitive cell from which larger N:2ⁿ DEMUXes are built. A 1:4 DEMUX can be constructed from three 1:2 DEMUXes (one at the first level, two at the second level) in a binary tree arrangement. Note that many commercial DEMUX ICs (e.g., 74HC138, 74HC139) include an enable input for additional flexibility.",
   ],
+  circuitDiagram: demux1to2TheoryDiagram,
 };
