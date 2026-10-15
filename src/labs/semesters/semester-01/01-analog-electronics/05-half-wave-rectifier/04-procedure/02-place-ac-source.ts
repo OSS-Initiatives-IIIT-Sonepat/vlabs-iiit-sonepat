@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step02 as schematic } from "@/labs/schematics/half-wave-rectifier-schematics";
 
 export const step: SceneProcedureStep = {
   label: "Connect the AC input source",
@@ -6,4 +7,5 @@ export const step: SceneProcedureStep = {
   show: ["bb", "ac_src"],
   highlight: "ac_src",
   supplyVoltage: 12.0,
+  schematic,
 };

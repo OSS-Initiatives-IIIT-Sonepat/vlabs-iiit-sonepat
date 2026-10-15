@@ -1,4 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
+import { jkTFlipFlopTheoryDiagram } from "@/labs/schematics/s2-jk-t-flip-flop-schematics";
 
 export const theory: TheorySection = {
   id: "theory",
@@ -10,4 +11,5 @@ export const theory: TheorySection = {
     "The **T flip-flop** is a special case of the JK flip-flop with J and K inputs tied together as the single T input. When T=1 the output toggles on every active clock edge; when T=0 the output holds. The T flip-flop is widely used as a binary frequency divider: each stage divides the clock frequency by 2. $$Q_{n+1} = T\\bar{Q}_n + \\bar{T}Q_n = T \\oplus Q_n$$",
     "Applications: JK flip-flops form the basis of synchronous counters, sequence detectors, and state machines. T flip-flops implement ripple and synchronous counters and are used wherever clean frequency division is needed.",
   ],
+  circuitDiagram: jkTFlipFlopTheoryDiagram,
 };

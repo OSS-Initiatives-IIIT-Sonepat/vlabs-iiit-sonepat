@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step03 as schematic } from "@/labs/schematics/ohms-law-schematics";
 
 export const step: SceneProcedureStep = {
   label: "Connect the voltmeter in parallel across the resistor.",
@@ -18,4 +19,5 @@ export const step: SceneProcedureStep = {
     "w_vm_pos",
     "w_vm_neg",
   ],
+  schematic,
 };

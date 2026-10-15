@@ -6,12 +6,13 @@ import { step as s05 } from "./05-assemble-the-non-inverting-amplifier-phase-b";
 import { step as s06 } from "./06-measure-the-non-inverting-amplifier-gain-and-com";
 
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { opampCircuitsStepSchematics } from "@/labs/schematics/opamp-circuits-schematics";
 
 export const procedureSteps: SceneProcedureStep[] = [
-  s01,
-  s02,
-  s03,
-  s04,
-  s05,
-  s06,
+  { ...s01, schematic: opampCircuitsStepSchematics[0] },
+  { ...s02, schematic: opampCircuitsStepSchematics[1] },
+  { ...s03, schematic: opampCircuitsStepSchematics[2] },
+  { ...s04, schematic: opampCircuitsStepSchematics[3] },
+  { ...s05, schematic: opampCircuitsStepSchematics[4] },
+  { ...s06, schematic: opampCircuitsStepSchematics[5] },
 ];

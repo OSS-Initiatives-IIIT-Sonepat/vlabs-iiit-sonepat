@@ -14,18 +14,20 @@ import { step as s11 } from "./11-measure-non-inverting-gain";
 import { step as s12 } from "./12-vary-feedback-non-inverting";
 import { step as s13 } from "./13-calculate-error-and-shut-down";
 
+import { opampInvertingNonInvertingStepSchematics } from "@/labs/schematics/opamp-inverting-noninverting-schematics";
+
 export const procedureSteps: SceneProcedureStep[] = [
-  s01,
-  s02,
-  s03,
-  s04,
-  s05,
-  s06,
-  s07,
-  s08,
-  s09,
-  s10,
-  s11,
-  s12,
-  s13,
+  { ...s01, schematic: opampInvertingNonInvertingStepSchematics[0] },
+  { ...s02, schematic: opampInvertingNonInvertingStepSchematics[1] },
+  { ...s03, schematic: opampInvertingNonInvertingStepSchematics[2] },
+  { ...s04, schematic: opampInvertingNonInvertingStepSchematics[3] },
+  { ...s05, schematic: opampInvertingNonInvertingStepSchematics[4] },
+  { ...s06, schematic: opampInvertingNonInvertingStepSchematics[5] },
+  { ...s07, schematic: opampInvertingNonInvertingStepSchematics[6] },
+  { ...s08, schematic: opampInvertingNonInvertingStepSchematics[7] },
+  { ...s09, schematic: opampInvertingNonInvertingStepSchematics[8] },
+  { ...s10, schematic: opampInvertingNonInvertingStepSchematics[9] },
+  { ...s11, schematic: opampInvertingNonInvertingStepSchematics[10] },
+  { ...s12, schematic: opampInvertingNonInvertingStepSchematics[11] },
+  { ...s13, schematic: opampInvertingNonInvertingStepSchematics[12] },
 ];

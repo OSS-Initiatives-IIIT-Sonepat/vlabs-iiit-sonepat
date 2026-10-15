@@ -1,4 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
+import { s2Demux1to4IcTheoryDiagram } from "@/labs/schematics/s2-demux-1to4-ic-schematics";
 
 export const theory: TheorySection = {
   id: "theory",
@@ -10,4 +11,5 @@ export const theory: TheorySection = {
     "The decoding logic for channel 1 is: Y0 = ¬(EN_bar' · A' · B'),  Y1 = ¬(EN_bar' · A · B'), Y2 = ¬(EN_bar' · A' · B),   Y3 = ¬(EN_bar' · A · B). The active-LOW outputs mean LEDs connected between output and GND illuminate when selected because the output sinks current to ground.",
     "When used as a pure decoder, the enable input acts as the data line and the address selects which output carries the data. When EN_bar is data (pulsed), the circuit distributes the signal to the output channel addressed by A, B. The 74HC139 is commonly used in memory address decoding and I/O port selection.",
   ],
+  circuitDiagram: s2Demux1to4IcTheoryDiagram,
 };

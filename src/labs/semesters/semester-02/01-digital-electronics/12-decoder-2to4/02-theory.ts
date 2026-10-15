@@ -1,4 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
+import { s2Decoder2to4TheoryDiagram } from "@/labs/schematics/s2-decoder-2to4-schematics";
 
 export const theory: TheorySection = {
   id: "theory",
@@ -10,4 +11,5 @@ export const theory: TheorySection = {
     "Gate-level implementation: two NOT gates (74HC04) generate A' and B'; four AND gates (74HC08 — uses all four gates in one IC) each implement one minterm (Y0=A'B', Y1=A'B, Y2=AB', Y3=AB). Total ICs: 1× 74HC04, 1× 74HC08. This is a complete one-IC-each solution. Commercial decoders such as the 74HC139 (dual 2:4) or 74HC138 (3:8) include an active-low enable input for chip-select and cascading.",
     "Applications of 2:4 decoders include: memory address decoding (selecting one of four memory chips based on two address lines), instruction decoding in CPUs (activating one of four functional units), display digit selection in multiplexed 7-segment displays, and as a fundamental sub-block in larger decoders (two 2:4 decoders plus an inverter form a 3:8 decoder).",
   ],
+  circuitDiagram: s2Decoder2to4TheoryDiagram,
 };

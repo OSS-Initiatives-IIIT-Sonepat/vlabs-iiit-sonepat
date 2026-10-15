@@ -1,5 +1,6 @@
 import { type LabSection } from "@/labs/lab-content.types";
 import { type SchematicSpec } from "@/labs/TheoryScene";
+import { step05 as circuitDiagram } from "@/labs/schematics/zener-voltage-regulator-schematics";
 
 // ── Shunt-regulator schematic ──────────────────────────────────────────────
 //   Vin ── Rs ──┬── Vout ──┬── RL ──┐
@@ -88,6 +89,7 @@ export const theory: LabSection = {
   type: "text",
   title: "Theory",
   schematic: THEORY_SCHEMATIC,
+  circuitDiagram,
   paragraphs: [
     "A Zener diode is a heavily doped p-n junction diode designed to operate in the reverse breakdown region. When the reverse voltage reaches the Zener voltage Vz, the diode starts to conduct a large reverse current while the voltage across it stays almost constant. Breakdown below about 5 V is mainly due to the Zener (tunnelling) effect, above about 7 V it is mainly due to avalanche multiplication, and in between both effects act together.",
     "In the shunt regulator circuit a series resistor Rs connects the unregulated input Vin to the output node, and the Zener diode is connected across the load RL with its cathode towards the positive side (reverse biased). The regulated output is Vout = Vz.",

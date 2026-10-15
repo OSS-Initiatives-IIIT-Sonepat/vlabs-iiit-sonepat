@@ -1,9 +1,11 @@
 import { type TheorySection } from "@/labs/lab-content.types";
+import { basicComponentsTheoryDiagram as circuitDiagram } from "@/labs/schematics/basic-components-schematics";
 
 export const theory: TheorySection = {
   id: "theory",
   type: "text",
   title: "Theory",
+  circuitDiagram,
   paragraphs: [
     "Regulated Power Supply: A regulated DC power supply converts mains AC into a steady DC output that does not change with load current or mains fluctuations. A bench supply has a voltage knob (0-30 V typical), a current-limit knob, a + (red) terminal, a - (black) terminal and a green GND terminal. Always set the voltage before connecting the circuit, and use the current limit to protect the circuit from a short.",
     "Bread Board: A solderless prototyping board. Each numbered column has five holes (a-e and f-j) joined together by a metal strip, and the two halves are separated by a centre gap that IC packages straddle. The long rails along the edges are for VCC (+) and GND (-). Holes in the same strip are connected; holes in different strips are not.",

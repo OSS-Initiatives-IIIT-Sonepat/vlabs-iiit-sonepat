@@ -1,4 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
+import { cbTransistorCharacteristicsTheoryDiagram } from "@/labs/schematics/cb-transistor-characteristics-schematics";
 
 export const theory: TheorySection = {
   id: "theory",
@@ -12,4 +13,5 @@ export const theory: TheorySection = {
     "Current gain: $\\alpha_{dc} = I_C / I_E$ and $\\alpha_{ac} = \\Delta I_C / \\Delta I_E$ at constant $V_{CB}$. It is always slightly less than 1 (typically 0.95 to 0.99) and is related to the common-emitter gain by $\\alpha = \\beta / (1 + \\beta)$.",
     "This virtual experiment uses a single collector supply, so $V_{CB}$ is varied from 0 V upwards (active region only).",
   ],
+  circuitDiagram: cbTransistorCharacteristicsTheoryDiagram,
 };

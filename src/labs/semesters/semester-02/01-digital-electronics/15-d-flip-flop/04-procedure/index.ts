@@ -1,3 +1,4 @@
+import { dFlipFlopStepSchematics } from "@/labs/schematics/s2-d-flip-flop-schematics";
 import { step as s01 } from "./01-place-the-breadboard";
 import { step as s02 } from "./02-place-the-74hc74-d-flip-flop-ic";
 import { step as s03 } from "./03-tie-pre-bar-and-clr-bar-high";
@@ -11,13 +12,13 @@ import { step as s09 } from "./09-test-change-d-without-clocking-q-holds";
 import { type SceneProcedureStep } from "@/labs/experiments/types";
 
 export const procedureSteps: SceneProcedureStep[] = [
-  s01,
-  s02,
-  s03,
-  s04,
-  s05,
-  s06,
-  s07,
-  s08,
-  s09,
+  { ...s01, schematic: dFlipFlopStepSchematics[0] },
+  { ...s02, schematic: dFlipFlopStepSchematics[1] },
+  { ...s03, schematic: dFlipFlopStepSchematics[2] },
+  { ...s04, schematic: dFlipFlopStepSchematics[3] },
+  { ...s05, schematic: dFlipFlopStepSchematics[4] },
+  { ...s06, schematic: dFlipFlopStepSchematics[5] },
+  { ...s07, schematic: dFlipFlopStepSchematics[6] },
+  { ...s08, schematic: dFlipFlopStepSchematics[7] },
+  { ...s09, schematic: dFlipFlopStepSchematics[8] },
 ];

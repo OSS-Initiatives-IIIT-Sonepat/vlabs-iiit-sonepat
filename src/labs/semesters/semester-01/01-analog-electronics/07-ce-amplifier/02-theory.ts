@@ -1,4 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
+import { ceAmplifierTheoryDiagram } from "@/labs/schematics/ce-amplifier-schematics";
 
 export const theory: TheorySection = {
   id: "theory",
@@ -10,4 +11,5 @@ export const theory: TheorySection = {
     "Three coupling/bypass capacitors are used: C_1 (input coupling, blocks DC from the signal source), C_2 (output coupling, blocks DC from the load), and C_E (emitter bypass, short-circuits R_E at AC frequencies to maximise gain). Their values are chosen so that their reactance is negligible at the operating frequency.",
     "The frequency response of the CE amplifier has a mid-band region where gain is maximum and flat, a low-frequency roll-off (due to coupling and bypass capacitors), and a high-frequency roll-off (due to transistor junction capacitances). The bandwidth is defined as the frequency range between the upper and lower −3 dB points.",
   ],
+  circuitDiagram: ceAmplifierTheoryDiagram,
 };

@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step06 as schematic } from "@/labs/schematics/full-wave-rectifier-schematics";
 
 export const step: SceneProcedureStep = {
   label: "Add the filter capacitor",
@@ -27,4 +28,5 @@ export const step: SceneProcedureStep = {
   ],
   highlight: "c1",
   supplyVoltage: 12,
+  schematic,
 };

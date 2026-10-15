@@ -1,4 +1,5 @@
 import { type LabSection } from "@/labs/lab-content.types";
+import { s2IntroLogicGatesTheoryDiagram } from "@/labs/schematics/s2-intro-logic-gates-schematics";
 
 export const theory: LabSection = {
   id: "theory",
@@ -15,4 +16,5 @@ export const theory: LabSection = {
     "**EX-NOR (XNOR) gate:** output is 1 when the inputs are the same. $Y = \\overline{A \\oplus B} = AB + \\overline{A}\\,\\overline{B}$. IC: 74HC266. It is also called the equivalence gate.",
     "**Truth tables** (A, B → NOT A, AND, OR, NAND, NOR, XOR, XNOR): 00 → 1, 0, 0, 1, 1, 0, 1; 01 → 1, 0, 1, 1, 0, 1, 0; 10 → 0, 0, 1, 1, 0, 1, 0; 11 → 0, 1, 1, 0, 0, 0, 1.",
   ],
+  circuitDiagram: s2IntroLogicGatesTheoryDiagram,
 };

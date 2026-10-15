@@ -45,6 +45,8 @@ export type TheorySection = {
   paragraphs: string[];
   /** Schematic spec rendered in the Three.js TheoryScene (2D symbols, same canvas) */
   schematic?: SchematicSpec;
+  /** Optional 2D circuit diagram rendered inline in the text card */
+  circuitDiagram?: SchematicData;
 };
 
 // Apparatus: list of items — rendered as 3D slider in ApparatusScene

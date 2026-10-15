@@ -303,12 +303,26 @@ function FloatingCardContent({
 
   if (section.type === "text") {
     return (
-      <StreamingTheoryParagraphs
-        key={streamKey}
-        streamKey={streamKey}
-        paragraphs={section.paragraphs}
-        paragraphClassName={PARAGRAPH_CLASS}
-      />
+      <>
+        <StreamingTheoryParagraphs
+          key={streamKey}
+          streamKey={streamKey}
+          paragraphs={section.paragraphs}
+          paragraphClassName={PARAGRAPH_CLASS}
+        />
+        {section.circuitDiagram && (
+          <div
+            style={{
+              marginTop: "calc(var(--spacing-base) * 4)",
+              borderRadius: 8,
+              overflow: "hidden",
+              border: "1px solid rgba(0,0,0,0.06)",
+            }}
+          >
+            <CircuitSchematic schematic={section.circuitDiagram} />
+          </div>
+        )}
+      </>
     );
   }
 

@@ -1,4 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
+import { s2Mux4to1IcTheoryDiagram } from "@/labs/schematics/s2-mux-4to1-ic-schematics";
 
 export const theory: TheorySection = {
   id: "theory",
@@ -11,4 +12,5 @@ export const theory: TheorySection = {
     "Each product term is a 3-input AND gate, so the gate-level circuit is 2 NOT gates, 4 three-input AND gates and one 4-input OR gate. In this experiment the 74HC153 dual 4:1 multiplexer is used, with only section 1 (pins 1C0–1C3, 1Y) connected. The enable input $\\overline{1G}$ is active LOW and is tied to ground so the output stays enabled.",
     "Applications: data routing, parallel-to-serial conversion, implementing Boolean functions, and bus selection in CPUs.",
   ],
+  circuitDiagram: s2Mux4to1IcTheoryDiagram,
 };

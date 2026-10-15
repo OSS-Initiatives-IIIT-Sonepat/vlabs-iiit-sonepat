@@ -1,3 +1,4 @@
+import { srLatchStepSchematics } from "@/labs/schematics/s2-sr-latch-schematics";
 import { step as s01 } from "./01-place-the-breadboard";
 import { step as s02 } from "./02-place-the-74hc279-sr-latch-ic";
 import { step as s03 } from "./03-wire-s-bar-and-r-bar-inputs";
@@ -12,14 +13,14 @@ import { step as s10 } from "./10-observe-the-forbidden-state-both-0";
 import { type SceneProcedureStep } from "@/labs/experiments/types";
 
 export const procedureSteps: SceneProcedureStep[] = [
-  s01,
-  s02,
-  s03,
-  s04,
-  s05,
-  s06,
-  s07,
-  s08,
-  s09,
-  s10,
+  { ...s01, schematic: srLatchStepSchematics[0] },
+  { ...s02, schematic: srLatchStepSchematics[1] },
+  { ...s03, schematic: srLatchStepSchematics[2] },
+  { ...s04, schematic: srLatchStepSchematics[3] },
+  { ...s05, schematic: srLatchStepSchematics[4] },
+  { ...s06, schematic: srLatchStepSchematics[5] },
+  { ...s07, schematic: srLatchStepSchematics[6] },
+  { ...s08, schematic: srLatchStepSchematics[7] },
+  { ...s09, schematic: srLatchStepSchematics[8] },
+  { ...s10, schematic: srLatchStepSchematics[9] },
 ];

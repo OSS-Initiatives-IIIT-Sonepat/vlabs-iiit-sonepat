@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { fullWaveStepSchematics } from "@/labs/schematics/full-wave-rectifier-schematics";
 
 import { step as s01 } from "./01-place-breadboard-and-source";
 import { step as s02 } from "./02-wire-upper-bridge-diodes";
@@ -10,12 +11,12 @@ import { step as s07 } from "./07-connect-multimeter";
 import { step as s08 } from "./08-observe-rectified-output";
 
 export const procedureSteps: SceneProcedureStep[] = [
-  s01,
-  s02,
-  s03,
-  s04,
-  s05,
-  s06,
-  s07,
-  s08,
+  { ...s01, schematic: fullWaveStepSchematics[0] },
+  { ...s02, schematic: fullWaveStepSchematics[1] },
+  { ...s03, schematic: fullWaveStepSchematics[2] },
+  { ...s04, schematic: fullWaveStepSchematics[3] },
+  { ...s05, schematic: fullWaveStepSchematics[4] },
+  { ...s06, schematic: fullWaveStepSchematics[5] },
+  { ...s07, schematic: fullWaveStepSchematics[6] },
+  { ...s08, schematic: fullWaveStepSchematics[7] },
 ];

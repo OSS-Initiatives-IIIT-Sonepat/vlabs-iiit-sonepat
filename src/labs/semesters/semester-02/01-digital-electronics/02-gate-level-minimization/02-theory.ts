@@ -1,4 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
+import { s2GateMinimizationTheoryDiagram } from "@/labs/schematics/s2-gate-minimization-schematics";
 
 export const theory: TheorySection = {
   id: "theory",
@@ -13,4 +14,5 @@ export const theory: TheorySection = {
     "The trade-off of multi-level design is speed and design effort. Each extra level adds one gate propagation delay, so the delay is roughly the number of levels multiplied by the delay of one gate, and multi-level networks are harder to design and analyse than two-level ones. In this small example the factored circuit is still two gates deep, so the saving comes without a delay penalty. For larger functions, factoring increases the depth.",
     "Both networks realise the same function, so their truth tables must be identical. The output is 1 only when $A = 1$ and at least one of $B$ and $C$ is 1, which is 3 of the 8 input combinations. Comparing the two LED outputs for every input combination verifies the equivalence.",
   ],
+  circuitDiagram: s2GateMinimizationTheoryDiagram,
 };

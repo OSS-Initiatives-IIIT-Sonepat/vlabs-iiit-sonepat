@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step06 as schematic } from "@/labs/schematics/zener-voltage-regulator-schematics";
 
 export const step: SceneProcedureStep = {
   label: "Line regulation: set Vin = 6 V.",
@@ -19,4 +20,5 @@ export const step: SceneProcedureStep = {
   highlight: "dmm",
   supplyVoltage: 6,
   readings: { dmm: "4.51 V" },
+  schematic,
 };

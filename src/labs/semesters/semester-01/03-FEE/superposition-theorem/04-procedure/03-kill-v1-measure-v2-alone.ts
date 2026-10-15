@@ -1,5 +1,7 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step03 as schematic } from "@/labs/schematics/superposition-theorem-schematics";
 export const step: SceneProcedureStep = {
+  schematic,
   label: "Kill V1 — measure due to V2 alone.",
   body: "Restore V2, then kill V1 with a short-circuit jumper. Re-energise V2. Measure $I_{R3,V2}$. Carefully note the current direction — it may oppose $I_{R3,V1}$. Assign signs: positive if same direction as $I_{total}$, negative if opposing.",
   show: [

@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step07 as schematic } from "@/labs/schematics/kirchhoff-laws-schematics";
 
 export const step: SceneProcedureStep = {
   label: "Compute theoretical values and compare.",
@@ -21,4 +22,5 @@ export const step: SceneProcedureStep = {
     "w_r3_led",
     "w_led_gnd",
   ],
+  schematic,
 };

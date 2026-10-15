@@ -1,4 +1,5 @@
 import { type LabSection } from "@/labs/lab-content.types";
+import { s2FullAdderTheoryDiagram } from "@/labs/schematics/s2-full-adder-schematics";
 
 export const theory: LabSection = {
   id: "theory",
@@ -11,4 +12,5 @@ export const theory: LabSection = {
     "Gates used: two XOR (74HC86), two AND (74HC08) and one OR (74HC32). Inputs are applied at the tie-points on the left of the breadboard and the outputs are shown on LEDs through 330 Ω current-limiting resistors.",
     "Working: Sum is 1 when an odd number of inputs are 1. Cout is 1 when at least two inputs are 1, which is the majority function of A, B and Cin.",
   ],
+  circuitDiagram: s2FullAdderTheoryDiagram,
 };

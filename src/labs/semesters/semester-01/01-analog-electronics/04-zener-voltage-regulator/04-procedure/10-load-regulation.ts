@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step10 as schematic } from "@/labs/schematics/zener-voltage-regulator-schematics";
 
 export const step: SceneProcedureStep = {
   label: "Load regulation: connect a second load in parallel.",
@@ -22,4 +23,5 @@ export const step: SceneProcedureStep = {
   highlight: "rl2",
   supplyVoltage: 10,
   readings: { dmm: "5.10 V" },
+  schematic,
 };

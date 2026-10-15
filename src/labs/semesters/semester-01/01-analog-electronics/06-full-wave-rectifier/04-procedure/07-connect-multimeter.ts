@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step07 as schematic } from "@/labs/schematics/full-wave-rectifier-schematics";
 
 export const step: SceneProcedureStep = {
   label: "Connect the multimeter across the load",
@@ -29,4 +30,5 @@ export const step: SceneProcedureStep = {
   highlight: "dmm",
   supplyVoltage: 12,
   readings: { dmm: "~15.6 V DC" },
+  schematic,
 };

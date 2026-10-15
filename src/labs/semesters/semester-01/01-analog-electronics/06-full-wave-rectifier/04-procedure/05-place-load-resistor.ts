@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step05 as schematic } from "@/labs/schematics/full-wave-rectifier-schematics";
 
 export const step: SceneProcedureStep = {
   label: "Place the load resistor across the output",
@@ -24,4 +25,5 @@ export const step: SceneProcedureStep = {
   ],
   highlight: "r_load",
   supplyVoltage: 12,
+  schematic,
 };

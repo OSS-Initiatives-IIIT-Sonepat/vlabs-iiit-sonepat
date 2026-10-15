@@ -1,4 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
+import { halfAdderTheoryDiagram } from "@/labs/schematics/half-adder-schematics";
 
 export const theory: TheorySection = {
   id: "theory",
@@ -10,4 +11,5 @@ export const theory: TheorySection = {
     "In binary arithmetic, 0+0=00, 0+1=01, 1+0=01, and 1+1=10. The two bits of the result map directly to the Carry (most significant) and Sum (least significant) outputs of the half adder. The circuit is the fundamental building block of all binary adder architectures and forms the basis of arithmetic logic units (ALUs) in processors.",
     "Both the 74HC86 (XOR) and 74HC08 (AND) are CMOS logic ICs operating from 2 V to 6 V. They are quad-gate packages, meaning each IC contains four independent gates. In this experiment only one gate from each IC is used. Current-limiting resistors (330 Ω) protect the output LEDs from excessive current draw.",
   ],
+  circuitDiagram: halfAdderTheoryDiagram,
 };

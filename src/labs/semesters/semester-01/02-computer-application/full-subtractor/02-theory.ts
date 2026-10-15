@@ -1,4 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
+import { fullSubtractorTheoryDiagram } from "@/labs/schematics/full-subtractor-schematics";
 
 export const theory: TheorySection = {
   id: "theory",
@@ -10,4 +11,5 @@ export const theory: TheorySection = {
     "Gate-level implementation: two XOR gates (74HC86) compute P = A⊕B and D = P⊕Bin. A NOT gate (74HC04) computes A'. Two AND gates (74HC08) compute A'·B and Bin·(A'·B + additional terms) — depending on the chosen minimised expression. One OR gate (74HC32) combines the AND terms to produce Bout. Total ICs: 1× 74HC86, 1× 74HC04, 1× 74HC08, 1× 74HC32.",
     "A Full Subtractor can also be realised from two Half Subtractors: first HS computes D1 = A⊕B and Bout1 = A'·B; second HS computes D = D1⊕Bin and Bout2 = D1'·Bin; final Bout = Bout1 + Bout2 via one OR gate. This modular construction mirrors the Full Adder from two Half Adders and is instructive for understanding combinational design methodology.",
   ],
+  circuitDiagram: fullSubtractorTheoryDiagram,
 };

@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step02 as schematic } from "@/labs/schematics/zener-voltage-regulator-schematics";
 
 export const step: SceneProcedureStep = {
   label: "Mount the series resistor Rs.",
@@ -6,4 +7,5 @@ export const step: SceneProcedureStep = {
   show: ["bb", "psu", "rs", "w_vcc_rs"],
   highlight: "rs",
   supplyVoltage: 0,
+  schematic,
 };

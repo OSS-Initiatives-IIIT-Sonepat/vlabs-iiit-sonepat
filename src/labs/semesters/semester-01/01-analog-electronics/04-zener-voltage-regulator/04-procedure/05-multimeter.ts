@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step05 as schematic } from "@/labs/schematics/zener-voltage-regulator-schematics";
 
 export const step: SceneProcedureStep = {
   label: "Connect the multimeter across the output.",
@@ -19,4 +20,5 @@ export const step: SceneProcedureStep = {
   highlight: "dmm",
   supplyVoltage: 0,
   readings: { dmm: "0.00 V" },
+  schematic,
 };

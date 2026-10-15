@@ -1,5 +1,7 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step06 as schematic } from "@/labs/schematics/superposition-theorem-schematics";
 export const step: SceneProcedureStep = {
+  schematic,
   label: "Calculate theoretical values and compare.",
   body: "Calculate theoretical $I_{R3,V1}$ and $I_{R3,V2}$ using series-parallel analysis or voltage divider rule for each single-source sub-circuit. Compare with measured values and record percentage error in the observation table.",
   show: [

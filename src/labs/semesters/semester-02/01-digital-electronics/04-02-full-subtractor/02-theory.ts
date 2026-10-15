@@ -1,4 +1,5 @@
 import { type LabSection } from "@/labs/lab-content.types";
+import { s2FullSubtractorTheoryDiagram } from "@/labs/schematics/s2-full-subtractor-schematics";
 
 export const theory: LabSection = {
   id: "theory",
@@ -11,4 +12,5 @@ export const theory: LabSection = {
     "Implementation used in this lab (5 gates): x = A ⊕ B, D = x ⊕ Bin, t = B ⊕ Bin, g = x · t and Bout = Bin ⊕ g. If x = 0 then g = 0 and Bout = Bin. If x = 1 then g = B ⊕ Bin and Bout = Bin ⊕ B ⊕ Bin = B. This is equivalent to the textbook equation and needs no NOT gates.",
     "Gates used: four XOR (74HC86) and one AND (74HC08). Inputs are applied at the tie-points on the left of the breadboard and the outputs are shown on LEDs through 330 Ω current-limiting resistors.",
   ],
+  circuitDiagram: s2FullSubtractorTheoryDiagram,
 };

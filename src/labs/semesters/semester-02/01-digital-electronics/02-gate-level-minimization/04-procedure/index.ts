@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { s2GateMinimizationStepSchematics } from "@/labs/schematics/s2-gate-minimization-schematics";
 
 import { step as s01 } from "./01-place-breadboard";
 import { step as s02 } from "./02-place-two-level-gates";
@@ -12,14 +13,14 @@ import { step as s09 } from "./09-compare-outputs";
 import { step as s10 } from "./10-check-zero-case";
 
 export const procedureSteps: SceneProcedureStep[] = [
-  s01,
-  s02,
-  s03,
-  s04,
-  s05,
-  s06,
-  s07,
-  s08,
-  s09,
-  s10,
+  { ...s01, schematic: s2GateMinimizationStepSchematics[0] },
+  { ...s02, schematic: s2GateMinimizationStepSchematics[1] },
+  { ...s03, schematic: s2GateMinimizationStepSchematics[2] },
+  { ...s04, schematic: s2GateMinimizationStepSchematics[3] },
+  { ...s05, schematic: s2GateMinimizationStepSchematics[4] },
+  { ...s06, schematic: s2GateMinimizationStepSchematics[5] },
+  { ...s07, schematic: s2GateMinimizationStepSchematics[6] },
+  { ...s08, schematic: s2GateMinimizationStepSchematics[7] },
+  { ...s09, schematic: s2GateMinimizationStepSchematics[8] },
+  { ...s10, schematic: s2GateMinimizationStepSchematics[9] },
 ];

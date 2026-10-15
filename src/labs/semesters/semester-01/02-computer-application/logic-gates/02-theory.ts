@@ -1,4 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
+import { logicGatesTheoryDiagram } from "@/labs/schematics/logic-gates-schematics";
 
 export const theory: TheorySection = {
   id: "theory",
@@ -10,4 +11,5 @@ export const theory: TheorySection = {
     "Each gate's behaviour is fully described by its truth table. For a 2-input gate, there are 2² = 4 possible input combinations (00, 01, 10, 11). The truth table lists the output for each combination. For AND: output is 1 only when both inputs are 1. For OR: output is 0 only when both inputs are 0. NAND and NOR are the complements of AND and OR respectively, and are functionally complete — any Boolean function can be realised using only NAND gates (or only NOR gates).",
     "In this experiment each gate is individually wired on a breadboard using the corresponding 74HC-series IC, input logic levels are applied via switch-to-Vcc/GND connections, and the output is observed via an LED (lit = logic 1, off = logic 0). The measured truth tables are compared with standard truth tables to verify correct operation.",
   ],
+  circuitDiagram: logicGatesTheoryDiagram,
 };

@@ -1,4 +1,5 @@
 import { type LabSection } from "@/labs/lab-content.types";
+import { binarySubtractor4bitTheoryDiagram } from "@/labs/schematics/s2-binary-subtractor-4bit-schematics";
 
 export const theory: LabSection = {
   id: "theory",
@@ -12,4 +13,5 @@ export const theory: LabSection = {
     "Worked examples: $9 - 5$: $1001 + 1010 + 1 = 1\\,0100$, so $S = 0100$ and $C_4 = 1$, giving $+4$. $5 - 9$: $0101 + 0110 + 1 = 0\\,1100$, so $S = 1100$ and $C_4 = 0$; the magnitude is $\\overline{1100} + 1 = 0100$, giving $-4$.",
     "Extension: replacing the inverters with 74HC86 XOR gates controlled by a mode line $M$ gives an adder/subtractor ($M = 0$ adds, $M = 1$ subtracts), with $M$ also wired to $C_0$.",
   ],
+  circuitDiagram: binarySubtractor4bitTheoryDiagram,
 };
