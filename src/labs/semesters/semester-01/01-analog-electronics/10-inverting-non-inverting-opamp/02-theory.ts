@@ -1,4 +1,5 @@
 import { type ExperimentDefinition } from "@/labs/experiments/types";
+import { opampInvertingNonInvertingTheoryDiagram } from "@/labs/schematics/opamp-inverting-noninverting-schematics";
 
 type Section = ExperimentDefinition["sections"][number];
 
@@ -15,4 +16,5 @@ export const theory: Section = {
     "Values used in this experiment. Rin = R1 = 10 kΩ and Rf is taken as 100 kΩ, 47 kΩ and 22 kΩ in turn. The theoretical gains are therefore −10, −4.7 and −2.2 for the inverting amplifier, and 11, 5.7 and 3.2 for the non-inverting amplifier. A sine wave of 1 kHz and 1 V peak-to-peak is applied at the input in every case.",
     "Practical limits. The output voltage cannot exceed the supply voltages. With ±12 V supplies the output of the LM741 saturates a volt or two below the supply rails, so the input amplitude must be small enough for the amplified peaks to stay below this level; this is why 1 V peak-to-peak is used. The gain-bandwidth product of the LM741 is about 1 MHz, so the −3 dB bandwidth of a closed-loop amplifier is roughly 1 MHz divided by its noise gain (1 + Rf / Rin for the inverting circuit and 1 + Rf / R1 for the non-inverting circuit). For a gain setting of 10 or 11 this is of the order of 100 kHz, which is well above the 1 kHz test frequency.",
   ],
+  circuitDiagram: opampInvertingNonInvertingTheoryDiagram,
 };
