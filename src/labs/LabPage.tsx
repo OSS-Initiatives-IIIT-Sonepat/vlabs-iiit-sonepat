@@ -699,7 +699,16 @@ function LabPageStandard({ content }: Props) {
         {activeSection?.type === "procedure" &&
           activeSection.steps[procedureStepIndex]?.schematic && (
             <div className="pointer-events-auto">
-              <FloatingCircuitCard>
+              <FloatingCircuitCard
+                stepIndex={procedureStepIndex}
+                totalSteps={activeSection.steps.length}
+                onStepChange={setProcedureStepIndex}
+                expandedContent={
+                  <CircuitSchematic
+                    schematic={activeSection.steps[procedureStepIndex].schematic!}
+                  />
+                }
+              >
                 <CircuitSchematic
                   schematic={activeSection.steps[procedureStepIndex].schematic!}
                 />

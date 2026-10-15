@@ -223,30 +223,48 @@ function Label({ x, y, text }: { x: number; y: number; text: string }) {
   return <text x={x} y={y} textAnchor="middle" fontSize={9} fill={PIN_COLOR} fontWeight={500}>{text}</text>;
 }
 
-/* ── Dot-grid pattern (exact OpenBench) ────────────────────────── */
-function DotGrid({ width, height }: { width: number; height: number }) {
-  const dots: React.ReactElement[] = [];
-  for (let gx = 0; gx <= width; gx += GRID) {
-    for (let gy = 0; gy <= height; gy += GRID) {
-      dots.push(<circle key={`${gx}-${gy}`} cx={gx} cy={gy} r={0.8} fill={GRID_DOT} />);
-    }
-  }
-  return <g>{dots}</g>;
-}
+/* ── Dot-grid pattern (infinite via SVG <pattern>) ─────────────── */
+const GRID_PAT_ID = "schematic-dot-grid";
 
 /* ── Main component ────────────────────────────────────────────── */
 export function CircuitSchematic({ schematic }: { schematic: SchematicData }) {
   const w = schematic.width ?? 340;
   const h = schematic.height ?? 260;
 
+  // The viewBox stays tight around the circuit content (original sizing).
+  // The dot-grid rect extends far beyond via a large negative offset,
+  // but `overflow: visible` on the SVG lets PanZoomCanvas reveal it when panning.
+  const DOT_PAD = 2000;
+
   return (
     <svg
       viewBox={`-10 -10 ${w + 20} ${h + 20}`}
       width="100%"
       height="100%"
-      style={{ background: CANVAS_BG, borderRadius: 6, display: "block" }}
+      overflow="visible"
+      style={{ background: CANVAS_BG, display: "block" }}
     >
-      <DotGrid width={w} height={h} />
+      <defs>
+        <pattern
+          id={GRID_PAT_ID}
+          x={0}
+          y={0}
+          width={GRID}
+          height={GRID}
+          patternUnits="userSpaceOnUse"
+        >
+          <circle cx={0} cy={0} r={0.8} fill={GRID_DOT} />
+        </pattern>
+      </defs>
+
+      {/* Dot grid — extends far beyond viewBox so it's visible when panning */}
+      <rect
+        x={-DOT_PAD}
+        y={-DOT_PAD}
+        width={w + DOT_PAD * 2}
+        height={h + DOT_PAD * 2}
+        fill={`url(#${GRID_PAT_ID})`}
+      />
 
       {schematic.elements.map((el) => {
         switch (el.type) {
