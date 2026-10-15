@@ -1,4 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
+import { mosfetCommonSourceTheoryDiagram } from "@/labs/schematics/mosfet-common-source-schematics";
 
 export const theory: TheorySection = {
   id: "theory",
@@ -12,4 +13,5 @@ export const theory: TheorySection = {
     "For small signals the transconductance is $g_m = \\dfrac{\\partial I_D}{\\partial V_{GS}} = 2K\\,(V_{GS} - V_{th})$. The small-signal voltage gain, neglecting the drain resistance $r_o$, is $A_v = \\dfrac{v_{out}}{v_{in}} = -g_m\\,(R_D \\parallel R_L)$. The negative sign means the output is 180° out of phase with the input: when the gate voltage rises, $I_D$ rises, the drop across $R_D$ rises and the drain voltage falls.",
     "For the values used in this experiment ($V_{DD} = 10$ V, $R_D = 1\\,\\text{k}\\Omega$, $R_L = 10\\,\\text{k}\\Omega$, $V_{GS} \\approx 3$ V, $K \\approx 5\\,\\text{mA/V}^2$) the expected values are $I_D \\approx 4$ mA, $V_{DS} \\approx 6$ V, $g_m \\approx 9$ mS and $|A_v| \\approx 8$. Actual values depend on the individual device because $V_{th}$ and $K$ vary from part to part.",
   ],
+  circuitDiagram: mosfetCommonSourceTheoryDiagram,
 };
