@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step03 as schematic } from "@/labs/schematics/full-wave-rectifier-schematics";
 
 export const step: SceneProcedureStep = {
   label: "Place D3 and D4 to complete the bridge",
@@ -19,4 +20,5 @@ export const step: SceneProcedureStep = {
   ],
   highlight: "d4",
   supplyVoltage: 12,
+  schematic,
 };

@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step04 as schematic } from "@/labs/schematics/full-wave-rectifier-schematics";
 
 export const step: SceneProcedureStep = {
   label: "Tie D1 and D2 cathodes into the positive output node",
@@ -20,4 +21,5 @@ export const step: SceneProcedureStep = {
     "w_d2_pos",
   ],
   supplyVoltage: 12,
+  schematic,
 };

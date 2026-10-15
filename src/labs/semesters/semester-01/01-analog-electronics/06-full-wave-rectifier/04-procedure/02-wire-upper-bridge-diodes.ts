@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step02 as schematic } from "@/labs/schematics/full-wave-rectifier-schematics";
 
 export const step: SceneProcedureStep = {
   label: "Place D1 and D2 and wire the AC lines to their anodes",
@@ -6,4 +7,5 @@ export const step: SceneProcedureStep = {
   show: ["bb", "ac_src", "d1", "d2", "w_a1_d1", "w_a2_d2"],
   highlight: "d2",
   supplyVoltage: 12,
+  schematic,
 };

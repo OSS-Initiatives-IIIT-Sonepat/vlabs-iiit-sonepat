@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step08 as schematic } from "@/labs/schematics/full-wave-rectifier-schematics";
 
 export const step: SceneProcedureStep = {
   label: "Observe the rectified output",
@@ -28,4 +29,5 @@ export const step: SceneProcedureStep = {
   ],
   supplyVoltage: 12,
   readings: { dmm: "15.6 V DC (ripple ≈ 3%)" },
+  schematic,
 };
