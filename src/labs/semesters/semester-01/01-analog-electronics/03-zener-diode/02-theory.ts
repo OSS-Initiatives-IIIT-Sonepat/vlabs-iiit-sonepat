@@ -1,5 +1,6 @@
 import { type TheorySection } from "@/labs/lab-content.types";
 import { type SchematicSpec } from "@/labs/TheoryScene";
+import { step06 as circuitDiagram } from "@/labs/schematics/zener-diode-schematics";
 
 const FWD_BAT_X = -2.8;
 const TOP_Y_F = 1.0;
@@ -246,6 +247,7 @@ export const theory: TheorySection = {
   type: "text",
   title: "Theory",
   schematic: THEORY_SCHEMATIC,
+  circuitDiagram,
   paragraphs: [
     "A Zener diode is a heavily-doped PN junction designed to conduct reliably in **reverse breakdown**. " +
       "Two mechanisms cause breakdown: *Zener breakdown* (quantum tunnelling, $V_Z < 5\\,\\text{V}$) and " +
