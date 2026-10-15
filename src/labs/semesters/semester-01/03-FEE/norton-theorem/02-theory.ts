@@ -1,6 +1,8 @@
 import { type TheorySection } from "@/labs/lab-content.types";
+import { step05 as circuitDiagram } from "@/labs/schematics/norton-theorem-schematics";
 export const theory: TheorySection = {
   id: "theory",
+  circuitDiagram,
   type: "text",
   title: "Theory",
   paragraphs: [
