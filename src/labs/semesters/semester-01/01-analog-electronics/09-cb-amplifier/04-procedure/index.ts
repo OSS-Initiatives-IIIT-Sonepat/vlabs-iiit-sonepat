@@ -9,15 +9,16 @@ import { step as s08 } from "./08-wire-r-c-output-to-the-led-anode";
 import { step as s09 } from "./09-power-on-and-record-input-output-characteristics";
 
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { cbAmplifierStepSchematics } from "@/labs/schematics/cb-amplifier-schematics";
 
 export const procedureSteps: SceneProcedureStep[] = [
-  s01,
-  s02,
-  s03,
-  s04,
-  s05,
-  s06,
-  s07,
-  s08,
-  s09,
+  { ...s01, schematic: cbAmplifierStepSchematics[0] },
+  { ...s02, schematic: cbAmplifierStepSchematics[1] },
+  { ...s03, schematic: cbAmplifierStepSchematics[2] },
+  { ...s04, schematic: cbAmplifierStepSchematics[3] },
+  { ...s05, schematic: cbAmplifierStepSchematics[4] },
+  { ...s06, schematic: cbAmplifierStepSchematics[5] },
+  { ...s07, schematic: cbAmplifierStepSchematics[6] },
+  { ...s08, schematic: cbAmplifierStepSchematics[7] },
+  { ...s09, schematic: cbAmplifierStepSchematics[8] },
 ];
