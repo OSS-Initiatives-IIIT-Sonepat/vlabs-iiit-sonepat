@@ -1,4 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
+import { halfSubtractorTheoryDiagram } from "@/labs/schematics/half-subtractor-schematics";
 
 export const theory: TheorySection = {
   id: "theory",
@@ -10,4 +11,5 @@ export const theory: TheorySection = {
     "Gate-level implementation: one XOR gate (from 74HC86) produces the Difference output. One NOT gate (from 74HC04) inverts input A to produce A'. One AND gate (from 74HC08) computes A' AND B to produce the Borrow output. Total ICs required: one 74HC86 (XOR), one 74HC04 (NOT), and one 74HC08 (AND) — though all three functions may be found on a single 74HC series combination IC.",
     "The Half Subtractor's Borrow expression Bout = A'·B is the complement of the A term ANDed with B. This is asymmetric: subtracting 1 from 0 generates a borrow, but subtracting 0 from any value does not. This asymmetry contrasts with the Half Adder's symmetric carry expression Cout = A·B, which treats both inputs equivalently.",
   ],
+  circuitDiagram: halfSubtractorTheoryDiagram,
 };
