@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step03 as schematic } from "@/labs/schematics/zener-voltage-regulator-schematics";
 
 export const step: SceneProcedureStep = {
   label: "Connect the Zener diode in reverse bias.",
@@ -6,4 +7,5 @@ export const step: SceneProcedureStep = {
   show: ["bb", "psu", "rs", "w_vcc_rs", "dz", "w_rs_dz", "w_dz_gnd"],
   highlight: "dz",
   supplyVoltage: 0,
+  schematic,
 };

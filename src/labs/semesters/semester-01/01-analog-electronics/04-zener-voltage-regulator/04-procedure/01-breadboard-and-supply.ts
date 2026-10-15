@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step01 as schematic } from "@/labs/schematics/zener-voltage-regulator-schematics";
 
 export const step: SceneProcedureStep = {
   label: "Place the breadboard and connect the DC power supply.",
@@ -6,4 +7,5 @@ export const step: SceneProcedureStep = {
   show: ["bb", "psu"],
   highlight: "psu",
   supplyVoltage: 0,
+  schematic,
 };
