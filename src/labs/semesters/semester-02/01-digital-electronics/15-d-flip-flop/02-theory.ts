@@ -1,4 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
+import { dFlipFlopTheoryDiagram } from "@/labs/schematics/s2-d-flip-flop-schematics";
 
 export const theory: TheorySection = {
   id: "theory",
@@ -10,4 +11,5 @@ export const theory: TheorySection = {
     "The 74HC74 also has asynchronous override inputs: active-low $\\overline{PRE}$ (preset, forces Q=1) and active-low $\\overline{CLR}$ (clear, forces Q=0). These take effect immediately, independent of the clock. In normal operation both are tied HIGH (inactive). **Setup time** ($t_{su}$) is the minimum time D must be stable before the clock edge. **Hold time** ($t_h$) is the minimum time D must remain stable after the clock edge.",
     "Applications: shift registers, pipeline registers, state machines, frequency dividers (connect Q_bar to D → output toggles every clock cycle = ÷2 counter). The D-FF eliminates the forbidden state of the SR latch, making it the most common storage element in digital systems.",
   ],
+  circuitDiagram: dFlipFlopTheoryDiagram,
 };
