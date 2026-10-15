@@ -1,4 +1,5 @@
 import { type LabSection } from "@/labs/lab-content.types";
+import { binaryAdder4bitTheoryDiagram } from "@/labs/schematics/s2-binary-adder-4bit-schematics";
 
 export const theory: LabSection = {
   id: "theory",
@@ -11,4 +12,5 @@ export const theory: LabSection = {
     "The experiment uses discrete gates: **74HC86** (quad 2-input XOR), **74HC08** (quad 2-input AND) and **74HC32** (quad 2-input OR). Four full adders need 8 XOR, 8 AND and 4 OR gates, which is exactly two 74HC86, two 74HC08 and one 74HC32. The same function is available in a single IC, the 74HC283 (7483) 4-bit binary adder, which uses carry look-ahead internally.",
     "In a ripple-carry adder the carry must pass through every stage in turn. The worst-case delay is therefore about $4 \\times (t_{AND} + t_{OR})$ for the carry chain plus one XOR delay for the last sum bit, and it grows linearly with the number of bits. This is why wide adders use carry look-ahead.",
   ],
+  circuitDiagram: binaryAdder4bitTheoryDiagram,
 };

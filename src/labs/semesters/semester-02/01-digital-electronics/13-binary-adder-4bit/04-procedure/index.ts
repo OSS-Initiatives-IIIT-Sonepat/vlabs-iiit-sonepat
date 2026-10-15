@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { binaryAdder4bitStepSchematics } from "@/labs/schematics/s2-binary-adder-4bit-schematics";
 import { step as s01 } from "./01-place-breadboard";
 import { step as s02 } from "./02-connect-supply";
 import { step as s03 } from "./03-place-ics";
@@ -13,16 +14,16 @@ import { step as s11 } from "./11-test-15-plus-1";
 import { step as s12 } from "./12-test-maximum";
 
 export const procedureSteps: SceneProcedureStep[] = [
-  s01,
-  s02,
-  s03,
-  s04,
-  s05,
-  s06,
-  s07,
-  s08,
-  s09,
-  s10,
-  s11,
-  s12,
+  { ...s01, schematic: binaryAdder4bitStepSchematics[0] },
+  { ...s02, schematic: binaryAdder4bitStepSchematics[1] },
+  { ...s03, schematic: binaryAdder4bitStepSchematics[2] },
+  { ...s04, schematic: binaryAdder4bitStepSchematics[3] },
+  { ...s05, schematic: binaryAdder4bitStepSchematics[4] },
+  { ...s06, schematic: binaryAdder4bitStepSchematics[5] },
+  { ...s07, schematic: binaryAdder4bitStepSchematics[6] },
+  { ...s08, schematic: binaryAdder4bitStepSchematics[7] },
+  { ...s09, schematic: binaryAdder4bitStepSchematics[8] },
+  { ...s10, schematic: binaryAdder4bitStepSchematics[9] },
+  { ...s11, schematic: binaryAdder4bitStepSchematics[10] },
+  { ...s12, schematic: binaryAdder4bitStepSchematics[11] },
 ];
