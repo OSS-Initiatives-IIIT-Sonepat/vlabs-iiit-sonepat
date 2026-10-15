@@ -1,4 +1,5 @@
 import { type LabSection } from "@/labs/lab-content.types";
+import { mod5CounterTheoryDiagram } from "@/labs/schematics/s2-mod5-counter-schematics";
 
 export const theory: LabSection = {
   id: "theory",
@@ -16,4 +17,5 @@ export const theory: LabSection = {
     "**Propagation delay.** In a ripple counter the delays of the stages add up. For $n$ flip-flops the output settles after about $n\\,t_{pd}$, so the maximum clock frequency is roughly $f_{max} \\approx 1/(n\\,t_{pd} + t_{decode})$. This is the main drawback compared with synchronous counters.",
     "**Frequency division.** A MOD-5 counter divides the clock frequency by 5, so $f_{out} = f_{clk}/5$. In the UP counter, $Q_C$ is high for only one clock period in every five, which is a 20% duty cycle.",
   ],
+  circuitDiagram: mod5CounterTheoryDiagram,
 };
