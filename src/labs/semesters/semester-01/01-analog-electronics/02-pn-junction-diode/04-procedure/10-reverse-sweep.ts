@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step10 as schematic } from "@/labs/schematics/pn-junction-diode-schematics";
 
 export const step: SceneProcedureStep = {
   label: "Reverse bias sweep: 0 → 15 V.",
@@ -11,4 +12,5 @@ export const step: SceneProcedureStep = {
   activeInputs: { Vcc: 1 },
   supplyVoltage: 10.0,
   readings: { am1: "0.02 mA", vm1: "10.00 V" },
+  schematic,
 };

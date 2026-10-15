@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step09 as schematic } from "@/labs/schematics/pn-junction-diode-schematics";
 
 export const step: SceneProcedureStep = {
   label: "Wire the reverse-bias path and reconnect voltmeter.",
@@ -8,4 +9,5 @@ export const step: SceneProcedureStep = {
     "**Voltmeter probes**: across the reversed diode.\n" +
     "DMM readings will show the reverse voltage $-V_D$ across the diode.",
   show: ["bb", "psu", "am1", "r1", "d1", "w_diode_r", "w_r_gnd", "vm1"],
+  schematic,
 };

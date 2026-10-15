@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step01 as schematic } from "@/labs/schematics/pn-junction-diode-schematics";
 
 export const step: SceneProcedureStep = {
   label: "Place the breadboard and connect the DC power supply.",
@@ -8,4 +9,5 @@ export const step: SceneProcedureStep = {
     "**Black wire**: supply (−) terminal → GND rail at col 2.\n" +
     "The red rails carry $V_s$ throughout; the blue rails are $\\text{GND}$. Do **not** power on yet.",
   show: ["bb", "psu"],
+  schematic,
 };

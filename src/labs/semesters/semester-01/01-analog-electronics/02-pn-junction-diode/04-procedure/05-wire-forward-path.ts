@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step05 as schematic } from "@/labs/schematics/pn-junction-diode-schematics";
 
 export const step: SceneProcedureStep = {
   label: "Wire R₁ to diode anode, cathode to GND.",
@@ -9,4 +10,5 @@ export const step: SceneProcedureStep = {
     "$V_s^+ \\to \\text{ammeter} \\to R \\to D_1 \\to \\text{GND}$\n" +
     "**Double-check polarity** before powering on.",
   show: ["bb", "psu", "am1", "r1", "d1", "w_diode_r", "w_r_gnd"],
+  schematic,
 };

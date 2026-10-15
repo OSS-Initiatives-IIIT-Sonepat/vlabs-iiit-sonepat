@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step04 as schematic } from "@/labs/schematics/pn-junction-diode-schematics";
 
 export const step: SceneProcedureStep = {
   label: "Insert the 1N4148 diode in forward bias.",
@@ -8,4 +9,5 @@ export const step: SceneProcedureStep = {
     "In forward bias, conventional current flows anode → cathode once $V_D$ exceeds the knee voltage $\\approx 0.7\\,\\text{V}$ for silicon.",
   show: ["bb", "psu", "am1", "r1", "d1"],
   highlight: "d1",
+  schematic,
 };

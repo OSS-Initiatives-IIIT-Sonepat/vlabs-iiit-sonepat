@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step06 as schematic } from "@/labs/schematics/pn-junction-diode-schematics";
 
 export const step: SceneProcedureStep = {
   label: "Connect the voltmeter across the forward-biased diode.",
@@ -8,4 +9,5 @@ export const step: SceneProcedureStep = {
     "**Probe (−)**: connect to the diode cathode (col 11).\n" +
     "These probes measure $V_D$ directly across the diode.",
   show: ["bb", "psu", "am1", "r1", "d1", "w_diode_r", "w_r_gnd", "vm1"],
+  schematic,
 };
