@@ -1,4 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
+import { s2GrayBinaryConverterTheoryDiagram } from "@/labs/schematics/s2-gray-binary-converter-schematics";
 
 export const theory: TheorySection = {
   id: "theory",
@@ -10,4 +11,5 @@ export const theory: TheorySection = {
     "Gray-to-Binary code conversion is the complementary reverse operation. The binary MSB is identical to the Gray MSB, B₃ = G₃. Each subsequent binary bit is obtained by cascading the previously calculated binary bit with the corresponding Gray input bit: B₂ = B₃ ⊕ G₂, B₁ = B₂ ⊕ G₁, and B₀ = B₁ ⊕ G₀. This can be synthesized using three cascaded XOR gates.",
     "The physical realization utilizes the standard 74HC86 Quad 2-Input XOR Gate CMOS IC operating from a regulated +5 V DC power supply. Output logic states are monitored via four color-coded LED indicators (G₃ = Red, G₂ = Yellow, G₁ = Green, G₀ = Blue) in series with 330 Ω current-limiting resistors to verify logic levels safely.",
   ],
+  circuitDiagram: s2GrayBinaryConverterTheoryDiagram,
 };
