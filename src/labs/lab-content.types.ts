@@ -1,5 +1,6 @@
 import { type StepMarker } from "@/labs/LabScene";
 import { type SchematicSpec } from "@/labs/TheoryScene";
+import { type SchematicData } from "@/labs/CircuitSchematic";
 
 // ── Lab content types ──────────────────────────────────────────────────────
 // Sections are displayed in the sidebar in order.
@@ -127,6 +128,8 @@ export type ProcedureStep = {
   supplyVoltage?: number;
   readings?: Record<string, string>;
   ledBrightness?: Record<string, number>;
+  /** Optional 2D circuit schematic to display for this step in FloatingCircuitCard */
+  schematic?: SchematicData;
 };
 
 export type ObservationTable = {
