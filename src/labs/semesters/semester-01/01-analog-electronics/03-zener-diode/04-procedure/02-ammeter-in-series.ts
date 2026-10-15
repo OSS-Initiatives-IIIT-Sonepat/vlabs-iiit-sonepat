@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step02 as schematic } from "@/labs/schematics/zener-diode-schematics";
 
 export const step: SceneProcedureStep = {
   label: "Connect the ammeter (DMM) in series.",
@@ -9,4 +10,5 @@ export const step: SceneProcedureStep = {
     "**Orange wire 2**: col 3 row c → R₁ input (col 5 row c).\n" +
     "Since rows c and d in the same column share a net, all circuit current flows through the ammeter, measuring $I_Z$ directly.",
   show: ["bb", "psu", "dmm", "w_amm_in", "w_amm_out"],
+  schematic,
 };

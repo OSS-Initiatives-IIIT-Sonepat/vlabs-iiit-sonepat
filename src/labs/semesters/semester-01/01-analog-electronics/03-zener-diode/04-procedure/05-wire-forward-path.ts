@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step05 as schematic } from "@/labs/schematics/zener-diode-schematics";
 
 import { DOWN, M } from "../constants";
 
@@ -25,4 +26,5 @@ export const step: SceneProcedureStep = {
     { pos: M.r1_p2, dir: DOWN, label: "R₁ p2 → green wire" },
     { pos: M.zd_cathode, dir: DOWN, label: "Cathode → GND" },
   ],
+  schematic,
 };

@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step07 as schematic } from "@/labs/schematics/zener-diode-schematics";
 
 export const step: SceneProcedureStep = {
   label: "Forward bias sweep: 0 → 2 V in 0.1 V steps.",
@@ -23,4 +24,5 @@ export const step: SceneProcedureStep = {
   supplyVoltage: 1.0,
   readings: { psu: "1.00 V", dmm: "0.62 V  0.81 mA" },
   ledBrightness: { zener_fwd: 0.08 },
+  schematic,
 };

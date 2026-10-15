@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step08 as schematic } from "@/labs/schematics/zener-diode-schematics";
 
 export const step: SceneProcedureStep = {
   label: "Reverse the Zener diode for reverse-bias measurement.",
@@ -8,4 +9,5 @@ export const step: SceneProcedureStep = {
     "The red LED on the breadboard marks this reversed orientation — current will enter through the cathode.",
   show: ["bb", "psu", "dmm", "w_amm_in", "w_amm_out", "r1", "zener_rev"],
   highlight: "zener_rev",
+  schematic,
 };

@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step09 as schematic } from "@/labs/schematics/zener-diode-schematics";
 
 export const step: SceneProcedureStep = {
   label: "Wire the reverse-bias path and reconnect voltmeter.",
@@ -20,4 +21,5 @@ export const step: SceneProcedureStep = {
     "w_vm_rev_pos",
     "w_vm_rev_neg",
   ],
+  schematic,
 };

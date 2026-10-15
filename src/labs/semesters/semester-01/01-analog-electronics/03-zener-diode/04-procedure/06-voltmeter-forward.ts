@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step06 as schematic } from "@/labs/schematics/zener-diode-schematics";
 
 export const step: SceneProcedureStep = {
   label: "Connect voltmeter across the forward-biased Zener.",
@@ -20,4 +21,5 @@ export const step: SceneProcedureStep = {
     "w_vm_fwd_pos",
     "w_vm_fwd_neg",
   ],
+  schematic,
 };

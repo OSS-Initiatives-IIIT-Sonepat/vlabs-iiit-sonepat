@@ -23,6 +23,8 @@ import {
 } from "@/labs/lab-content.types";
 import { LabSidebar } from "@/labs/LabSidebar";
 import { FloatingLabCard } from "@/labs/FloatingLabCard";
+import { FloatingCircuitCard } from "@/labs/FloatingCircuitCard";
+import { CircuitSchematic } from "@/labs/CircuitSchematic";
 import {
   resolveFinalCircuitStepIndex,
   resolveProcedureCircuitStepIndex,
@@ -692,6 +694,18 @@ function LabPageStandard({ content }: Props) {
             </FloatingLabCard>
           </div>
         )}
+
+        {/* Floating 2D circuit schematic — shows per-step diagram */}
+        {activeSection?.type === "procedure" &&
+          activeSection.steps[procedureStepIndex]?.schematic && (
+            <div className="pointer-events-auto">
+              <FloatingCircuitCard>
+                <CircuitSchematic
+                  schematic={activeSection.steps[procedureStepIndex].schematic!}
+                />
+              </FloatingCircuitCard>
+            </div>
+          )}
 
         {/* Top-Right Floating Controls */}
         <div className="absolute top-6 right-6 flex items-center gap-4 z-[100] pointer-events-auto">
