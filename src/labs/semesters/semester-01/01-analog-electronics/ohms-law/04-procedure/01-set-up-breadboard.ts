@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step01 as schematic } from "@/labs/schematics/ohms-law-schematics";
 
 export const step: SceneProcedureStep = {
   label: "Set up the breadboard.",
@@ -9,4 +10,5 @@ export const step: SceneProcedureStep = {
     "and the **negative** terminal to the blue (−) rail. " +
     "Keep the supply switched **OFF** at this stage to avoid accidental short circuits.",
   show: ["bb"],
+  schematic,
 };

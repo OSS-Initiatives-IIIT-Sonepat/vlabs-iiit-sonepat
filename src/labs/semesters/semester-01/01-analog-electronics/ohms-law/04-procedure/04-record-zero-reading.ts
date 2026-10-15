@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step04 as schematic } from "@/labs/schematics/ohms-law-schematics";
 
 export const step: SceneProcedureStep = {
   label: "Record zero reading and energise circuit.",
@@ -17,4 +18,5 @@ export const step: SceneProcedureStep = {
     "w_vm_pos",
     "w_vm_neg",
   ],
+  schematic,
 };

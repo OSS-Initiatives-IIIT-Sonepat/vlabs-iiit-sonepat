@@ -1,9 +1,11 @@
 import { type TheorySection } from "@/labs/lab-content.types";
+import { step03 as circuitDiagram } from "@/labs/schematics/ohms-law-schematics";
 
 export const theory: TheorySection = {
   id: "theory",
   type: "text",
   title: "Theory",
+  circuitDiagram,
   paragraphs: [
     "Ohm's Law states that the current $I$ flowing through a conductor is directly proportional to the " +
       "potential difference $V$ applied across it, provided temperature and other physical conditions " +
