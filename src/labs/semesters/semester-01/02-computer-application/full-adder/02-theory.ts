@@ -1,4 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
+import { fullAdderTheoryDiagram } from "@/labs/schematics/full-adder-schematics";
 
 export const theory: TheorySection = {
   id: "theory",
@@ -10,4 +11,5 @@ export const theory: TheorySection = {
     "Gate-level implementation using 74HC-series ICs: two 74HC86 (quad XOR) gates for the Sum path, two gates from a 74HC08 (quad AND) for the carry generation, and one gate from a 74HC32 (quad OR) for the carry combination. Total IC count: 1× 74HC86, 1× 74HC08, 1× 74HC32. All three ICs are DIP-14 packages powered from a 5 V supply.",
     "A 4-bit ripple-carry adder is constructed by cascading four Full Adders in series, with each stage's Cout connected to the next stage's Cin. The carry \"ripples\" from LSB to MSB, introducing a cumulative propagation delay. The total worst-case delay is 4 × (carry propagation time per stage), which limits the maximum operating frequency of the adder.",
   ],
+  circuitDiagram: fullAdderTheoryDiagram,
 };
