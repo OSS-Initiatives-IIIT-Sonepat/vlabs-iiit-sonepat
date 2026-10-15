@@ -6,12 +6,13 @@ import { step as s05 } from "./05-wire-all-signal-connections-and-verify";
 import { step as s06 } from "./06-test-s-0-and-s-1-routing-systematically";
 
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { mux2to1StepSchematics } from "@/labs/schematics/mux-2to1-schematics";
 
 export const procedureSteps: SceneProcedureStep[] = [
-  s01,
-  s02,
-  s03,
-  s04,
-  s05,
-  s06,
+  { ...s01, schematic: mux2to1StepSchematics[0] },
+  { ...s02, schematic: mux2to1StepSchematics[1] },
+  { ...s03, schematic: mux2to1StepSchematics[2] },
+  { ...s04, schematic: mux2to1StepSchematics[3] },
+  { ...s05, schematic: mux2to1StepSchematics[4] },
+  { ...s06, schematic: mux2to1StepSchematics[5] },
 ];

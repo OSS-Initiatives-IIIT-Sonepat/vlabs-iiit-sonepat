@@ -1,4 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
+import { mux2to1TheoryDiagram } from "@/labs/schematics/mux-2to1-schematics";
 
 export const theory: TheorySection = {
   id: "theory",
@@ -10,4 +11,5 @@ export const theory: TheorySection = {
     "Gate-level implementation of the 2:1 MUX: one NOT gate (74HC04) to generate S'; two AND gates (74HC08) — one computing A·S' and the other computing B·S; one OR gate (74HC32) combining the AND outputs. Total ICs: 1× 74HC04, 1× 74HC08, 1× 74HC32. This is the canonical gate-level realisation.",
     "MUX circuits are fundamental in digital systems: they implement data routing in buses, enable time-division multiplexing (TDM) in communication systems, implement any Boolean function (a 2ⁿ:1 MUX can implement any n-variable function by connecting its data inputs to the required minterms), and form the basis of FPGA look-up tables (LUTs).",
   ],
+  circuitDiagram: mux2to1TheoryDiagram,
 };
