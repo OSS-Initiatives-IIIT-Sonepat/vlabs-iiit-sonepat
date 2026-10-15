@@ -1,4 +1,5 @@
 import { type LabSection } from "@/labs/lab-content.types";
+import { mosfetCharacteristicsTheoryDiagram } from "@/labs/schematics/mosfet-characteristics-schematics";
 
 export const theory: LabSection = {
   id: "theory",
@@ -11,4 +12,5 @@ export const theory: LabSection = {
     "Transconductance: $g_m = \\Delta I_D / \\Delta V_{GS}$ at constant $V_{DS}$. Drain (output) resistance: $r_d = \\Delta V_{DS} / \\Delta I_D$ at constant $V_{GS}$.",
     "Measurement method: the drain current is found from the voltage across the drain resistor $R_D = 100\\ \\Omega$, so $I_D = V_{R_D} / R_D$. Because $V_{DS} = V_{DD} - V_{R_D}$, $V_{DD}$ must be adjusted until the $V_{DS}$ meter shows the required value.",
   ],
+  circuitDiagram: mosfetCharacteristicsTheoryDiagram,
 };
