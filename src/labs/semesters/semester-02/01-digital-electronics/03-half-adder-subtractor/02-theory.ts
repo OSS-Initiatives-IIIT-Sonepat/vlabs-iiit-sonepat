@@ -1,4 +1,5 @@
 import { type LabSection } from "@/labs/lab-content.types";
+import { s2HalfAdderSubtractorTheoryDiagram } from "@/labs/schematics/s2-half-adder-subtractor-schematics";
 
 export const theory: LabSection = {
   id: "theory",
@@ -13,4 +14,5 @@ export const theory: LabSection = {
   ],
   audioPath:
     "/semesters/semester-02/01-digital-electronics/half-adder-subtractor/02_theory_english.mp3",
+  circuitDiagram: s2HalfAdderSubtractorTheoryDiagram,
 };
