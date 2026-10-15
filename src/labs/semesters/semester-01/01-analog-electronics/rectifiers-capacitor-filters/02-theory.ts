@@ -1,4 +1,6 @@
 import { type TheorySection } from "@/labs/lab-content.types";
+import { rectifiersCapacitorFiltersTheoryDiagram } from "@/labs/schematics/rectifiers-capacitor-filters-schematics";
+
 export const theory: TheorySection = {
   id: "theory",
   type: "text",
@@ -9,4 +11,5 @@ export const theory: TheorySection = {
     "PIV across non-conducting diodes increases with a filter: for a half-wave rectifier $\\text{PIV} = 2V_m$; for a full-wave bridge $\\text{PIV} = V_m$ per diode regardless of filter.",
     "Larger $C$ improves ripple at the cost of higher peak diode current — the capacitor charges in short bursts. Practical designs balance ripple reduction against diode surge current ratings.",
   ],
+  circuitDiagram: rectifiersCapacitorFiltersTheoryDiagram,
 };
