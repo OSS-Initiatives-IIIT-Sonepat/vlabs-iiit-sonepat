@@ -1,3 +1,4 @@
+import { jkTFlipFlopStepSchematics } from "@/labs/schematics/s2-jk-t-flip-flop-schematics";
 import { step as s01 } from "./01-place-the-breadboard";
 import { step as s02 } from "./02-place-the-74hc76-jk-flip-flop-ic";
 import { step as s03 } from "./03-tie-set-bar-and-clr-bar-high";
@@ -12,14 +13,14 @@ import { step as s10 } from "./10-t-mode-t-1-q-toggles-on-every-clock";
 import { type SceneProcedureStep } from "@/labs/experiments/types";
 //
 export const procedureSteps: SceneProcedureStep[] = [
-  s01,
-  s02,
-  s03,
-  s04,
-  s05,
-  s06,
-  s07,
-  s08,
-  s09,
-  s10,
+  { ...s01, schematic: jkTFlipFlopStepSchematics[0] },
+  { ...s02, schematic: jkTFlipFlopStepSchematics[1] },
+  { ...s03, schematic: jkTFlipFlopStepSchematics[2] },
+  { ...s04, schematic: jkTFlipFlopStepSchematics[3] },
+  { ...s05, schematic: jkTFlipFlopStepSchematics[4] },
+  { ...s06, schematic: jkTFlipFlopStepSchematics[5] },
+  { ...s07, schematic: jkTFlipFlopStepSchematics[6] },
+  { ...s08, schematic: jkTFlipFlopStepSchematics[7] },
+  { ...s09, schematic: jkTFlipFlopStepSchematics[8] },
+  { ...s10, schematic: jkTFlipFlopStepSchematics[9] },
 ];
