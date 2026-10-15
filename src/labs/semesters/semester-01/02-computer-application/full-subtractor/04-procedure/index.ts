@@ -6,12 +6,13 @@ import { step as s05 } from "./05-verify-all-wiring-connections";
 import { step as s06 } from "./06-test-all-8-input-combinations";
 
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { fullSubtractorStepSchematics } from "@/labs/schematics/full-subtractor-schematics";
 
 export const procedureSteps: SceneProcedureStep[] = [
-  s01,
-  s02,
-  s03,
-  s04,
-  s05,
-  s06,
+  { ...s01, schematic: fullSubtractorStepSchematics[0] },
+  { ...s02, schematic: fullSubtractorStepSchematics[1] },
+  { ...s03, schematic: fullSubtractorStepSchematics[2] },
+  { ...s04, schematic: fullSubtractorStepSchematics[3] },
+  { ...s05, schematic: fullSubtractorStepSchematics[4] },
+  { ...s06, schematic: fullSubtractorStepSchematics[5] },
 ];
