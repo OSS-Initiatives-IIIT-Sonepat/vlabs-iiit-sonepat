@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { voltageRegulatorStepSchematics } from "@/labs/schematics/zener-voltage-regulator-schematics";
 
 import { step as s01 } from "./01-breadboard-and-supply";
 import { step as s02 } from "./02-series-resistor";
@@ -12,14 +13,14 @@ import { step as s09 } from "./09-line-regulation-12v";
 import { step as s10 } from "./10-load-regulation";
 
 export const procedureSteps: SceneProcedureStep[] = [
-  s01,
-  s02,
-  s03,
-  s04,
-  s05,
-  s06,
-  s07,
-  s08,
-  s09,
-  s10,
+  { ...s01, schematic: voltageRegulatorStepSchematics[0] },
+  { ...s02, schematic: voltageRegulatorStepSchematics[1] },
+  { ...s03, schematic: voltageRegulatorStepSchematics[2] },
+  { ...s04, schematic: voltageRegulatorStepSchematics[3] },
+  { ...s05, schematic: voltageRegulatorStepSchematics[4] },
+  { ...s06, schematic: voltageRegulatorStepSchematics[5] },
+  { ...s07, schematic: voltageRegulatorStepSchematics[6] },
+  { ...s08, schematic: voltageRegulatorStepSchematics[7] },
+  { ...s09, schematic: voltageRegulatorStepSchematics[8] },
+  { ...s10, schematic: voltageRegulatorStepSchematics[9] },
 ];
