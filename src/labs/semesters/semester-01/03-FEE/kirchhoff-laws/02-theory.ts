@@ -1,4 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
+import { step03 as circuitDiagram } from "@/labs/schematics/kirchhoff-laws-schematics";
 
 export const theory: TheorySection = {
   id: "theory",
@@ -21,4 +22,5 @@ export const theory: TheorySection = {
       "Currents at each node and voltages around each loop are measured. " +
       "The algebraic sums are confirmed to be zero within experimental error.",
   ],
+  circuitDiagram,
 };

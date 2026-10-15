@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step03 as schematic } from "@/labs/schematics/kirchhoff-laws-schematics";
 
 export const step: SceneProcedureStep = {
   label: "Measure branch currents (KCL check).",
@@ -21,4 +22,5 @@ export const step: SceneProcedureStep = {
     "w_r3_led",
     "w_led_gnd",
   ],
+  schematic,
 };

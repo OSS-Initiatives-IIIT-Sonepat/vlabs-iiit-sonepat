@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step02 as schematic } from "@/labs/schematics/kirchhoff-laws-schematics";
 
 export const step: SceneProcedureStep = {
   label: "Insert ammeters in each branch.",
@@ -8,4 +9,5 @@ export const step: SceneProcedureStep = {
     "Set each ammeter to the DC milliamp range. " +
     "Positive current is defined as flowing **into** node A.",
   show: ["bb", "r1", "r2", "r3", "led1", "w_vcc_r1", "w_vcc_r2"],
+  schematic,
 };

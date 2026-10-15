@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step01 as schematic } from "@/labs/schematics/kirchhoff-laws-schematics";
 
 export const step: SceneProcedureStep = {
   label: "Build the resistor network.",
@@ -9,4 +10,5 @@ export const step: SceneProcedureStep = {
     "Both supply negatives share the same ground rail. " +
     "This creates node A where three branch currents meet — the KCL verification point.",
   show: ["bb", "r1", "r2", "r3", "led1"],
+  schematic,
 };

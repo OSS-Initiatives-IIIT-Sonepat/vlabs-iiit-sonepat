@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step05 as schematic } from "@/labs/schematics/kirchhoff-laws-schematics";
 
 export const step: SceneProcedureStep = {
   label: "Measure voltages around Loop 2 (KVL check).",
@@ -22,4 +23,5 @@ export const step: SceneProcedureStep = {
     "w_vm_r2_pos",
     "w_vm_r2_neg",
   ],
+  schematic,
 };
