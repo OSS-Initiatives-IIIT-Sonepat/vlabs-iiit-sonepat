@@ -1,4 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
+import { bjtBiasTheoryDiagram } from "@/labs/schematics/bjt-bias-schematics";
 
 export const theory: TheorySection = {
   id: "theory",
@@ -10,4 +11,5 @@ export const theory: TheorySection = {
     "The Q-point equations for VDB are:$$V_B = V_{CC}\\frac{R_2}{R_1+R_2}, \\quad V_E = V_B - 0.7\\,\\text{V}, \\quad I_C \\approx I_E = \\frac{V_E}{R_E}$$$$V_{CE} = V_{CC} - I_C(R_C + R_E)$$For the circuit under test ($V_{CC}=12\\,\\text{V}$, $R_1=100\\,\\text{k}\\Omega$, $R_2=10\\,\\text{k}\\Omega$, $R_C=4.7\\,\\text{k}\\Omega$, $R_E=1\\,\\text{k}\\Omega$): $V_B \\approx 1.09\\,\\text{V}$, $I_C \\approx 0.39\\,\\text{mA}$, $V_{CE} \\approx 9.8\\,\\text{V}$.",
     "For fixed bias with $R_B = 470\\,\\text{k}\\Omega$ and $\\beta = 200$: $I_B \\approx 24\\,\\mu\\text{A}$, $I_C \\approx 4.8\\,\\text{mA}$, $V_{CE} = 12 - 4.8 \\times 10^{-3}(4700) \\approx -10.6\\,\\text{V}$ — the transistor is **saturated** ($V_{CE} < V_{CE,sat}$). This shows how fixed bias can drive the device out of the active region if $\\beta$ is high, while VDB keeps it well within the linear region for any $\\beta$ in the range 50–600.",
   ],
+  circuitDiagram: bjtBiasTheoryDiagram,
 };

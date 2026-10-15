@@ -6,12 +6,13 @@ import { step as s05 } from "./05-assemble-phase-b-voltage-divider-bias-circuit"
 import { step as s06 } from "./06-measure-the-vdb-q-point-and-compare";
 
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { bjtBiasStepSchematics } from "@/labs/schematics/bjt-bias-schematics";
 
 export const procedureSteps: SceneProcedureStep[] = [
-  s01,
-  s02,
-  s03,
-  s04,
-  s05,
-  s06,
+  { ...s01, schematic: bjtBiasStepSchematics[0] },
+  { ...s02, schematic: bjtBiasStepSchematics[1] },
+  { ...s03, schematic: bjtBiasStepSchematics[2] },
+  { ...s04, schematic: bjtBiasStepSchematics[3] },
+  { ...s05, schematic: bjtBiasStepSchematics[4] },
+  { ...s06, schematic: bjtBiasStepSchematics[5] },
 ];
