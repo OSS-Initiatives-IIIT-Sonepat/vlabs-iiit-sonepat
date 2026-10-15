@@ -5,5 +5,12 @@ import { step as s04 } from "./04-apply-signal-and-observe-voltage-gain";
 import { step as s05 } from "./05-plot-the-frequency-response";
 
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { ceAmplifierStepSchematics } from "@/labs/schematics/ce-amplifier-schematics";
 
-export const procedureSteps: SceneProcedureStep[] = [s01, s02, s03, s04, s05];
+export const procedureSteps: SceneProcedureStep[] = [
+  { ...s01, schematic: ceAmplifierStepSchematics[0] },
+  { ...s02, schematic: ceAmplifierStepSchematics[1] },
+  { ...s03, schematic: ceAmplifierStepSchematics[2] },
+  { ...s04, schematic: ceAmplifierStepSchematics[3] },
+  { ...s05, schematic: ceAmplifierStepSchematics[4] },
+];
