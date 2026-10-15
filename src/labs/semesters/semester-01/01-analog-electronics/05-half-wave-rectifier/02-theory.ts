@@ -1,9 +1,11 @@
 import { type LabSection } from "@/labs/lab-content.types";
+import { step09 as circuitDiagram } from "@/labs/schematics/half-wave-rectifier-schematics";
 
 export const theory: LabSection = {
   id: "theory",
   type: "text",
   title: "Theory",
+  circuitDiagram,
   audioPath:
     "/semesters/semester-01/01-analog-electronics/half-wave-rectifier/02-theory.mp3",
   paragraphs: [

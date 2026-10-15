@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step09 as schematic } from "@/labs/schematics/half-wave-rectifier-schematics";
 
 export const step: SceneProcedureStep = {
   label: "Add a filter capacitor for smoothing",
@@ -18,4 +19,5 @@ export const step: SceneProcedureStep = {
   ],
   highlight: "c1",
   readings: { dmm: "10.4 V" },
+  schematic,
 };

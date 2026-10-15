@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { step08 as schematic } from "@/labs/schematics/half-wave-rectifier-schematics";
 
 export const step: SceneProcedureStep = {
   label: "Connect the multimeter across R_L",
@@ -6,4 +7,5 @@ export const step: SceneProcedureStep = {
   show: ["bb", "ac_src", "d1", "w_src_d1", "r1", "w_d1_r1", "w_r1_gnd", "dmm"],
   highlight: "dmm",
   readings: { dmm: "3.6 V" },
+  schematic,
 };
