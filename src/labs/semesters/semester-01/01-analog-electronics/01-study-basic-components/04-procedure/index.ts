@@ -1,4 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { basicComponentsStepSchematics } from "@/labs/schematics/basic-components-schematics";
 
 import { step as s01 } from "./01-place-breadboard";
 import { step as s02 } from "./02-regulated-power-supply";
@@ -10,12 +11,12 @@ import { step as s07 } from "./07-function-generator";
 import { step as s08 } from "./08-cro";
 
 export const procedureSteps: SceneProcedureStep[] = [
-  s01,
-  s02,
-  s03,
-  s04,
-  s05,
-  s06,
-  s07,
-  s08,
+  { ...s01, schematic: basicComponentsStepSchematics[0] },
+  { ...s02, schematic: basicComponentsStepSchematics[1] },
+  { ...s03, schematic: basicComponentsStepSchematics[2] },
+  { ...s04, schematic: basicComponentsStepSchematics[3] },
+  { ...s05, schematic: basicComponentsStepSchematics[4] },
+  { ...s06, schematic: basicComponentsStepSchematics[5] },
+  { ...s07, schematic: basicComponentsStepSchematics[6] },
+  { ...s08, schematic: basicComponentsStepSchematics[7] },
 ];
