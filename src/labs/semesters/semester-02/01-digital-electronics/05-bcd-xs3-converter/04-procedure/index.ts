@@ -1,3 +1,4 @@
+import { s2BcdXs3ConverterStepSchematics } from "@/labs/schematics/s2-bcd-xs3-converter-schematics";
 import { step as s01 } from "./01-inspect-and-place-the-breadboard";
 import { step as s02 } from "./02-place-not-and-xor-gates";
 import { step as s03 } from "./03-place-and-and-or-gates";
@@ -10,12 +11,12 @@ import { step as s08 } from "./08-test-bcd-1001-decimal-9";
 import { type SceneProcedureStep } from "@/labs/experiments/types";
 
 export const procedureSteps: SceneProcedureStep[] = [
-  s01,
-  s02,
-  s03,
-  s04,
-  s05,
-  s06,
-  s07,
-  s08,
+  { ...s01, schematic: s2BcdXs3ConverterStepSchematics[0] },
+  { ...s02, schematic: s2BcdXs3ConverterStepSchematics[1] },
+  { ...s03, schematic: s2BcdXs3ConverterStepSchematics[2] },
+  { ...s04, schematic: s2BcdXs3ConverterStepSchematics[3] },
+  { ...s05, schematic: s2BcdXs3ConverterStepSchematics[4] },
+  { ...s06, schematic: s2BcdXs3ConverterStepSchematics[5] },
+  { ...s07, schematic: s2BcdXs3ConverterStepSchematics[6] },
+  { ...s08, schematic: s2BcdXs3ConverterStepSchematics[7] },
 ];
