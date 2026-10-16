@@ -1,5 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
-import { s2HalfAdderSubtractorStepSchematics } from "@/labs/schematics/s2-half-adder-subtractor-schematics";
+import { s2HalfAdderSubtractorStepSchematics } from "@/labs/schematics/semester-02/01-digital-electronics/03-half-adder-subtractor";
 
 import { step as s01 } from "./01-breadboard";
 import { step as s02 } from "./02-adder-ics";
