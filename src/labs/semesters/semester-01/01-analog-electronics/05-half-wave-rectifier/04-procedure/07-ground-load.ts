@@ -1,5 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
-import { step07 as schematic } from "@/labs/schematics/half-wave-rectifier-schematics";
+import { step07 as schematic } from "@/labs/schematics/semester-01/01-analog-electronics/05-half-wave-rectifier";
 
 export const step: SceneProcedureStep = {
   label: "Return the load to ground",
