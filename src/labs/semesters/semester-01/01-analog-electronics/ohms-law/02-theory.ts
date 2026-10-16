@@ -1,5 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
-import { step03 as circuitDiagram } from "@/labs/schematics/ohms-law-schematics";
+import { step03 as circuitDiagram } from "@/labs/schematics/semester-01/01-analog-electronics/ohms-law";
 
 export const theory: TheorySection = {
   id: "theory",
