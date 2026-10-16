@@ -1,5 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
-import { fullSubtractorTheoryDiagram } from "@/labs/schematics/full-subtractor-schematics";
+import { fullSubtractorTheoryDiagram } from "@/labs/schematics/semester-01/02-computer-application/full-subtractor";
 
 export const theory: TheorySection = {
   id: "theory",
