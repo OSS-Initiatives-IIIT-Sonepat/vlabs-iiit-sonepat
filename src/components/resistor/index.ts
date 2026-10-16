@@ -1,68 +1,165 @@
 import * as THREE from "three";
 import { PITCH, BOARD_H, TOP_Y } from "@/labs/coords";
-import { M, WIRE_HEX } from "@/components/shared/materials";
-import { solidBox, solidCyl, textLabel } from "@/components/shared/primitives";
+import { M } from "@/components/shared/materials";
+import { textLabel } from "@/components/shared/primitives";
 
-// ── Resistor colour-band lookup ───────────────────────────────────────────
-// 4-band E24/E96 resistor colour code.
-// Band 1: first significant digit
-// Band 2: second significant digit
-// Band 3: multiplier (power of 10)
-// Band 4: tolerance (gold = ±5%, silver = ±10%)
-//
-// Digit colours: 0=black, 1=brown, 2=red, 3=orange, 4=yellow,
-//                5=green, 6=blue, 7=violet, 8=grey, 9=white
-//
-// We compute the correct 4 bands for a given ohm value:
-//   330Ω → orange(3) orange(3) brown(×10) gold
-//   470Ω → yellow(4) violet(7) brown(×10) gold
-//   1kΩ  → brown(1) black(0) red(×100) gold
-//   10kΩ → brown(1) black(0) orange(×1k) gold
+// ═══════════════════════════════════════════════════════════════════════════════
+// RESISTOR — Axial 1/4W through-hole resistor with vibrant colors & crisp edges
+// ═══════════════════════════════════════════════════════════════════════════════
 
-const BAND_COLOURS: Record<number, () => THREE.Material> = {
-  0: M.dark, // black
-  1: () => new THREE.MeshBasicMaterial({ color: 0x8b4513 }), // brown
-  2: M.red,
-  3: M.orange,
-  4: () => new THREE.MeshBasicMaterial({ color: 0xffd700 }), // yellow (distinct from gold)
-  5: M.green,
-  6: M.blue,
-  7: () => new THREE.MeshBasicMaterial({ color: 0x8b008b }), // violet
-  8: () => new THREE.MeshBasicMaterial({ color: 0x808080 }), // grey
-  9: () => new THREE.MeshBasicMaterial({ color: 0xffffff }), // white
+export const RESISTOR_PIN_P1 = "resistor-p1";
+export const RESISTOR_PIN_P2 = "resistor-p2";
+
+const BAND_HEX: Record<number, number> = {
+  0: 0x1a1a1a, // black
+  1: 0x9c4814, // brown
+  2: 0xe62e22, // red
+  3: 0xf57c18, // orange
+  4: 0xffd700, // yellow
+  5: 0x22b44c, // green
+  6: 0x2270d8, // blue
+  7: 0x8e2de2, // violet
+  8: 0x80848c, // grey
+  9: 0xffffff, // white
 };
+
+function bandMat(digit: number): THREE.Material {
+  const color = BAND_HEX[digit] ?? 0x1a1a1a;
+  return new THREE.MeshBasicMaterial({ color });
+}
+
+function goldBandMat(): THREE.Material {
+  return new THREE.MeshBasicMaterial({ color: 0xe8ac18 });
+}
 
 function resistorBands(
   ohms: number,
-): [
-  () => THREE.Material,
-  () => THREE.Material,
-  () => THREE.Material,
-  () => THREE.Material,
-] {
-  // Find the best 2-digit mantissa and multiplier
-  // e.g. 330 = 33 × 10^1 → d1=3, d2=3, mult=1
-  //      470 = 47 × 10^1 → d1=4, d2=7, mult=1
-  //      1000= 10 × 10^2 → d1=1, d2=0, mult=2
+): [THREE.Material, THREE.Material, THREE.Material, THREE.Material] {
   let mult = 0;
-  let val = ohms;
+  let val = Math.max(1, Math.round(ohms));
   while (val >= 100) {
     val = Math.round(val / 10);
     mult++;
+  }
+  while (val < 10 && mult > 0) {
+    val *= 10;
+    mult--;
   }
 
   const d1 = Math.floor(val / 10);
   const d2 = val % 10;
 
-  const b1 = BAND_COLOURS[d1] ?? M.dark;
-  const b2 = BAND_COLOURS[d2] ?? M.dark;
-  const b3 = BAND_COLOURS[mult] ?? M.dark;
-  const b4 = M.gold; // gold = ±5% tolerance
-
-  return [b1, b2, b3, b4];
+  return [bandMat(d1), bandMat(d2), bandMat(mult), goldBandMat()];
 }
 
-// ── RESISTOR ──────────────────────────────────────────────────────────────
+function buildDogBoneGeometry(
+  totalLen: number,
+  waistR: number,
+): THREE.LatheGeometry {
+  const halfL = totalLen / 2;
+  const capR = waistR * 1.18;
+  const pts: THREE.Vector2[] = [
+    new THREE.Vector2(0.001, -halfL),
+    new THREE.Vector2(capR * 0.72, -halfL),
+    new THREE.Vector2(capR, -halfL * 0.86),
+    new THREE.Vector2(capR, -halfL * 0.56),
+    new THREE.Vector2(waistR, -halfL * 0.38),
+    new THREE.Vector2(waistR, halfL * 0.38),
+    new THREE.Vector2(capR, halfL * 0.56),
+    new THREE.Vector2(capR, halfL * 0.86),
+    new THREE.Vector2(capR * 0.72, halfL),
+    new THREE.Vector2(0.001, halfL),
+  ];
+  return new THREE.LatheGeometry(pts, 24);
+}
+
+function buildResistorBodyMesh(
+  bodyLen: number,
+  waistR: number,
+  ohms: number,
+): THREE.Group {
+  const grp = new THREE.Group();
+
+  // Warm tan-cream ceramic coating with crisp silhouette outline
+  const lacquerMat = new THREE.MeshBasicMaterial({ color: 0xf3e2ba });
+  const bodyGeo = buildDogBoneGeometry(bodyLen, waistR);
+  bodyGeo.rotateZ(Math.PI / 2);
+  grp.add(new THREE.Mesh(bodyGeo, lacquerMat));
+  grp.add(
+    new THREE.LineSegments(new THREE.EdgesGeometry(bodyGeo, 28), M.edge()),
+  );
+
+  // 4 IEC color bands
+  const bands = resistorBands(ohms);
+  const bandX = [-0.28, -0.11, 0.06, 0.28].map((f) => f * bodyLen);
+  const bandRadii = [
+    waistR * 1.13,
+    waistR * 1.03,
+    waistR * 1.03,
+    waistR * 1.13,
+  ];
+  const bandW = bodyLen * 0.088;
+
+  for (let i = 0; i < 4; i++) {
+    const r = bandRadii[i];
+    const bGeo = new THREE.CylinderGeometry(r, r, bandW, 20);
+    bGeo.rotateZ(Math.PI / 2);
+    const bm = new THREE.Mesh(bGeo, bands[i]);
+    bm.position.x = bandX[i];
+    grp.add(bm);
+  }
+
+  // Value text on top of body
+  const ohmText =
+    ohms >= 1_000_000
+      ? `${+(ohms / 1_000_000).toFixed(1)}MΩ`
+      : ohms >= 1000
+        ? `${+(ohms / 1000).toFixed(1)}kΩ`
+        : `${ohms}Ω`;
+
+  const lbl = textLabel(ohmText, bodyLen * 0.78, waistR * 1.35, {
+    textColor: "#222222",
+    fontSize: 42,
+    bold: true,
+  });
+  if (lbl) {
+    lbl.rotation.x = -Math.PI / 2;
+    lbl.position.set(0, waistR * 1.22, 0);
+    grp.add(lbl);
+  }
+
+  return grp;
+}
+
+export function buildAxialLead(
+  bodyEnd: THREE.Vector3,
+  holePos: THREE.Vector3,
+  leadR: number,
+): THREE.Mesh {
+  const bottom = new THREE.Vector3(
+    holePos.x,
+    TOP_Y - BOARD_H * 0.35,
+    holePos.z,
+  );
+  const holeEntry = new THREE.Vector3(
+    holePos.x,
+    TOP_Y + PITCH * 0.05,
+    holePos.z,
+  );
+  const corner = new THREE.Vector3(holePos.x, bodyEnd.y, holePos.z);
+
+  const curve = new THREE.CatmullRomCurve3([
+    bodyEnd,
+    bodyEnd.clone().lerp(corner, 0.72),
+    corner,
+    holeEntry,
+    bottom,
+  ]);
+  const geo = new THREE.TubeGeometry(curve, 18, leadR, 8, false);
+  return new THREE.Mesh(geo, M.gold());
+}
+
+// ── Board-placed Resistor ───────────────────────────────────────────────────
 export function buildResistor(
   lead1: THREE.Vector3,
   lead2: THREE.Vector3,
@@ -76,158 +173,62 @@ export function buildResistor(
   const span = Math.sqrt(spanX * spanX + spanZ * spanZ);
   const angle = Math.atan2(spanZ, spanX);
 
-  const BODY_R = PITCH * 0.4;
-  const BODY_L = span * 0.58; // realistic body proportion for through-hole resistor
-  const bodyH = PITCH * 0.22; // sit much closer to the board surface
+  const waistR = PITCH * 0.28;
+  const bodyLen = span * 0.62;
+  const bodyY = TOP_Y + PITCH * 0.34;
 
-  const bodyGrp = new THREE.Group();
-  const bodyGeo = new THREE.CylinderGeometry(BODY_R, BODY_R, BODY_L, 14);
-  bodyGrp.add(new THREE.Mesh(bodyGeo, M.cream()));
-  bodyGrp.add(
-    new THREE.LineSegments(new THREE.EdgesGeometry(bodyGeo, 20), M.edge()),
-  );
-  bodyGrp.rotation.z = Math.PI / 2;
-
-  // Correct 4-band resistor colour code
-  const [b1, b2, b3, b4] = resistorBands(ohms);
-  const bandOffsets = [-0.3, -0.13, 0.06, 0.26].map((f) => f * BODY_L);
-  const bandMats = [b1(), b2(), b3(), b4()];
-  for (let i = 0; i < 4; i++) {
-    const bGeo = new THREE.CylinderGeometry(
-      BODY_R + 0.009,
-      BODY_R + 0.009,
-      PITCH * 0.13,
-      14,
-    );
-    const bm = new THREE.Mesh(bGeo, bandMats[i]);
-    bm.position.y = bandOffsets[i];
-    bodyGrp.add(bm);
-  }
-
-  // Ohm value label
-  const ohmText = ohms >= 1000 ? `${ohms / 1000}kΩ` : `${ohms}Ω`;
-  const ohmLabel = textLabel(ohmText, BODY_R * 5, BODY_R * 1.6, {
-    textColor: "#444",
-    fontSize: 42,
-  });
-  if (ohmLabel) {
-    ohmLabel.rotation.z = -Math.PI / 2;
-    ohmLabel.position.set(0, 0, BODY_R + 0.022);
-    bodyGrp.add(ohmLabel);
-  }
-
-  const bodyHolder = new THREE.Group();
-  bodyHolder.add(bodyGrp);
+  const bodyHolder = buildResistorBodyMesh(bodyLen, waistR, ohms);
   bodyHolder.rotation.y = -angle;
-  bodyHolder.position.set(midX, TOP_Y + bodyH, midZ);
+  bodyHolder.position.set(midX, bodyY, midZ);
   root.add(bodyHolder);
 
-  // Leads: bent wires from body endpoints down into holes
-  // Body endpoint positions (in world space)
-  const halfBodyLen = BODY_L / 2;
+  const halfLen = bodyLen * 0.48;
   const bodyEndL = new THREE.Vector3(
-    midX - Math.cos(angle) * halfBodyLen,
-    TOP_Y + bodyH,
-    midZ - Math.sin(angle) * halfBodyLen,
+    midX - Math.cos(angle) * halfLen,
+    bodyY,
+    midZ - Math.sin(angle) * halfLen,
   );
   const bodyEndR = new THREE.Vector3(
-    midX + Math.cos(angle) * halfBodyLen,
-    TOP_Y + bodyH,
-    midZ + Math.sin(angle) * halfBodyLen,
+    midX + Math.cos(angle) * halfLen,
+    bodyY,
+    midZ + Math.sin(angle) * halfLen,
   );
 
-  const leadR = PITCH * 0.07;
-  const leadGeoV = new THREE.CylinderGeometry(
-    leadR,
-    leadR,
-    bodyH + BOARD_H * 0.4,
-    6,
-  );
-  const leadGeoH1 = (len: number) =>
-    new THREE.CylinderGeometry(leadR, leadR, len, 6);
+  const leadR = PITCH * 0.055;
+  root.add(buildAxialLead(bodyEndL, lead1, leadR));
+  root.add(buildAxialLead(bodyEndR, lead2, leadR));
 
-  for (const [holePos, bodyEnd] of [
-    [lead1, bodyEndL],
-    [lead2, bodyEndR],
-  ] as const) {
-    // Vertical part: from hole up to body height
-    const vLead = new THREE.Mesh(leadGeoV, M.gold());
-    vLead.position.set(
-      holePos.x,
-      TOP_Y - BOARD_H * 0.2 + (bodyH + BOARD_H * 0.4) / 2,
-      holePos.z,
-    );
-    root.add(vLead);
+  // Named pin anchors
+  const p1Anchor = new THREE.Object3D();
+  p1Anchor.name = RESISTOR_PIN_P1;
+  p1Anchor.position.copy(lead1);
+  root.add(p1Anchor);
 
-    // Horizontal part: from top of vertical lead to body endpoint
-    const dx = bodyEnd.x - holePos.x;
-    const dz = bodyEnd.z - holePos.z;
-    const hLen = Math.sqrt(dx * dx + dz * dz);
-    if (hLen > 0.001) {
-      const hLead = new THREE.Mesh(leadGeoH1(hLen), M.gold());
-      hLead.position.set(
-        (holePos.x + bodyEnd.x) / 2,
-        TOP_Y + bodyH,
-        (holePos.z + bodyEnd.z) / 2,
-      );
-      const hDir = new THREE.Vector3(dx, 0, dz).normalize();
-      hLead.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), hDir);
-      root.add(hLead);
-    }
-  }
+  const p2Anchor = new THREE.Object3D();
+  p2Anchor.name = RESISTOR_PIN_P2;
+  p2Anchor.position.copy(lead2);
+  root.add(p2Anchor);
 
   return root;
 }
 
+// ── Standalone Resistor (for Apparatus / Component Viewer) ──────────────────
 export function buildResistorStandalone(ohms = 330): THREE.Group {
   const root = new THREE.Group();
   const P = PITCH;
-  const R = P * 0.42,
-    L = P * 3.2;
+  const waistR = P * 0.34;
+  const bodyLen = P * 2.8;
 
-  const bodyGeo = new THREE.CylinderGeometry(R, R, L, 14);
-  const bodyMesh = new THREE.Mesh(bodyGeo, M.cream());
-  const bodyEdge = new THREE.LineSegments(
-    new THREE.EdgesGeometry(bodyGeo, 20),
-    M.edge(),
-  );
-  root.add(bodyMesh);
-  root.add(bodyEdge);
-  root.rotation.z = Math.PI / 2;
+  root.add(buildResistorBodyMesh(bodyLen, waistR, ohms));
 
-  // Correct colour bands
-  const [b1, b2, b3, b4] = resistorBands(ohms);
-  const bandOffsets = [-0.3, -0.13, 0.06, 0.26].map((f) => f * L);
-  const bandMats = [b1(), b2(), b3(), b4()];
-  for (let i = 0; i < 4; i++) {
-    const bm = new THREE.Mesh(
-      new THREE.CylinderGeometry(R + 0.009, R + 0.009, P * 0.13, 14),
-      bandMats[i],
-    );
-    bm.position.y = bandOffsets[i];
-    bodyMesh.add(bm); // add to mesh, not edge geometry
-  }
+  const leadLen = P * 1.8;
+  const leadGeo = new THREE.CylinderGeometry(P * 0.06, P * 0.06, leadLen, 10);
+  leadGeo.rotateZ(Math.PI / 2);
 
-  // Leads
   for (const sign of [-1, 1]) {
-    const lead = new THREE.Mesh(
-      new THREE.CylinderGeometry(P * 0.07, P * 0.07, P * 2.2, 6),
-      M.gold(),
-    );
-    lead.position.y = sign * (L / 2 + P * 1.1);
-    bodyMesh.add(lead);
-  }
-
-  // Value label
-  const ohmText = ohms >= 1000 ? `${ohms / 1000}kΩ` : `${ohms}Ω`;
-  const ohmLabel = textLabel(ohmText, R * 5, R * 1.6, {
-    textColor: "#444",
-    fontSize: 42,
-  });
-  if (ohmLabel) {
-    ohmLabel.rotation.z = -Math.PI / 2;
-    ohmLabel.position.set(0, 0, R + 0.022);
-    root.add(ohmLabel);
+    const lead = new THREE.Mesh(leadGeo, M.gold());
+    lead.position.x = sign * (bodyLen / 2 + leadLen / 2 - P * 0.08);
+    root.add(lead);
   }
 
   return root;
