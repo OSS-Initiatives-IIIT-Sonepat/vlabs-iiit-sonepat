@@ -1,5 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
-import { step01 as schematic } from "@/labs/schematics/zener-diode-schematics";
+import { step01 as schematic } from "@/labs/schematics/semester-01/01-analog-electronics/03-zener-diode";
 
 export const step: SceneProcedureStep = {
   label: "Place the breadboard and connect the DC power supply.",
