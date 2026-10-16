@@ -1,4 +1,4 @@
-import { jkTFlipFlopStepSchematics } from "@/labs/schematics/s2-jk-t-flip-flop-schematics";
+import { jkTFlipFlopStepSchematics } from "@/labs/schematics/semester-02/01-digital-electronics/16-jk-t-flip-flop";
 import { step as s01 } from "./01-place-the-breadboard";
 import { step as s02 } from "./02-place-the-74hc76-jk-flip-flop-ic";
 import { step as s03 } from "./03-tie-set-bar-and-clr-bar-high";

@@ -12,7 +12,7 @@ import { step as s09 } from "./09-input-vcb-5";
 import { step as s10 } from "./10-output-characteristics";
 import { step as s11 } from "./11-calculate-parameters";
 
-import { cbTransistorCharacteristicsStepSchematics } from "@/labs/schematics/cb-transistor-characteristics-schematics";
+import { cbTransistorCharacteristicsStepSchematics } from "@/labs/schematics/semester-01/01-analog-electronics/08-cb-transistor-characteristics";
 
 export const procedureSteps: SceneProcedureStep[] = [
   { ...s01, schematic: cbTransistorCharacteristicsStepSchematics[0] },

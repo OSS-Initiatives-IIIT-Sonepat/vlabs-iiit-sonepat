@@ -46,7 +46,9 @@ function makeMainBody(): THREE.Mesh {
 
   const geo = extrude(shape, BODY_D);
   geo.translate(0, 0, -(BODY_D * MM) / 2);
-  return new THREE.Mesh(geo, M.dark());
+  const mesh = new THREE.Mesh(geo, M.hex(0x222834));
+  mesh.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo, 24), M.edge()));
+  return mesh;
 }
 
 function makeTab(): THREE.Mesh {
@@ -70,7 +72,9 @@ function makeTab(): THREE.Mesh {
 
   const geo = extrude(shape, TAB_D);
   geo.translate(0, 0, (BODY_D / 2) * MM - TAB_D * MM);
-  return new THREE.Mesh(geo, M.dark());
+  const mesh = new THREE.Mesh(geo, M.silver());
+  mesh.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo, 24), M.edge()));
+  return mesh;
 }
 
 // Draw a cylindrical lead from the bottom of the lifted body down to the hole

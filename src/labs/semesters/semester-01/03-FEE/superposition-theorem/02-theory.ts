@@ -1,5 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
-import { step01 as circuitDiagram } from "@/labs/schematics/superposition-theorem-schematics";
+import { step01 as circuitDiagram } from "@/labs/schematics/semester-01/03-FEE/superposition-theorem";
 export const theory: TheorySection = {
   circuitDiagram,
   id: "theory",

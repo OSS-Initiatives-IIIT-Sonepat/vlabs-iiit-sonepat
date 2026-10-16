@@ -4,6 +4,7 @@ import { M } from "@/components/shared/materials";
 import { solidBox, textLabel } from "@/components/shared/primitives";
 
 export const FG_OUT_ANCHOR = "socket-fg-out";
+export const FG_GND_ANCHOR = "socket-fg-gnd";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // FUNCTION / SIGNAL GENERATOR — benchtop, 0.1 Hz – 1 MHz class
@@ -258,66 +259,33 @@ export function buildFunctionGenerator(
   scale = 1,
 ): THREE.Group {
   const root = new THREE.Group();
+  root.userData.isInstrumentBody = true;
 
   // ── Materials ────────────────────────────────────────────────────────────
   const mat = {
-    panel: new THREE.MeshStandardMaterial({
-      color: "#3a4f63",
-      roughness: 0.55,
-      metalness: 0.15,
+    panel: new THREE.MeshBasicMaterial({ color: 0x3b4d63 }),
+    frame: new THREE.MeshBasicMaterial({ color: 0x161a20 }),
+    glass: new THREE.MeshBasicMaterial({
+      color: powerOn ? 0x180808 : 0x080808,
     }),
-    frame: new THREE.MeshStandardMaterial({ color: "#121418", roughness: 0.6 }),
-    glass: new THREE.MeshStandardMaterial({
-      color: powerOn ? "#140606" : "#060606",
-      roughness: 0.15,
+    segOn: new THREE.MeshBasicMaterial({ color: 0xff6218 }),
+    segOff: new THREE.MeshBasicMaterial({
+      color: powerOn ? 0x36140c : 0x1c0e0a,
     }),
-    segOn: new THREE.MeshStandardMaterial({
-      color: "#ff5a1f",
-      emissive: "#ff3a00",
-      emissiveIntensity: 1.4,
+    knob: new THREE.MeshBasicMaterial({ color: 0x1e222a }),
+    knobRing: new THREE.MeshBasicMaterial({ color: 0x383e4a }),
+    pointer: new THREE.MeshBasicMaterial({ color: 0xf8fafc }),
+    print: new THREE.MeshBasicMaterial({ color: 0xf0f4f8 }),
+    rubber: new THREE.MeshBasicMaterial({ color: 0x14161a }),
+    slot: new THREE.MeshBasicMaterial({ color: 0x0c0e12 }),
+    btn: new THREE.MeshBasicMaterial({ color: 0xdce2ea }),
+    btnDark: new THREE.MeshBasicMaterial({ color: 0x222630 }),
+    ledOn: new THREE.MeshBasicMaterial({ color: 0x38ff68 }),
+    ledOff: new THREE.MeshBasicMaterial({ color: 0x163420 }),
+    powerLed: new THREE.MeshBasicMaterial({
+      color: powerOn ? 0xff3b30 : 0x421412,
     }),
-    segOff: new THREE.MeshStandardMaterial({
-      color: powerOn ? "#2e100a" : "#1a0c09",
-      roughness: 0.6,
-    }),
-    knob: new THREE.MeshStandardMaterial({ color: "#0f1013", roughness: 0.5 }),
-    knobRing: new THREE.MeshStandardMaterial({
-      color: "#2a2d33",
-      roughness: 0.45,
-    }),
-    pointer: new THREE.MeshStandardMaterial({
-      color: "#f2f2f2",
-      roughness: 0.6,
-    }),
-    print: new THREE.MeshStandardMaterial({ color: "#e8e8e8", roughness: 0.8 }),
-    rubber: new THREE.MeshStandardMaterial({
-      color: "#0c0c0d",
-      roughness: 0.95,
-    }),
-    slot: new THREE.MeshStandardMaterial({ color: "#08090a", roughness: 0.9 }),
-    btn: new THREE.MeshStandardMaterial({ color: "#c9ccd1", roughness: 0.4 }),
-    btnDark: new THREE.MeshStandardMaterial({
-      color: "#1b1d22",
-      roughness: 0.5,
-    }),
-    ledOn: new THREE.MeshStandardMaterial({
-      color: "#39ff6a",
-      emissive: "#18e048",
-      emissiveIntensity: 1.5,
-    }),
-    ledOff: new THREE.MeshStandardMaterial({
-      color: "#16301d",
-      roughness: 0.6,
-    }),
-    powerLed: new THREE.MeshStandardMaterial({
-      color: powerOn ? "#ff3b30" : "#3a1210",
-      emissive: powerOn ? "#ff1a10" : "#000000",
-      emissiveIntensity: powerOn ? 1.5 : 0,
-    }),
-    insulator: new THREE.MeshStandardMaterial({
-      color: "#1b1b1d",
-      roughness: 0.7,
-    }),
+    insulator: new THREE.MeshBasicMaterial({ color: 0x1e2026 }),
   };
 
   const toY = (v: number) => V_C + v; // panel v (mm) → world Y (mm)
@@ -576,6 +544,11 @@ export function buildFunctionGenerator(
       anchor.name = FG_OUT_ANCHOR;
       anchor.position.set(b.u * MM, toY(-37) * MM, PANEL_Z + 14 * MM);
       root.add(anchor);
+    } else if (b.text === "TTL OUT") {
+      const gndAnchor = new THREE.Object3D();
+      gndAnchor.name = FG_GND_ANCHOR;
+      gndAnchor.position.set(b.u * MM, toY(-37) * MM, PANEL_Z + 14 * MM);
+      root.add(gndAnchor);
     }
 
     addLabel(b.text, b.u, -37 - 11.5);

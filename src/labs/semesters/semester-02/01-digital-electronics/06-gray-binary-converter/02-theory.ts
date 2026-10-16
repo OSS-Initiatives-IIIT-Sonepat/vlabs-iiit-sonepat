@@ -1,5 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
-import { s2GrayBinaryConverterTheoryDiagram } from "@/labs/schematics/s2-gray-binary-converter-schematics";
+import { s2GrayBinaryConverterTheoryDiagram } from "@/labs/schematics/semester-02/01-digital-electronics/06-gray-binary-converter";
 
 export const theory: TheorySection = {
   id: "theory",

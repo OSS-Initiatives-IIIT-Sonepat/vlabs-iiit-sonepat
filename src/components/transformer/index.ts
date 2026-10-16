@@ -77,14 +77,8 @@ export function buildTransformer(
   const root = new THREE.Group();
 
   // ── Materials ────────────────────────────────────────────────────────────
-  const epoxyMat = new THREE.MeshStandardMaterial({
-    color: "#101114",
-    roughness: 0.35,
-  });
-  const stickerMat = new THREE.MeshStandardMaterial({
-    color: "#dcdcd6",
-    roughness: 0.8,
-  });
+  const epoxyMat = new THREE.MeshBasicMaterial({ color: 0x222834 });
+  const stickerMat = new THREE.MeshBasicMaterial({ color: 0xf4f1ea });
 
   // ── Base plate + case ────────────────────────────────────────────────────
   const base = solidBox(

@@ -1,4 +1,4 @@
-import { s2Decoder2to4StepSchematics } from "@/labs/schematics/s2-decoder-2to4-schematics";
+import { s2Decoder2to4StepSchematics } from "@/labs/schematics/semester-02/01-digital-electronics/12-decoder-2to4";
 import { step as s01 } from "./01-set-up-breadboard-and-power-supply";
 import { step as s02 } from "./02-wire-not-gates-for-input-complements";
 import { step as s03 } from "./03-wire-all-four-and-gates-for-minterm-outputs";

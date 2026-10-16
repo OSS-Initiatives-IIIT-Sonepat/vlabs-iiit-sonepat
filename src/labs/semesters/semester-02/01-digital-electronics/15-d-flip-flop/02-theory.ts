@@ -1,5 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
-import { dFlipFlopTheoryDiagram } from "@/labs/schematics/s2-d-flip-flop-schematics";
+import { dFlipFlopTheoryDiagram } from "@/labs/schematics/semester-02/01-digital-electronics/15-d-flip-flop";
 
 export const theory: TheorySection = {
   id: "theory",

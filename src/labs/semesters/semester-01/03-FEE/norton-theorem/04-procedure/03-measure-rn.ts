@@ -1,5 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
-import { step03 as schematic } from "@/labs/schematics/norton-theorem-schematics";
+import { step03 as schematic } from "@/labs/schematics/semester-01/03-FEE/norton-theorem";
 export const step: SceneProcedureStep = {
   label: "Measure R_N (Norton resistance).",
   schematic,

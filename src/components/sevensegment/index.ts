@@ -150,10 +150,7 @@ export function buildSevenSegment(
   root.add(body);
 
   // ── Face panel ───────────────────────────────────────────────────────────
-  const panelMat = new THREE.MeshStandardMaterial({
-    color: "#262626",
-    roughness: 0.6,
-  });
+  const panelMat = new THREE.MeshBasicMaterial({ color: 0x222630 });
   const panel = new THREE.Mesh(
     new THREE.BoxGeometry(PANEL_W * MM, PANEL_T * MM, PANEL_L * MM),
     panelMat,
@@ -164,16 +161,8 @@ export function buildSevenSegment(
   const baseY = (BODY_H + PANEL_T) * MM;
 
   // ── Segments ─────────────────────────────────────────────────────────────
-  const offMat = new THREE.MeshStandardMaterial({
-    color: "#4a1414",
-    roughness: 0.5,
-  });
-  const onMat = new THREE.MeshStandardMaterial({
-    color: "#ff4a3a",
-    emissive: "#ff2a1a",
-    emissiveIntensity: 1.3,
-    roughness: 0.4,
-  });
+  const offMat = new THREE.MeshBasicMaterial({ color: 0x451a1a });
+  const onMat = new THREE.MeshBasicMaterial({ color: 0xff3b2f });
 
   const hGeo = makeSegmentGeometry(true);
   const vGeo = makeSegmentGeometry(false);

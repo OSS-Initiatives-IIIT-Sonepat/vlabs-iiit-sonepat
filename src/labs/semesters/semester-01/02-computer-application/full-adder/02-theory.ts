@@ -1,5 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
-import { fullAdderTheoryDiagram } from "@/labs/schematics/full-adder-schematics";
+import { fullAdderTheoryDiagram } from "@/labs/schematics/semester-01/02-computer-application/full-adder";
 
 export const theory: TheorySection = {
   id: "theory",

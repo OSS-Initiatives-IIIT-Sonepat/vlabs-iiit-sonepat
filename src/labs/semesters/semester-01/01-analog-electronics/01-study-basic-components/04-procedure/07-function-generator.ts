@@ -20,5 +20,7 @@ export const step: SceneProcedureStep = {
     "w_c_gnd",
   ],
   highlight: "fg1",
-  readings: { fg1: "1 kHz, 5 Vpp" },
+  supplyVoltage: 5.0,
+  ledBrightness: { led1: 0.6 },
+  readings: { dmm: "2.9 V", fg1: "1 kHz, 5 Vpp" },
 };

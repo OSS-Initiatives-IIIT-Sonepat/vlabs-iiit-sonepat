@@ -1,5 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
-import { s2Mux4to1IcTheoryDiagram } from "@/labs/schematics/s2-mux-4to1-ic-schematics";
+import { s2Mux4to1IcTheoryDiagram } from "@/labs/schematics/semester-02/01-digital-electronics/08-mux-4to1-ic";
 
 export const theory: TheorySection = {
   id: "theory",

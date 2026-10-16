@@ -1,5 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
-import { logicGatesTheoryDiagram } from "@/labs/schematics/logic-gates-schematics";
+import { logicGatesTheoryDiagram } from "@/labs/schematics/semester-01/02-computer-application/logic-gates";
 
 export const theory: TheorySection = {
   id: "theory",

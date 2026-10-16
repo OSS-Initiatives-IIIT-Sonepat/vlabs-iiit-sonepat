@@ -1,5 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
-import { s2DemuxAddressDecoderTheoryDiagram } from "@/labs/schematics/s2-demux-address-decoder-schematics";
+import { s2DemuxAddressDecoderTheoryDiagram } from "@/labs/schematics/semester-02/01-digital-electronics/10-demux-address-decoder";
 
 export const theory: TheorySection = {
   id: "theory",

@@ -1,5 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
-import { step01 as schematic } from "@/labs/schematics/full-wave-rectifier-schematics";
+import { step01 as schematic } from "@/labs/schematics/semester-01/01-analog-electronics/06-full-wave-rectifier";
 
 export const step: SceneProcedureStep = {
   label: "Place the breadboard and connect the AC source",

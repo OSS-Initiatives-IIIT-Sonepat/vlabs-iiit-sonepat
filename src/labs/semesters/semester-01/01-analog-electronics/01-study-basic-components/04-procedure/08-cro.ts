@@ -21,5 +21,7 @@ export const step: SceneProcedureStep = {
     "cro",
   ],
   highlight: "cro",
-  readings: { fg1: "1 kHz, 5 Vpp", cro: "4.2 Vpp, 1 kHz" },
+  supplyVoltage: 5.0,
+  ledBrightness: { led1: 0.6 },
+  readings: { dmm: "2.9 V", fg1: "1 kHz, 5 Vpp", cro: "4.2 Vpp, 1 kHz" },
 };

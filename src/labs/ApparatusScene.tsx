@@ -9,6 +9,7 @@ import {
   buildResistorStandalone,
   buildLedStandalone,
   buildCapacitorStandalone,
+  buildInductorStandalone,
   buildBatteryStandalone,
   buildDcPowerSupplyStandalone,
   buildIcMeterStandalone,
@@ -45,6 +46,9 @@ function buildItemModel(item: ApparatusItem): THREE.Group {
             ? "orange"
             : "red",
     );
+  }
+  if (n.includes("inductor") || n.includes("choke")) {
+    return buildInductorStandalone(0.01);
   }
   if (n.includes("resistor") || n.includes("ω") || n.includes("ohm")) {
     return buildResistorStandalone(parseOhms(n) ?? 470);

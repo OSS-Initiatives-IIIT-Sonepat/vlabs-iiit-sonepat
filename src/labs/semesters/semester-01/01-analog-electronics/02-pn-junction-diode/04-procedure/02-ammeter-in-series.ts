@@ -1,5 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
-import { step02 as schematic } from "@/labs/schematics/pn-junction-diode-schematics";
+import { step02 as schematic } from "@/labs/schematics/semester-01/01-analog-electronics/02-pn-junction-diode";
 
 export const step: SceneProcedureStep = {
   label: "Connect the milliammeter (DMM) in series.",

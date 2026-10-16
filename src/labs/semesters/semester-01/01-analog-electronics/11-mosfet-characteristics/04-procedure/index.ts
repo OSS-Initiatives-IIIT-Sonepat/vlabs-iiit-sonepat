@@ -10,7 +10,7 @@ import { step as s08 } from "./08-step";
 import { step as s09 } from "./09-step";
 import { step as s10 } from "./10-step";
 
-import { mosfetCharacteristicsStepSchematics } from "@/labs/schematics/mosfet-characteristics-schematics";
+import { mosfetCharacteristicsStepSchematics } from "@/labs/schematics/semester-01/01-analog-electronics/11-mosfet-characteristics";
 
 export const procedureSteps: SceneProcedureStep[] = [
   { ...s01, schematic: mosfetCharacteristicsStepSchematics[0] },

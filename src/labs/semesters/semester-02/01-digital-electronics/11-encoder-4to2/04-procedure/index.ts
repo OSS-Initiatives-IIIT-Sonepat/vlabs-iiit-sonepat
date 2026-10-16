@@ -1,4 +1,4 @@
-import { s2Encoder4to2StepSchematics } from "@/labs/schematics/s2-encoder-4to2-schematics";
+import { s2Encoder4to2StepSchematics } from "@/labs/schematics/semester-02/01-digital-electronics/11-encoder-4to2";
 import { step as s01 } from "./01-set-up-breadboard-and-power-supply";
 import { step as s02 } from "./02-wire-or-gates-for-outputs-a-and-b";
 import { step as s03 } from "./03-connect-all-input-lines";

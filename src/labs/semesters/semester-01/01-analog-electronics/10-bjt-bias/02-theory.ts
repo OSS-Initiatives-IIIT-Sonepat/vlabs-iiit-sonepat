@@ -1,5 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
-import { bjtBiasTheoryDiagram } from "@/labs/schematics/bjt-bias-schematics";
+import { bjtBiasTheoryDiagram } from "@/labs/schematics/semester-01/01-analog-electronics/10-bjt-bias";
 
 export const theory: TheorySection = {
   id: "theory",

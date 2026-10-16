@@ -1,5 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
-import { step02 as schematic } from "@/labs/schematics/superposition-theorem-schematics";
+import { step02 as schematic } from "@/labs/schematics/semester-01/03-FEE/superposition-theorem";
 export const step: SceneProcedureStep = {
   schematic,
   label: "Kill V2 — measure due to V1 alone.",

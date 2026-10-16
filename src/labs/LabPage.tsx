@@ -24,7 +24,17 @@ import {
 import { LabSidebar } from "@/labs/LabSidebar";
 import { FloatingLabCard } from "@/labs/FloatingLabCard";
 import { FloatingCircuitCard } from "@/labs/FloatingCircuitCard";
-import { CircuitSchematic } from "@/labs/CircuitSchematic";
+import {
+  CircuitSchematic,
+  type SchematicElement,
+} from "@/labs/CircuitSchematic";
+import { NavPill } from "@/labs/NavPill";
+import {
+  LabInteractionProvider,
+  componentDisplayName,
+  resolveSchematicRef,
+  useLabInteractionState,
+} from "@/labs/lab-interaction";
 import {
   resolveFinalCircuitStepIndex,
   resolveProcedureCircuitStepIndex,
@@ -160,33 +170,6 @@ function ExpandIcon() {
     </svg>
   );
 }
-function ArrowLeftIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-      <path
-        d="M8.5 3.5L5 7L8.5 10.5"
-        stroke="currentColor"
-        strokeWidth="1.3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-function ArrowRightIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-      <path
-        d="M5.5 3.5L9 7L5.5 10.5"
-        stroke="currentColor"
-        strokeWidth="1.3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
 function MiconIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -482,6 +465,8 @@ const SceneRenderer = React.memo(function SceneRenderer({
 type Props = { content: LabContent };
 
 function LabPageStandard({ content }: Props) {
+  const interaction = useLabInteractionState();
+  const inComponentView = interaction.selectedId !== null;
   const [isMicOn, setIsMicOn] = useState<boolean>(true);
   const [collapsed, setCollapsed] = useState(false);
   const [activeSectionId, setActiveSectionId] = useState(
@@ -535,6 +520,8 @@ function LabPageStandard({ content }: Props) {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // The 3D component view uses the arrow keys to cycle components.
+      if (inComponentView) return;
       if (e.key === "ArrowRight") {
         handleNav(currentIndex + 1);
       } else if (e.key === "ArrowLeft") {
@@ -543,7 +530,7 @@ function LabPageStandard({ content }: Props) {
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [currentIndex, handleNav]);
+  }, [currentIndex, handleNav, inComponentView]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const isAudioUnlockedRef = useRef<boolean>(false);
   const speak = useCallback(
@@ -661,160 +648,170 @@ function LabPageStandard({ content }: Props) {
     [activeSectionId],
   );
 
+  const sceneVisibleIds = useMemo(
+    () => new Set(circuit.steps[sceneStepIndex]?.show ?? []),
+    [circuit, sceneStepIndex],
+  );
+  const linkSchematicElement = useCallback(
+    (el: SchematicElement) => {
+      const id = resolveSchematicRef(el, circuit.components, sceneVisibleIds);
+      if (!id) return null;
+      const inst = circuit.components.find((c) => c.id === id);
+      return inst ? { id, name: componentDisplayName(inst) } : null;
+    },
+    [circuit, sceneVisibleIds],
+  );
+
+  // Leaving the procedure (or switching labs) closes the component view.
+  useEffect(() => {
+    interaction.setSelectedId(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeSectionId, circuit.id]);
+
   return (
-    <div className="flex h-dvh overflow-hidden bg-[var(--color-neutral)] relative">
-      {/* ── Scene area (always full screen, stable viewport so Three.js never resizes or resets on sidebar toggle) ── */}
-      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-auto">
-        {activeSection && (
-          <SceneRenderer
-            section={activeSection}
-            circuit={circuit}
-            sceneStepIndex={sceneStepIndex}
-            activeMarkers={activeMarkers}
-          />
-        )}
-      </div>
+    <LabInteractionProvider value={interaction}>
+      <div className="flex h-dvh overflow-hidden bg-[var(--color-neutral)] relative">
+        {/* ── Scene area (always full screen, stable viewport so Three.js never resizes or resets on sidebar toggle) ── */}
+        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-auto">
+          {activeSection && (
+            <SceneRenderer
+              section={activeSection}
+              circuit={circuit}
+              sceneStepIndex={sceneStepIndex}
+              activeMarkers={activeMarkers}
+            />
+          )}
+        </div>
 
-      {/* ── Sidebar ── */}
-      <LabSidebar
-        title={content.title}
-        sections={content.sections}
-        activeSectionId={activeSectionId}
-        onSelectSection={handleSectionClick}
-        expandedProcedureId={expandedProcedureId}
-        onToggleExpandProcedure={(id) =>
-          setExpandedProcedureId((prev) => (prev === id ? null : id))
-        }
-        procedureStepIndex={procedureStepIndex}
-        onSelectProcedureStep={(stepIdx, section) => {
-          setActiveSectionId(section.id);
-          setProcedureStepIndex(stepIdx);
-        }}
-        collapsed={collapsed}
-        onToggleCollapse={setCollapsed}
-      />
+        {/* ── Sidebar ── */}
+        <LabSidebar
+          title={content.title}
+          sections={content.sections}
+          activeSectionId={activeSectionId}
+          onSelectSection={handleSectionClick}
+          expandedProcedureId={expandedProcedureId}
+          onToggleExpandProcedure={(id) =>
+            setExpandedProcedureId((prev) => (prev === id ? null : id))
+          }
+          procedureStepIndex={procedureStepIndex}
+          onSelectProcedureStep={(stepIdx, section) => {
+            setActiveSectionId(section.id);
+            setProcedureStepIndex(stepIdx);
+          }}
+          collapsed={collapsed}
+          onToggleCollapse={setCollapsed}
+        />
 
-      {/* ── Overlay controls & floating cards ── */}
-      <div className="flex-1 min-w-0 overflow-hidden relative pointer-events-none z-10">
-        {/* Floating text card over scene */}
-        {activeSection && (
-          <div className="pointer-events-auto">
-            <FloatingLabCard>
-              <FloatingCardContent
-                key={contentStreamKey(activeSection, procedureStepIndex)}
-                section={activeSection}
-                procedureStepIndex={procedureStepIndex}
-              />
-            </FloatingLabCard>
-          </div>
-        )}
-
-        {/* Floating 2D circuit schematic — shows per-step diagram */}
-        {activeSection?.type === "procedure" &&
-          activeSection.steps[procedureStepIndex]?.schematic && (
+        {/* ── Overlay controls & floating cards ── */}
+        <div className="flex-1 min-w-0 overflow-hidden relative pointer-events-none z-10">
+          {/* Floating text card over scene */}
+          {activeSection && (
             <div className="pointer-events-auto">
-              <FloatingCircuitCard
-                stepIndex={procedureStepIndex}
-                totalSteps={activeSection.steps.length}
-                onStepChange={setProcedureStepIndex}
-                expandedContent={
-                  <CircuitSchematic
-                    schematic={activeSection.steps[procedureStepIndex].schematic!}
-                  />
-                }
-              >
-                <CircuitSchematic
-                  schematic={activeSection.steps[procedureStepIndex].schematic!}
+              <FloatingLabCard>
+                <FloatingCardContent
+                  key={contentStreamKey(activeSection, procedureStepIndex)}
+                  section={activeSection}
+                  procedureStepIndex={procedureStepIndex}
                 />
-              </FloatingCircuitCard>
+              </FloatingLabCard>
             </div>
           )}
 
-        {/* Top-Right Floating Controls */}
-        <div className="absolute top-6 right-6 flex items-center gap-4 z-[100] pointer-events-auto">
-          {/* Language & Mic Pill */}
-          <div className="relative flex items-center p-1.5 gap-2 bg-white/90 backdrop-blur-md border border-[var(--color-black-10)] rounded-full shadow-[0_4px_24px_rgba(0,0,0,0.12),0_1px_3px_rgba(0,0,0,0.04)] transition-transform duration-300">
-            {/* Mic Button */}
-            <button
-              onClick={() => handleToggleMic()}
-              className="appearance-none flex items-center justify-center w-8 h-8 rounded-full border-none outline-none bg-[var(--color-black-5)] cursor-pointer text-[var(--ink-muted)] hover:bg-[var(--color-black-10)] hover:text-[var(--ink)] transition-colors"
-              aria-label="Microphone"
-            >
-              {isMicOn ? <MiconIcon /> : <MicOffIcon />}
-            </button>
-
-            {/* Language Selector */}
-            <div className="relative">
-              <button
-                onClick={() => setIsLangOpen(!isLangOpen)}
-                className="appearance-none flex items-center gap-1.5 px-3 h-8 rounded-full border-none outline-none bg-transparent cursor-pointer text-[var(--ink)] hover:bg-[var(--color-black-5)] transition-colors font-medium text-[13px]"
-              >
-                {language === "en" ? "English" : "Hindi"}
-                <span
-                  className={`transition-transform duration-200 ${isLangOpen ? "rotate-180" : ""}`}
+          {/* Floating 2D circuit schematic — shows per-step diagram */}
+          {activeSection?.type === "procedure" &&
+            activeSection.steps[procedureStepIndex]?.schematic && (
+              <div className="pointer-events-auto">
+                <FloatingCircuitCard
+                  stepIndex={procedureStepIndex}
+                  totalSteps={activeSection.steps.length}
+                  onStepChange={setProcedureStepIndex}
+                  expandedContent={
+                    <CircuitSchematic
+                      schematic={
+                        activeSection.steps[procedureStepIndex].schematic!
+                      }
+                      linkElement={linkSchematicElement}
+                    />
+                  }
                 >
-                  <ChevronDownIcon />
-                </span>
+                  <CircuitSchematic
+                    schematic={
+                      activeSection.steps[procedureStepIndex].schematic!
+                    }
+                    linkElement={linkSchematicElement}
+                  />
+                </FloatingCircuitCard>
+              </div>
+            )}
+
+          {/* Top-Right Floating Controls */}
+          <div className="absolute top-6 right-6 flex items-center gap-4 z-[100] pointer-events-auto">
+            {/* Language & Mic Pill */}
+            <div className="relative flex items-center p-1.5 gap-2 bg-white/90 backdrop-blur-md border border-[var(--color-black-10)] rounded-full shadow-[0_4px_24px_rgba(0,0,0,0.12),0_1px_3px_rgba(0,0,0,0.04)] transition-transform duration-300">
+              {/* Mic Button */}
+              <button
+                onClick={() => handleToggleMic()}
+                className="appearance-none flex items-center justify-center w-8 h-8 rounded-full border-none outline-none bg-[var(--color-black-5)] cursor-pointer text-[var(--ink-muted)] hover:bg-[var(--color-black-10)] hover:text-[var(--ink)] transition-colors"
+                aria-label="Microphone"
+              >
+                {isMicOn ? <MiconIcon /> : <MicOffIcon />}
               </button>
 
-              {/* Dropdown Menu */}
-              {isLangOpen && (
-                <div className="absolute top-[calc(100%+8px)] right-0 flex flex-col min-w-[100px] p-1 bg-white border border-[var(--color-black-10)] rounded-[12px] shadow-[0_4px_24px_rgba(0,0,0,0.12)] z-[101]">
-                  <button
-                    onClick={() => {
-                      setLanguage("en");
-                      setIsLangOpen(false);
-                    }}
-                    className={`appearance-none text-left px-3 py-2 rounded-[8px] border-none outline-none cursor-pointer text-[13px] hover:bg-[var(--color-black-5)] transition-colors ${language === "en" ? "text-[var(--color-blue)] bg-[var(--color-black-5)] font-medium" : "text-[var(--ink)] bg-transparent"}`}
+              {/* Language Selector */}
+              <div className="relative">
+                <button
+                  onClick={() => setIsLangOpen(!isLangOpen)}
+                  className="appearance-none flex items-center gap-1.5 px-3 h-8 rounded-full border-none outline-none bg-transparent cursor-pointer text-[var(--ink)] hover:bg-[var(--color-black-5)] transition-colors font-medium text-[13px]"
+                >
+                  {language === "en" ? "English" : "Hindi"}
+                  <span
+                    className={`transition-transform duration-200 ${isLangOpen ? "rotate-180" : ""}`}
                   >
-                    English
-                  </button>
-                  <button
-                    onClick={() => {
-                      setLanguage("hi");
-                      setIsLangOpen(false);
-                    }}
-                    className={`appearance-none text-left px-3 py-2 rounded-[8px] border-none outline-none cursor-pointer text-[13px] hover:bg-[var(--color-black-5)] transition-colors ${language === "hi" ? "text-[var(--color-blue)] bg-[var(--color-black-5)] font-medium" : "text-[var(--ink)] bg-transparent"}`}
-                  >
-                    Hindi
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
+                    <ChevronDownIcon />
+                  </span>
+                </button>
 
-          {/* Floating Navigation Pill */}
-          <div className="flex items-center p-1.5 gap-1.5 bg-white/90 backdrop-blur-md border border-[var(--color-black-10)] rounded-full shadow-[0_4px_24px_rgba(0,0,0,0.12),0_1px_3px_rgba(0,0,0,0.04)] transition-transform duration-300">
-            <button
-              onClick={() => handleNav(currentIndex - 1)}
-              disabled={currentIndex <= 0}
-              className="appearance-none flex items-center justify-center w-10 h-10 rounded-full border-none outline-none bg-transparent cursor-pointer text-[var(--ink-muted)] hover:bg-[var(--color-black-5)] hover:text-[var(--ink)] disabled:opacity-40 disabled:pointer-events-none transition-all"
-              aria-label="Previous step"
-            >
-              <ArrowLeftIcon />
-            </button>
-
-            <div className="flex flex-col items-center justify-center px-4 min-w-[140px] select-none">
-              <span className="text-[10px] font-semibold tracking-[0.04em] text-[var(--ink-muted)] uppercase mb-0.5">
-                {navItems[currentIndex]?.section.title || "Step"}
-              </span>
-              <span className="text-[13px] font-medium text-[var(--ink)] truncate max-w-[160px]">
-                {navItems[currentIndex]?.label || ""}
-              </span>
+                {/* Dropdown Menu */}
+                {isLangOpen && (
+                  <div className="absolute top-[calc(100%+8px)] right-0 flex flex-col min-w-[100px] p-1 bg-white border border-[var(--color-black-10)] rounded-[12px] shadow-[0_4px_24px_rgba(0,0,0,0.12)] z-[101]">
+                    <button
+                      onClick={() => {
+                        setLanguage("en");
+                        setIsLangOpen(false);
+                      }}
+                      className={`appearance-none text-left px-3 py-2 rounded-[8px] border-none outline-none cursor-pointer text-[13px] hover:bg-[var(--color-black-5)] transition-colors ${language === "en" ? "text-[var(--color-blue)] bg-[var(--color-black-5)] font-medium" : "text-[var(--ink)] bg-transparent"}`}
+                    >
+                      English
+                    </button>
+                    <button
+                      onClick={() => {
+                        setLanguage("hi");
+                        setIsLangOpen(false);
+                      }}
+                      className={`appearance-none text-left px-3 py-2 rounded-[8px] border-none outline-none cursor-pointer text-[13px] hover:bg-[var(--color-black-5)] transition-colors ${language === "hi" ? "text-[var(--color-blue)] bg-[var(--color-black-5)] font-medium" : "text-[var(--ink)] bg-transparent"}`}
+                    >
+                      Hindi
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
 
-            <button
-              onClick={() => handleNav(currentIndex + 1)}
-              disabled={currentIndex >= navItems.length - 1}
-              className="appearance-none flex items-center justify-center w-10 h-10 rounded-full border-none outline-none bg-[var(--color-black-5)] cursor-pointer text-[var(--ink)] hover:bg-[var(--color-black-10)] disabled:opacity-40 disabled:pointer-events-none transition-all"
-              aria-label="Next step"
-            >
-              <ArrowRightIcon />
-            </button>
+            {/* Floating Navigation Pill */}
+            <NavPill
+              eyebrow={navItems[currentIndex]?.section.title || "Step"}
+              label={navItems[currentIndex]?.label || ""}
+              onPrev={() => handleNav(currentIndex - 1)}
+              onNext={() => handleNav(currentIndex + 1)}
+              prevDisabled={currentIndex <= 0}
+              nextDisabled={currentIndex >= navItems.length - 1}
+              prevLabel="Previous step"
+              nextLabel="Next step"
+            />
           </div>
         </div>
       </div>
-    </div>
+    </LabInteractionProvider>
   );
 }
 

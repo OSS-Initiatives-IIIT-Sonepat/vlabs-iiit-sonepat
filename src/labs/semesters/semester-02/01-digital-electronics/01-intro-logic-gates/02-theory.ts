@@ -1,5 +1,5 @@
 import { type LabSection } from "@/labs/lab-content.types";
-import { s2IntroLogicGatesTheoryDiagram } from "@/labs/schematics/s2-intro-logic-gates-schematics";
+import { s2IntroLogicGatesTheoryDiagram } from "@/labs/schematics/semester-02/01-digital-electronics/01-intro-logic-gates";
 
 export const theory: LabSection = {
   id: "theory",

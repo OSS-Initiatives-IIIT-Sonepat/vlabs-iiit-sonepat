@@ -1,7 +1,15 @@
 import * as THREE from "three";
 import { PITCH, BOARD_H, TOP_Y } from "@/labs/coords";
 import { M } from "@/components/shared/materials";
-import { solidCyl, textLabel } from "@/components/shared/primitives";
+import { textLabel } from "@/components/shared/primitives";
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// DIODE — DO-35 Glass Signal Diode (1N4148), DO-41 Rectifier (1N4007),
+//         and DO-35 Glass Zener Diode (1N4733A) with vibrant colors & crisp edges
+// ═══════════════════════════════════════════════════════════════════════════════
+
+export const DIODE_PIN_ANODE = "diode-anode";
+export const DIODE_PIN_CATHODE = "diode-cathode";
 
 export type DiodeType = "1N4148" | "1N4007" | "zener";
 
@@ -9,210 +17,116 @@ interface DiodeSpec {
   label: string;
   bodyLength: number;
   bodyRadius: number;
+  glass: boolean;
+  bodyColor: number;
+  bandColor: number;
 }
 
 const DIODE_SPECS: Record<DiodeType, DiodeSpec> = {
   "1N4148": {
     label: "1N4148",
-    bodyLength: PITCH * 1.9,
-    bodyRadius: PITCH * 0.34,
+    bodyLength: PITCH * 1.75,
+    bodyRadius: PITCH * 0.28,
+    glass: true,
+    bodyColor: 0xf05a24, // bright fiery orange-amber DO-35 glass package
+    bandColor: 0x141414, // jet-black cathode ring
   },
-
   "1N4007": {
     label: "1N4007",
-    bodyLength: PITCH * 2.2,
-    bodyRadius: PITCH * 0.42,
+    bodyLength: PITCH * 2.05,
+    bodyRadius: PITCH * 0.34,
+    glass: false,
+    bodyColor: 0x22262e, // dark DO-41 epoxy package
+    bandColor: 0xdce4ee, // bright silver cathode ring
   },
-
   zener: {
     label: "1N4733A",
-    bodyLength: PITCH * 2.0,
-    bodyRadius: PITCH * 0.36,
+    bodyLength: PITCH * 1.85,
+    bodyRadius: PITCH * 0.28,
+    glass: true,
+    bodyColor: 0xe23e28, // bright crimson-orange Zener glass package
+    bandColor: 0x141414, // black cathode ring
   },
 };
 
-/*
- * ─────────────────────────────────────────────────────────────────────────
- * STANDALONE DIODE BODY
- * ─────────────────────────────────────────────────────────────────────────
- *
- * Normal:
- *   1N4148 / 1N4007
- *   → dark body
- *   → gray cathode band at the end
- *
- * Zener:
- *   1N4733A
- *   → light red body
- *   → dark cathode band at the end
- */
-function buildDiodeBody(root: THREE.Group, type: DiodeType): void {
-  const spec = DIODE_SPECS[type];
+function buildDiodePackageMesh(spec: DiodeSpec): THREE.Group {
+  const grp = new THREE.Group();
+  const { bodyLength, bodyRadius: r, bodyColor, bandColor, label } = spec;
 
-  const bodyLength = spec.bodyLength;
-  const radius = spec.bodyRadius;
-
-  /*
-   * ───────────────────────────────────────────────────────────────────────
-   * BODY
-   * ───────────────────────────────────────────────────────────────────────
-   */
-
-  const bodyGeo = new THREE.CylinderGeometry(radius, radius, bodyLength, 14);
-
-  const bodyMaterial = type === "zener" ? M.red() : M.dark();
-
-  const body = new THREE.Mesh(bodyGeo, bodyMaterial);
-
-  /*
-   * Cylinder default axis = Y.
-   * Rotate it so the diode runs along X.
-   */
-  body.rotation.z = Math.PI / 2;
-
-  body.add(
-    new THREE.LineSegments(new THREE.EdgesGeometry(bodyGeo, 12), M.edge()),
+  const bodyMat = new THREE.MeshBasicMaterial({ color: bodyColor });
+  const cylGeo = new THREE.CylinderGeometry(r, r, bodyLength, 20);
+  cylGeo.rotateZ(Math.PI / 2);
+  grp.add(new THREE.Mesh(cylGeo, bodyMat));
+  grp.add(
+    new THREE.LineSegments(new THREE.EdgesGeometry(cylGeo, 25), M.edge()),
   );
 
-  root.add(body);
-
-  /*
-   * ───────────────────────────────────────────────────────────────────────
-   * CATHODE BAND
-   * ───────────────────────────────────────────────────────────────────────
-   *
-   * The band is placed at the RIGHT END of the body.
-   */
-
-  const bandWidth = bodyLength * 0.16;
-
+  // Cathode polarity band on the right (+X) end
+  const bandW = bodyLength * 0.2;
   const bandGeo = new THREE.CylinderGeometry(
-    radius + 0.006,
-    radius + 0.006,
-    bandWidth,
-    14,
+    r + 0.006,
+    r + 0.006,
+    bandW,
+    20,
   );
-
-  const bandMaterial = type === "zener" ? M.dark() : M.silver();
-
-  const band = new THREE.Mesh(bandGeo, bandMaterial);
-
-  band.rotation.z = Math.PI / 2;
-
-  /*
-   * Body goes from:
-   *
-   *   -bodyLength / 2
-   *          to
-   *   +bodyLength / 2
-   *
-   * Place the band directly at the right end.
-   */
-  const bandX = bodyLength / 2 - bandWidth / 2;
-
-  band.position.x = bandX;
-
-  band.add(
-    new THREE.LineSegments(new THREE.EdgesGeometry(bandGeo, 12), M.edge()),
+  bandGeo.rotateZ(Math.PI / 2);
+  const bandMat = new THREE.MeshBasicMaterial({ color: bandColor });
+  const band = new THREE.Mesh(bandGeo, bandMat);
+  band.position.x = bodyLength / 2 - bandW * 0.72;
+  grp.add(band);
+  const bandEdge = new THREE.LineSegments(
+    new THREE.EdgesGeometry(bandGeo, 25),
+    M.edge(),
   );
+  bandEdge.position.copy(band.position);
+  grp.add(bandEdge);
 
-  root.add(band);
-
-  /*
-   * ───────────────────────────────────────────────────────────────────────
-   * ZENER MARK
-   * ───────────────────────────────────────────────────────────────────────
-   */
-
-  if (type === "zener") {
-    const markerGeo = new THREE.BoxGeometry(
-      PITCH * 0.06,
-      radius * 1.9,
-      radius * 0.5,
-    );
-
-    const marker = new THREE.Mesh(markerGeo, M.edge());
-
-    marker.position.set(bandX, 0, radius * 0.7);
-
-    root.add(marker);
-  }
-
-  /*
-   * ───────────────────────────────────────────────────────────────────────
-   * AXIAL LEADS
-   * ───────────────────────────────────────────────────────────────────────
-   */
-
-  const leadLength = PITCH * 1.25;
-  const leadRadius = PITCH * 0.07;
-
-  /*
-   * Left lead
-   */
-  const leftLead = solidCyl(leadRadius, leadLength, M.gold(), 6);
-
-  leftLead.rotation.z = Math.PI / 2;
-
-  leftLead.position.x = -bodyLength / 2 - leadLength / 2;
-
-  root.add(leftLead);
-
-  /*
-   * Right lead
-   */
-  const rightLead = solidCyl(leadRadius, leadLength, M.gold(), 6);
-
-  rightLead.rotation.z = Math.PI / 2;
-
-  rightLead.position.x = bodyLength / 2 + leadLength / 2;
-
-  root.add(rightLead);
-
-  /*
-   * ───────────────────────────────────────────────────────────────────────
-   * COMPONENT LABEL
-   * ───────────────────────────────────────────────────────────────────────
-   *
-   * IMPORTANT:
-   *
-   * Just like the resistor:
-   *
-   *     textLabel()
-   *          ↓
-   *     positioned on the cylinder surface
-   *
-   * The label is attached to the body so it follows the component.
-   */
-
-  const label = textLabel(spec.label, bodyLength * 0.72, radius * 1.15, {
+  // Crisp part label on top of the diode body
+  const lbl = textLabel(label, bodyLength * 0.74, r * 1.35, {
     textColor: "#ffffff",
     fontSize: 42,
+    bold: true,
   });
-
-  if (label) {
-    /*
-     * The text is initially generated in the XY plane.
-     *
-     * Put it onto the cylindrical surface facing upward.
-     */
-    label.rotation.x = -Math.PI / 2;
-
-    /*
-     * Slightly above the cylinder surface.
-     */
-    label.position.set(0, radius + 0.018, 0);
-
-    root.add(label);
+  if (lbl) {
+    lbl.rotation.x = -Math.PI / 2;
+    lbl.position.set(-bodyLength * 0.08, r + 0.016, 0);
+    grp.add(lbl);
   }
+
+  return grp;
 }
 
-/*
- * ─────────────────────────────────────────────────────────────────────────
- * MOUNTED DIODE
- * ─────────────────────────────────────────────────────────────────────────
- */
+function buildAxialDiodeLead(
+  bodyEnd: THREE.Vector3,
+  holePos: THREE.Vector3,
+  leadR: number,
+): THREE.Mesh {
+  const bottom = new THREE.Vector3(
+    holePos.x,
+    TOP_Y - BOARD_H * 0.35,
+    holePos.z,
+  );
+  const holeEntry = new THREE.Vector3(
+    holePos.x,
+    TOP_Y + PITCH * 0.05,
+    holePos.z,
+  );
+  const corner = new THREE.Vector3(holePos.x, bodyEnd.y, holePos.z);
 
+  const curve = new THREE.CatmullRomCurve3([
+    bodyEnd,
+    bodyEnd.clone().lerp(corner, 0.72),
+    corner,
+    holeEntry,
+    bottom,
+  ]);
+  return new THREE.Mesh(
+    new THREE.TubeGeometry(curve, 16, leadR, 8, false),
+    M.gold(),
+  );
+}
+
+// ── Mounted Diode ───────────────────────────────────────────────────────────
 export function buildDiode(
   anodePos: THREE.Vector3,
   cathodePos: THREE.Vector3,
@@ -222,129 +136,97 @@ export function buildDiode(
   const spec = DIODE_SPECS[type];
   const cx = (anodePos.x + cathodePos.x) / 2;
   const cz = (anodePos.z + cathodePos.z) / 2;
+  const spanX = cathodePos.x - anodePos.x;
+  const spanZ = cathodePos.z - anodePos.z;
+  const angle = Math.atan2(spanZ, spanX);
 
-  const bodyGeo = new THREE.CylinderGeometry(
-    spec.bodyRadius,
-    spec.bodyRadius,
-    spec.bodyLength,
-    14,
-  );
-  const bodyMaterial = type === "zener" ? M.red() : M.dark();
-  const body = new THREE.Mesh(bodyGeo, bodyMaterial);
-  body.rotation.z = Math.PI / 2;
-  body.position.set(cx, TOP_Y + spec.bodyRadius, cz);
-  body.add(
-    new THREE.LineSegments(new THREE.EdgesGeometry(bodyGeo, 12), M.edge()),
-  );
-  root.add(body);
+  const bodyY = TOP_Y + PITCH * 0.32;
+  const pkg = buildDiodePackageMesh(spec);
+  pkg.rotation.y = -angle;
+  pkg.position.set(cx, bodyY, cz);
+  root.add(pkg);
 
-  const bandWidth = spec.bodyLength * 0.16;
-  const bandGeo = new THREE.CylinderGeometry(
-    spec.bodyRadius + 0.006,
-    spec.bodyRadius + 0.006,
-    bandWidth,
-    14,
+  const halfLen = spec.bodyLength / 2;
+  const endAnode = new THREE.Vector3(
+    cx - Math.cos(angle) * halfLen,
+    bodyY,
+    cz - Math.sin(angle) * halfLen,
   );
-  const band = new THREE.Mesh(
-    bandGeo,
-    type === "zener" ? M.dark() : M.silver(),
-  );
-  band.rotation.z = Math.PI / 2;
-  const bandX = spec.bodyLength / 2 - bandWidth / 2;
-  band.position.set(cx + bandX, TOP_Y + spec.bodyRadius, cz);
-  band.add(
-    new THREE.LineSegments(new THREE.EdgesGeometry(bandGeo, 12), M.edge()),
-  );
-  root.add(band);
-
-  if (type === "zener") {
-    const markerGeo = new THREE.BoxGeometry(
-      PITCH * 0.06,
-      spec.bodyRadius * 1.9,
-      spec.bodyRadius * 0.5,
-    );
-    const marker = new THREE.Mesh(markerGeo, M.edge());
-    marker.position.set(
-      cx + bandX,
-      TOP_Y + spec.bodyRadius,
-      cz + spec.bodyRadius * 0.7,
-    );
-    root.add(marker);
-  }
-
-  const leadRadius = PITCH * 0.07;
-  const bodyY = TOP_Y + spec.bodyRadius;
-  const holeY = TOP_Y - BOARD_H * 0.2;
-  const verticalLeadLength = bodyY - holeY;
-  const verticalLeadGeometry = new THREE.CylinderGeometry(
-    leadRadius,
-    leadRadius,
-    verticalLeadLength,
-    6,
+  const endCathode = new THREE.Vector3(
+    cx + Math.cos(angle) * halfLen,
+    bodyY,
+    cz + Math.sin(angle) * halfLen,
   );
 
-  for (const [holePos, bodyEndX] of [
-    [anodePos, cx - spec.bodyLength / 2],
-    [cathodePos, cx + spec.bodyLength / 2],
-  ] as const) {
-    const verticalLead = new THREE.Mesh(verticalLeadGeometry, M.gold());
-    verticalLead.position.set(holePos.x, (bodyY + holeY) / 2, holePos.z);
-    root.add(verticalLead);
+  const leadR = PITCH * 0.052;
+  root.add(buildAxialDiodeLead(endAnode, anodePos, leadR));
+  root.add(buildAxialDiodeLead(endCathode, cathodePos, leadR));
 
-    const dx = bodyEndX - holePos.x;
-    if (Math.abs(dx) > 0.001) {
-      const horizontalLead = solidCyl(leadRadius, Math.abs(dx), M.gold(), 6);
-      horizontalLead.rotation.z = Math.PI / 2;
-      horizontalLead.position.set((holePos.x + bodyEndX) / 2, bodyY, holePos.z);
-      root.add(horizontalLead);
-    }
-  }
+  // Named pin anchors
+  const aAnchor = new THREE.Object3D();
+  aAnchor.name = DIODE_PIN_ANODE;
+  aAnchor.position.copy(anodePos);
+  root.add(aAnchor);
+
+  const cAnchor = new THREE.Object3D();
+  cAnchor.name = DIODE_PIN_CATHODE;
+  cAnchor.position.copy(cathodePos);
+  root.add(cAnchor);
 
   return root;
 }
 
-/*
- * ─────────────────────────────────────────────────────────────────────────
- * STANDALONE NORMAL DIODE
- * ─────────────────────────────────────────────────────────────────────────
- *
- * 1N4148 / 1N4007
- *
- *     GOLD ── DARK BODY ── GRAY BAND ── GOLD
- */
+// ── Standalone Normal Diode ─────────────────────────────────────────────────
 export function buildDiodeStandalone(
   type: "1N4148" | "1N4007" = "1N4148",
 ): THREE.Group {
   const root = new THREE.Group();
+  const spec = DIODE_SPECS[type];
+  root.add(buildDiodePackageMesh(spec));
 
-  buildDiodeBody(root, type);
+  const leadLen = PITCH * 1.5;
+  const leadGeo = new THREE.CylinderGeometry(
+    PITCH * 0.06,
+    PITCH * 0.06,
+    leadLen,
+    10,
+  );
+  leadGeo.rotateZ(Math.PI / 2);
+
+  for (const sign of [-1, 1]) {
+    const lead = new THREE.Mesh(leadGeo, M.gold());
+    lead.position.x = sign * (spec.bodyLength / 2 + leadLen / 2);
+    root.add(lead);
+  }
 
   return root;
 }
 
-/*
- * ─────────────────────────────────────────────────────────────────────────
- * STANDALONE ZENER DIODE
- * ─────────────────────────────────────────────────────────────────────────
- *
- * 1N4733A
- *
- *     GOLD ── LIGHT RED BODY ── DARK BAND ── GOLD
- */
+// ── Standalone Zener Diode ──────────────────────────────────────────────────
 export function buildZenerDiodeStandalone(): THREE.Group {
   const root = new THREE.Group();
+  const spec = DIODE_SPECS["zener"];
+  root.add(buildDiodePackageMesh(spec));
 
-  buildDiodeBody(root, "zener");
+  const leadLen = PITCH * 1.5;
+  const leadGeo = new THREE.CylinderGeometry(
+    PITCH * 0.06,
+    PITCH * 0.06,
+    leadLen,
+    10,
+  );
+  leadGeo.rotateZ(Math.PI / 2);
+
+  for (const sign of [-1, 1]) {
+    const lead = new THREE.Mesh(leadGeo, M.gold());
+    lead.position.x = sign * (spec.bodyLength / 2 + leadLen / 2);
+    root.add(lead);
+  }
 
   return root;
 }
 
-/*
- * ─────────────────────────────────────────────────────────────────────────
- * MOUNTED ZENER DIODE
- * ─────────────────────────────────────────────────────────────────────────
- */
-
+// ── Mounted Zener Diode ─────────────────────────────────────────────────────
 export function buildZenerDiode(
   anodePos: THREE.Vector3,
   cathodePos: THREE.Vector3,

@@ -110,10 +110,7 @@ export function buildOpAmp(
   const topY = BODY_H * MM + 0.02 * MM;
 
   // ── Pin-1 notch: half-circle moulded into the left end ───────────────────
-  const notchMat = new THREE.MeshStandardMaterial({
-    color: "#3a3a3a",
-    roughness: 0.9,
-  });
+  const notchMat = new THREE.MeshBasicMaterial({ color: 0x3b4252 });
   const notch = new THREE.Mesh(
     new THREE.CircleGeometry(0.95 * MM, 32, -Math.PI / 2, Math.PI),
     notchMat,
@@ -125,7 +122,7 @@ export function buildOpAmp(
   // ── Pin-1 dimple (ring) next to pin 1 ────────────────────────────────────
   const dimple = new THREE.Mesh(
     new THREE.TorusGeometry(0.45 * MM, 0.08 * MM, 8, 24),
-    M.metal(),
+    M.gold(),
   );
   dimple.rotation.x = -Math.PI / 2;
   dimple.position.set(-3.7 * MM, topY, 1.2 * MM);
@@ -133,8 +130,9 @@ export function buildOpAmp(
 
   // ── Part marking ─────────────────────────────────────────────────────────
   const marking = textLabel(partNumber, 5.4 * MM, 1.9 * MM, {
-    textColor: "#eeeeee",
-    fontSize: 32,
+    textColor: "#f8fafc",
+    fontSize: 36,
+    bold: true,
   });
   if (marking) {
     lay(marking);

@@ -1,5 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
-import { step06 as schematic } from "@/labs/schematics/superposition-theorem-schematics";
+import { step06 as schematic } from "@/labs/schematics/semester-01/03-FEE/superposition-theorem";
 export const step: SceneProcedureStep = {
   schematic,
   label: "Calculate theoretical values and compare.",

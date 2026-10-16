@@ -1,5 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
-import { step03 as circuitDiagram } from "@/labs/schematics/kirchhoff-laws-schematics";
+import { step03 as circuitDiagram } from "@/labs/schematics/semester-01/03-FEE/kirchhoff-laws";
 
 export const theory: TheorySection = {
   id: "theory",

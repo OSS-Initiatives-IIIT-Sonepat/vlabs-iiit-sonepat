@@ -1,5 +1,5 @@
 import { type ExperimentDefinition } from "@/labs/experiments/types";
-import { opampInvertingNonInvertingTheoryDiagram } from "@/labs/schematics/opamp-inverting-noninverting-schematics";
+import { opampInvertingNonInvertingTheoryDiagram } from "@/labs/schematics/semester-01/01-analog-electronics/10-inverting-non-inverting-opamp";
 
 type Section = ExperimentDefinition["sections"][number];
 

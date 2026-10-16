@@ -1,5 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
-import { step04 as schematic } from "@/labs/schematics/zener-voltage-regulator-schematics";
+import { step04 as schematic } from "@/labs/schematics/semester-01/01-analog-electronics/04-zener-voltage-regulator";
 
 export const step: SceneProcedureStep = {
   label: "Connect the load resistor RL1.",

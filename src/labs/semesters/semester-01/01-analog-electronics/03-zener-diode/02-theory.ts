@@ -1,6 +1,6 @@
 import { type TheorySection } from "@/labs/lab-content.types";
 import { type SchematicSpec } from "@/labs/TheoryScene";
-import { step06 as circuitDiagram } from "@/labs/schematics/zener-diode-schematics";
+import { step06 as circuitDiagram } from "@/labs/schematics/semester-01/01-analog-electronics/03-zener-diode";
 
 const FWD_BAT_X = -2.8;
 const TOP_Y_F = 1.0;
