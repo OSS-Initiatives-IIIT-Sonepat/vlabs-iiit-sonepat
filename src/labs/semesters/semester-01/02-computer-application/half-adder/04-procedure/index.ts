@@ -9,7 +9,7 @@ import { step as s08 } from "./08-double-check-all-connections-then-power-on";
 import { step as s09 } from "./09-test-all-four-input-combinations";
 
 import { type SceneProcedureStep } from "@/labs/experiments/types";
-import { halfAdderStepSchematics } from "@/labs/schematics/half-adder-schematics";
+import { halfAdderStepSchematics } from "@/labs/schematics/semester-01/02-computer-application/half-adder";
 
 export const procedureSteps: SceneProcedureStep[] = [
   { ...s01, schematic: halfAdderStepSchematics[0] },
