@@ -719,7 +719,9 @@ function LabPageStandard({ content }: Props) {
                 onStepChange={setProcedureStepIndex}
                 expandedContent={
                   <CircuitSchematic
-                    schematic={activeSection.steps[procedureStepIndex].schematic!}
+                    schematic={
+                      activeSection.steps[procedureStepIndex].schematic!
+                    }
                   />
                 }
               >
