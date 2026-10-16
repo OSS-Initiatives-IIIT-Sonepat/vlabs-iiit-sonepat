@@ -1,5 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
-import { binarySubtractor4bitStepSchematics } from "@/labs/schematics/s2-binary-subtractor-4bit-schematics";
+import { binarySubtractor4bitStepSchematics } from "@/labs/schematics/semester-02/01-digital-electronics/14-binary-subtractor-4bit";
 import { step as s01 } from "./01-theory-recap";
 import { step as s02 } from "./02-power-and-ics";
 import { step as s03 } from "./03-invert-b";
