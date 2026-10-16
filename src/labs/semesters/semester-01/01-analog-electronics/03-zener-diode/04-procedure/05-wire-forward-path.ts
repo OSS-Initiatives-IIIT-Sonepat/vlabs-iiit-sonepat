@@ -1,5 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
-import { step05 as schematic } from "@/labs/schematics/zener-diode-schematics";
+import { step05 as schematic } from "@/labs/schematics/semester-01/01-analog-electronics/03-zener-diode";
 
 import { DOWN, M } from "../constants";
 
