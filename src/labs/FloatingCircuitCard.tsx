@@ -204,7 +204,6 @@ function PanZoomCanvas({
           transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
           width: "100%",
           height: "100%",
-          pointerEvents: "none",
         }}
       >
         {children}
