@@ -1,5 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
-import { s2FullAdderStepSchematics } from "@/labs/schematics/s2-full-adder-schematics";
+import { s2FullAdderStepSchematics } from "@/labs/schematics/semester-02/01-digital-electronics/04-01-full-adder";
 import { step as s01 } from "./01-place-breadboard";
 import { step as s02 } from "./02-place-xor-gates";
 import { step as s03 } from "./03-place-and-or-gates";
