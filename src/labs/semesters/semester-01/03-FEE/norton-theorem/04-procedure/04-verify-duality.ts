@@ -1,5 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
-import { step04 as schematic } from "@/labs/schematics/norton-theorem-schematics";
+import { step04 as schematic } from "@/labs/schematics/semester-01/03-FEE/norton-theorem";
 export const step: SceneProcedureStep = {
   label: "Verify I_N = V_th / R_th relationship.",
   schematic,
