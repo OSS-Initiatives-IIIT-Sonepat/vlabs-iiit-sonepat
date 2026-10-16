@@ -1,4 +1,4 @@
-import { s2Demux1to4IcStepSchematics } from "@/labs/schematics/s2-demux-1to4-ic-schematics";
+import { s2Demux1to4IcStepSchematics } from "@/labs/schematics/semester-02/01-digital-electronics/09-demux-1to4-ic";
 import { step as s01 } from "./01-inspect-and-place-the-breadboard";
 import { step as s02 } from "./02-mount-the-74hc139-ic";
 import { step as s03 } from "./03-tie-en-bar-to-gnd";
