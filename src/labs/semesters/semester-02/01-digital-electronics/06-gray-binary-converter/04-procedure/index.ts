@@ -1,4 +1,4 @@
-import { s2GrayBinaryConverterStepSchematics } from "@/labs/schematics/s2-gray-binary-converter-schematics";
+import { s2GrayBinaryConverterStepSchematics } from "@/labs/schematics/semester-02/01-digital-electronics/06-gray-binary-converter";
 import { step as s01 } from "./01-inspect-and-place-the-breadboard";
 import { step as s02 } from "./02-mount-the-three-xor-gates";
 import { step as s03 } from "./03-wire-all-binary-inputs";

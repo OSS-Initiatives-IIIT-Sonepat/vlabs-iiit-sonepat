@@ -1,6 +1,6 @@
 import { type LabSection } from "@/labs/lab-content.types";
 import { type SchematicSpec } from "@/labs/TheoryScene";
-import { step05 as circuitDiagram } from "@/labs/schematics/zener-voltage-regulator-schematics";
+import { step05 as circuitDiagram } from "@/labs/schematics/semester-01/01-analog-electronics/04-zener-voltage-regulator";
 
 // ── Shunt-regulator schematic ──────────────────────────────────────────────
 //   Vin ── Rs ──┬── Vout ──┬── RL ──┐

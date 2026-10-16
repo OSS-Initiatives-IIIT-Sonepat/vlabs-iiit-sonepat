@@ -1,5 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
-import { step05 as schematic } from "@/labs/schematics/superposition-theorem-schematics";
+import { step05 as schematic } from "@/labs/schematics/semester-01/03-FEE/superposition-theorem";
 export const step: SceneProcedureStep = {
   schematic,
   label: "Verify voltage across R3 by superposition.",

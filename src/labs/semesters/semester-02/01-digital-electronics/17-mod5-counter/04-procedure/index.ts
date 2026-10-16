@@ -1,5 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
-import { mod5CounterStepSchematics } from "@/labs/schematics/s2-mod5-counter-schematics";
+import { mod5CounterStepSchematics } from "@/labs/schematics/semester-02/01-digital-electronics/17-mod5-counter";
 
 import { step as s01 } from "./01-check-ics";
 import { step as s02 } from "./02-power-and-toggle";

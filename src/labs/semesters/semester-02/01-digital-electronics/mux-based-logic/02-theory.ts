@@ -1,5 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
-import { muxBasedLogicTheoryDiagram } from "@/labs/schematics/s2-mux-based-logic-schematics";
+import { muxBasedLogicTheoryDiagram } from "@/labs/schematics/semester-02/01-digital-electronics/mux-based-logic";
 
 export const theory: TheorySection = {
   id: "theory",

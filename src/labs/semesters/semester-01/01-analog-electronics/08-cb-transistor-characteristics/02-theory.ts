@@ -1,5 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
-import { cbTransistorCharacteristicsTheoryDiagram } from "@/labs/schematics/cb-transistor-characteristics-schematics";
+import { cbTransistorCharacteristicsTheoryDiagram } from "@/labs/schematics/semester-01/01-analog-electronics/08-cb-transistor-characteristics";
 
 export const theory: TheorySection = {
   id: "theory",

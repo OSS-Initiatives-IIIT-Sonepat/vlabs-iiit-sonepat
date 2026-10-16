@@ -112,12 +112,13 @@ function PanZoomCanvas({
   const [pan, setPan] = useState<Offset>({ x: 0, y: 0 });
   const panSession = useRef<{ pointerId: number; startX: number; startY: number; orig: Offset } | null>(null);
   const [panning, setPanning] = useState(false);
+  const [prevResetKey, setPrevResetKey] = useState(resetKey);
 
-  // Reset when step changes
-  useEffect(() => {
+  if (resetKey !== prevResetKey) {
+    setPrevResetKey(resetKey);
     setZoom(1);
     setPan({ x: 0, y: 0 });
-  }, [resetKey]);
+  }
 
   const onPointerDown = useCallback((e: RPointerEvent<HTMLDivElement>) => {
     if (e.button !== 0) return;
@@ -204,7 +205,6 @@ function PanZoomCanvas({
           transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
           width: "100%",
           height: "100%",
-          pointerEvents: "none",
         }}
       >
         {children}

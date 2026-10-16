@@ -1,5 +1,5 @@
 import { type LabSection } from "@/labs/lab-content.types";
-import { mod5CounterTheoryDiagram } from "@/labs/schematics/s2-mod5-counter-schematics";
+import { mod5CounterTheoryDiagram } from "@/labs/schematics/semester-02/01-digital-electronics/17-mod5-counter";
 
 export const theory: LabSection = {
   id: "theory",

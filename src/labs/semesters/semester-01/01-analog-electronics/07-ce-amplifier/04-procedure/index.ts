@@ -5,7 +5,7 @@ import { step as s04 } from "./04-apply-signal-and-observe-voltage-gain";
 import { step as s05 } from "./05-plot-the-frequency-response";
 
 import { type SceneProcedureStep } from "@/labs/experiments/types";
-import { ceAmplifierStepSchematics } from "@/labs/schematics/ce-amplifier-schematics";
+import { ceAmplifierStepSchematics } from "@/labs/schematics/semester-01/01-analog-electronics/07-ce-amplifier";
 
 export const procedureSteps: SceneProcedureStep[] = [
   { ...s01, schematic: ceAmplifierStepSchematics[0] },

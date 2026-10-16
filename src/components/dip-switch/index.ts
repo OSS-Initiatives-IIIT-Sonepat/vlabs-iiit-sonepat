@@ -116,18 +116,9 @@ export function buildDipSwitch(
   const poleX = (i: number) => (i - (poles - 1) / 2) * POLE_PITCH;
 
   // ── Materials ────────────────────────────────────────────────────────────
-  const bodyMat = new THREE.MeshStandardMaterial({
-    color: bodyColor,
-    roughness: 0.45,
-  });
-  const slotMat = new THREE.MeshStandardMaterial({
-    color: "#101114",
-    roughness: 0.7,
-  });
-  const sliderMat = new THREE.MeshStandardMaterial({
-    color: "#f2f2ee",
-    roughness: 0.4,
-  });
+  const bodyMat = new THREE.MeshBasicMaterial({ color: bodyColor });
+  const slotMat = new THREE.MeshBasicMaterial({ color: 0x161a20 });
+  const sliderMat = new THREE.MeshBasicMaterial({ color: 0xf8fafc });
 
   // ── Body ─────────────────────────────────────────────────────────────────
   const body = solidBox(bodyL * MM, BODY_H * MM, BODY_W * MM, bodyMat);

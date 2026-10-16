@@ -1,5 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
-import { s2Mux4to1IcStepSchematics } from "@/labs/schematics/s2-mux-4to1-ic-schematics";
+import { s2Mux4to1IcStepSchematics } from "@/labs/schematics/semester-02/01-digital-electronics/08-mux-4to1-ic";
 import { step as s01 } from "./01-breadboard-and-supply";
 import { step as s02 } from "./02-place-ic";
 import { step as s03 } from "./03-enable";

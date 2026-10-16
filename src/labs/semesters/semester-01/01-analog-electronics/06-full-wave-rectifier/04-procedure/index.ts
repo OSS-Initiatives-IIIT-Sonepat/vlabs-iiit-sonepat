@@ -1,5 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
-import { fullWaveStepSchematics } from "@/labs/schematics/full-wave-rectifier-schematics";
+import { fullWaveStepSchematics } from "@/labs/schematics/semester-01/01-analog-electronics/06-full-wave-rectifier";
 
 import { step as s01 } from "./01-place-breadboard-and-source";
 import { step as s02 } from "./02-wire-upper-bridge-diodes";

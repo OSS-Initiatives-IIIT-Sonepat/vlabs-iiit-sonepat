@@ -1,5 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
-import { zenerStepSchematics } from "@/labs/schematics/zener-diode-schematics";
+import { zenerStepSchematics } from "@/labs/schematics/semester-01/01-analog-electronics/03-zener-diode";
 
 import { step as s01 } from "./01-breadboard-and-supply";
 import { step as s02 } from "./02-ammeter-in-series";

@@ -1,5 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
-import { opampCircuitsTheoryDiagram } from "@/labs/schematics/opamp-circuits-schematics";
+import { opampCircuitsTheoryDiagram } from "@/labs/schematics/semester-01/01-analog-electronics/13-opamp-circuits";
 
 export const theory: TheorySection = {
   id: "theory",

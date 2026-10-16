@@ -1,5 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
-import { s2GateMinimizationStepSchematics } from "@/labs/schematics/s2-gate-minimization-schematics";
+import { s2GateMinimizationStepSchematics } from "@/labs/schematics/semester-02/01-digital-electronics/02-gate-level-minimization";
 
 import { step as s01 } from "./01-place-breadboard";
 import { step as s02 } from "./02-place-two-level-gates";

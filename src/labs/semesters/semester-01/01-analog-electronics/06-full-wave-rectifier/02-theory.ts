@@ -1,5 +1,5 @@
 import { type LabSection } from "@/labs/lab-content.types";
-import { step08 as circuitDiagram } from "@/labs/schematics/full-wave-rectifier-schematics";
+import { step08 as circuitDiagram } from "@/labs/schematics/semester-01/01-analog-electronics/06-full-wave-rectifier";
 
 export const theory: LabSection = {
   id: "theory",

@@ -4,7 +4,7 @@ import { step as s02 } from "./02-add-10uf";
 import { step as s03 } from "./03-replace-capacitors";
 import { step as s04 } from "./04-plot-ripple-vs-capacitance";
 import { step as s05 } from "./05-observe-peak-diode-current";
-import { rectifiersCapacitorFiltersStepSchematics } from "@/labs/schematics/rectifiers-capacitor-filters-schematics";
+import { rectifiersCapacitorFiltersStepSchematics } from "@/labs/schematics/semester-01/01-analog-electronics/rectifiers-capacitor-filters";
 
 export const procedureSteps: SceneProcedureStep[] = [
   { ...s01, schematic: rectifiersCapacitorFiltersStepSchematics[0] },

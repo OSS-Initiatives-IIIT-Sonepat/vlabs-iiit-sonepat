@@ -195,6 +195,14 @@ export function EceComponentViewer({
     renderer.setClearColor(background, 1);
 
     const scene = new THREE.Scene();
+    scene.add(new THREE.AmbientLight(0xffffff, 0.78));
+    const keyLight = new THREE.DirectionalLight(0xffffff, 0.65);
+    keyLight.position.set(3, 6, 5);
+    scene.add(keyLight);
+    const fillLight = new THREE.DirectionalLight(0xffffff, 0.28);
+    fillLight.position.set(-3, 2, -4);
+    scene.add(fillLight);
+
     const [cx, cy, cz] = CAM[kind];
     const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
     camera.position.set(cx, cy, cz);

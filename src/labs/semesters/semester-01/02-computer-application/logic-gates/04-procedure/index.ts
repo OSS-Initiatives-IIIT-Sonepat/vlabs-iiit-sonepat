@@ -6,7 +6,7 @@ import { step as s05 } from "./05-verify-xnor-using-xor-not";
 import { step as s06 } from "./06-document-and-compare-all-truth-tables";
 
 import { type SceneProcedureStep } from "@/labs/experiments/types";
-import { logicGatesStepSchematics } from "@/labs/schematics/logic-gates-schematics";
+import { logicGatesStepSchematics } from "@/labs/schematics/semester-01/02-computer-application/logic-gates";
 
 export const procedureSteps: SceneProcedureStep[] = [
   { ...s01, schematic: logicGatesStepSchematics[0] },

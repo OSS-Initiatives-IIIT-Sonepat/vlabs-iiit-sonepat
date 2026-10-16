@@ -3,324 +3,392 @@ import { PITCH, BOARD_H, TOP_Y } from "@/labs/coords";
 import { M } from "@/components/shared/materials";
 import { solidBox, solidCyl, textLabel } from "@/components/shared/primitives";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// OSCILLOSCOPE / CRO
-// Bench oscilloscope with screen, controls and probe inputs
-// ─────────────────────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════════
+// OSCILLOSCOPE (CRO) — Dual-Trace Benchtop Oscilloscope with vibrant colors
+// ═══════════════════════════════════════════════════════════════════════════════
 
-const BODY_W = PITCH * 5.2;
-const BODY_H = PITCH * 3.6;
-const BODY_D = PITCH * 2.2;
-
-const SCREEN_W = BODY_W * 0.55;
-const SCREEN_H = BODY_H * 0.62;
-
-const KNOB_R = PITCH * 0.13;
-const KNOB_DEPTH = PITCH * 0.1;
-
-const BUTTON_R = PITCH * 0.075;
-
-/** Names of the anchor objects LabScene uses to start the probe cables. */
 export const OSCILLOSCOPE_CH1_ANCHOR = "socket-ch1";
 export const OSCILLOSCOPE_GND_ANCHOR = "socket-gnd";
 
-function buildScreen(): THREE.Group {
-  const screen = new THREE.Group();
+const P = PITCH;
+const BODY_W = P * 6.4;
+const BODY_H = P * 4.0;
+const BODY_D = P * 4.2;
+const FOOT_H = P * 0.2;
+const CASE_Y = FOOT_H + BODY_H / 2;
+const FRONT_Z = BODY_D / 2 + 0.025;
 
-  // Outer bezel
-  const bezel = solidBox(
-    SCREEN_W + PITCH * 0.18,
-    SCREEN_H + PITCH * 0.18,
-    PITCH * 0.12,
-    M.dark(),
+const SCREEN_W = BODY_W * 0.5;
+const SCREEN_H = BODY_H * 0.68;
+const SCREEN_X = -BODY_W * 0.19;
+const SCREEN_Y = CASE_Y - P * 0.04;
+
+function buildCrtScreen(readingText = "4.2 Vpp, 1 kHz"): THREE.Group {
+  const grp = new THREE.Group();
+
+  // Deep hood bezel around CRT
+  const hood = solidBox(
+    SCREEN_W + P * 0.2,
+    SCREEN_H + P * 0.2,
+    P * 0.12,
+    new THREE.MeshBasicMaterial({ color: 0x161a20 }),
   );
+  hood.position.z = P * 0.04;
+  grp.add(hood);
 
-  bezel.position.set(0, 0, BODY_D / 2 + PITCH * 0.08);
-
-  screen.add(bezel);
-
-  // Display
-  const display = solidBox(SCREEN_W, SCREEN_H, PITCH * 0.06, M.green());
-
-  display.position.set(0, 0, BODY_D / 2 + PITCH * 0.15);
-
-  screen.add(display);
-
-  // Grid lines
-  const gridMaterial = new THREE.MeshBasicMaterial({
-    color: "#183c28",
-  });
-
-  const gridThickness = PITCH * 0.012;
-
-  const verticalCount = 10;
-  const horizontalCount = 8;
-
-  for (let i = 1; i < verticalCount; i++) {
-    const x = -SCREEN_W / 2 + (SCREEN_W / verticalCount) * i;
-
-    const line = solidBox(gridThickness, SCREEN_H, PITCH * 0.015, gridMaterial);
-
-    line.position.set(x, 0, BODY_D / 2 + PITCH * 0.19);
-
-    screen.add(line);
-  }
-
-  for (let i = 1; i < horizontalCount; i++) {
-    const y = -SCREEN_H / 2 + (SCREEN_H / horizontalCount) * i;
-
-    const line = solidBox(SCREEN_W, gridThickness, PITCH * 0.015, gridMaterial);
-
-    line.position.set(0, y, BODY_D / 2 + PITCH * 0.19);
-
-    screen.add(line);
-  }
-
-  // Simple waveform
-  const points: THREE.Vector3[] = [];
-
-  const segments = 48;
-
-  for (let i = 0; i <= segments; i++) {
-    const t = i / segments;
-    const x = -SCREEN_W * 0.43 + SCREEN_W * 0.86 * t;
-
-    const y = Math.sin(t * Math.PI * 4) * SCREEN_H * 0.22;
-
-    points.push(new THREE.Vector3(x, y, BODY_D / 2 + PITCH * 0.23));
-  }
-
-  const waveformGeometry = new THREE.BufferGeometry().setFromPoints(points);
-
-  const waveformMaterial = new THREE.LineBasicMaterial({
-    color: "#eeeeee",
-  });
-
-  const waveform = new THREE.Line(waveformGeometry, waveformMaterial);
-
-  screen.add(waveform);
-
-  return screen;
-}
-
-function buildKnob(x: number, y: number, labelText: string): THREE.Group {
-  const group = new THREE.Group();
-
-  const knob = solidCyl(KNOB_R, KNOB_DEPTH, M.dark(), 20);
-
-  knob.rotation.x = Math.PI / 2;
-
-  knob.position.set(x, y, BODY_D / 2 + PITCH * 0.16);
-
-  group.add(knob);
-
-  const indicator = solidBox(
-    PITCH * 0.025,
-    KNOB_R * 0.65,
-    PITCH * 0.025,
-    M.cream(),
+  // Phosphor CRT glass
+  const phosphor = new THREE.Mesh(
+    new THREE.BoxGeometry(SCREEN_W, SCREEN_H, P * 0.04),
+    new THREE.MeshBasicMaterial({ color: 0x072818 }),
   );
+  phosphor.position.z = P * 0.08;
+  grp.add(phosphor);
 
-  indicator.position.set(x, y + KNOB_R * 0.28, BODY_D / 2 + PITCH * 0.23);
+  // 10×8 Graticule grid
+  const gridZ = P * 0.105;
+  const gridPts: THREE.Vector3[] = [];
+  const cols = 10;
+  const rows = 8;
 
-  group.add(indicator);
-
-  const label = textLabel(labelText, PITCH * 0.55, PITCH * 0.22, {
-    textColor: "#eeeeee",
-    fontSize: 24,
-  });
-
-  if (label) {
-    label.position.set(x, y - KNOB_R * 1.65, BODY_D / 2 + PITCH * 0.17);
-
-    group.add(label);
-  }
-
-  return group;
-}
-
-function buildInput(x: number, labelText: string): THREE.Group {
-  const group = new THREE.Group();
-
-  const socket = solidCyl(PITCH * 0.14, PITCH * 0.12, M.dark(), 20);
-
-  socket.rotation.x = Math.PI / 2;
-
-  socket.position.set(x, BODY_H * 0.18, BODY_D / 2 + PITCH * 0.12);
-
-  group.add(socket);
-
-  const contact = solidCyl(PITCH * 0.055, PITCH * 0.13, M.metal(), 16);
-
-  contact.rotation.x = Math.PI / 2;
-
-  contact.position.set(x, BODY_H * 0.18, BODY_D / 2 + PITCH * 0.18);
-
-  group.add(contact);
-
-  const label = textLabel(labelText, PITCH * 0.42, PITCH * 0.22, {
-    textColor: "#eeeeee",
-    fontSize: 24,
-  });
-
-  if (label) {
-    label.position.set(
-      x,
-      BODY_H * 0.18 + PITCH * 0.34,
-      BODY_D / 2 + PITCH * 0.16,
+  for (let c = 1; c < cols; c++) {
+    const x = -SCREEN_W / 2 + (SCREEN_W / cols) * c;
+    gridPts.push(
+      new THREE.Vector3(x, -SCREEN_H / 2, gridZ),
+      new THREE.Vector3(x, SCREEN_H / 2, gridZ),
     );
-
-    group.add(label);
+  }
+  for (let r = 1; r < rows; r++) {
+    const y = -SCREEN_H / 2 + (SCREEN_H / rows) * r;
+    gridPts.push(
+      new THREE.Vector3(-SCREEN_W / 2, y, gridZ),
+      new THREE.Vector3(SCREEN_W / 2, y, gridZ),
+    );
   }
 
-  return group;
+  grp.add(
+    new THREE.LineSegments(
+      new THREE.BufferGeometry().setFromPoints(gridPts),
+      new THREE.LineBasicMaterial({ color: 0x1d6b42 }),
+    ),
+  );
+
+  // Bright phosphor trace; its shape follows the reading text.
+  const shape = traceShape(readingText);
+  const wavePts: THREE.Vector3[] = [];
+  const N = shape === "sine" ? 80 : 240;
+  for (let i = 0; i <= N; i++) {
+    const t = i / N;
+    const x = -SCREEN_W * 0.46 + SCREEN_W * 0.92 * t;
+    const y = traceY(shape, t) * SCREEN_H * 0.26;
+    wavePts.push(new THREE.Vector3(x, y, gridZ + 0.008));
+  }
+  const waveCurve =
+    shape === "sine"
+      ? new THREE.CatmullRomCurve3(wavePts)
+      : new THREE.CatmullRomCurve3(wavePts, false, "centripetal", 0);
+  const waveTube = new THREE.TubeGeometry(waveCurve, N, P * 0.022, 6, false);
+  grp.add(
+    new THREE.Mesh(
+      waveTube,
+      new THREE.MeshBasicMaterial({ color: 0x48ff88 }),
+    ),
+  );
+
+  // Digital on-screen readout banner
+  const rLabel = textLabel(readingText, SCREEN_W * 0.9, P * 0.26, {
+    textColor: "#78ffac",
+    fontSize: 32,
+    bold: true,
+  });
+  if (rLabel) {
+    rLabel.position.set(0, -SCREEN_H * 0.39, gridZ + 0.012);
+    grp.add(rLabel);
+  }
+
+  const chLabel = textLabel("CH1: 1V/div   0.2ms/div", SCREEN_W * 0.9, P * 0.22, {
+    textColor: "#ffd84d",
+    fontSize: 26,
+    bold: true,
+  });
+  if (chLabel) {
+    chLabel.position.set(0, SCREEN_H * 0.4, gridZ + 0.012);
+    grp.add(chLabel);
+  }
+
+  return grp;
+}
+
+type TraceShape = "sine" | "square" | "rc" | "flat";
+
+function traceShape(reading: string): TraceShape {
+  const r = reading.toLowerCase();
+  if (/no signal|^\s*$|\boff\b/.test(r)) return "flat";
+  if (/charg|τ|tau|exponential/.test(r)) return "rc";
+  if (/square|switch/.test(r)) return "square";
+  return "sine";
+}
+
+/** Normalised trace height in [-1, 1] at horizontal position t ∈ [0, 1]. */
+function traceY(shape: TraceShape, t: number): number {
+  const cycles = 2.5;
+  const phase = (t * cycles) % 1;
+  switch (shape) {
+    case "flat":
+      return 0;
+    case "square":
+      return phase < 0.5 ? 1 : -1;
+    case "rc": {
+      // Half-period = 5τ, so the capacitor fully charges and discharges.
+      const k = 10;
+      return phase < 0.5
+        ? 1 - 2 * Math.exp(-k * phase)
+        : -1 + 2 * Math.exp(-k * (phase - 0.5));
+    }
+    default:
+      return Math.sin(t * Math.PI * 5);
+  }
+}
+
+function buildScopeKnob(
+  x: number,
+  y: number,
+  z: number,
+  radius: number,
+  angleDeg: number,
+  label: string,
+  accentHex = 0x3b82f6,
+): THREE.Group {
+  const grp = new THREE.Group();
+
+  const skirt = solidCyl(
+    radius * 1.15,
+    0.02,
+    new THREE.MeshBasicMaterial({ color: 0x262c36 }),
+    16,
+  );
+  skirt.rotation.x = Math.PI / 2;
+  skirt.position.set(x, y, z + 0.01);
+  grp.add(skirt);
+
+  const depth = P * 0.16;
+  const body = solidCyl(
+    radius,
+    depth,
+    new THREE.MeshBasicMaterial({ color: 0xcfd6de }),
+    16,
+  );
+  body.rotation.x = Math.PI / 2;
+  body.position.set(x, y, z + depth / 2 + 0.012);
+  grp.add(body);
+
+  const cap = new THREE.Mesh(
+    new THREE.CylinderGeometry(radius * 0.62, radius * 0.62, 0.014, 14),
+    new THREE.MeshBasicMaterial({ color: accentHex }),
+  );
+  cap.rotation.x = Math.PI / 2;
+  cap.position.set(x, y, z + depth + 0.016);
+  grp.add(cap);
+
+  const rad = THREE.MathUtils.degToRad(angleDeg);
+  const ptr = new THREE.Mesh(
+    new THREE.BoxGeometry(0.018, radius * 0.55, 0.018),
+    M.white(),
+  );
+  ptr.rotation.z = -rad;
+  ptr.position.set(
+    x + Math.sin(rad) * radius * 0.35,
+    y + Math.cos(rad) * radius * 0.35,
+    z + depth + 0.018,
+  );
+  grp.add(ptr);
+
+  const lbl = textLabel(label, P * 0.9, P * 0.22, {
+    textColor: "#f0f4f8",
+    fontSize: 26,
+    bold: true,
+  });
+  if (lbl) {
+    lbl.position.set(x, y - radius - P * 0.18, z + 0.01);
+    grp.add(lbl);
+  }
+
+  return grp;
+}
+
+function buildBncConnector(
+  x: number,
+  y: number,
+  z: number,
+  label: string,
+  anchorName: string,
+  ringHex: number,
+): THREE.Group {
+  const grp = new THREE.Group();
+
+  const ring = new THREE.Mesh(
+    new THREE.CylinderGeometry(P * 0.19, P * 0.19, 0.02, 16),
+    new THREE.MeshBasicMaterial({ color: ringHex }),
+  );
+  ring.rotation.x = Math.PI / 2;
+  ring.position.set(x, y, z + 0.01);
+  grp.add(ring);
+
+  const bLen = P * 0.26;
+  const barrel = solidCyl(P * 0.13, bLen, M.silver(), 14);
+  barrel.rotation.x = Math.PI / 2;
+  barrel.position.set(x, y, z + bLen / 2 + 0.015);
+  grp.add(barrel);
+
+  const pin = new THREE.Mesh(
+    new THREE.CylinderGeometry(P * 0.03, P * 0.03, bLen + 0.02, 8),
+    M.gold(),
+  );
+  pin.rotation.x = Math.PI / 2;
+  pin.position.set(x, y, z + bLen / 2 + 0.02);
+  grp.add(pin);
+
+  const lbl = textLabel(label, P * 0.72, P * 0.22, {
+    textColor: "#f0f4f8",
+    fontSize: 26,
+    bold: true,
+  });
+  if (lbl) {
+    lbl.position.set(x, y + P * 0.28, z + 0.012);
+    grp.add(lbl);
+  }
+
+  const anchor = new THREE.Object3D();
+  anchor.name = anchorName;
+  anchor.position.set(x, y, z + bLen + 0.025);
+  grp.add(anchor);
+
+  return grp;
 }
 
 export function buildOscilloscope(
   mountPos: THREE.Vector3 = new THREE.Vector3(),
+  readingText = "4.2 Vpp, 1 kHz",
 ): THREE.Group {
   const root = new THREE.Group();
+  root.userData.isInstrumentBody = true;
 
-  // ── Main body ───────────────────────────────────────────────────────────
+  // Rubber feet
+  const footGeo = new THREE.BoxGeometry(P * 0.5, FOOT_H, P * 0.65);
+  for (const sx of [-1, 1]) {
+    for (const sz of [-1, 1]) {
+      const foot = new THREE.Mesh(footGeo, M.dark());
+      foot.position.set(
+        sx * (BODY_W * 0.4),
+        FOOT_H / 2,
+        sz * (BODY_D * 0.36),
+      );
+      root.add(foot);
+    }
+  }
 
-  const body = solidBox(BODY_W, BODY_H, BODY_D, M.dark());
+  // Main instrument enclosure & front panel with crisp edges
+  const chassis = solidBox(
+    BODY_W,
+    BODY_H,
+    BODY_D,
+    new THREE.MeshBasicMaterial({ color: 0x262e38 }),
+  );
+  chassis.position.set(0, CASE_Y, 0);
+  root.add(chassis);
 
-  body.position.set(0, BODY_H / 2, 0);
+  const panel = solidBox(
+    BODY_W * 0.97,
+    BODY_H * 0.94,
+    0.04,
+    new THREE.MeshBasicMaterial({ color: 0x3b4d63 }),
+  );
+  panel.position.set(0, CASE_Y, BODY_D / 2 + 0.008);
+  root.add(panel);
 
-  root.add(body);
-
-  // ── Top front label ─────────────────────────────────────────────────────
-
-  const title = textLabel("OSCILLOSCOPE", PITCH * 1.55, PITCH * 0.28, {
-    textColor: "#eeeeee",
-    fontSize: 30,
-  });
-
+  // Top title banner
+  const title = textLabel(
+    "DUAL-TRACE OSCILLOSCOPE  20 MHz",
+    BODY_W * 0.62,
+    P * 0.26,
+    {
+      textColor: "#f0f4f8",
+      fontSize: 30,
+      bold: true,
+    },
+  );
   if (title) {
-    title.position.set(0, BODY_H * 0.93, BODY_D / 2 + PITCH * 0.1);
-
+    title.position.set(-BODY_W * 0.14, CASE_Y + BODY_H * 0.4, FRONT_Z + 0.012);
     root.add(title);
   }
 
-  // ── Screen ───────────────────────────────────────────────────────────────
+  // CRT Screen
+  const crt = buildCrtScreen(readingText);
+  crt.position.set(SCREEN_X, SCREEN_Y, FRONT_Z);
+  root.add(crt);
 
-  const screen = buildScreen();
+  // Control knobs
+  const col1X = BODY_W * 0.16;
+  const col2X = BODY_W * 0.35;
+  const row1Y = CASE_Y + BODY_H * 0.22;
+  const row2Y = CASE_Y - BODY_H * 0.04;
 
-  screen.position.set(-BODY_W * 0.14, BODY_H * 0.5, 0);
-
-  root.add(screen);
-
-  // ── Control knobs ───────────────────────────────────────────────────────
-
-  const controls = [
-    {
-      x: BODY_W * 0.3,
-      y: BODY_H * 0.72,
-      label: "VOLTS",
-    },
-    {
-      x: BODY_W * 0.42,
-      y: BODY_H * 0.72,
-      label: "TIME",
-    },
-    {
-      x: BODY_W * 0.3,
-      y: BODY_H * 0.48,
-      label: "POS",
-    },
-    {
-      x: BODY_W * 0.42,
-      y: BODY_H * 0.48,
-      label: "LEVEL",
-    },
-  ];
-
-  for (const control of controls) {
-    root.add(buildKnob(control.x, control.y, control.label));
-  }
-
-  // ── Channel input ───────────────────────────────────────────────────────
-
-  root.add(buildInput(BODY_W * 0.3, "CH1"));
-
-  // ── Ground input ─────────────────────────────────────────────────────────
-
-  root.add(buildInput(BODY_W * 0.42, "GND"));
-
-  // ── Probe cable anchors (invisible) ─────────────────────────────────────
-  // LabScene reads the world position of these to start the CH1 / GND cables.
-
-  const ch1Anchor = new THREE.Object3D();
-  ch1Anchor.name = OSCILLOSCOPE_CH1_ANCHOR;
-  ch1Anchor.position.set(
-    BODY_W * 0.3,
-    BODY_H * 0.18,
-    BODY_D / 2 + PITCH * 0.22,
+  root.add(
+    buildScopeKnob(col1X, row1Y, FRONT_Z, P * 0.26, -30, "VOLTS/DIV", 0xe8ac18),
   );
-  root.add(ch1Anchor);
-
-  const gndAnchor = new THREE.Object3D();
-  gndAnchor.name = OSCILLOSCOPE_GND_ANCHOR;
-  gndAnchor.position.set(
-    BODY_W * 0.42,
-    BODY_H * 0.18,
-    BODY_D / 2 + PITCH * 0.22,
+  root.add(
+    buildScopeKnob(col2X, row1Y, FRONT_Z, P * 0.28, 20, "TIME/DIV", 0x228be6),
   );
-  root.add(gndAnchor);
-
-  // ── Power button ─────────────────────────────────────────────────────────
-
-  const power = solidCyl(BUTTON_R, PITCH * 0.08, M.red(), 16);
-
-  power.rotation.x = Math.PI / 2;
-
-  power.position.set(BODY_W * 0.42, BODY_H * 0.22, BODY_D / 2 + PITCH * 0.15);
-
-  root.add(power);
-
-  const powerLabel = textLabel("POWER", PITCH * 0.55, PITCH * 0.22, {
-    textColor: "#eeeeee",
-    fontSize: 22,
-  });
-
-  if (powerLabel) {
-    powerLabel.position.set(
-      BODY_W * 0.42,
-      BODY_H * 0.22 - PITCH * 0.28,
-      BODY_D / 2 + PITCH * 0.16,
-    );
-
-    root.add(powerLabel);
-  }
-
-  // ── Feet ────────────────────────────────────────────────────────────────
-
-  const footGeometry = new THREE.BoxGeometry(
-    PITCH * 0.5,
-    PITCH * 0.25,
-    PITCH * 0.7,
+  root.add(
+    buildScopeKnob(col1X, row2Y, FRONT_Z, P * 0.2, 0, "V.POS", 0x3b424c),
+  );
+  root.add(
+    buildScopeKnob(col2X, row2Y, FRONT_Z, P * 0.2, 15, "TRIG LVL", 0x22b44c),
   );
 
-  const leftFoot = new THREE.Mesh(footGeometry, M.dark());
+  // BNC inputs (CH1 & GND)
+  const bncY = CASE_Y - BODY_H * 0.33;
+  root.add(
+    buildBncConnector(
+      col1X,
+      bncY,
+      FRONT_Z,
+      "CH1 IN",
+      OSCILLOSCOPE_CH1_ANCHOR,
+      0xf0b400,
+    ),
+  );
+  root.add(
+    buildBncConnector(
+      col2X,
+      bncY,
+      FRONT_Z,
+      "⏚ GND",
+      OSCILLOSCOPE_GND_ANCHOR,
+      0x1a1c20,
+    ),
+  );
 
-  const rightFoot = new THREE.Mesh(footGeometry, M.dark());
+  // Power button
+  const pwrX = -BODY_W * 0.41;
+  const pwrY = bncY;
+  const pwrBtn = solidCyl(P * 0.11, P * 0.08, M.red(), 14);
+  pwrBtn.rotation.x = Math.PI / 2;
+  pwrBtn.position.set(pwrX, pwrY, FRONT_Z + 0.02);
+  root.add(pwrBtn);
 
-  leftFoot.position.set(-BODY_W * 0.38, -PITCH * 0.08, 0);
-
-  rightFoot.position.set(BODY_W * 0.38, -PITCH * 0.08, 0);
-
-  root.add(leftFoot);
-  root.add(rightFoot);
+  const pwrLed = new THREE.Mesh(
+    new THREE.SphereGeometry(P * 0.055, 10, 8),
+    new THREE.MeshBasicMaterial({ color: 0x38ff68 }),
+  );
+  pwrLed.position.set(pwrX + P * 0.24, pwrY, FRONT_Z + 0.015);
+  root.add(pwrLed);
 
   root.position.copy(mountPos);
-
   return root;
 }
 
 export function buildOscilloscopeStandalone(): THREE.Group {
   const root = buildOscilloscope(new THREE.Vector3(0, 0, 0));
-
   root.position.y = TOP_Y + BOARD_H * 0.04;
-
   return root;
 }

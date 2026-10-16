@@ -251,6 +251,52 @@
   }
 }
 
+/* ─── Lab component hover name / inspection popover ───────────────── */
+@keyframes lab-name-rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes lab-popover-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.lab-name-tag {
+  animation: lab-name-rise 180ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(6px);
+  box-shadow:
+    0 2px 10px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(0, 0, 0, 0.06);
+  color: #737373;
+  font-family: var(--font-sans, sans-serif);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+}
+
+.lab-popover {
+  animation: lab-popover-in 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 .inference-cursor {
   animation: inference-cursor 1s step-end infinite;
 }

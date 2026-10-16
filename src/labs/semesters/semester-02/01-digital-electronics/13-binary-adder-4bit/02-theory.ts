@@ -1,5 +1,5 @@
 import { type LabSection } from "@/labs/lab-content.types";
-import { binaryAdder4bitTheoryDiagram } from "@/labs/schematics/s2-binary-adder-4bit-schematics";
+import { binaryAdder4bitTheoryDiagram } from "@/labs/schematics/semester-02/01-digital-electronics/13-binary-adder-4bit";
 
 export const theory: LabSection = {
   id: "theory",

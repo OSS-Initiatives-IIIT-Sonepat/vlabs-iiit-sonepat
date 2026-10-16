@@ -1,5 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
-import { halfWaveStepSchematics } from "@/labs/schematics/half-wave-rectifier-schematics";
+import { halfWaveStepSchematics } from "@/labs/schematics/semester-01/01-analog-electronics/05-half-wave-rectifier";
 
 import { step as s01 } from "./01-breadboard";
 import { step as s02 } from "./02-place-ac-source";

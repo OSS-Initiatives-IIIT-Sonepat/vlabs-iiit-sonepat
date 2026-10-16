@@ -186,32 +186,15 @@ export function buildLogicAnalyzer(
 
   // ── Materials ────────────────────────────────────────────────────────────
   const mat = {
-    alu: new THREE.MeshStandardMaterial({
-      color: "#2c3036",
-      roughness: 0.45,
-      metalness: 0.6,
-    }),
-    rubber: new THREE.MeshStandardMaterial({
-      color: "#0c0c0d",
-      roughness: 0.95,
-    }),
-    bezel: new THREE.MeshStandardMaterial({ color: "#0a0a0c", roughness: 0.6 }),
-    glass: new THREE.MeshStandardMaterial({ color: "#12151a", roughness: 0.2 }),
-    gold: new THREE.MeshStandardMaterial({
-      color: "#d4af37",
-      roughness: 0.3,
-      metalness: 0.9,
-    }),
-    shell: new THREE.MeshStandardMaterial({
-      color: "#b8bcc2",
-      roughness: 0.3,
-      metalness: 0.9,
-    }),
-    slot: new THREE.MeshStandardMaterial({ color: "#050506", roughness: 0.8 }),
-    led: new THREE.MeshStandardMaterial({
-      color: powerOn ? "#39ff6a" : "#16301d",
-      emissive: powerOn ? "#18e048" : "#000000",
-      emissiveIntensity: powerOn ? 1.6 : 0,
+    alu: new THREE.MeshBasicMaterial({ color: 0x3b4859 }),
+    rubber: new THREE.MeshBasicMaterial({ color: 0x161a20 }),
+    bezel: new THREE.MeshBasicMaterial({ color: 0x12151c }),
+    glass: new THREE.MeshBasicMaterial({ color: 0x0c1420 }),
+    gold: new THREE.MeshBasicMaterial({ color: 0xd4a82a }),
+    shell: new THREE.MeshBasicMaterial({ color: 0xdce4ee }),
+    slot: new THREE.MeshBasicMaterial({ color: 0x080a0e }),
+    led: new THREE.MeshBasicMaterial({
+      color: powerOn ? 0x38ff68 : 0x163420,
     }),
   };
 

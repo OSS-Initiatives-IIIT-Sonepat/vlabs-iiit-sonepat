@@ -143,6 +143,54 @@ import {
 } from "./semester-01/01-analog-electronics/10-inverting-non-inverting-opamp";
 
 import {
+  RcFiltersCircuit,
+  RcFiltersContent,
+  rcFiltersExperiment,
+} from "./semester-01/01-analog-electronics/14-rc-filters";
+
+import {
+  RcTransientCircuit,
+  RcTransientContent,
+  rcTransientExperiment,
+} from "./semester-01/01-analog-electronics/15-rc-transient";
+
+import {
+  SeriesRlcResonanceCircuit,
+  SeriesRlcResonanceContent,
+  seriesRlcResonanceExperiment,
+} from "./semester-01/01-analog-electronics/16-series-rlc-resonance";
+
+import {
+  TransistorSwitchCircuit,
+  TransistorSwitchContent,
+  transistorSwitchExperiment,
+} from "./semester-01/01-analog-electronics/17-transistor-switch";
+
+import {
+  Decoder3to8IcCircuit,
+  Decoder3to8IcContent,
+  decoder3to8IcExperiment,
+} from "./semester-02/03-combinational-logic/01-decoder-3to8-ic";
+
+import {
+  PriorityEncoder8to3IcCircuit,
+  PriorityEncoder8to3IcContent,
+  priorityEncoder8to3IcExperiment,
+} from "./semester-02/03-combinational-logic/02-priority-encoder-8to3-ic";
+
+import {
+  SyncCounter74hc161Circuit,
+  SyncCounter74hc161Content,
+  syncCounter74hc161Experiment,
+} from "./semester-02/04-sequential-logic/01-sync-counter-74hc161";
+
+import {
+  RippleCounter74hc93Circuit,
+  RippleCounter74hc93Content,
+  rippleCounter74hc93Experiment,
+} from "./semester-02/04-sequential-logic/02-ripple-counter-74hc93";
+
+import {
   IntroLogicGatesCircuit,
   IntroLogicGatesContent,
   introLogicGatesExperiment,
@@ -597,6 +645,34 @@ export const SEMESTER_SUBJECTS: readonly SemesterSubjectCatalog[] = [
         InvertingNonInvertingOpampContent,
         ["op-amp", "lm741", "inverting", "non-inverting", "voltage gain"],
       ),
+      fromBuilt(rcFiltersExperiment, RcFiltersCircuit, RcFiltersContent, [
+        "rc filter",
+        "low-pass",
+        "high-pass",
+        "cut-off frequency",
+        "bode plot",
+        "CRO",
+      ]),
+      fromBuilt(rcTransientExperiment, RcTransientCircuit, RcTransientContent, [
+        "rc circuit",
+        "time constant",
+        "charging",
+        "discharging",
+        "square wave",
+        "CRO",
+      ]),
+      fromBuilt(
+        seriesRlcResonanceExperiment,
+        SeriesRlcResonanceCircuit,
+        SeriesRlcResonanceContent,
+        ["rlc", "resonance", "inductor", "quality factor", "bandwidth", "CRO"],
+      ),
+      fromBuilt(
+        transistorSwitchExperiment,
+        TransistorSwitchCircuit,
+        TransistorSwitchContent,
+        ["bjt", "bc547", "switch", "saturation", "cut-off", "led driver"],
+      ),
       // fromBuilt(
       //   rectifiersCapacitorFiltersExperiment,
       //   RectifiersCapacitorFiltersCircuit,
@@ -914,6 +990,54 @@ export const SEMESTER_SUBJECTS: readonly SemesterSubjectCatalog[] = [
       //   FullAdderRippleContent,
       //   ["ripple carry", "4-bit adder", "carry propagation", "alu", "delay"],
       // ),
+    ],
+  },
+  {
+    semesterId: "semester-2",
+    semesterLabel: "Semester 2",
+    subjectId: "03-combinational-logic",
+    subjectLabel: "Combinational Logic",
+    subjectDescription:
+      "Use MSI combinational ICs on a breadboard: decode a 3-bit address with the 74HC138 and encode eight inputs by priority with the 74HC148, including active-low outputs and enable cascading.",
+    defaultCircuitId: "decoder-3to8-ic",
+    experiments: [
+      fromBuilt(decoder3to8IcExperiment, Decoder3to8IcCircuit, Decoder3to8IcContent, [
+        "decoder",
+        "3:8 decoder",
+        "74hc138",
+        "active-low",
+        "enable",
+        "combinational",
+      ]),
+      fromBuilt(
+        priorityEncoder8to3IcExperiment,
+        PriorityEncoder8to3IcCircuit,
+        PriorityEncoder8to3IcContent,
+        ["encoder", "priority encoder", "8:3 encoder", "74hc148", "active-low", "combinational"],
+      ),
+    ],
+  },
+  {
+    semesterId: "semester-2",
+    semesterLabel: "Semester 2",
+    subjectId: "04-sequential-logic",
+    subjectLabel: "Sequential Logic",
+    subjectDescription:
+      "Build counters from MSI ICs clocked by a function generator: a synchronous 74HC161 with synchronous load and an asynchronous 74HC93 ripple counter, each converted to a MOD-10 decade counter.",
+    defaultCircuitId: "sync-counter-74hc161",
+    experiments: [
+      fromBuilt(
+        syncCounter74hc161Experiment,
+        SyncCounter74hc161Circuit,
+        SyncCounter74hc161Content,
+        ["counter", "synchronous", "74hc161", "mod-16", "mod-10", "decade", "sequential"],
+      ),
+      fromBuilt(
+        rippleCounter74hc93Experiment,
+        RippleCounter74hc93Circuit,
+        RippleCounter74hc93Content,
+        ["counter", "ripple counter", "asynchronous", "74hc93", "mod-16", "decade", "sequential"],
+      ),
     ],
   },
   {

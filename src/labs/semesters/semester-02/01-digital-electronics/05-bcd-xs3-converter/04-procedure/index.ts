@@ -1,4 +1,4 @@
-import { s2BcdXs3ConverterStepSchematics } from "@/labs/schematics/s2-bcd-xs3-converter-schematics";
+import { s2BcdXs3ConverterStepSchematics } from "@/labs/schematics/semester-02/01-digital-electronics/05-bcd-xs3-converter";
 import { step as s01 } from "./01-inspect-and-place-the-breadboard";
 import { step as s02 } from "./02-place-not-and-xor-gates";
 import { step as s03 } from "./03-place-and-and-or-gates";

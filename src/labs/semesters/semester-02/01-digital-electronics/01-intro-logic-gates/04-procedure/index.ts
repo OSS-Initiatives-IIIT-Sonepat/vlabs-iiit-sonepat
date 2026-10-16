@@ -1,5 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
-import { s2IntroLogicGatesStepSchematics } from "@/labs/schematics/s2-intro-logic-gates-schematics";
+import { s2IntroLogicGatesStepSchematics } from "@/labs/schematics/semester-02/01-digital-electronics/01-intro-logic-gates";
 
 import { step as s01 } from "./01-breadboard";
 import { step as s02 } from "./02-chips-basic";

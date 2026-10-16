@@ -1,5 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
-import { step04 as circuitDiagram } from "@/labs/schematics/thevenin-theorem-schematics";
+import { step04 as circuitDiagram } from "@/labs/schematics/semester-01/03-FEE/thevenin-theorem";
 export const theory: TheorySection = {
   circuitDiagram,
   id: "theory",

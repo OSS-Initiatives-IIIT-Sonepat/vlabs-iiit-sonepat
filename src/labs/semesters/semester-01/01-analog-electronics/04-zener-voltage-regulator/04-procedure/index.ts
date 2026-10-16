@@ -1,5 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
-import { voltageRegulatorStepSchematics } from "@/labs/schematics/zener-voltage-regulator-schematics";
+import { voltageRegulatorStepSchematics } from "@/labs/schematics/semester-01/01-analog-electronics/04-zener-voltage-regulator";
 
 import { step as s01 } from "./01-breadboard-and-supply";
 import { step as s02 } from "./02-series-resistor";

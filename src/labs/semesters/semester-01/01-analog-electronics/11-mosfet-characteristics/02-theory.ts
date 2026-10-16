@@ -1,5 +1,5 @@
 import { type LabSection } from "@/labs/lab-content.types";
-import { mosfetCharacteristicsTheoryDiagram } from "@/labs/schematics/mosfet-characteristics-schematics";
+import { mosfetCharacteristicsTheoryDiagram } from "@/labs/schematics/semester-01/01-analog-electronics/11-mosfet-characteristics";
 
 export const theory: LabSection = {
   id: "theory",

@@ -1,12 +1,17 @@
 "use client";
 
-import React from "react";
+import React, { useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { useLabInteraction } from "./lab-interaction";
+import { textBaselineOffset, uprightTextCenter } from "./schematics/geometry";
 
 /* ── OpenBench-faithful tokens ─────────────────────────────────── */
 const CANVAS_BG = "#fafafa";
 const GRID_DOT = "rgba(212,212,212,0.45)";
 const WIRE = "#171717";
 const WIRE_HIGHLIGHT = "#2563eb";
+const HOVER_FILL = "rgba(250,204,21,0.3)";
+const HOVER_STROKE = "#eab308";
 const SYMBOL_BODY = "#ffffff";
 const SYMBOL_STROKE = "#171717";
 const PIN_COLOR = "#525252";
@@ -24,11 +29,12 @@ const sp = {
 /* ── Types ─────────────────────────────────────────────────────── */
 export type Pt = { x: number; y: number };
 
-export type SchematicElement =
+export type SchematicElement = (
   | { type: "resistor"; id: string; x: number; y: number; rotation?: number; label?: string; value?: string; highlight?: boolean }
   | { type: "zener"; id: string; x: number; y: number; rotation?: number; label?: string; value?: string; highlight?: boolean }
   | { type: "diode"; id: string; x: number; y: number; rotation?: number; label?: string; highlight?: boolean }
   | { type: "capacitor"; id: string; x: number; y: number; rotation?: number; label?: string; value?: string; highlight?: boolean }
+  | { type: "inductor"; id: string; x: number; y: number; rotation?: number; label?: string; value?: string; highlight?: boolean }
   | { type: "vsource"; id: string; x: number; y: number; rotation?: number; label?: string; value?: string; highlight?: boolean }
   | { type: "ground"; id: string; x: number; y: number }
   | { type: "ammeter"; id: string; x: number; y: number; rotation?: number; label?: string; highlight?: boolean }
@@ -56,12 +62,18 @@ export type SchematicElement =
   // Function generator / AC source
   | { type: "acsource"; id: string; x: number; y: number; rotation?: number; label?: string; value?: string; highlight?: boolean }
   // Oscilloscope probe point
-  | { type: "probe"; id: string; x: number; y: number; label?: string; highlight?: boolean };
+  | { type: "probe"; id: string; x: number; y: number; label?: string; highlight?: boolean }
+) & {
+  /** Id of the 3D component this symbol stands for, when it can't be inferred. */
+  ref?: string;
+};
 
 export type SchematicData = {
   elements: SchematicElement[];
   width?: number;
   height?: number;
+  /** Symbols shown on their own (a legend or pictorial), not a wired circuit. */
+  gallery?: boolean;
 };
 
 /* ── Highlight selection rect ──────────────────────────────────── */
@@ -85,6 +97,22 @@ function Pin({ x, y }: { x: number; y: number }) {
   return <circle cx={x} cy={y} r={3} fill={PIN_COLOR} />;
 }
 
+/* ── Symbol text: stays upright when the symbol is rotated ─────── */
+function SymText({ x, y, rotation = 0, textAnchor = "start", fontSize, fill = PIN_COLOR, fontWeight, inside, children }: {
+  x: number; y: number; rotation?: number; textAnchor?: "start" | "middle" | "end";
+  fontSize: number; fill?: string; fontWeight?: number; inside?: boolean; children: string;
+}) {
+  if (!(rotation % 360)) {
+    return <text x={x} y={y} textAnchor={textAnchor} fontSize={fontSize} fill={fill} fontWeight={fontWeight}>{children}</text>;
+  }
+  const c = uprightTextCenter({ x, y, text: children, fontSize, anchor: textAnchor }, rotation, inside);
+  return (
+    <text x={c.x} y={c.y + textBaselineOffset(fontSize)} transform={`rotate(${-rotation})`} textAnchor="middle" fontSize={fontSize} fill={fill} fontWeight={fontWeight}>
+      {children}
+    </text>
+  );
+}
+
 /* ── Symbols (OpenBench faithful) ──────────────────────────────── */
 
 function Resistor({ x, y, rotation = 0, label, value, highlight }: {
@@ -101,8 +129,8 @@ function Resistor({ x, y, rotation = 0, label, value, highlight }: {
       {/* pins */}
       <Pin x={-30} y={0} />
       <Pin x={30} y={0} />
-      {label && <text x={0} y={-14} textAnchor="middle" fontSize={10} fill={PIN_COLOR}>{label}</text>}
-      {value && <text x={0} y={22} textAnchor="middle" fontSize={9} fill={PIN_COLOR}>{value}</text>}
+      {label && <SymText rotation={rotation} x={0} y={-14} textAnchor="middle" fontSize={10} fill={PIN_COLOR}>{label}</SymText>}
+      {value && <SymText rotation={rotation} x={0} y={22} textAnchor="middle" fontSize={9} fill={PIN_COLOR}>{value}</SymText>}
     </g>
   );
 }
@@ -126,8 +154,8 @@ function ZenerDiode({ x, y, rotation = 0, label, value, highlight }: {
       {/* pins */}
       <Pin x={-20} y={0} />
       <Pin x={20} y={0} />
-      {label && <text x={0} y={-18} textAnchor="middle" fontSize={10} fill={PIN_COLOR}>{label}</text>}
-      {value && <text x={0} y={24} textAnchor="middle" fontSize={9} fill={PIN_COLOR}>{value}</text>}
+      {label && <SymText rotation={rotation} x={0} y={-18} textAnchor="middle" fontSize={10} fill={PIN_COLOR}>{label}</SymText>}
+      {value && <SymText rotation={rotation} x={0} y={24} textAnchor="middle" fontSize={9} fill={PIN_COLOR}>{value}</SymText>}
     </g>
   );
 }
@@ -144,7 +172,7 @@ function Diode({ x, y, rotation = 0, label, highlight }: {
       <line x1={8} y1={-9} x2={8} y2={9} stroke={SYMBOL_STROKE} strokeWidth={2} />
       <Pin x={-20} y={0} />
       <Pin x={20} y={0} />
-      {label && <text x={0} y={-18} textAnchor="middle" fontSize={10} fill={PIN_COLOR}>{label}</text>}
+      {label && <SymText rotation={rotation} x={0} y={-18} textAnchor="middle" fontSize={10} fill={PIN_COLOR}>{label}</SymText>}
     </g>
   );
 }
@@ -161,8 +189,31 @@ function Capacitor({ x, y, rotation = 0, label, value, highlight }: {
       <line x1={4} y1={-12} x2={4} y2={12} stroke={SYMBOL_STROKE} strokeWidth={2} />
       <Pin x={-20} y={0} />
       <Pin x={20} y={0} />
-      {label && <text x={0} y={-16} textAnchor="middle" fontSize={10} fill={PIN_COLOR}>{label}</text>}
-      {value && <text x={0} y={22} textAnchor="middle" fontSize={9} fill={PIN_COLOR}>{value}</text>}
+      {label && <SymText rotation={rotation} x={0} y={-16} textAnchor="middle" fontSize={10} fill={PIN_COLOR}>{label}</SymText>}
+      {value && <SymText rotation={rotation} x={0} y={22} textAnchor="middle" fontSize={9} fill={PIN_COLOR}>{value}</SymText>}
+    </g>
+  );
+}
+
+function Inductor({ x, y, rotation = 0, label, value, highlight }: {
+  x: number; y: number; rotation?: number; label?: string; value?: string; highlight?: boolean;
+}) {
+  return (
+    <g transform={`translate(${x},${y}) rotate(${rotation})`}>
+      {highlight && <SelectionRect hw={30} hh={10} />}
+      <line x1={-30} y1={0} x2={-20} y2={0} {...sp} />
+      <line x1={20} y1={0} x2={30} y2={0} {...sp} />
+      <path
+        d="M -20 0 a 5 5 0 0 1 10 0 a 5 5 0 0 1 10 0 a 5 5 0 0 1 10 0 a 5 5 0 0 1 10 0"
+        fill="none"
+        stroke={SYMBOL_STROKE}
+        strokeWidth={SW}
+        strokeLinecap="round"
+      />
+      <Pin x={-30} y={0} />
+      <Pin x={30} y={0} />
+      {label && <SymText rotation={rotation} x={0} y={-12} textAnchor="middle" fontSize={10} fill={PIN_COLOR}>{label}</SymText>}
+      {value && <SymText rotation={rotation} x={0} y={16} textAnchor="middle" fontSize={9} fill={PIN_COLOR}>{value}</SymText>}
     </g>
   );
 }
@@ -181,13 +232,13 @@ function VSource({ x, y, rotation = 0, label, value, highlight }: {
       {/* - plate (short, thick) */}
       <line x1={-8} y1={4} x2={8} y2={4} stroke={SYMBOL_STROKE} strokeWidth={3} />
       {/* +/- signs */}
-      <text x={12} y={-10} fontSize={10} fill={SYMBOL_STROKE} fontWeight={600}>+</text>
-      <text x={12} y={16} fontSize={10} fill={SYMBOL_STROKE} fontWeight={600}>−</text>
+      <SymText rotation={rotation} x={12} y={-10} fontSize={10} fill={SYMBOL_STROKE} fontWeight={600}>+</SymText>
+      <SymText rotation={rotation} x={12} y={16} fontSize={10} fill={SYMBOL_STROKE} fontWeight={600}>−</SymText>
       {/* pins */}
       <Pin x={0} y={-30} />
       <Pin x={0} y={30} />
-      {label && <text x={-18} y={4} textAnchor="end" fontSize={10} fill={PIN_COLOR}>{label}</text>}
-      {value && <text x={-18} y={16} textAnchor="end" fontSize={9} fill={PIN_COLOR}>{value}</text>}
+      {label && <SymText rotation={rotation} x={-18} y={4} textAnchor="end" fontSize={10} fill={PIN_COLOR}>{label}</SymText>}
+      {value && <SymText rotation={rotation} x={-18} y={16} textAnchor="end" fontSize={9} fill={PIN_COLOR}>{value}</SymText>}
     </g>
   );
 }
@@ -211,12 +262,12 @@ function MeterCircle({ x, y, rotation = 0, letter, label, highlight }: {
     <g transform={`translate(${x},${y}) rotate(${rotation})`}>
       {highlight && <SelectionRect hw={14} hh={14} />}
       <circle cx={0} cy={0} r={14} fill={SYMBOL_BODY} stroke={SYMBOL_STROKE} strokeWidth={SW} />
-      <text x={0} y={5} textAnchor="middle" fontSize={13} fontWeight={600} fill={SYMBOL_STROKE}>{letter}</text>
+      <SymText rotation={rotation} inside x={0} y={5} textAnchor="middle" fontSize={13} fontWeight={600} fill={SYMBOL_STROKE}>{letter}</SymText>
       <line x1={0} y1={-14} x2={0} y2={-24} {...sp} />
       <line x1={0} y1={14} x2={0} y2={24} {...sp} />
       <Pin x={0} y={-24} />
       <Pin x={0} y={24} />
-      {label && <text x={18} y={4} textAnchor="start" fontSize={10} fill={PIN_COLOR}>{label}</text>}
+      {label && <SymText rotation={rotation} x={18} y={4} textAnchor="start" fontSize={10} fill={PIN_COLOR}>{label}</SymText>}
     </g>
   );
 }
@@ -274,10 +325,10 @@ function NpnBjt({ x, y, rotation = 0, label, highlight }: {
       <Pin x={20} y={-30} />
       <Pin x={20} y={30} />
       {/* Labels */}
-      <text x={-14} y={-8} fontSize={8} fill={PIN_COLOR}>B</text>
-      <text x={24} y={-24} fontSize={8} fill={PIN_COLOR}>C</text>
-      <text x={24} y={28} fontSize={8} fill={PIN_COLOR}>E</text>
-      {label && <text x={0} y={-28} textAnchor="middle" fontSize={10} fill={PIN_COLOR}>{label}</text>}
+      <SymText rotation={rotation} x={-14} y={-8} fontSize={8} fill={PIN_COLOR}>B</SymText>
+      <SymText rotation={rotation} x={24} y={-24} fontSize={8} fill={PIN_COLOR}>C</SymText>
+      <SymText rotation={rotation} x={24} y={28} fontSize={8} fill={PIN_COLOR}>E</SymText>
+      {label && <SymText rotation={rotation} x={0} y={-28} textAnchor="middle" fontSize={10} fill={PIN_COLOR}>{label}</SymText>}
     </g>
   );
 }
@@ -302,10 +353,10 @@ function PnpBjt({ x, y, rotation = 0, label, highlight }: {
       <Pin x={-20} y={0} />
       <Pin x={20} y={-30} />
       <Pin x={20} y={30} />
-      <text x={-14} y={-8} fontSize={8} fill={PIN_COLOR}>B</text>
-      <text x={24} y={-24} fontSize={8} fill={PIN_COLOR}>C</text>
-      <text x={24} y={28} fontSize={8} fill={PIN_COLOR}>E</text>
-      {label && <text x={0} y={-28} textAnchor="middle" fontSize={10} fill={PIN_COLOR}>{label}</text>}
+      <SymText rotation={rotation} x={-14} y={-8} fontSize={8} fill={PIN_COLOR}>B</SymText>
+      <SymText rotation={rotation} x={24} y={-24} fontSize={8} fill={PIN_COLOR}>C</SymText>
+      <SymText rotation={rotation} x={24} y={28} fontSize={8} fill={PIN_COLOR}>E</SymText>
+      {label && <SymText rotation={rotation} x={0} y={-28} textAnchor="middle" fontSize={10} fill={PIN_COLOR}>{label}</SymText>}
     </g>
   );
 }
@@ -342,10 +393,10 @@ function NMosfet({ x, y, rotation = 0, label, highlight }: {
       <Pin x={10} y={-30} />
       <Pin x={10} y={30} />
       {/* Labels */}
-      <text x={-18} y={-8} fontSize={8} fill={PIN_COLOR}>G</text>
-      <text x={16} y={-24} fontSize={8} fill={PIN_COLOR}>D</text>
-      <text x={16} y={28} fontSize={8} fill={PIN_COLOR}>S</text>
-      {label && <text x={0} y={-36} textAnchor="middle" fontSize={10} fill={PIN_COLOR}>{label}</text>}
+      <SymText rotation={rotation} x={-18} y={-8} fontSize={8} fill={PIN_COLOR}>G</SymText>
+      <SymText rotation={rotation} x={16} y={-24} fontSize={8} fill={PIN_COLOR}>D</SymText>
+      <SymText rotation={rotation} x={16} y={28} fontSize={8} fill={PIN_COLOR}>S</SymText>
+      {label && <SymText rotation={rotation} x={-14} y={-20} textAnchor="end" fontSize={10} fill={PIN_COLOR}>{label}</SymText>}
     </g>
   );
 }
@@ -373,10 +424,10 @@ function PMosfet({ x, y, rotation = 0, label, highlight }: {
       <Pin x={-24} y={0} />
       <Pin x={10} y={-30} />
       <Pin x={10} y={30} />
-      <text x={-18} y={-8} fontSize={8} fill={PIN_COLOR}>G</text>
-      <text x={16} y={-24} fontSize={8} fill={PIN_COLOR}>D</text>
-      <text x={16} y={28} fontSize={8} fill={PIN_COLOR}>S</text>
-      {label && <text x={0} y={-36} textAnchor="middle" fontSize={10} fill={PIN_COLOR}>{label}</text>}
+      <SymText rotation={rotation} x={-18} y={-8} fontSize={8} fill={PIN_COLOR}>G</SymText>
+      <SymText rotation={rotation} x={16} y={-24} fontSize={8} fill={PIN_COLOR}>D</SymText>
+      <SymText rotation={rotation} x={16} y={28} fontSize={8} fill={PIN_COLOR}>S</SymText>
+      {label && <SymText rotation={rotation} x={-14} y={-20} textAnchor="end" fontSize={10} fill={PIN_COLOR}>{label}</SymText>}
     </g>
   );
 }
@@ -398,13 +449,13 @@ function OpAmp({ x, y, rotation = 0, label, highlight }: {
       {/* Output lead */}
       <line x1={30} y1={0} x2={40} y2={0} {...sp} />
       {/* +/- labels inside */}
-      <text x={-14} y={-8} fontSize={12} fill={SYMBOL_STROKE} fontWeight={600}>−</text>
-      <text x={-14} y={17} fontSize={12} fill={SYMBOL_STROKE} fontWeight={600}>+</text>
+      <SymText rotation={rotation} inside x={-14} y={-8} fontSize={12} fill={SYMBOL_STROKE} fontWeight={600}>−</SymText>
+      <SymText rotation={rotation} inside x={-14} y={17} fontSize={12} fill={SYMBOL_STROKE} fontWeight={600}>+</SymText>
       {/* Pins */}
       <Pin x={-30} y={-12} />
       <Pin x={-30} y={12} />
       <Pin x={40} y={0} />
-      {label && <text x={0} y={-30} textAnchor="middle" fontSize={10} fill={PIN_COLOR}>{label}</text>}
+      {label && <SymText rotation={rotation} x={0} y={-30} textAnchor="middle" fontSize={10} fill={PIN_COLOR}>{label}</SymText>}
     </g>
   );
 }
@@ -423,8 +474,8 @@ function AcSource({ x, y, rotation = 0, label, value, highlight }: {
       <path d="M-8,0 Q-4,-8 0,0 Q4,8 8,0" fill="none" stroke={SYMBOL_STROKE} strokeWidth={SW} />
       <Pin x={0} y={-30} />
       <Pin x={0} y={30} />
-      {label && <text x={-20} y={4} textAnchor="end" fontSize={10} fill={PIN_COLOR}>{label}</text>}
-      {value && <text x={-20} y={16} textAnchor="end" fontSize={9} fill={PIN_COLOR}>{value}</text>}
+      {label && <SymText rotation={rotation} x={-20} y={4} textAnchor="end" fontSize={10} fill={PIN_COLOR}>{label}</SymText>}
+      {value && <SymText rotation={rotation} x={-20} y={16} textAnchor="end" fontSize={9} fill={PIN_COLOR}>{value}</SymText>}
     </g>
   );
 }
@@ -446,7 +497,7 @@ function Led({ x, y, rotation = 0, label, color = "red", highlight }: {
       <line x1={4} y1={-10} x2={10} y2={-16} stroke={SYMBOL_STROKE} strokeWidth={SW} />
       <Pin x={-20} y={0} />
       <Pin x={20} y={0} />
-      {label && <text x={0} y={20} textAnchor="middle" fontSize={9} fill={PIN_COLOR}>{label}</text>}
+      {label && <SymText rotation={rotation} x={0} y={20} textAnchor="middle" fontSize={9} fill={PIN_COLOR}>{label}</SymText>}
     </g>
   );
 }
@@ -483,7 +534,7 @@ function AndGate({ x, y, rotation = 0, label, highlight }: {
       <Pin x={-26} y={-8} />
       <Pin x={-26} y={8} />
       <Pin x={26} y={0} />
-      {label && <text x={0} y={-22} textAnchor="middle" fontSize={9} fill={PIN_COLOR}>{label}</text>}
+      {label && <SymText rotation={rotation} x={0} y={-22} textAnchor="middle" fontSize={9} fill={PIN_COLOR}>{label}</SymText>}
     </g>
   );
 }
@@ -502,7 +553,7 @@ function OrGate({ x, y, rotation = 0, label, highlight }: {
       <Pin x={-26} y={-8} />
       <Pin x={-26} y={8} />
       <Pin x={26} y={0} />
-      {label && <text x={0} y={-22} textAnchor="middle" fontSize={9} fill={PIN_COLOR}>{label}</text>}
+      {label && <SymText rotation={rotation} x={0} y={-22} textAnchor="middle" fontSize={9} fill={PIN_COLOR}>{label}</SymText>}
     </g>
   );
 }
@@ -521,7 +572,7 @@ function NotGate({ x, y, rotation = 0, label, highlight }: {
       <line x1={18} y1={0} x2={26} y2={0} {...sp} />
       <Pin x={-22} y={0} />
       <Pin x={26} y={0} />
-      {label && <text x={0} y={-18} textAnchor="middle" fontSize={9} fill={PIN_COLOR}>{label}</text>}
+      {label && <SymText rotation={rotation} x={0} y={-18} textAnchor="middle" fontSize={9} fill={PIN_COLOR}>{label}</SymText>}
     </g>
   );
 }
@@ -540,7 +591,7 @@ function NandGate({ x, y, rotation = 0, label, highlight }: {
       <Pin x={-26} y={-8} />
       <Pin x={-26} y={8} />
       <Pin x={32} y={0} />
-      {label && <text x={0} y={-22} textAnchor="middle" fontSize={9} fill={PIN_COLOR}>{label}</text>}
+      {label && <SymText rotation={rotation} x={0} y={-22} textAnchor="middle" fontSize={9} fill={PIN_COLOR}>{label}</SymText>}
     </g>
   );
 }
@@ -559,7 +610,7 @@ function NorGate({ x, y, rotation = 0, label, highlight }: {
       <Pin x={-26} y={-8} />
       <Pin x={-26} y={8} />
       <Pin x={36} y={0} />
-      {label && <text x={0} y={-22} textAnchor="middle" fontSize={9} fill={PIN_COLOR}>{label}</text>}
+      {label && <SymText rotation={rotation} x={0} y={-22} textAnchor="middle" fontSize={9} fill={PIN_COLOR}>{label}</SymText>}
     </g>
   );
 }
@@ -579,7 +630,7 @@ function XorGate({ x, y, rotation = 0, label, highlight }: {
       <Pin x={-28} y={-8} />
       <Pin x={-28} y={8} />
       <Pin x={28} y={0} />
-      {label && <text x={0} y={-22} textAnchor="middle" fontSize={9} fill={PIN_COLOR}>{label}</text>}
+      {label && <SymText rotation={rotation} x={0} y={-22} textAnchor="middle" fontSize={9} fill={PIN_COLOR}>{label}</SymText>}
     </g>
   );
 }
@@ -599,7 +650,7 @@ function XnorGate({ x, y, rotation = 0, label, highlight }: {
       <Pin x={-28} y={-8} />
       <Pin x={-28} y={8} />
       <Pin x={36} y={0} />
-      {label && <text x={0} y={-22} textAnchor="middle" fontSize={9} fill={PIN_COLOR}>{label}</text>}
+      {label && <SymText rotation={rotation} x={0} y={-22} textAnchor="middle" fontSize={9} fill={PIN_COLOR}>{label}</SymText>}
     </g>
   );
 }
@@ -608,109 +659,245 @@ function XnorGate({ x, y, rotation = 0, label, highlight }: {
 const GRID_PAT_ID = "schematic-dot-grid";
 
 /* ── Main component ────────────────────────────────────────────── */
-export function CircuitSchematic({ schematic }: { schematic: SchematicData }) {
+
+/** Half-extents [hw, hh, cx] of each linkable symbol, in its local frame. */
+const SYMBOL_BOUNDS: Partial<Record<SchematicElement["type"], [number, number, number?]>> = {
+  resistor: [32, 12],
+  zener: [22, 14],
+  diode: [22, 14],
+  capacitor: [22, 14],
+  inductor: [32, 12],
+  vsource: [18, 32],
+  acsource: [20, 32],
+  ammeter: [17, 26],
+  voltmeter: [17, 26],
+  "npn-bjt": [24, 32, 2],
+  "pnp-bjt": [24, 32, 2],
+  "n-mosfet": [26, 32, -4],
+  "p-mosfet": [26, 32, -4],
+  "op-amp": [38, 27, 5],
+  led: [22, 20],
+  probe: [10, 10],
+  "and-gate": [30, 19],
+  "or-gate": [30, 19],
+  "not-gate": [28, 15, 2],
+  "nand-gate": [34, 19, 3],
+  "nor-gate": [36, 19, 5],
+  "xor-gate": [32, 19],
+  "xnor-gate": [36, 19, 4],
+};
+
+export type SchematicLink = { id: string; name: string };
+
+export function CircuitSchematic({
+  schematic,
+  linkElement,
+}: {
+  schematic: SchematicData;
+  /** Maps a symbol to its 3D component; enables hover/select linking. */
+  linkElement?: (el: SchematicElement) => SchematicLink | null;
+}) {
   const w = schematic.width ?? 340;
   const h = schematic.height ?? 260;
+  const { hovered, hover, unhover, setSelectedId } = useLabInteraction();
+  const [tag, setTag] = useState<{ key: string; name: string; x: number; y: number } | null>(null);
+  const hitRefs = useRef(new Map<string, SVGRectElement>());
 
   // The viewBox stays tight around the circuit content (original sizing).
   // The dot-grid rect extends far beyond via a large negative offset,
   // but `overflow: visible` on the SVG lets PanZoomCanvas reveal it when panning.
   const DOT_PAD = 2000;
 
+  function showTag(el: SchematicElement, link: SchematicLink) {
+    const rect = hitRefs.current.get(el.id)?.getBoundingClientRect();
+    if (!rect) return;
+    setTag({ key: el.id, name: link.name, x: rect.left + rect.width / 2, y: rect.top });
+  }
+
   return (
-    <svg
-      viewBox={`-10 -10 ${w + 20} ${h + 20}`}
-      width="100%"
-      height="100%"
-      overflow="visible"
-      style={{ background: CANVAS_BG, display: "block" }}
-    >
-      <defs>
-        <pattern
-          id={GRID_PAT_ID}
-          x={0}
-          y={0}
-          width={GRID}
-          height={GRID}
-          patternUnits="userSpaceOnUse"
-        >
-          <circle cx={0} cy={0} r={0.8} fill={GRID_DOT} />
-        </pattern>
-      </defs>
+    <>
+      <svg
+        viewBox={`-10 -10 ${w + 20} ${h + 20}`}
+        width="100%"
+        height="100%"
+        overflow="visible"
+        style={{ background: CANVAS_BG, display: "block" }}
+      >
+        <defs>
+          <pattern
+            id={GRID_PAT_ID}
+            x={0}
+            y={0}
+            width={GRID}
+            height={GRID}
+            patternUnits="userSpaceOnUse"
+          >
+            <circle cx={0} cy={0} r={0.8} fill={GRID_DOT} />
+          </pattern>
+        </defs>
 
-      {/* Dot grid — extends far beyond viewBox so it's visible when panning */}
-      <rect
-        x={-DOT_PAD}
-        y={-DOT_PAD}
-        width={w + DOT_PAD * 2}
-        height={h + DOT_PAD * 2}
-        fill={`url(#${GRID_PAT_ID})`}
-      />
+        {/* Dot grid — extends far beyond viewBox so it's visible when panning */}
+        <rect
+          x={-DOT_PAD}
+          y={-DOT_PAD}
+          width={w + DOT_PAD * 2}
+          height={h + DOT_PAD * 2}
+          fill={`url(#${GRID_PAT_ID})`}
+        />
 
-      {schematic.elements.map((el) => {
-        switch (el.type) {
-          case "resistor":
-            return <Resistor key={el.id} x={el.x} y={el.y} rotation={el.rotation} label={el.label} value={el.value} highlight={el.highlight} />;
-          case "zener":
-            return <ZenerDiode key={el.id} x={el.x} y={el.y} rotation={el.rotation} label={el.label} value={el.value} highlight={el.highlight} />;
-          case "diode":
-            return <Diode key={el.id} x={el.x} y={el.y} rotation={el.rotation} label={el.label} highlight={el.highlight} />;
-          case "capacitor":
-            return <Capacitor key={el.id} x={el.x} y={el.y} rotation={el.rotation} label={el.label} value={el.value} highlight={el.highlight} />;
-          case "vsource":
-            return <VSource key={el.id} x={el.x} y={el.y} rotation={el.rotation} label={el.label} value={el.value} highlight={el.highlight} />;
-          case "ground":
-            return <Ground key={el.id} x={el.x} y={el.y} />;
-          case "ammeter":
-            return <MeterCircle key={el.id} x={el.x} y={el.y} rotation={el.rotation} letter="A" label={el.label} highlight={el.highlight} />;
-          case "voltmeter":
-            return <MeterCircle key={el.id} x={el.x} y={el.y} rotation={el.rotation} letter="V" label={el.label} highlight={el.highlight} />;
-          case "wire":
-            return <Wire key={el.id} points={el.points} highlight={el.highlight} />;
-          case "junction":
-            return <Junction key={el.id} x={el.x} y={el.y} />;
-          case "label":
-            return <Label key={el.id} x={el.x} y={el.y} text={el.text} />;
-          // Transistors
-          case "npn-bjt":
-            return <NpnBjt key={el.id} x={el.x} y={el.y} rotation={el.rotation} label={el.label} highlight={el.highlight} />;
-          case "pnp-bjt":
-            return <PnpBjt key={el.id} x={el.x} y={el.y} rotation={el.rotation} label={el.label} highlight={el.highlight} />;
-          case "n-mosfet":
-            return <NMosfet key={el.id} x={el.x} y={el.y} rotation={el.rotation} label={el.label} highlight={el.highlight} />;
-          case "p-mosfet":
-            return <PMosfet key={el.id} x={el.x} y={el.y} rotation={el.rotation} label={el.label} highlight={el.highlight} />;
-          // Op-amp
-          case "op-amp":
-            return <OpAmp key={el.id} x={el.x} y={el.y} rotation={el.rotation} label={el.label} highlight={el.highlight} />;
-          // AC source
-          case "acsource":
-            return <AcSource key={el.id} x={el.x} y={el.y} rotation={el.rotation} label={el.label} value={el.value} highlight={el.highlight} />;
-          // LED
-          case "led":
-            return <Led key={el.id} x={el.x} y={el.y} rotation={el.rotation} label={el.label} color={el.color} highlight={el.highlight} />;
-          // Probe
-          case "probe":
-            return <Probe key={el.id} x={el.x} y={el.y} label={el.label} highlight={el.highlight} />;
-          // Logic gates
-          case "and-gate":
-            return <AndGate key={el.id} x={el.x} y={el.y} rotation={el.rotation} label={el.label} highlight={el.highlight} />;
-          case "or-gate":
-            return <OrGate key={el.id} x={el.x} y={el.y} rotation={el.rotation} label={el.label} highlight={el.highlight} />;
-          case "not-gate":
-            return <NotGate key={el.id} x={el.x} y={el.y} rotation={el.rotation} label={el.label} highlight={el.highlight} />;
-          case "nand-gate":
-            return <NandGate key={el.id} x={el.x} y={el.y} rotation={el.rotation} label={el.label} highlight={el.highlight} />;
-          case "nor-gate":
-            return <NorGate key={el.id} x={el.x} y={el.y} rotation={el.rotation} label={el.label} highlight={el.highlight} />;
-          case "xor-gate":
-            return <XorGate key={el.id} x={el.x} y={el.y} rotation={el.rotation} label={el.label} highlight={el.highlight} />;
-          case "xnor-gate":
-            return <XnorGate key={el.id} x={el.x} y={el.y} rotation={el.rotation} label={el.label} highlight={el.highlight} />;
-          default:
-            return null;
-        }
-      })}
-    </svg>
+        {schematic.elements.map((el) => {
+          const symbol = renderSymbol(el);
+          const bounds = SYMBOL_BOUNDS[el.type];
+          const link = bounds && linkElement ? linkElement(el) : null;
+          if (!link || !bounds || !("x" in el)) {
+            return <React.Fragment key={el.id}>{symbol}</React.Fragment>;
+          }
+
+          const [hw, hh, cx = 0] = bounds;
+          const rotation = "rotation" in el ? (el.rotation ?? 0) : 0;
+          const isHovered = hovered?.id === link.id;
+          const frame = `translate(${el.x},${el.y}) rotate(${rotation})`;
+
+          return (
+            <g
+              key={el.id}
+              style={{ cursor: "pointer" }}
+              onPointerEnter={() => {
+                hover(link.id, "2d");
+                showTag(el, link);
+              }}
+              onPointerLeave={() => {
+                unhover("2d");
+                setTag(null);
+              }}
+              // Keep the click from starting a pan of the schematic canvas.
+              onPointerDown={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation();
+                setTag(null);
+                setSelectedId(link.id);
+              }}
+            >
+              {isHovered && (
+                <g transform={frame}>
+                  <rect
+                    x={cx - hw}
+                    y={-hh}
+                    width={hw * 2}
+                    height={hh * 2}
+                    rx={5}
+                    fill={HOVER_FILL}
+                    stroke={HOVER_STROKE}
+                    strokeWidth={1.2}
+                  />
+                </g>
+              )}
+              {symbol}
+              <g transform={frame}>
+                <rect
+                  ref={(node) => {
+                    if (node) hitRefs.current.set(el.id, node);
+                    else hitRefs.current.delete(el.id);
+                  }}
+                  x={cx - hw}
+                  y={-hh}
+                  width={hw * 2}
+                  height={hh * 2}
+                  fill="transparent"
+                  pointerEvents="all"
+                />
+              </g>
+            </g>
+          );
+        })}
+      </svg>
+
+      {tag &&
+        hovered?.source === "2d" &&
+        createPortal(
+          <div
+            style={{
+              position: "fixed",
+              left: tag.x,
+              top: tag.y - 8,
+              transform: "translate(-50%, -100%)",
+              zIndex: 1000,
+              pointerEvents: "none",
+            }}
+          >
+            <div key={tag.key} className="lab-name-tag">
+              {tag.name}
+            </div>
+          </div>,
+          document.body,
+        )}
+    </>
   );
+}
+
+function renderSymbol(el: SchematicElement): React.ReactNode {
+  switch (el.type) {
+    case "resistor":
+      return <Resistor x={el.x} y={el.y} rotation={el.rotation} label={el.label} value={el.value} highlight={el.highlight} />;
+    case "zener":
+      return <ZenerDiode x={el.x} y={el.y} rotation={el.rotation} label={el.label} value={el.value} highlight={el.highlight} />;
+    case "diode":
+      return <Diode x={el.x} y={el.y} rotation={el.rotation} label={el.label} highlight={el.highlight} />;
+    case "capacitor":
+      return <Capacitor x={el.x} y={el.y} rotation={el.rotation} label={el.label} value={el.value} highlight={el.highlight} />;
+    case "inductor":
+      return <Inductor x={el.x} y={el.y} rotation={el.rotation} label={el.label} value={el.value} highlight={el.highlight} />;
+    case "vsource":
+      return <VSource x={el.x} y={el.y} rotation={el.rotation} label={el.label} value={el.value} highlight={el.highlight} />;
+    case "ground":
+      return <Ground x={el.x} y={el.y} />;
+    case "ammeter":
+      return <MeterCircle x={el.x} y={el.y} rotation={el.rotation} letter="A" label={el.label} highlight={el.highlight} />;
+    case "voltmeter":
+      return <MeterCircle x={el.x} y={el.y} rotation={el.rotation} letter="V" label={el.label} highlight={el.highlight} />;
+    case "wire":
+      return <Wire points={el.points} highlight={el.highlight} />;
+    case "junction":
+      return <Junction x={el.x} y={el.y} />;
+    case "label":
+      return <Label x={el.x} y={el.y} text={el.text} />;
+    // Transistors
+    case "npn-bjt":
+      return <NpnBjt x={el.x} y={el.y} rotation={el.rotation} label={el.label} highlight={el.highlight} />;
+    case "pnp-bjt":
+      return <PnpBjt x={el.x} y={el.y} rotation={el.rotation} label={el.label} highlight={el.highlight} />;
+    case "n-mosfet":
+      return <NMosfet x={el.x} y={el.y} rotation={el.rotation} label={el.label} highlight={el.highlight} />;
+    case "p-mosfet":
+      return <PMosfet x={el.x} y={el.y} rotation={el.rotation} label={el.label} highlight={el.highlight} />;
+    // Op-amp
+    case "op-amp":
+      return <OpAmp x={el.x} y={el.y} rotation={el.rotation} label={el.label} highlight={el.highlight} />;
+    // AC source
+    case "acsource":
+      return <AcSource x={el.x} y={el.y} rotation={el.rotation} label={el.label} value={el.value} highlight={el.highlight} />;
+    // LED
+    case "led":
+      return <Led x={el.x} y={el.y} rotation={el.rotation} label={el.label} color={el.color} highlight={el.highlight} />;
+    // Probe
+    case "probe":
+      return <Probe x={el.x} y={el.y} label={el.label} highlight={el.highlight} />;
+    // Logic gates
+    case "and-gate":
+      return <AndGate x={el.x} y={el.y} rotation={el.rotation} label={el.label} highlight={el.highlight} />;
+    case "or-gate":
+      return <OrGate x={el.x} y={el.y} rotation={el.rotation} label={el.label} highlight={el.highlight} />;
+    case "not-gate":
+      return <NotGate x={el.x} y={el.y} rotation={el.rotation} label={el.label} highlight={el.highlight} />;
+    case "nand-gate":
+      return <NandGate x={el.x} y={el.y} rotation={el.rotation} label={el.label} highlight={el.highlight} />;
+    case "nor-gate":
+      return <NorGate x={el.x} y={el.y} rotation={el.rotation} label={el.label} highlight={el.highlight} />;
+    case "xor-gate":
+      return <XorGate x={el.x} y={el.y} rotation={el.rotation} label={el.label} highlight={el.highlight} />;
+    case "xnor-gate":
+      return <XnorGate x={el.x} y={el.y} rotation={el.rotation} label={el.label} highlight={el.highlight} />;
+    default:
+      return null;
+  }
 }

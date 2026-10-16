@@ -1,5 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
-import { ohmsLawStepSchematics } from "@/labs/schematics/ohms-law-schematics";
+import { ohmsLawStepSchematics } from "@/labs/schematics/semester-01/01-analog-electronics/ohms-law";
 
 import { step as s01 } from "./01-set-up-breadboard";
 import { step as s02 } from "./02-insert-resistor-ammeter";

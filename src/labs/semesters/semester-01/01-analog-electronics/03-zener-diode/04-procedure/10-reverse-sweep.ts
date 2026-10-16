@@ -1,5 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
-import { step10 as schematic } from "@/labs/schematics/zener-diode-schematics";
+import { step10 as schematic } from "@/labs/schematics/semester-01/01-analog-electronics/03-zener-diode";
 
 export const step: SceneProcedureStep = {
   label: "Reverse bias sweep: 0 → 10 V.",

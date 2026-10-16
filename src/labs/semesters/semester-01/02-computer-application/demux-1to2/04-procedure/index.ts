@@ -5,7 +5,7 @@ import { step as s04 } from "./04-connect-input-lines-to-both-and-gates";
 import { step as s05 } from "./05-test-s-0-and-s-1-routing";
 
 import { type SceneProcedureStep } from "@/labs/experiments/types";
-import { demux1to2StepSchematics } from "@/labs/schematics/demux-1to2-schematics";
+import { demux1to2StepSchematics } from "@/labs/schematics/semester-01/02-computer-application/demux-1to2";
 
 export const procedureSteps: SceneProcedureStep[] = [
   { ...s01, schematic: demux1to2StepSchematics[0] },
