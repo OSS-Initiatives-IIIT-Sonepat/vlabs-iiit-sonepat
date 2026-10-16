@@ -1,5 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
-import { ceAmplifierTheoryDiagram } from "@/labs/schematics/ce-amplifier-schematics";
+import { ceAmplifierTheoryDiagram } from "@/labs/schematics/semester-01/01-analog-electronics/07-ce-amplifier";
 
 export const theory: TheorySection = {
   id: "theory",
