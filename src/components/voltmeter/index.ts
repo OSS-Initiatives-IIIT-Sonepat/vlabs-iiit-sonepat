@@ -1,7 +1,12 @@
 import * as THREE from "three";
 import { PITCH, BOARD_H, BOARD_W, BOARD_D, TOP_Y } from "@/labs/coords";
 import { M } from "@/components/shared/materials";
-import { solidBox, solidCyl, textLabel } from "@/components/shared/primitives";
+import {
+  solidBox,
+  solidCyl,
+  textLabel,
+  centreAtOrigin,
+} from "@/components/shared/primitives";
 import { instrumentWire } from "@/components/shared/instrument-wire";
 import { benchPlacement, BENCH_SLOTS } from "@/components/shared/bench-layout";
 
@@ -32,10 +37,27 @@ function makeNeedle(length: number): THREE.Mesh {
     NEEDLE_WIDTH * 0.55,
   );
 
+  // BoxGeometry is centered by default.
+  // Translate vertices upward so (0, 0, 0) is the bottom pivot.
+  geometry.translate(0, length / 2, 0);
+
   const needle = new THREE.Mesh(geometry, M.dark());
-  needle.position.y = length / 2;
 
   return needle;
+}
+
+function parseReadingValue(
+  reading: string | number | undefined | null,
+): number | null {
+  if (reading === undefined || reading === null) return null;
+  if (typeof reading === "number")
+    return Number.isFinite(reading) ? reading : null;
+  const str = String(reading).trim();
+  if (!str || str === "--") return null;
+  const match = str.match(/[-+]?[0-9]*\.?[0-9]+/);
+  if (!match) return null;
+  const val = parseFloat(match[0]);
+  return Number.isFinite(val) ? val : null;
 }
 
 function makeDialTick(
@@ -59,7 +81,7 @@ function makeDialTick(
   return tick;
 }
 
-function buildDial(): THREE.Group {
+function buildDial(reading?: number | string): THREE.Group {
   const dial = new THREE.Group();
 
   // Dial face
@@ -140,8 +162,20 @@ function buildDial(): THREE.Group {
   // Needle
   const needle = makeNeedle(NEEDLE_LENGTH);
 
-  needle.rotation.z = -Math.PI * 0.42;
-  needle.position.z = PITCH * 0.13;
+  const numVal = parseReadingValue(reading);
+  const voltVal =
+    numVal !== null
+      ? numVal
+      : typeof reading === "string" && reading.trim() === "--"
+        ? 0
+        : 5;
+
+  const clampedVal = Math.max(0, Math.min(15, voltVal));
+  const t = clampedVal / 15;
+  const angle = startAngle + (endAngle - startAngle) * t;
+
+  needle.position.set(0, 0, PITCH * 0.13);
+  needle.rotation.z = -angle;
 
   dial.add(needle);
 
@@ -206,7 +240,7 @@ function buildTerminal(
 
   // + / − label above terminal
   const label = textLabel(labelText, PITCH * 0.48, PITCH * 0.28, {
-    textColor: "#222222",
+    textColor: labelText === "+" ? "#d32f2f" : "#222222",
     fontSize: 28,
   });
 
@@ -225,6 +259,7 @@ function buildTerminal(
 
 export function buildVoltmeter(
   mountPos: THREE.Vector3 = new THREE.Vector3(),
+  reading?: number | string,
 ): THREE.Group {
   const root = new THREE.Group();
 
@@ -243,7 +278,7 @@ export function buildVoltmeter(
   root.add(bezel);
 
   // Dial
-  const dial = buildDial();
+  const dial = buildDial(reading);
 
   dial.position.set(0, BODY_H * 0.6, BODY_D / 2 + PITCH * 0.19);
 
@@ -304,12 +339,11 @@ export function buildVoltmeter(
   return root;
 }
 
-export function buildVoltmeterStandalone(): THREE.Group {
-  const root = buildVoltmeter(new THREE.Vector3(0, 0, 0));
-
-  root.position.y = TOP_Y + BOARD_H * 0.04;
-
-  return root;
+export function buildVoltmeterStandalone(
+  reading?: number | string,
+): THREE.Group {
+  const root = buildVoltmeter(new THREE.Vector3(0, 0, 0), reading ?? 5);
+  return centreAtOrigin(root);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -318,9 +352,26 @@ export function buildVoltmeterStandalone(): THREE.Group {
 
 export function buildVoltmeterSide(
   position: "left" | "right" | number = "left",
+  readingOrTargets?:
+    string | number | { probe1: THREE.Vector3; probe2: THREE.Vector3 },
   targets?: { probe1: THREE.Vector3; probe2: THREE.Vector3 },
 ): THREE.Group {
-  const model = buildVoltmeterStandalone();
+  let displayVal: string | number | undefined;
+  let actualTargets = targets;
+  if (
+    readingOrTargets &&
+    typeof readingOrTargets === "object" &&
+    "probe1" in readingOrTargets
+  ) {
+    actualTargets = readingOrTargets as {
+      probe1: THREE.Vector3;
+      probe2: THREE.Vector3;
+    };
+  } else if (readingOrTargets !== undefined) {
+    displayVal = readingOrTargets as string | number;
+  }
+
+  const model = buildVoltmeterStandalone(displayVal ?? "--");
 
   const slot =
     typeof position === "number"
@@ -333,19 +384,20 @@ export function buildVoltmeterSide(
   const wrapper = new THREE.Group();
   wrapper.add(model);
   wrapper.scale.setScalar(scale);
-  wrapper.position.copy(slotPos);
+  // Elevate so that the feet of the centered model sit on the bench (Y = 0)
+  wrapper.position.set(slotPos.x, BODY_H * 0.5 * scale, slotPos.z);
 
   const root = new THREE.Group();
   root.add(wrapper);
 
-  if (targets) {
+  if (actualTargets) {
     const meterY = TOP_Y + PITCH * 0.5;
     const origin = new THREE.Vector3(slotPos.x, meterY, slotPos.z);
-    root.add(instrumentWire(origin, targets.probe1, 0xd63b2a));
+    root.add(instrumentWire(origin, actualTargets.probe1, 0xd63b2a));
     const origin2 = origin.clone();
     origin2.x -= 0.06;
     origin2.z += 0.05;
-    root.add(instrumentWire(origin2, targets.probe2, 0x202020));
+    root.add(instrumentWire(origin2, actualTargets.probe2, 0x202020));
   }
 
   return root;

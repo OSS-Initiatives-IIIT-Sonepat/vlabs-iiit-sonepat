@@ -1,7 +1,12 @@
 import * as THREE from "three";
 import { PITCH, BOARD_H, BOARD_W, BOARD_D, TOP_Y } from "@/labs/coords";
 import { M } from "@/components/shared/materials";
-import { solidBox, solidCyl, textLabel } from "@/components/shared/primitives";
+import {
+  solidBox,
+  solidCyl,
+  textLabel,
+  centreAtOrigin,
+} from "@/components/shared/primitives";
 import { instrumentWire } from "@/components/shared/instrument-wire";
 import { benchPlacement, BENCH_SLOTS } from "@/components/shared/bench-layout";
 
@@ -36,13 +41,27 @@ function makeNeedle(length: number): THREE.Mesh {
     NEEDLE_WIDTH * 0.55,
   );
 
+  // BoxGeometry is centered by default.
+  // Translate vertices upward so (0, 0, 0) is the bottom pivot.
+  geometry.translate(0, length / 2, 0);
+
   const needle = new THREE.Mesh(geometry, M.dark());
 
-  // BoxGeometry is centered.
-  // Move it upward so its bottom starts at the pivot.
-  needle.position.y = length / 2;
-
   return needle;
+}
+
+function parseReadingValue(
+  reading: string | number | undefined | null,
+): number | null {
+  if (reading === undefined || reading === null) return null;
+  if (typeof reading === "number")
+    return Number.isFinite(reading) ? reading : null;
+  const str = String(reading).trim();
+  if (!str || str === "--") return null;
+  const match = str.match(/[-+]?[0-9]*\.?[0-9]+/);
+  if (!match) return null;
+  const val = parseFloat(match[0]);
+  return Number.isFinite(val) ? val : null;
 }
 
 function makeDialTick(
@@ -70,7 +89,7 @@ function makeDialTick(
 // Dial
 // ─────────────────────────────────────────────────────────────────────────────
 
-function buildDial(): THREE.Group {
+function buildDial(reading?: number | string): THREE.Group {
   const dial = new THREE.Group();
 
   // ── White analogue dial face ────────────────────────────────────────────
@@ -162,10 +181,20 @@ function buildDial(): THREE.Group {
 
   const needle = makeNeedle(NEEDLE_LENGTH);
 
-  // Start around 20 mA.
-  needle.rotation.z = -Math.PI * 0.42;
+  const numVal = parseReadingValue(reading);
+  const currentVal =
+    numVal !== null
+      ? numVal
+      : typeof reading === "string" && reading.trim() === "--"
+        ? 0
+        : 25;
 
-  needle.position.z = PITCH * 0.13;
+  const clampedVal = Math.max(0, Math.min(100, currentVal));
+  const t = clampedVal / 100;
+  const angle = startAngle + (endAngle - startAngle) * t;
+
+  needle.position.set(0, 0, PITCH * 0.13);
+  needle.rotation.z = -angle;
 
   dial.add(needle);
 
@@ -193,24 +222,6 @@ function buildTerminal(
 ): THREE.Group {
   const group = new THREE.Group();
 
-  /*
-   * IMPORTANT
-   *
-   * The main body is positioned at:
-   *
-   *     y = BODY_H / 2
-   *
-   * therefore the body occupies:
-   *
-   *     y = 0 → BODY_H
-   *
-   * The terminals must therefore also be inside that range.
-   *
-   * The previous version used a negative Y value, which placed the
-   * terminals BELOW the physical body and made them look like they
-   * were floating.
-   */
-
   const terminalY = BODY_H * 0.18;
 
   // Front surface of the body.
@@ -227,9 +238,6 @@ function buildTerminal(
 
   socket.rotation.x = Math.PI / 2;
 
-  /*
-   * Socket sits directly against the body.
-   */
   socket.position.set(x, terminalY, frontZ + PITCH * 0.015);
 
   group.add(socket);
@@ -240,12 +248,6 @@ function buildTerminal(
 
   post.rotation.x = Math.PI / 2;
 
-  /*
-   * The post slightly intersects the front face.
-   *
-   * This prevents the terminal from visually floating away
-   * from the instrument.
-   */
   post.position.set(x, terminalY, frontZ + TERMINAL_DEPTH * 0.28);
 
   group.add(post);
@@ -293,6 +295,7 @@ function buildTerminal(
 
 export function buildAmmeter(
   mountPos: THREE.Vector3 = new THREE.Vector3(),
+  reading?: number | string,
 ): THREE.Group {
   const root = new THREE.Group();
 
@@ -318,7 +321,7 @@ export function buildAmmeter(
 
   // ── Dial ────────────────────────────────────────────────────────────────
 
-  const dial = buildDial();
+  const dial = buildDial(reading);
 
   dial.position.set(0, BODY_H * 0.6, BODY_D / 2 + PITCH * 0.19);
 
@@ -389,12 +392,9 @@ export function buildAmmeter(
 // Standalone preview
 // ─────────────────────────────────────────────────────────────────────────────
 
-export function buildAmmeterStandalone(): THREE.Group {
-  const root = buildAmmeter(new THREE.Vector3(0, 0, 0));
-
-  root.position.y = TOP_Y + BOARD_H * 0.04;
-
-  return root;
+export function buildAmmeterStandalone(reading?: number | string): THREE.Group {
+  const root = buildAmmeter(new THREE.Vector3(0, 0, 0), reading ?? 25);
+  return centreAtOrigin(root);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -403,9 +403,26 @@ export function buildAmmeterStandalone(): THREE.Group {
 
 export function buildAmmeterSide(
   position: "left" | "right" | number = "right",
+  readingOrTargets?:
+    string | number | { probe1: THREE.Vector3; probe2: THREE.Vector3 },
   targets?: { probe1: THREE.Vector3; probe2: THREE.Vector3 },
 ): THREE.Group {
-  const model = buildAmmeterStandalone();
+  let displayVal: string | number | undefined;
+  let actualTargets = targets;
+  if (
+    readingOrTargets &&
+    typeof readingOrTargets === "object" &&
+    "probe1" in readingOrTargets
+  ) {
+    actualTargets = readingOrTargets as {
+      probe1: THREE.Vector3;
+      probe2: THREE.Vector3;
+    };
+  } else if (readingOrTargets !== undefined) {
+    displayVal = readingOrTargets as string | number;
+  }
+
+  const model = buildAmmeterStandalone(displayVal ?? "--");
 
   const slot =
     typeof position === "number"
@@ -418,19 +435,20 @@ export function buildAmmeterSide(
   const wrapper = new THREE.Group();
   wrapper.add(model);
   wrapper.scale.setScalar(scale);
-  wrapper.position.copy(slotPos);
+  // Elevate so that the feet of the centered model sit on the bench (Y = 0)
+  wrapper.position.set(slotPos.x, BODY_H * 0.5 * scale, slotPos.z);
 
   const root = new THREE.Group();
   root.add(wrapper);
 
-  if (targets) {
+  if (actualTargets) {
     const meterY = TOP_Y + PITCH * 0.5;
     const origin = new THREE.Vector3(slotPos.x, meterY, slotPos.z);
-    root.add(instrumentWire(origin, targets.probe1, 0xd63b2a));
+    root.add(instrumentWire(origin, actualTargets.probe1, 0xd63b2a));
     const origin2 = origin.clone();
     origin2.x -= 0.06;
     origin2.z += 0.05;
-    root.add(instrumentWire(origin2, targets.probe2, 0x202020));
+    root.add(instrumentWire(origin2, actualTargets.probe2, 0x202020));
   }
 
   return root;
