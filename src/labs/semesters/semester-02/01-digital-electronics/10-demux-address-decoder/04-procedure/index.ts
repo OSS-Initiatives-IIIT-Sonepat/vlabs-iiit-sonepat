@@ -1,4 +1,4 @@
-import { s2DemuxAddressDecoderStepSchematics } from "@/labs/schematics/s2-demux-address-decoder-schematics";
+import { s2DemuxAddressDecoderStepSchematics } from "@/labs/schematics/semester-02/01-digital-electronics/10-demux-address-decoder";
 import { step as s01 } from "./01-build-the-1-2-demux-circuit-with-i-1";
 import { step as s02 } from "./02-connect-address-select-switch-and-led-indicators";
 import { step as s03 } from "./03-verify-deselected-peripheral-is-not-enabled";
