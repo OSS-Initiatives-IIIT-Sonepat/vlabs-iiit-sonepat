@@ -41,11 +41,11 @@ export const M = {
       polygonOffset: true,
       polygonOffsetFactor: 3,
     }),
-  metal: () =>
-    new THREE.MeshStandardMaterial({
-      color: "#B8C0C8",
-      metalness: 0.85,
-      roughness: 0.3,
+  metal: () => new THREE.MeshBasicMaterial({ color: 0xc2cad2 }),
+  resBody: () => new THREE.MeshBasicMaterial({ color: 0xf0dfb4 }),
+  wire: (color: string) =>
+    new THREE.MeshBasicMaterial({
+      color: WIRE_HEX[color.toLowerCase()] ?? 0xd63b2a,
     }),
   edge: () => new THREE.LineBasicMaterial({ color: 0x141414 }),
   hex: (c: number) => new THREE.MeshBasicMaterial({ color: c }),
@@ -53,11 +53,12 @@ export const M = {
 
 // ── Wire colour lookup ─────────────────────────────────────────────────────
 export const WIRE_HEX: Record<string, number> = {
-  red: 0xd63b2a,
-  black: 0x202020,
-  yellow: 0xdda000,
-  green: 0x22a84a,
-  blue: 0x2563a8,
-  orange: 0xe07020,
-  white: 0xeeeeee,
+  red: 0xe03424,
+  black: 0x202226,
+  yellow: 0xf0b400,
+  green: 0x22b44c,
+  blue: 0x2270cc,
+  orange: 0xf27418,
+  white: 0xf0f2f5,
+  purple: 0x8832d8,
 };
