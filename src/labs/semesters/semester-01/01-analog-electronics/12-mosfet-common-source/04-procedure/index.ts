@@ -11,7 +11,7 @@ import { step as s08 } from "./08-vary-gate-voltage";
 import { step as s09 } from "./09-apply-input-signal";
 import { step as s10 } from "./10-observe-output";
 
-import { mosfetCommonSourceStepSchematics } from "@/labs/schematics/mosfet-common-source-schematics";
+import { mosfetCommonSourceStepSchematics } from "@/labs/schematics/semester-01/01-analog-electronics/12-mosfet-common-source";
 
 export const procedureSteps: SceneProcedureStep[] = [
   { ...s01, schematic: mosfetCommonSourceStepSchematics[0] },
