@@ -1,5 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
-import { s2FullSubtractorStepSchematics } from "@/labs/schematics/s2-full-subtractor-schematics";
+import { s2FullSubtractorStepSchematics } from "@/labs/schematics/semester-02/01-digital-electronics/04-02-full-subtractor";
 import { step as s01 } from "./01-place-breadboard";
 import { step as s02 } from "./02-place-difference-gates";
 import { step as s03 } from "./03-place-borrow-gates";
