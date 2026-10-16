@@ -1,5 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
-import { basicComponentsTheoryDiagram as circuitDiagram } from "@/labs/schematics/basic-components-schematics";
+import { basicComponentsTheoryDiagram as circuitDiagram } from "@/labs/schematics/semester-01/01-analog-electronics/01-study-basic-components";
 
 export const theory: TheorySection = {
   id: "theory",
