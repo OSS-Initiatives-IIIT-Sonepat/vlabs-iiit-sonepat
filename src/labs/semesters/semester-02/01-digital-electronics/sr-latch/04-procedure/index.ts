@@ -1,4 +1,4 @@
-import { srLatchStepSchematics } from "@/labs/schematics/s2-sr-latch-schematics";
+import { srLatchStepSchematics } from "@/labs/schematics/semester-02/01-digital-electronics/sr-latch";
 import { step as s01 } from "./01-place-the-breadboard";
 import { step as s02 } from "./02-place-the-74hc279-sr-latch-ic";
 import { step as s03 } from "./03-wire-s-bar-and-r-bar-inputs";
