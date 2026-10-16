@@ -1,5 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
-import { s2GateMinimizationTheoryDiagram } from "@/labs/schematics/s2-gate-minimization-schematics";
+import { s2GateMinimizationTheoryDiagram } from "@/labs/schematics/semester-02/01-digital-electronics/02-gate-level-minimization";
 
 export const theory: TheorySection = {
   id: "theory",
