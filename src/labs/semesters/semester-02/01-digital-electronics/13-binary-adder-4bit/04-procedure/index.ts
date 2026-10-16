@@ -1,5 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
-import { binaryAdder4bitStepSchematics } from "@/labs/schematics/s2-binary-adder-4bit-schematics";
+import { binaryAdder4bitStepSchematics } from "@/labs/schematics/semester-02/01-digital-electronics/13-binary-adder-4bit";
 import { step as s01 } from "./01-place-breadboard";
 import { step as s02 } from "./02-connect-supply";
 import { step as s03 } from "./03-place-ics";
