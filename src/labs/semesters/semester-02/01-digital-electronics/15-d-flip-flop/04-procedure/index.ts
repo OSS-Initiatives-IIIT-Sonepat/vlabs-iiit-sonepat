@@ -1,4 +1,4 @@
-import { dFlipFlopStepSchematics } from "@/labs/schematics/s2-d-flip-flop-schematics";
+import { dFlipFlopStepSchematics } from "@/labs/schematics/semester-02/01-digital-electronics/15-d-flip-flop";
 import { step as s01 } from "./01-place-the-breadboard";
 import { step as s02 } from "./02-place-the-74hc74-d-flip-flop-ic";
 import { step as s03 } from "./03-tie-pre-bar-and-clr-bar-high";
