@@ -1,5 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
-import { basicComponentsStepSchematics } from "@/labs/schematics/basic-components-schematics";
+import { basicComponentsStepSchematics } from "@/labs/schematics/semester-01/01-analog-electronics/01-study-basic-components";
 
 import { step as s01 } from "./01-place-breadboard";
 import { step as s02 } from "./02-regulated-power-supply";
