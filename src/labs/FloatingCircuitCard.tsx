@@ -113,11 +113,14 @@ function PanZoomCanvas({
   const panSession = useRef<{ pointerId: number; startX: number; startY: number; orig: Offset } | null>(null);
   const [panning, setPanning] = useState(false);
 
+  const [prevResetKey, setPrevResetKey] = useState(resetKey);
+
   // Reset when step changes
-  useEffect(() => {
+  if (resetKey !== prevResetKey) {
+    setPrevResetKey(resetKey);
     setZoom(1);
     setPan({ x: 0, y: 0 });
-  }, [resetKey]);
+  }
 
   const onPointerDown = useCallback((e: RPointerEvent<HTMLDivElement>) => {
     if (e.button !== 0) return;
