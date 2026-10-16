@@ -1,5 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
-import { step09 as schematic } from "@/labs/schematics/half-wave-rectifier-schematics";
+import { step09 as schematic } from "@/labs/schematics/semester-01/01-analog-electronics/05-half-wave-rectifier";
 
 export const step: SceneProcedureStep = {
   label: "Add a filter capacitor for smoothing",
