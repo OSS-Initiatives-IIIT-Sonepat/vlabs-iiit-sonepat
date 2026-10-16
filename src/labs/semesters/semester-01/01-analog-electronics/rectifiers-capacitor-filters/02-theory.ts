@@ -1,5 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
-import { rectifiersCapacitorFiltersTheoryDiagram } from "@/labs/schematics/rectifiers-capacitor-filters-schematics";
+import { rectifiersCapacitorFiltersTheoryDiagram } from "@/labs/schematics/semester-01/01-analog-electronics/rectifiers-capacitor-filters";
 
 export const theory: TheorySection = {
   id: "theory",
