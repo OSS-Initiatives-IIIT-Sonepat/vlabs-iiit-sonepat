@@ -1,5 +1,5 @@
 import { type LabSection } from "@/labs/lab-content.types";
-import { step06 as circuitDiagram } from "@/labs/schematics/pn-junction-diode-schematics";
+import { step06 as circuitDiagram } from "@/labs/schematics/semester-01/01-analog-electronics/02-pn-junction-diode";
 
 export const theory: LabSection = {
   id: "theory",
