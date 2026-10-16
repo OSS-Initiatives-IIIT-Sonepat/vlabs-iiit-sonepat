@@ -12,6 +12,9 @@ export {
   textLabel,
   centreAtOrigin,
   instrumentWire,
+  probeWire,
+  alligatorWire,
+  patchCable,
 } from "./shared";
 
 export { buildBreadboard, buildBreadboardStandalone } from "./breadboard";
@@ -19,11 +22,19 @@ export {
   buildLongBreadboard,
   buildLongBreadboardStandalone,
 } from "./long-breadboard";
-export { buildWire, buildWireStandalone } from "./wire";
+export {
+  buildWire,
+  buildWireStandalone,
+  buildInstrumentCable,
+  buildBananaCableStandalone,
+  type ConnectorType,
+} from "./wire";
 export { buildResistor, buildResistorStandalone } from "./resistor";
 export { buildCapacitor, buildCapacitorStandalone } from "./capacitor";
+export { buildInductor, buildInductorStandalone } from "./inductor";
 export { buildLed, buildLedStandalone } from "./led";
 export {
+  buildDip,
   buildDip14,
   buildDip14Standalone,
   buildDip16,
@@ -35,6 +46,11 @@ export {
   buildDcPowerSupplyStandalone,
   buildDcJackStandalone,
   buildBatteryStandalone,
+  PSU_TERMINAL_V_PLUS,
+  PSU_TERMINAL_GND,
+  PSU_TERMINAL_V_MINUS,
+  getPsuTerminals,
+  type PsuTerminalInfo,
 } from "./psu";
 export { buildIcMeter, buildIcMeterStandalone } from "./multimeter";
 export { buildSwitchStandalone } from "./switch";
@@ -66,6 +82,7 @@ export {
   buildFunctionGeneratorStandalone,
   buildFunctionGenerator,
   FG_OUT_ANCHOR,
+  FG_GND_ANCHOR,
 } from "./function-generater";
 export { buildTransformerStandalone, buildTransformer } from "./transformer";
 export { buildDipSwitchStandalone, buildDipSwitch } from "./dip-switch";
