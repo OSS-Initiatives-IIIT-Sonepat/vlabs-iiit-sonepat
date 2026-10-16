@@ -1,5 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
-import { step02 as schematic } from "@/labs/schematics/ohms-law-schematics";
+import { step02 as schematic } from "@/labs/schematics/semester-01/01-analog-electronics/ohms-law";
 
 export const step: SceneProcedureStep = {
   label: "Insert the resistor and connect the ammeter in series.",
