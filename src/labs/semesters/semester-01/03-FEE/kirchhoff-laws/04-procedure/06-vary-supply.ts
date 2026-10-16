@@ -1,5 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
-import { step06 as schematic } from "@/labs/schematics/kirchhoff-laws-schematics";
+import { step06 as schematic } from "@/labs/schematics/semester-01/03-FEE/kirchhoff-laws";
 
 export const step: SceneProcedureStep = {
   label: "Vary supply voltages and repeat.",
