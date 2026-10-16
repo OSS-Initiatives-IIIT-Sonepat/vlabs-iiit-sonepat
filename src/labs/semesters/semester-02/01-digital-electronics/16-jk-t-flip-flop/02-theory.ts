@@ -1,5 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
-import { jkTFlipFlopTheoryDiagram } from "@/labs/schematics/s2-jk-t-flip-flop-schematics";
+import { jkTFlipFlopTheoryDiagram } from "@/labs/schematics/semester-02/01-digital-electronics/16-jk-t-flip-flop";
 
 export const theory: TheorySection = {
   id: "theory",
