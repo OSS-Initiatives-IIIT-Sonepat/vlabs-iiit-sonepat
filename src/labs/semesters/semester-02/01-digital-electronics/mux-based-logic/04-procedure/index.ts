@@ -1,4 +1,4 @@
-import { muxBasedLogicStepSchematics } from "@/labs/schematics/s2-mux-based-logic-schematics";
+import { muxBasedLogicStepSchematics } from "@/labs/schematics/semester-02/01-digital-electronics/mux-based-logic";
 import { step as s01 } from "./01-construct-the-2-1-mux-base-circuit";
 import { step as s02 } from "./02-implement-and-a-b-using-the-mux";
 import { step as s03 } from "./03-implement-or-a-b-using-the-mux";
