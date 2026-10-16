@@ -1,5 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
-import { srLatchTheoryDiagram } from "@/labs/schematics/s2-sr-latch-schematics";
+import { srLatchTheoryDiagram } from "@/labs/schematics/semester-02/01-digital-electronics/sr-latch";
 
 export const theory: TheorySection = {
   id: "theory",
