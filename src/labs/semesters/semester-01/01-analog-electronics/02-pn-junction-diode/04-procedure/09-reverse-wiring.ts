@@ -1,5 +1,5 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
-import { step09 as schematic } from "@/labs/schematics/pn-junction-diode-schematics";
+import { step09 as schematic } from "@/labs/schematics/semester-01/01-analog-electronics/02-pn-junction-diode";
 
 export const step: SceneProcedureStep = {
   label: "Wire the reverse-bias path and reconnect voltmeter.",
