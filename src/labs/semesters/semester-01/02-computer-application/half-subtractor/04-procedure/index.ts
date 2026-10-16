@@ -6,7 +6,7 @@ import { step as s05 } from "./05-wire-not-gate-output-to-and-gate-input";
 import { step as s06 } from "./06-test-all-4-input-combinations-and-verify";
 
 import { type SceneProcedureStep } from "@/labs/experiments/types";
-import { halfSubtractorStepSchematics } from "@/labs/schematics/half-subtractor-schematics";
+import { halfSubtractorStepSchematics } from "@/labs/schematics/semester-01/02-computer-application/half-subtractor";
 
 export const procedureSteps: SceneProcedureStep[] = [
   { ...s01, schematic: halfSubtractorStepSchematics[0] },
