@@ -34,11 +34,17 @@ function clampOffset(raw: Offset, session: DragSession): Offset {
   return {
     x: Math.max(
       pad - session.anchorLeft,
-      Math.min(raw.x, session.boundsW - session.cardW - pad - session.anchorLeft),
+      Math.min(
+        raw.x,
+        session.boundsW - session.cardW - pad - session.anchorLeft,
+      ),
     ),
     y: Math.max(
       pad - session.anchorTop,
-      Math.min(raw.y, session.boundsH - session.cardH - pad - session.anchorTop),
+      Math.min(
+        raw.y,
+        session.boundsH - session.cardH - pad - session.anchorTop,
+      ),
     ),
   };
 }
@@ -50,10 +56,32 @@ function clampOffset(raw: Offset, session: DragSession): Offset {
 function ExpandIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
-      <path d="M8.5 1.5H12.5V5.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M5.5 12.5H1.5V8.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M12.5 1.5L8 6" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
-      <path d="M1.5 12.5L6 8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+      <path
+        d="M8.5 1.5H12.5V5.5"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M5.5 12.5H1.5V8.5"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M12.5 1.5L8 6"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+      />
+      <path
+        d="M1.5 12.5L6 8"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
@@ -61,7 +89,13 @@ function ExpandIcon() {
 function ChevronLeftIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
-      <path d="M10 3L5 8L10 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d="M10 3L5 8L10 13"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
@@ -69,7 +103,13 @@ function ChevronLeftIcon() {
 function ChevronRightIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
-      <path d="M6 3L11 8L6 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d="M6 3L11 8L6 13"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
@@ -77,7 +117,12 @@ function ChevronRightIcon() {
 function CloseIcon() {
   return (
     <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
-      <path d="M2 2L10 10M10 2L2 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <path
+        d="M2 2L10 10M10 2L2 10"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
@@ -85,8 +130,21 @@ function CloseIcon() {
 function FitIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
-      <rect x="2" y="2" width="10" height="10" rx="2" stroke="currentColor" strokeWidth="1.3" />
-      <path d="M5 7H9M7 5V9" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+      <rect
+        x="2"
+        y="2"
+        width="10"
+        height="10"
+        rx="2"
+        stroke="currentColor"
+        strokeWidth="1.3"
+      />
+      <path
+        d="M5 7H9M7 5V9"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
@@ -110,7 +168,12 @@ function PanZoomCanvas({
   const containerRef = useRef<HTMLDivElement>(null);
   const [zoom, setZoom] = useState(1);
   const [pan, setPan] = useState<Offset>({ x: 0, y: 0 });
-  const panSession = useRef<{ pointerId: number; startX: number; startY: number; orig: Offset } | null>(null);
+  const panSession = useRef<{
+    pointerId: number;
+    startX: number;
+    startY: number;
+    orig: Offset;
+  } | null>(null);
   const [panning, setPanning] = useState(false);
 
   const [prevResetKey, setPrevResetKey] = useState(resetKey);
@@ -122,19 +185,22 @@ function PanZoomCanvas({
     setPan({ x: 0, y: 0 });
   }
 
-  const onPointerDown = useCallback((e: RPointerEvent<HTMLDivElement>) => {
-    if (e.button !== 0) return;
-    e.preventDefault();
-    e.stopPropagation();
-    e.currentTarget.setPointerCapture(e.pointerId);
-    panSession.current = {
-      pointerId: e.pointerId,
-      startX: e.clientX,
-      startY: e.clientY,
-      orig: pan,
-    };
-    setPanning(true);
-  }, [pan]);
+  const onPointerDown = useCallback(
+    (e: RPointerEvent<HTMLDivElement>) => {
+      if (e.button !== 0) return;
+      e.preventDefault();
+      e.stopPropagation();
+      e.currentTarget.setPointerCapture(e.pointerId);
+      panSession.current = {
+        pointerId: e.pointerId,
+        startX: e.clientX,
+        startY: e.clientY,
+        orig: pan,
+      };
+      setPanning(true);
+    },
+    [pan],
+  );
 
   const onPointerMove = useCallback((e: RPointerEvent<HTMLDivElement>) => {
     const s = panSession.current;
@@ -165,7 +231,10 @@ function PanZoomCanvas({
 
     const delta = -e.deltaY * ZOOM_SENSITIVITY;
     setZoom((prevZoom) => {
-      const newZoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, prevZoom * (1 + delta)));
+      const newZoom = Math.min(
+        MAX_ZOOM,
+        Math.max(MIN_ZOOM, prevZoom * (1 + delta)),
+      );
       const scale = newZoom / prevZoom;
       // Zoom toward cursor: adjust pan so the point under cursor stays fixed
       setPan((prevPan) => ({
@@ -216,7 +285,10 @@ function PanZoomCanvas({
       {/* Reset / fit-to-view button — only visible when panned or zoomed */}
       {isTransformed && (
         <button
-          onClick={(e) => { e.stopPropagation(); resetView(); }}
+          onClick={(e) => {
+            e.stopPropagation();
+            resetView();
+          }}
           onPointerDown={(e) => e.stopPropagation()}
           aria-label="Reset view"
           title="Fit to view"
@@ -369,7 +441,8 @@ function ExpandedSchematicOverlay({
                 if (stepIndex > 0) e.currentTarget.style.background = "#f0f0f0";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = stepIndex <= 0 ? "#f5f5f5" : "#fff";
+                e.currentTarget.style.background =
+                  stepIndex <= 0 ? "#f5f5f5" : "#fff";
               }}
             >
               <ChevronLeftIcon />
@@ -407,10 +480,12 @@ function ExpandedSchematicOverlay({
                 transition: "all 150ms ease",
               }}
               onMouseEnter={(e) => {
-                if (stepIndex < totalSteps - 1) e.currentTarget.style.background = "#f0f0f0";
+                if (stepIndex < totalSteps - 1)
+                  e.currentTarget.style.background = "#f0f0f0";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = stepIndex >= totalSteps - 1 ? "#f5f5f5" : "#fff";
+                e.currentTarget.style.background =
+                  stepIndex >= totalSteps - 1 ? "#f5f5f5" : "#fff";
               }}
             >
               <ChevronRightIcon />
@@ -547,7 +622,12 @@ export function FloatingCircuitCard({
     e.currentTarget.setPointerCapture(e.pointerId);
     const card = cardRef.current;
     const parent = card.offsetParent as HTMLElement | null;
-    const pr = parent?.getBoundingClientRect() ?? { left: 0, top: 0, width: innerWidth, height: innerHeight };
+    const pr = parent?.getBoundingClientRect() ?? {
+      left: 0,
+      top: 0,
+      width: innerWidth,
+      height: innerHeight,
+    };
     const cr = card.getBoundingClientRect();
     dragRef.current = {
       pointerId: e.pointerId,
@@ -568,7 +648,10 @@ export function FloatingCircuitCard({
     if (!d || d.pointerId !== e.pointerId) return;
     setOffset(
       clampOffset(
-        { x: d.orig.x + e.clientX - d.startX, y: d.orig.y + e.clientY - d.startY },
+        {
+          x: d.orig.x + e.clientX - d.startX,
+          y: d.orig.y + e.clientY - d.startY,
+        },
         d,
       ),
     );
@@ -637,9 +720,30 @@ export function FloatingCircuitCard({
           >
             {/* 3 grip dots */}
             <span style={{ display: "flex", gap: 3 }}>
-              <span style={{ width: 4, height: 4, borderRadius: 2, background: "#ccc" }} />
-              <span style={{ width: 4, height: 4, borderRadius: 2, background: "#ccc" }} />
-              <span style={{ width: 4, height: 4, borderRadius: 2, background: "#ccc" }} />
+              <span
+                style={{
+                  width: 4,
+                  height: 4,
+                  borderRadius: 2,
+                  background: "#ccc",
+                }}
+              />
+              <span
+                style={{
+                  width: 4,
+                  height: 4,
+                  borderRadius: 2,
+                  background: "#ccc",
+                }}
+              />
+              <span
+                style={{
+                  width: 4,
+                  height: 4,
+                  borderRadius: 2,
+                  background: "#ccc",
+                }}
+              />
             </span>
           </div>
 
@@ -666,7 +770,8 @@ export function FloatingCircuitCard({
                 if (stepIndex > 0) e.currentTarget.style.color = "#171717";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.color = stepIndex <= 0 ? "#d4d4d4" : "#737373";
+                e.currentTarget.style.color =
+                  stepIndex <= 0 ? "#d4d4d4" : "#737373";
               }}
             >
               <ChevronLeftIcon />
@@ -702,10 +807,12 @@ export function FloatingCircuitCard({
                 transition: "color 150ms",
               }}
               onMouseEnter={(e) => {
-                if (stepIndex < totalSteps - 1) e.currentTarget.style.color = "#171717";
+                if (stepIndex < totalSteps - 1)
+                  e.currentTarget.style.color = "#171717";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.color = stepIndex >= totalSteps - 1 ? "#d4d4d4" : "#737373";
+                e.currentTarget.style.color =
+                  stepIndex >= totalSteps - 1 ? "#d4d4d4" : "#737373";
               }}
             >
               <ChevronRightIcon />
@@ -713,7 +820,14 @@ export function FloatingCircuitCard({
           </div>
 
           {/* Divider */}
-          <div style={{ width: 1, height: 16, background: "rgba(0,0,0,0.08)", margin: "0 2px" }} />
+          <div
+            style={{
+              width: 1,
+              height: 16,
+              background: "rgba(0,0,0,0.08)",
+              margin: "0 2px",
+            }}
+          />
 
           {/* Expand button */}
           <button
@@ -748,9 +862,7 @@ export function FloatingCircuitCard({
 
         {/* body — pan & zoom canvas */}
         <div style={{ flex: 1, minHeight: 0, overflow: "hidden" }}>
-          <PanZoomCanvas resetKey={stepIndex}>
-            {children}
-          </PanZoomCanvas>
+          <PanZoomCanvas resetKey={stepIndex}>{children}</PanZoomCanvas>
         </div>
       </div>
 
