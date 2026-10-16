@@ -7,7 +7,7 @@ import { step as s06 } from "./06-connect-internal-wires-between-ics";
 import { step as s07 } from "./07-test-all-8-input-combinations-and-verify-outputs";
 
 import { type SceneProcedureStep } from "@/labs/experiments/types";
-import { fullAdderStepSchematics } from "@/labs/schematics/full-adder-schematics";
+import { fullAdderStepSchematics } from "@/labs/schematics/semester-01/02-computer-application/full-adder";
 
 export const procedureSteps: SceneProcedureStep[] = [
   { ...s01, schematic: fullAdderStepSchematics[0] },
