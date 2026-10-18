@@ -44,10 +44,11 @@ export const components: ComponentInstance[] = [
     mountedAt: { board: "bb", col: 5, row: "c" },
   },
 
+  // Forward-biased Zener: anode col 10, cathode col 13.
   {
     id: "zener_fwd",
-    type: "led",
-    color: "yellow",
+    type: "zener",
+    vz: 5.1,
     mountedAt: { board: "bb", col: 10, row: "c" },
   },
   {
@@ -55,34 +56,35 @@ export const components: ComponentInstance[] = [
     type: "wire",
     color: "green",
     from: { component: "r1", end: "p2" },
-    to: { led: "zener_fwd", end: "anode" },
+    to: { component: "zener_fwd", end: "p1" },
   },
   {
     id: "w_zfwd_gnd",
     type: "wire",
     color: "black",
-    from: { led: "zener_fwd", end: "cathode" },
-    to: { board: "bb", rail: "gnd_top", col: 11 },
+    from: { component: "zener_fwd", end: "p2" },
+    to: { board: "bb", rail: "gnd_top", col: 13 },
   },
   {
     id: "w_vm_fwd_pos",
     type: "wire",
     color: "blue",
-    from: { led: "zener_fwd", end: "anode" },
+    from: { component: "zener_fwd", end: "p1" },
     to: { board: "bb", col: 10, row: "a" },
   },
   {
     id: "w_vm_fwd_neg",
     type: "wire",
     color: "blue",
-    from: { board: "bb", rail: "gnd_top", col: 12 },
-    to: { board: "bb", col: 12, row: "a" },
+    from: { component: "zener_fwd", end: "p2" },
+    to: { board: "bb", col: 13, row: "a" },
   },
 
+  // Reverse-biased Zener: anode col 15 (to ground), cathode col 18 (to R1).
   {
     id: "zener_rev",
-    type: "led",
-    color: "red",
+    type: "zener",
+    vz: 5.1,
     mountedAt: { board: "bb", col: 15, row: "c" },
   },
   {
@@ -90,27 +92,27 @@ export const components: ComponentInstance[] = [
     type: "wire",
     color: "purple",
     from: { component: "r1", end: "p2" },
-    to: { led: "zener_rev", end: "cathode" },
+    to: { component: "zener_rev", end: "p2" },
   },
   {
     id: "w_zrev_gnd",
     type: "wire",
     color: "black",
-    from: { led: "zener_rev", end: "anode" },
+    from: { component: "zener_rev", end: "p1" },
     to: { board: "bb", rail: "gnd_top", col: 15 },
   },
   {
     id: "w_vm_rev_pos",
     type: "wire",
     color: "blue",
-    from: { led: "zener_rev", end: "cathode" },
-    to: { board: "bb", col: 16, row: "a" },
+    from: { component: "zener_rev", end: "p2" },
+    to: { board: "bb", col: 18, row: "a" },
   },
   {
     id: "w_vm_rev_neg",
     type: "wire",
     color: "blue",
-    from: { board: "bb", rail: "gnd_top", col: 13 },
-    to: { board: "bb", col: 13, row: "a" },
+    from: { component: "zener_rev", end: "p1" },
+    to: { board: "bb", col: 15, row: "a" },
   },
 ];

@@ -6,7 +6,7 @@ export const step: SceneProcedureStep = {
   body:
     "Set DMM 1 to **DC Voltage, 20 V range**.\n" +
     "**Blue wire** (+): col 10, spanning row a → row e (anode side).\n" +
-    "**Blue wire** (−): col 11, spanning row a → row e (cathode side).\n" +
+    "**Blue wire** (−): col 13, spanning row a → row e (cathode side).\n" +
     "These probes measure $V_Z$ directly across the diode.",
   show: [
     "bb",

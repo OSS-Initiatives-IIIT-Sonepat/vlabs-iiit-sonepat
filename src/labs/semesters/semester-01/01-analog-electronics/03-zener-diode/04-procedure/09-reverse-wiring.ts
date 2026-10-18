@@ -4,9 +4,9 @@ import { step09 as schematic } from "@/labs/schematics/semester-01/01-analog-ele
 export const step: SceneProcedureStep = {
   label: "Wire the reverse-bias path and reconnect voltmeter.",
   body:
-    "**Purple wire**: R₁ right lead (col 8) → Zener cathode (col 16). Current enters the cathode — reverse bias.\n" +
+    "**Purple wire**: R₁ right lead (col 8) → Zener cathode (col 18). Current enters the cathode — reverse bias.\n" +
     "**Black wire**: Zener anode (col 15) → GND rail.\n" +
-    "**Blue wires**: voltmeter probes across the reversed Zener (col 15 and col 16, spanning rows a → e).\n" +
+    "**Blue wires**: voltmeter probes across the reversed Zener (col 15 and col 18, spanning rows a → e).\n" +
     "DMM readings will show **negative** voltage — this is the reverse voltage $-V_Z$ across the Zener.",
   show: [
     "bb",

@@ -68,8 +68,8 @@ export const components: ComponentInstance[] = [
     type: "potentiometer",
     mountedAt: { board: "bb", col: 1, row: "b" },
     probes: [
-      { board: "bb", col: 7, row: "a" },
-      { board: "bb", col: 14, row: "a" },
+      { board: "bb", col: 12, row: "a" },
+      { board: "bb", rail: "gnd_top", col: 18 },
     ],
   },
 
