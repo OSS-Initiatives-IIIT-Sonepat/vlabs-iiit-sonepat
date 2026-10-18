@@ -7,10 +7,10 @@ export const step: SceneProcedureStep = {
     "Power on. Increase $V_s$ from 0 to 15 V in **1 V steps**.\n" +
     "Observe: the reverse current $I_0$ remains nearly constant (a few $\\mu\\text{A}$ at most) — this is the **reverse saturation region**.\n" +
     "Do **not** exceed the 1N4148 rated breakdown voltage ($V_{BR} \\approx 100\\,\\text{V}$). The current should stay flat across the entire sweep range.",
-  show: ["bb", "psu", "am1", "r1", "d1", "w_diode_r", "w_r_gnd", "vm1"],
-  highlight: "vm1",
+  show: ["bb", "psu", "am1", "r1", "d1_rev", "w_r_d1rev", "w_d1rev_gnd", "vm1_rev"],
+  highlight: "vm1_rev",
   activeInputs: { Vcc: 1 },
   supplyVoltage: 10.0,
-  readings: { am1: "0.02 mA", vm1: "10.00 V" },
+  readings: { am1: "0.02 mA", vm1_rev: "10.00 V" },
   schematic,
 };

@@ -42,7 +42,7 @@ export type ComponentInstance =
     }
   | { id: string; type: "inductor"; henrys: number; mountedAt: MountPoint }
   | { id: string; type: "led"; color: LedColor; mountedAt: MountPoint }
-  | { id: string; type: "diode"; mountedAt: MountPoint } // 1N4148, general signal diode
+  | { id: string; type: "diode"; model?: "1N4148" | "1N4007"; mountedAt: MountPoint } // signal diode (default) or rectifier
   | { id: string; type: "zener"; vz: number; mountedAt: MountPoint } // Zener diode
 
   // ── Active: BJT ───────────────────────────────────────────────────────

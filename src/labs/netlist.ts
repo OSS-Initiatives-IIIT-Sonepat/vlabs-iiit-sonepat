@@ -223,16 +223,16 @@ export class Netlist {
           this.registerPin(inst.id, "p2", tieKey(col + 3, row as Row));
           break;
         }
-        case "diode": {
-          const { col, row } = inst.mountedAt;
-          this.registerPin(inst.id, "anode", tieKey(col, row as Row));
-          this.registerPin(inst.id, "cathode", tieKey(col + 1, row as Row));
-          break;
-        }
+        // Axial diodes span col (anode, p1) → col+3 (cathode, p2), like a resistor.
+        case "diode":
         case "zener": {
           const { col, row } = inst.mountedAt;
-          this.registerPin(inst.id, "anode", tieKey(col, row as Row));
-          this.registerPin(inst.id, "cathode", tieKey(col + 1, row as Row));
+          const anode = tieKey(col, row as Row);
+          const cathode = tieKey(col + 3, row as Row);
+          this.registerPin(inst.id, "anode", anode);
+          this.registerPin(inst.id, "p1", anode);
+          this.registerPin(inst.id, "cathode", cathode);
+          this.registerPin(inst.id, "p2", cathode);
           break;
         }
 
@@ -671,7 +671,7 @@ export class Netlist {
     // PassivePin: { component, end }
     if ("component" in ep) {
       const cId = ep.component as string;
-      const end = ep.end as "p1" | "p2";
+      const end = ep.end as string;
       return this.pinNets.get(`${cId}:${end}`) ?? null;
     }
 

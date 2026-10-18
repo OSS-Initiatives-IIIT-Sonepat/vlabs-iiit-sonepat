@@ -196,7 +196,8 @@ function resolvePin(
     if (!inst || !("mountedAt" in inst) || !inst.mountedAt) return null;
     const { col, row, board } = inst.mountedAt;
     const cols = colsForBoardId(board, all);
-    const targetCol = lp.end === "anode" ? col : col + 1;
+    const span = inst.type === "diode" || inst.type === "zener" ? 3 : 1;
+    const targetCol = lp.end === "anode" ? col : col + span;
     const targetRow = pickWireRow(row, peerPin, targetCol);
     return hole(targetCol, targetRow, cols);
   }
@@ -458,7 +459,7 @@ function buildInstance(
     case "diode": {
       const { col, row, board } = inst.mountedAt;
       const cols = colsForBoardId(board, all);
-      return buildDiode(hole(col, row, cols), hole(col + 3, row, cols));
+      return buildDiode(hole(col, row, cols), hole(col + 3, row, cols), inst.model ?? "1N4148");
     }
 
     case "zener": {

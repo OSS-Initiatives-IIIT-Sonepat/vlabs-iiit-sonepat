@@ -1,8 +1,7 @@
 import { type ComponentInstance } from "@/labs/types";
 
 // Full-wave BRIDGE rectifier.
-// Input source (rendered as a generic supply stand-in) -> 4-diode bridge
-// (diodes stood in as yellow LEDs, per repo convention)
+// Input source (rendered as a generic supply stand-in) -> 4-diode bridge (1N4007)
 // -> shared positive node -> load resistor (with DMM across it) -> filter capacitor -> gnd_top.
 //
 // Node map:
@@ -10,6 +9,16 @@ import { type ComponentInstance } from "@/labs/types";
 //   a2 = (bb, col 4, row b)   AC terminal 2
 //   pos = (bb, col 21, row a) shared positive output node (D1 cathode + D2 cathode)
 //   neg = gnd_top rail        shared negative/return node (D3 anode + D4 anode + load/cap return)
+//
+// Each diode spans 4 columns (anode at col, cathode at col+3):
+//   D1 5–8, D2 9–12, D3 13–16, D4 17–20.
+
+const bridgeDiode = (id: string, col: number): ComponentInstance => ({
+  id,
+  type: "diode",
+  model: "1N4007",
+  mountedAt: { board: "bb", col, row: "c" },
+});
 
 export const components: ComponentInstance[] = [
   { id: "bb", type: "breadboard" },
@@ -26,35 +35,14 @@ export const components: ComponentInstance[] = [
     ],
   },
 
-  // Bridge diodes — visual stand-in per repo convention: yellow LED = signal diode.
   // D1: anode = a1, cathode -> pos
-  {
-    id: "d1",
-    type: "led",
-    color: "yellow",
-    mountedAt: { board: "bb", col: 6, row: "c" },
-  },
+  bridgeDiode("d1", 5),
   // D2: anode = a2, cathode -> pos
-  {
-    id: "d2",
-    type: "led",
-    color: "yellow",
-    mountedAt: { board: "bb", col: 10, row: "c" },
-  },
+  bridgeDiode("d2", 9),
   // D3: anode = neg, cathode -> a1
-  {
-    id: "d3",
-    type: "led",
-    color: "yellow",
-    mountedAt: { board: "bb", col: 14, row: "c" },
-  },
+  bridgeDiode("d3", 13),
   // D4: anode = neg, cathode -> a2
-  {
-    id: "d4",
-    type: "led",
-    color: "yellow",
-    mountedAt: { board: "bb", col: 18, row: "c" },
-  },
+  bridgeDiode("d4", 17),
 
   // Load resistor across the rectified output (spans col 22 -> 25).
   {
@@ -89,27 +77,27 @@ export const components: ComponentInstance[] = [
     type: "wire",
     color: "red",
     from: { board: "bb", col: 3, row: "a" },
-    to: { led: "d1", end: "anode" },
+    to: { component: "d1", end: "p1" },
   },
   {
     id: "w_a2_d2",
     type: "wire",
     color: "blue",
     from: { board: "bb", col: 4, row: "b" },
-    to: { led: "d2", end: "anode" },
+    to: { component: "d2", end: "p1" },
   },
   {
     id: "w_d1_pos",
     type: "wire",
     color: "orange",
-    from: { led: "d1", end: "cathode" },
+    from: { component: "d1", end: "p2" },
     to: { board: "bb", col: 21, row: "a" },
   },
   {
     id: "w_d2_pos",
     type: "wire",
     color: "orange",
-    from: { led: "d2", end: "cathode" },
+    from: { component: "d2", end: "p2" },
     to: { board: "bb", col: 21, row: "a" },
   },
 
@@ -118,28 +106,28 @@ export const components: ComponentInstance[] = [
     id: "w_neg_d3",
     type: "wire",
     color: "black",
-    from: { board: "bb", rail: "gnd_top", col: 14 },
-    to: { led: "d3", end: "anode" },
+    from: { board: "bb", rail: "gnd_top", col: 13 },
+    to: { component: "d3", end: "p1" },
   },
   {
     id: "w_d3_a1",
     type: "wire",
     color: "red",
-    from: { led: "d3", end: "cathode" },
+    from: { component: "d3", end: "p2" },
     to: { board: "bb", col: 3, row: "a" },
   },
   {
     id: "w_neg_d4",
     type: "wire",
     color: "black",
-    from: { board: "bb", rail: "gnd_top", col: 18 },
-    to: { led: "d4", end: "anode" },
+    from: { board: "bb", rail: "gnd_top", col: 17 },
+    to: { component: "d4", end: "p1" },
   },
   {
     id: "w_d4_a2",
     type: "wire",
     color: "blue",
-    from: { led: "d4", end: "cathode" },
+    from: { component: "d4", end: "p2" },
     to: { board: "bb", col: 4, row: "b" },
   },
 

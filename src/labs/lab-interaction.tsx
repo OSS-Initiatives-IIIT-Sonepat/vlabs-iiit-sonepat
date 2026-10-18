@@ -120,7 +120,7 @@ export function componentDisplayName(inst: ComponentInstance): string {
     case "led":
       return `${capitalize(inst.color)} LED`;
     case "diode":
-      return "Diode";
+      return `Diode · ${inst.model ?? "1N4148"}`;
     case "zener":
       return `Zener Diode · ${inst.vz} V`;
     case "npn-bjt":

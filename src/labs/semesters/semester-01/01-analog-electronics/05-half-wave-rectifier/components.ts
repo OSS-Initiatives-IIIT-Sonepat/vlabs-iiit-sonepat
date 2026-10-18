@@ -3,17 +3,16 @@ import { type ComponentInstance } from "@/labs/types";
 /**
  * Half-Wave Rectifier
  * ---------------------------------------------------------------
- * AC source -> D1 (visual stand-in: yellow LED, per COMPONENTS.md
- * "diodes on the breadboard use type: 'led'") -> load resistor R_L
- * -> back to ground rail. C1 is added later as a parallel filter
- * capacitor across R_L to demonstrate ripple reduction.
+ * AC source -> D1 (1N4007) -> load resistor R_L -> back to ground rail.
+ * C1 is added later as a parallel filter capacitor across R_L to
+ * demonstrate ripple reduction.
  *
  * Column plan:
  *   col 1      ac_src (dc-jack stand-in for transformer/AC supply)
  *   col 1 (b)  dmm    (potentiometer stand-in for bench multimeter)
  *   col 5      vcc_top / gnd_top rail taps for ac_src terminals
- *   col 8–9    d1     (led, yellow — diode stand-in)
- *   col 11–14  r1     (resistor, load)
+ *   col 8–11   d1     (diode, 1N4007)
+ *   col 13–16  r1     (resistor, load)
  *   col 18–19  c1     (capacitor, filter — added in a later step)
  */
 export const components: ComponentInstance[] = [
@@ -31,11 +30,11 @@ export const components: ComponentInstance[] = [
     ],
   },
 
-  // D1 — rectifying diode (1N4007), rendered as a yellow LED stand-in.
+  // D1 — rectifying diode (1N4007).
   {
     id: "d1",
-    type: "led",
-    color: "yellow",
+    type: "diode",
+    model: "1N4007",
     mountedAt: { board: "bb", col: 8, row: "c" },
   },
 
@@ -44,7 +43,7 @@ export const components: ComponentInstance[] = [
     id: "r1",
     type: "resistor",
     ohms: 1000,
-    mountedAt: { board: "bb", col: 11, row: "c" },
+    mountedAt: { board: "bb", col: 13, row: "c" },
   },
 
   // Bench multimeter, probing across R_L (p1 = input side, p2 = ground side).
@@ -53,8 +52,8 @@ export const components: ComponentInstance[] = [
     type: "potentiometer",
     mountedAt: { board: "bb", col: 1, row: "b" },
     probes: [
-      { board: "bb", col: 11, row: "c" },
-      { board: "bb", col: 14, row: "c" },
+      { board: "bb", col: 13, row: "c" },
+      { board: "bb", col: 16, row: "c" },
     ],
   },
 
@@ -72,13 +71,13 @@ export const components: ComponentInstance[] = [
     type: "wire",
     color: "red",
     from: { board: "bb", rail: "vcc_top", col: 5 },
-    to: { led: "d1", end: "anode" },
+    to: { component: "d1", end: "p1" },
   },
   {
     id: "w_d1_r1",
     type: "wire",
     color: "white",
-    from: { led: "d1", end: "cathode" },
+    from: { component: "d1", end: "p2" },
     to: { component: "r1", end: "p1" },
   },
   {
