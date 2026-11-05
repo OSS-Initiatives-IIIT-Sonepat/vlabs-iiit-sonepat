@@ -34,6 +34,16 @@
       "developersAlt": "Blue developer illustration with branching arrows",
       "developersTitle": "Build on an open platform",
       "developersPreview": "Explore the source, open issues, and contribute to VLabs on GitHub.",
+      "hostInstitute": "Host Institute",
+      "hostInstituteDesc": "IIIT Sonepat & Technical Society",
+      "hostInstituteAlt": "Stylised blueprint of the IIIT Sonepat campus",
+      "hostInstituteTitle": "Where VLabs began",
+      "hostInstitutePreview": "Started by the Technical Society of IIIT Sonepat as an open-source virtual ECE lab initiative.",
+      "participatingInstitutions": "Participating Institutions",
+      "participatingInstitutionsDesc": "Partner with us on modules & labs",
+      "participatingInstitutionsAlt": "Handshake between institutions under campus icons",
+      "participatingInstitutionsTitle": "Build VLabs with us",
+      "participatingInstitutionsPreview": "We have been building alone — join us, especially other IIITs, in authoring modules and labs.",
       "components": "Components"
     }
   },
@@ -47,6 +57,8 @@
     "project": {
       "blog": "Blog",
       "community": "Community",
+      "hostInstitute": "Host Institute",
+      "participatingInstitutions": "Participating Institutions",
       "contributing": "Contributing"
     },
     "copyright": "© 2026 vlabs — open source ECE labs"

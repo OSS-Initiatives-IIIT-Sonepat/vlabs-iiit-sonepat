@@ -1,0 +1,1 @@
+export { ParticipatingInstitutionsSections } from "./ParticipatingInstitutionsSections";

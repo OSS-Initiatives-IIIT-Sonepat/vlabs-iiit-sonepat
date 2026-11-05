@@ -34,6 +34,16 @@
       "developersAlt": "ब्रांचिंग एरो के साथ नीला डेवलपर इलस्ट्रेशन",
       "developersTitle": "एक खुले प्लेटफॉर्म पर बनाएं",
       "developersPreview": "सोर्स एक्सप्लोर करें, इश्यूज़ खोलें, और GitHub पर VLabs में योगदान दें।",
+      "hostInstitute": "होस्ट संस्थान",
+      "hostInstituteDesc": "IIIT सोनीपत और टेक्निकल सोसाइटी",
+      "hostInstituteAlt": "IIIT सोनीपत कैंपस का स्टाइलाइज़्ड ब्लूप्रिंट",
+      "hostInstituteTitle": "जहाँ VLabs की शुरुआत हुई",
+      "hostInstitutePreview": "IIIT सोनीपत की टेक्निकल सोसाइटी द्वारा शुरू की गई ओपन-सोर्स वर्चुअल ECE लैब पहल।",
+      "participatingInstitutions": "सहभागी संस्थान",
+      "participatingInstitutionsDesc": "मॉड्यूल्स और लैब्स में साझेदारी करें",
+      "participatingInstitutionsAlt": "कैंपस आइकॉन के नीचे संस्थानों के बीच हैंडशेक",
+      "participatingInstitutionsTitle": "हमारे साथ VLabs बनाएँ",
+      "participatingInstitutionsPreview": "हम अकेले बना रहे थे — खासकर अन्य IIITs से जुड़ें और मॉड्यूल्स व लैब्स लिखें।",
       "components": "घटक"
     }
   },
@@ -47,6 +57,8 @@
     "project": {
       "blog": "Blog",
       "community": "Community",
+      "hostInstitute": "होस्ट संस्थान",
+      "participatingInstitutions": "सहभागी संस्थान",
       "contributing": "Contributing"
     },
     "copyright": "© 2026 vlabs — open source ECE labs"

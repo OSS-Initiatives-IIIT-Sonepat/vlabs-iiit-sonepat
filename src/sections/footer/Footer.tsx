@@ -175,6 +175,18 @@ export function Footer() {
               </a>
               <a
                 className="text-[#6b6a68] font-[family-name:var(--font-sans),sans-serif] text-[15px] no-underline w-fit transition-colors duration-150 ease-[cubic-bezier(0.22,1,0.36,1)] hover:text-[#111110]"
+                href="/host-institute"
+              >
+                {t("project.hostInstitute")}
+              </a>
+              <a
+                className="text-[#6b6a68] font-[family-name:var(--font-sans),sans-serif] text-[15px] no-underline w-fit transition-colors duration-150 ease-[cubic-bezier(0.22,1,0.36,1)] hover:text-[#111110]"
+                href="/participating-institutions"
+              >
+                {t("project.participatingInstitutions")}
+              </a>
+              <a
+                className="text-[#6b6a68] font-[family-name:var(--font-sans),sans-serif] text-[15px] no-underline w-fit transition-colors duration-150 ease-[cubic-bezier(0.22,1,0.36,1)] hover:text-[#111110]"
                 href="https://github.com/OSS-Initiatives-IIIT-Sonepat/vlabs-iiit-sonepat"
                 rel="noopener noreferrer"
                 target="_blank"
