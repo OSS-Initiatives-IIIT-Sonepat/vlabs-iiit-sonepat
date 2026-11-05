@@ -148,6 +148,8 @@ export function lintSchematic(schematic: SchematicData): LintIssue[] {
       add("warn", "DUPLICATE_ID", `duplicate element id "${el.id}"`);
     seen.add(el.id);
     if (el.type === "wire") wires.push(el);
+    else if (el.type === "arrow")
+      wires.push({ type: "wire", id: el.id, points: el.points, highlight: el.highlight });
     else if (el.type === "junction") junctions.push({ x: el.x, y: el.y });
     else if (el.type === "label")
       labels.push({
@@ -418,13 +420,19 @@ export function lintSchematic(schematic: SchematicData): LintIssue[] {
   ];
   for (const t of texts) {
     const b = shrink(t.box, 0.5);
-    for (const s of symbols)
+    for (const s of symbols) {
+      if (
+        t.owner === s.id &&
+        (s.type === "block" || s.type === "terminal" || s.type === "decision" || s.type === "memword")
+      )
+        continue;
       if (boxesOverlap(b, s.body))
         add(
           "warn",
           "TEXT_OVER_SYMBOL",
           `text "${t.text}" (${t.owner}) overlaps the body of ${s.id}`,
         );
+    }
     const hitWires = new Set<string>();
     for (const sg of segs)
       if (segmentHitsBox(sg.a, sg.b, b)) hitWires.add(sg.wireId);

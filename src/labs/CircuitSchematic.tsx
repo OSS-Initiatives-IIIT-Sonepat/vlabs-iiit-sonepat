@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useLabInteraction } from "./lab-interaction";
-import { textBaselineOffset, uprightTextCenter } from "./schematics/geometry";
+import { textBaselineOffset, uprightTextCenter, wideOrInputs } from "./schematics/geometry";
 
 /* ── OpenBench-faithful tokens ─────────────────────────────────── */
 const CANVAS_BG = "#fafafa";
@@ -39,9 +39,9 @@ export type SchematicElement = (
   | { type: "ground"; id: string; x: number; y: number }
   | { type: "ammeter"; id: string; x: number; y: number; rotation?: number; label?: string; highlight?: boolean }
   | { type: "voltmeter"; id: string; x: number; y: number; rotation?: number; label?: string; highlight?: boolean }
-  | { type: "wire"; id: string; points: Pt[]; highlight?: boolean }
-  | { type: "junction"; id: string; x: number; y: number }
-  | { type: "label"; id: string; x: number; y: number; text: string }
+  | { type: "wire"; id: string; points: Pt[]; highlight?: boolean; color?: string }
+  | { type: "junction"; id: string; x: number; y: number; color?: string }
+  | { type: "label"; id: string; x: number; y: number; text: string; color?: string; size?: number }
   // Transistors
   | { type: "npn-bjt"; id: string; x: number; y: number; rotation?: number; label?: string; highlight?: boolean }
   | { type: "pnp-bjt"; id: string; x: number; y: number; rotation?: number; label?: string; highlight?: boolean }
@@ -52,6 +52,8 @@ export type SchematicElement = (
   // Logic gates
   | { type: "and-gate"; id: string; x: number; y: number; rotation?: number; label?: string; highlight?: boolean }
   | { type: "or-gate"; id: string; x: number; y: number; rotation?: number; label?: string; highlight?: boolean }
+  /** Tall OR. `x`,`y` are the centre. `n` inputs are spaced down the left side. */
+  | { type: "wide-or"; id: string; x: number; y: number; h: number; n: number; highlight?: boolean }
   | { type: "not-gate"; id: string; x: number; y: number; rotation?: number; label?: string; highlight?: boolean }
   | { type: "nand-gate"; id: string; x: number; y: number; rotation?: number; label?: string; highlight?: boolean }
   | { type: "nor-gate"; id: string; x: number; y: number; rotation?: number; label?: string; highlight?: boolean }
@@ -63,6 +65,26 @@ export type SchematicElement = (
   | { type: "acsource"; id: string; x: number; y: number; rotation?: number; label?: string; value?: string; highlight?: boolean }
   // Oscilloscope probe point
   | { type: "probe"; id: string; x: number; y: number; label?: string; highlight?: boolean }
+  /** Rectangle in the same stroke as an IC body. `x` and `y` are the centre. */
+  | { type: "block"; id: string; x: number; y: number; w: number; h: number; label?: string; highlight?: boolean; fill?: string; ink?: string }
+  /** Rounded start or end terminal. `x` and `y` are the centre. */
+  | { type: "terminal"; id: string; x: number; y: number; w: number; h: number; label?: string; highlight?: boolean }
+  /** Diamond. `x` and `y` are the centre. Pins sit on the four points. */
+  | { type: "decision"; id: string; x: number; y: number; w: number; h: number; label?: string; highlight?: boolean }
+  /** One memory row: address, bits, contents. `x` and `y` are the left edge. */
+  | { type: "memword"; id: string; x: number; y: number; address: string; bits?: string; value: string; highlight?: boolean }
+  /** A wire that ends in an arrow head. `size` is the head length. */
+  | { type: "arrow"; id: string; points: Pt[]; highlight?: boolean; color?: string; size?: number; double?: boolean }
+  /**
+   * Hollow frame: left bar, right bar, and a bar across the bottom.
+   * `x` and `y` are the centre. Decorative — wires are not blocked by it.
+   */
+  | { type: "panel"; id: string; x: number; y: number; w: number; h: number; t: number; fill?: string }
+  /**
+   * Memory stack: straight sides, a wave along the top, a wave along the bottom.
+   * `x` and `y` are the centre of the straight part. Decorative — it has no pins.
+   */
+  | { type: "stack"; id: string; x: number; y: number; w: number; h: number; split?: boolean; highlight?: boolean }
 ) & {
   /** Id of the 3D component this symbol stands for, when it can't be inferred. */
   ref?: string;
@@ -272,14 +294,175 @@ function MeterCircle({ x, y, rotation = 0, letter, label, highlight }: {
   );
 }
 
-function Wire({ points, highlight }: { points: Pt[]; highlight?: boolean }) {
+const SchematicMotion = React.createContext(false);
+
+function arrowHead(tip: Pt, toward: Pt, head: number) {
+  const len = Math.hypot(toward.x - tip.x, toward.y - tip.y) || 1;
+  const ux = (toward.x - tip.x) / len;
+  const uy = (toward.y - tip.y) / len;
+  const base = { x: tip.x + ux * head, y: tip.y + uy * head };
+  const wing = head * 0.62;
+  const left = { x: base.x - uy * wing, y: base.y + ux * wing };
+  const right = { x: base.x + uy * wing, y: base.y - ux * wing };
+  return { base, points: `${tip.x},${tip.y} ${left.x},${left.y} ${right.x},${right.y}` };
+}
+
+function Arrow({ points, highlight, color, size, double: both }: { points: Pt[]; highlight?: boolean; color?: string; size?: number; double?: boolean }) {
+  const draw = useContext(SchematicMotion);
+  if (points.length < 2) return null;
+  const head = size ?? 11;
+  const end = arrowHead(points[points.length - 1], points[points.length - 2], head);
+  let shaft = points.slice(0, -1).concat([end.base]);
+  let tail = "";
+  if (both) {
+    const start = arrowHead(shaft[0], shaft[1] ?? end.base, head);
+    shaft = [start.base, ...shaft.slice(1)];
+    tail = start.points;
+  }
+  const d = shaft.map((p, i) => `${i === 0 ? "M" : "L"}${p.x},${p.y}`).join(" ");
+  const stroke = color ?? (highlight ? WIRE_HIGHLIGHT : WIRE);
+  const glide = { transition: "stroke 320ms ease, fill 320ms ease, stroke-width 320ms ease" };
+  return (
+    <g>
+      <path
+        d={d}
+        stroke={stroke}
+        strokeWidth={color || highlight ? 2.5 : SW}
+        fill="none"
+        strokeLinecap="butt"
+        strokeLinejoin="miter"
+        pathLength={draw ? 1 : undefined}
+        style={draw ? { ...glide, strokeDasharray: 1, animation: "schematic-draw 520ms ease both" } : glide}
+      />
+      <polygon points={end.points} fill={stroke} style={draw ? { animation: "schematic-in 280ms ease 240ms both" } : glide} />
+      {tail && <polygon points={tail} fill={stroke} style={draw ? { animation: "schematic-in 280ms ease 240ms both" } : glide} />}
+    </g>
+  );
+}
+
+/** Left bar, right bar, and the bar that closes the bottom. The top stays open. */
+function FramePanel({ x, y, w, h, t, fill }: { x: number; y: number; w: number; h: number; t: number; fill?: string }) {
+  const x0 = -w / 2;
+  const y0 = -h / 2;
+  const d = [
+    `M ${x0} ${y0}`,
+    `L ${x0} ${y0 + h}`,
+    `L ${x0 + w} ${y0 + h}`,
+    `L ${x0 + w} ${y0}`,
+    `L ${x0 + w - t} ${y0}`,
+    `L ${x0 + w - t} ${y0 + h - t}`,
+    `L ${x0 + t} ${y0 + h - t}`,
+    `L ${x0 + t} ${y0}`,
+    "Z",
+  ].join(" ");
+  return <path d={d} transform={`translate(${x},${y})`} fill={fill ?? "#8a8a8a"} />;
+}
+
+function FlowBox({
+  x, y, w, h, label, highlight, diamond, rounded, fill, ink,
+}: {
+  x: number; y: number; w: number; h: number; label?: string; highlight?: boolean; diamond?: boolean; rounded?: boolean; fill?: string; ink?: string;
+}) {
+  const stroke = highlight ? WIRE_HIGHLIGHT : SYMBOL_STROKE;
+  const body = fill ?? (highlight ? "#eff6ff" : SYMBOL_BODY);
+  const points = diamond
+    ? `${w / 2},0 ${0},${h / 2} ${-w / 2},0 ${0},${-h / 2}`
+    : undefined;
+  const glide = { transition: "stroke 320ms ease, fill 320ms ease, stroke-width 320ms ease" };
+  return (
+    <g transform={`translate(${x},${y})`}>
+      {highlight && <SelectionRect hw={w / 2} hh={h / 2} />}
+      {diamond ? (
+        <polygon points={points} fill={body} stroke={stroke} strokeWidth={highlight ? 2.5 : SW} style={glide} />
+      ) : (
+        <rect x={-w / 2} y={-h / 2} width={w} height={h} rx={rounded ? h / 2 : fill ? 0 : 6} fill={body} stroke={stroke} strokeWidth={highlight ? 2.5 : SW} style={glide} />
+      )}
+      {label &&
+        label.split("\n").map((line, i, lines) => (
+          <text
+            key={line}
+            x={0}
+            y={4 + (i - (lines.length - 1) / 2) * 13}
+            textAnchor="middle"
+            fontSize={11}
+            fill={ink ?? SYMBOL_STROKE}
+            fontWeight={highlight ? 600 : 500}
+          >
+            {line}
+          </text>
+        ))}
+    </g>
+  );
+}
+
+/** Textbook memory: gray stack, curved top and bottom, optional split. */
+function MemoryStack({
+  x, y, w, h, split, highlight,
+}: {
+  x: number; y: number; w: number; h: number; split?: boolean; highlight?: boolean;
+}) {
+  const hw = w / 2;
+  const hh = h / 2;
+  const a = Math.min(20, w * 0.1);
+  const d = [
+    `M ${-hw} ${-hh}`,
+    `Q ${-hw * 0.75} ${-hh - a} ${-hw * 0.5} ${-hh}`,
+    `Q ${-hw * 0.25} ${-hh + a} 0 ${-hh}`,
+    `Q ${hw * 0.25} ${-hh - a} ${hw * 0.5} ${-hh}`,
+    `Q ${hw * 0.75} ${-hh + a} ${hw} ${-hh}`,
+    `L ${hw} ${hh}`,
+    `Q ${hw * 0.75} ${hh + a} ${hw * 0.5} ${hh}`,
+    `Q ${hw * 0.25} ${hh - a} 0 ${hh}`,
+    `Q ${-hw * 0.25} ${hh + a} ${-hw * 0.5} ${hh}`,
+    `Q ${-hw * 0.75} ${hh - a} ${-hw} ${hh}`,
+    "Z",
+  ].join(" ");
+  const stroke = highlight ? WIRE_HIGHLIGHT : SYMBOL_STROKE;
+  return (
+    <g transform={`translate(${x},${y})`}>
+      <path d={d} fill={highlight ? "#e8eef9" : "#e4e4e7"} stroke={stroke} strokeWidth={highlight ? 2.5 : SW} />
+      {split && <line x1={-hw + 8} y1={0} x2={hw - 8} y2={0} stroke={stroke} strokeWidth={SW} />}
+    </g>
+  );
+}
+
+function MemWord({
+  x, y, address, bits, value, highlight,
+}: {
+  x: number; y: number; address: string; bits?: string; value: string; highlight?: boolean;
+}) {
+  const cells = bits ? [address, bits, value] : [address, value];
+  const widths = bits ? [56, 88, 72] : [56, 120];
+  const stroke = highlight ? WIRE_HIGHLIGHT : SYMBOL_STROKE;
+  let cursor = 0;
+  return (
+    <g transform={`translate(${x},${y})`}>
+      {cells.map((text, i) => {
+        const width = widths[i];
+        const node = (
+          <g key={text + i}>
+            <rect x={cursor} y={-14} width={width} height={28} fill={SYMBOL_BODY} stroke={stroke} strokeWidth={highlight ? 2.5 : SW} />
+            <text x={cursor + width / 2} y={4} textAnchor="middle" fontSize={11} fill={SYMBOL_STROKE}>
+              {text}
+            </text>
+          </g>
+        );
+        cursor += width;
+        return node;
+      })}
+    </g>
+  );
+}
+
+function Wire({ points, highlight, color }: { points: Pt[]; highlight?: boolean; color?: string }) {
   if (points.length < 2) return null;
   const d = points.map((p, i) => `${i === 0 ? "M" : "L"}${p.x},${p.y}`).join(" ");
+  const stroke = color ?? (highlight ? WIRE_HIGHLIGHT : WIRE);
   return (
     <path
       d={d}
-      stroke={highlight ? WIRE_HIGHLIGHT : WIRE}
-      strokeWidth={highlight ? 2.5 : SW}
+      stroke={stroke}
+      strokeWidth={color || highlight ? 2.5 : SW}
       fill="none"
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -287,12 +470,12 @@ function Wire({ points, highlight }: { points: Pt[]; highlight?: boolean }) {
   );
 }
 
-function Junction({ x, y }: { x: number; y: number }) {
-  return <circle cx={x} cy={y} r={3} fill={WIRE} />;
+function Junction({ x, y, color }: { x: number; y: number; color?: string }) {
+  return <circle cx={x} cy={y} r={3.5} fill={color ?? WIRE} />;
 }
 
-function Label({ x, y, text }: { x: number; y: number; text: string }) {
-  return <text x={x} y={y} textAnchor="middle" fontSize={9} fill={PIN_COLOR} fontWeight={500}>{text}</text>;
+function Label({ x, y, text, color, size }: { x: number; y: number; text: string; color?: string; size?: number }) {
+  return <text x={x} y={y} textAnchor="middle" fontSize={size ?? 9} fill={color ?? PIN_COLOR} fontWeight={size && size > 11 ? 650 : 500}>{text}</text>;
 }
 
 /* ── NPN BJT Transistor ────────────────────────────────────────── */
@@ -558,6 +741,30 @@ function OrGate({ x, y, rotation = 0, label, highlight }: {
   );
 }
 
+function WideOr({ x, y, h, n, highlight }: {
+  x: number; y: number; h: number; n: number; highlight?: boolean;
+}) {
+  const ys = wideOrInputs(h, n);
+  const top = -h / 2;
+  const bot = h / 2;
+  const stroke = highlight ? WIRE_HIGHLIGHT : SYMBOL_STROKE;
+  const d = `M -16 ${top} Q 8 ${top * 0.2} 30 0 Q 8 ${bot * 0.2} -16 ${bot} Q -2 0 -16 ${top} Z`;
+  return (
+    <g transform={`translate(${x},${y})`}>
+      {highlight && <SelectionRect hw={34} hh={h / 2} />}
+      <path d={d} fill={highlight ? "#eff6ff" : SYMBOL_BODY} stroke={stroke} strokeWidth={highlight ? 2.5 : SW} />
+      {ys.map((iy, i) => (
+        <line key={i} x1={-36} y1={iy} x2={-10} y2={iy} stroke={stroke} strokeWidth={SW} />
+      ))}
+      <line x1={30} y1={0} x2={44} y2={0} stroke={stroke} strokeWidth={SW} />
+      {ys.map((iy, i) => (
+        <Pin key={`p${i}`} x={-36} y={iy} />
+      ))}
+      <Pin x={44} y={0} />
+    </g>
+  );
+}
+
 function NotGate({ x, y, rotation = 0, label, highlight }: {
   x: number; y: number; rotation?: number; label?: string; highlight?: boolean;
 }) {
@@ -692,14 +899,33 @@ export type SchematicLink = { id: string; name: string };
 export function CircuitSchematic({
   schematic,
   linkElement,
+  animate = false,
 }: {
   schematic: SchematicData;
   /** Maps a symbol to its 3D component; enables hover/select linking. */
   linkElement?: (el: SchematicElement) => SchematicLink | null;
+  /** Draw new flowchart nodes in when a procedure step reveals them. */
+  animate?: boolean;
 }) {
   const w = schematic.width ?? 340;
   const h = schematic.height ?? 260;
   const { hovered, hover, unhover, setSelectedId } = useLabInteraction();
+  const seen = useRef(new Set<string>());
+  const signature = schematic.elements.map((el) => el.id).join("|");
+  const enteringRef = useRef<{ sig: string; ids: Set<string> }>({ sig: "", ids: new Set() });
+  if (animate && enteringRef.current.sig !== signature) {
+    enteringRef.current = {
+      sig: signature,
+      ids: new Set(schematic.elements.filter((el) => !seen.current.has(el.id)).map((el) => el.id)),
+    };
+  }
+  const entering = animate && enteringRef.current.sig === signature ? enteringRef.current.ids : new Set<string>();
+  useEffect(() => {
+    if (!animate) return;
+    const ids = new Set(schematic.elements.map((el) => el.id));
+    for (const id of seen.current) if (!ids.has(id)) seen.current.delete(id);
+    for (const id of ids) seen.current.add(id);
+  }, [animate, schematic]);
   const [tag, setTag] = useState<{ key: string; name: string; x: number; y: number } | null>(null);
   const hitRefs = useRef(new Map<string, SVGRectElement>());
 
@@ -747,10 +973,22 @@ export function CircuitSchematic({
 
         {schematic.elements.map((el) => {
           const symbol = renderSymbol(el);
-          const bounds = SYMBOL_BOUNDS[el.type];
+          const bounds =
+            el.type === "block" || el.type === "decision" || el.type === "terminal"
+              ? ([el.w / 2, el.h / 2] as [number, number])
+              : el.type === "memword"
+                ? ([108, 14, 108] as [number, number, number])
+                : SYMBOL_BOUNDS[el.type];
           const link = bounds && linkElement ? linkElement(el) : null;
+          const motion = (
+            <SchematicMotion.Provider value={entering.has(el.id)}>{symbol}</SchematicMotion.Provider>
+          );
           if (!link || !bounds || !("x" in el)) {
-            return <React.Fragment key={el.id}>{symbol}</React.Fragment>;
+            return (
+              <g key={el.id} className={entering.has(el.id) ? "schematic-enter" : undefined}>
+                {motion}
+              </g>
+            );
           }
 
           const [hw, hh, cx = 0] = bounds;
@@ -761,6 +999,7 @@ export function CircuitSchematic({
           return (
             <g
               key={el.id}
+              className={entering.has(el.id) ? "schematic-enter" : undefined}
               style={{ cursor: "pointer" }}
               onPointerEnter={() => {
                 hover(link.id, "2d");
@@ -792,7 +1031,7 @@ export function CircuitSchematic({
                   />
                 </g>
               )}
-              {symbol}
+              {motion}
               <g transform={frame}>
                 <rect
                   ref={(node) => {
@@ -856,11 +1095,11 @@ function renderSymbol(el: SchematicElement): React.ReactNode {
     case "voltmeter":
       return <MeterCircle x={el.x} y={el.y} rotation={el.rotation} letter="V" label={el.label} highlight={el.highlight} />;
     case "wire":
-      return <Wire points={el.points} highlight={el.highlight} />;
+      return <Wire points={el.points} highlight={el.highlight} color={el.color} />;
     case "junction":
-      return <Junction x={el.x} y={el.y} />;
+      return <Junction x={el.x} y={el.y} color={el.color} />;
     case "label":
-      return <Label x={el.x} y={el.y} text={el.text} />;
+      return <Label x={el.x} y={el.y} text={el.text} color={el.color} size={el.size} />;
     // Transistors
     case "npn-bjt":
       return <NpnBjt x={el.x} y={el.y} rotation={el.rotation} label={el.label} highlight={el.highlight} />;
@@ -882,11 +1121,27 @@ function renderSymbol(el: SchematicElement): React.ReactNode {
     // Probe
     case "probe":
       return <Probe x={el.x} y={el.y} label={el.label} highlight={el.highlight} />;
+    case "block":
+      return <FlowBox x={el.x} y={el.y} w={el.w} h={el.h} label={el.label} highlight={el.highlight} fill={el.fill} ink={el.ink} />;
+    case "terminal":
+      return <FlowBox x={el.x} y={el.y} w={el.w} h={el.h} label={el.label} highlight={el.highlight} rounded />;
+    case "decision":
+      return <FlowBox x={el.x} y={el.y} w={el.w} h={el.h} label={el.label} highlight={el.highlight} diamond />;
+    case "memword":
+      return <MemWord x={el.x} y={el.y} address={el.address} bits={el.bits} value={el.value} highlight={el.highlight} />;
+    case "stack":
+      return <MemoryStack x={el.x} y={el.y} w={el.w} h={el.h} split={el.split} highlight={el.highlight} />;
+    case "arrow":
+      return <Arrow points={el.points} highlight={el.highlight} color={el.color} size={el.size} double={el.double} />;
+    case "panel":
+      return <FramePanel x={el.x} y={el.y} w={el.w} h={el.h} t={el.t} fill={el.fill} />;
     // Logic gates
     case "and-gate":
       return <AndGate x={el.x} y={el.y} rotation={el.rotation} label={el.label} highlight={el.highlight} />;
     case "or-gate":
       return <OrGate x={el.x} y={el.y} rotation={el.rotation} label={el.label} highlight={el.highlight} />;
+    case "wide-or":
+      return <WideOr x={el.x} y={el.y} h={el.h} n={el.n} highlight={el.highlight} />;
     case "not-gate":
       return <NotGate x={el.x} y={el.y} rotation={el.rotation} label={el.label} highlight={el.highlight} />;
     case "nand-gate":

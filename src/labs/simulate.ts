@@ -34,6 +34,9 @@ import {
   op4BitAdder,
   ARITH_TYPES,
   opMux,
+  op74HC153_MUX,
+  op74HC138_DEMUX,
+  op74HC139_DEMUX,
   MUX_TYPES,
   opZeroExtend,
   opSignExtend,
@@ -48,6 +51,21 @@ import {
   isFullyDefined,
 } from "./logic/index";
 
+const MULTI_GATE_TYPES = new Set([
+  "not-hex",
+  "and-quad",
+  "or-quad",
+  "nand-quad",
+  "xor-quad",
+]);
+
+const QUAD_GATE: Record<string, string> = {
+  "and-quad": "and-gate",
+  "or-quad": "or-gate",
+  "nand-quad": "nand-gate",
+  "xor-quad": "xor-gate",
+};
+
 // Map NetId → Signal (1-bit or multi-bit)
 export type NetValues = Map<NetId, Signal>;
 
@@ -60,6 +78,19 @@ export type SimResult = {
 // ── Stateful component registry (persists across steps for same circuit) ───
 // Keyed by circuit.id so state resets when circuit changes.
 const sequentialRegistry = new Map<string, Map<string, SequentialState>>();
+
+type MachineState = { pc: number; clk: number; latch: number; flag: number; stb: number };
+const machineState = new Map<string, MachineState>();
+
+function machineOf(circuitId: string, id: string): MachineState {
+  const key = `${circuitId}:${id}`;
+  let state = machineState.get(key);
+  if (!state) {
+    state = { pc: 0, clk: 0, latch: 0, flag: 0, stb: 0 };
+    machineState.set(key, state);
+  }
+  return state;
+}
 
 function getOrCreateSeqState(
   circuitId: string,
@@ -152,11 +183,13 @@ export function simulate(
   const combGates = components.filter(
     (c) =>
       GATE_TYPES.has(c.type) ||
+      MULTI_GATE_TYPES.has(c.type) ||
       ARITH_TYPES.has(c.type) ||
       MUX_TYPES.has(c.type) ||
       BUS_TYPES.has(c.type),
   );
 
+  const runComb = () => {
   for (let iter = 0; iter < 40; iter++) {
     let changed = false;
 
@@ -166,7 +199,50 @@ export function simulate(
       const type = gate.type;
 
       // ── Standard gates (not/and/or/xor/nand/nor/xnor + reduce) ────
-      if (GATE_TYPES.has(type)) {
+      if (type === "not-hex") {
+        for (const n of [1, 2, 3, 4, 5, 6]) {
+          const nY = nl.componentPinNet(id, `${n}Y`);
+          if (!nY) continue;
+          const res = evaluateGate(
+            "not-gate",
+            { in: sig(nv, nl.componentPinNet(id, `${n}A`)) },
+            1,
+          );
+          if (res && !signalsEqual(nv.get(nY), res.out)) {
+            nv.set(nY, res.out);
+            changed = true;
+          }
+        }
+      } else if (QUAD_GATE[type]) {
+        for (const n of [1, 2, 3, 4]) {
+          const nY = nl.componentPinNet(id, `${n}Y`);
+          if (!nY) continue;
+          const res = evaluateGate(
+            QUAD_GATE[type],
+            {
+              in1: sig(nv, nl.componentPinNet(id, `${n}A`)),
+              in2: sig(nv, nl.componentPinNet(id, `${n}B`)),
+            },
+            1,
+          );
+          if (res && !signalsEqual(nv.get(nY), res.out)) {
+            nv.set(nY, res.out);
+            changed = true;
+          }
+        }
+      } else if (type === "buffer-gate") {
+        // 74HC125: A is the data pin, B is active-low output enable.
+        // Y is driven only while enable is low. A high enable is high impedance.
+        const nY = nl.componentPinNet(id, "Y") ?? nl.componentPinNet(id, "1Y");
+        const oe = sig(nv, nl.componentPinNet(id, "B") ?? nl.componentPinNet(id, "1B"));
+        if (nY && oe[0] === 0) {
+          const data = sig(nv, nl.componentPinNet(id, "A") ?? nl.componentPinNet(id, "1A"));
+          if (!signalsEqual(nv.get(nY), data)) {
+            nv.set(nY, data);
+            changed = true;
+          }
+        }
+      } else if (GATE_TYPES.has(type)) {
         // Gate 1 only (alias pins A/1A, B/1B → Y/1Y)
         const nA = nl.componentPinNet(id, "A") ?? nl.componentPinNet(id, "1A");
         const nB = nl.componentPinNet(id, "B") ?? nl.componentPinNet(id, "1B");
@@ -281,11 +357,84 @@ export function simulate(
             changed = true;
           }
         }
+      } else if (type === "mux-4to1") {
+        const s0 = sig(nv, nl.componentPinNet(id, "s0"));
+        const s1 = sig(nv, nl.componentPinNet(id, "s1"));
+        const y = op74HC153_MUX(
+          [s0[0] ?? "x", s1[0] ?? "x"],
+          sig(nv, nl.componentPinNet(id, "en1_bar")),
+          sig(nv, nl.componentPinNet(id, "i0_1")),
+          sig(nv, nl.componentPinNet(id, "i1_1")),
+          sig(nv, nl.componentPinNet(id, "i2_1")),
+          sig(nv, nl.componentPinNet(id, "i3_1")),
+        );
+        const nY = nl.componentPinNet(id, "y1");
+        if (nY && !signalsEqual(nv.get(nY), y)) {
+          nv.set(nY, y);
+          changed = true;
+        }
+        const y2 = op74HC153_MUX(
+          [s0[0] ?? "x", s1[0] ?? "x"],
+          sig(nv, nl.componentPinNet(id, "en2_bar")),
+          sig(nv, nl.componentPinNet(id, "i0_2")),
+          sig(nv, nl.componentPinNet(id, "i1_2")),
+          sig(nv, nl.componentPinNet(id, "i2_2")),
+          sig(nv, nl.componentPinNet(id, "i3_2")),
+        );
+        const nY2 = nl.componentPinNet(id, "y2");
+        if (nY2 && !signalsEqual(nv.get(nY2), y2)) {
+          nv.set(nY2, y2);
+          changed = true;
+        }
+      } else if (type === "demux-1to4") {
+        const out = op74HC139_DEMUX(
+          sig(nv, nl.componentPinNet(id, "a")),
+          sig(nv, nl.componentPinNet(id, "b")),
+          sig(nv, nl.componentPinNet(id, "en_bar")),
+        );
+        for (const [pin, val] of Object.entries(out)) {
+          const net = nl.componentPinNet(id, pin);
+          if (net && !signalsEqual(nv.get(net), val)) {
+            nv.set(net, val);
+            changed = true;
+          }
+        }
+      } else if (type === "decoder-3to8" || type === "demux-1to8") {
+        const out = op74HC138_DEMUX(
+          sig(nv, nl.componentPinNet(id, "a0")),
+          sig(nv, nl.componentPinNet(id, "a1")),
+          sig(nv, nl.componentPinNet(id, "a2")),
+          sig(nv, nl.componentPinNet(id, "e1")),
+          sig(nv, nl.componentPinNet(id, "e2")),
+          sig(nv, nl.componentPinNet(id, "e3")),
+        );
+        for (const [pin, val] of Object.entries(out)) {
+          const net = nl.componentPinNet(id, pin);
+          if (net && !signalsEqual(nv.get(net), val)) {
+            nv.set(net, val);
+            changed = true;
+          }
+        }
+      }
+    }
+
+    for (const inst of components) {
+      if (inst.type !== "ram" && inst.type !== "rom") continue;
+      const cs = pinBit(nv, nl, inst.id, "cs");
+      const oe = pinBit(nv, nl, inst.id, "oe");
+      if (cs !== 0 || oe !== 0) continue;
+      const addr = nibble(nv, nl, inst.id, "a");
+      if (addr === null) continue;
+      const word = (inst.words?.[addr] ?? 0) & 0xff;
+      for (let i = 0; i < 8; i++) {
+        if (driveBit(nv, nl, inst.id, `d${i}`, (word >> i) & 1)) changed = true;
       }
     }
 
     if (!changed) break;
   }
+  };
+  runComb();
 
   // ── 5. Sequential evaluation (one pass, uses current net values) ────
   for (const inst of components) {
@@ -335,7 +484,50 @@ export function simulate(
       const net = nl.componentPinNet(inst.id, pinName);
       if (net) nv.set(net, outSig);
     }
+    // 74HC161 publishes one 4-bit bus named `q`. The DIP pins are q0–q3.
+    if (inst.type === "counter-4bit-sync" && outputs.q && outputs.q.length >= 4) {
+      for (let i = 0; i < 4; i++) {
+        const net = nl.componentPinNet(inst.id, `q${i}`);
+        if (net) nv.set(net, [outputs.q[i]]);
+      }
+    }
   }
+
+  for (const inst of components) {
+    if (inst.type === "cpu") {
+      const state = machineOf(circuitId, inst.id);
+      const clk = pinBit(nv, nl, inst.id, "clk");
+      // Clock low always shows address 0, so the fetch step can be repeated.
+      // A rising edge then advances one word. A second call at clk=1 does not.
+      if (clk === 0) {
+        state.pc = 0;
+        state.clk = 0;
+      } else if (clk === 1) {
+        if (state.clk === 0) state.pc = (state.pc + 1) & 0xf;
+        state.clk = 1;
+      }
+      for (let i = 0; i < 4; i++) {
+        driveBit(nv, nl, inst.id, `a${i}`, (state.pc >> i) & 1);
+      }
+    } else if (inst.type === "io-port") {
+      const state = machineOf(circuitId, inst.id);
+      const stb = pinBit(nv, nl, inst.id, "stb");
+      if (state.stb === 0 && stb === 1) {
+        const data = nibble(nv, nl, inst.id, "d");
+        state.latch = data ?? 0;
+        state.flag = 1;
+      }
+      if (stb === 0 || stb === 1) state.stb = stb;
+      for (let i = 0; i < 4; i++) {
+        driveBit(nv, nl, inst.id, `q${i}`, (state.latch >> i) & 1);
+      }
+      driveBit(nv, nl, inst.id, "flag", state.flag);
+    }
+  }
+
+  // Gates that read a flip-flop or counter (opcode decode, Q LEDs through a NOT)
+  // need a second combinational pass after the sequential write.
+  runComb();
 
   // ── 6. LED evaluation via explicit wire tracing ─────────────────────
   // Traces backwards through explicit wire connections — independent of
@@ -435,4 +627,46 @@ function signalsEqual(a: Signal | undefined, b: Signal): boolean {
 /** Reset all sequential state for a given circuit (call when circuit changes) */
 export function resetSequentialState(circuitId: string) {
   sequentialRegistry.delete(circuitId);
+  for (const key of machineState.keys()) {
+    if (key.startsWith(`${circuitId}:`)) machineState.delete(key);
+  }
+}
+
+function pinBit(
+  nv: NetValues,
+  nl: Netlist,
+  id: string,
+  pin: string,
+): 0 | 1 | "x" {
+  const bit = sig(nv, nl.componentPinNet(id, pin))[0];
+  return bit === 0 || bit === 1 ? bit : "x";
+}
+
+function nibble(
+  nv: NetValues,
+  nl: Netlist,
+  id: string,
+  prefix: string,
+): number | null {
+  let value = 0;
+  for (let i = 0; i < 4; i++) {
+    const bit = pinBit(nv, nl, id, `${prefix}${i}`);
+    if (bit === "x") return null;
+    value |= bit << i;
+  }
+  return value;
+}
+
+function driveBit(
+  nv: NetValues,
+  nl: Netlist,
+  id: string,
+  pin: string,
+  bit: number,
+): boolean {
+  const net = nl.componentPinNet(id, pin);
+  const next: Signal = [bit ? 1 : 0];
+  if (!net || signalsEqual(nv.get(net), next)) return false;
+  nv.set(net, next);
+  return true;
 }

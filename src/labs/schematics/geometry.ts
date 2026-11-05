@@ -35,6 +35,13 @@ const seg = (ax: number, ay: number, bx: number, by: number): Seg => [
   { x: bx, y: by },
 ];
 const pt = (x: number, y: number): Pt => ({ x, y });
+
+/** Input y-offsets of a tall OR, in the gate's local frame. Shared by the drawing and the linter. */
+export function wideOrInputs(h: number, n: number): number[] {
+  const span = h - 48;
+  const pitch = n <= 1 ? 0 : span / (n - 1);
+  return Array.from({ length: n }, (_, i) => -span / 2 + i * pitch);
+}
 const txt = (
   x: number,
   y: number,
@@ -192,6 +199,17 @@ function localGeometry(el: SchematicElement): LocalGeometry | null {
       return gate2(-26, -16, 16, 26, box(-16, -16, 16, 16), el.label);
     case "or-gate":
       return gate2(-26, -12, 20, 26, box(-16, -16, 20, 16), el.label);
+    case "wide-or": {
+      const span = el.h - 48;
+      const pitch = el.n <= 1 ? 0 : span / (el.n - 1);
+      const ys = Array.from({ length: el.n }, (_, i) => -span / 2 + i * pitch);
+      return {
+        pins: [...ys.map((iy) => pt(-36, iy)), pt(44, 0)],
+        body: box(-16, -el.h / 2, 30, el.h / 2),
+        leads: [...ys.map((iy) => seg(-36, iy, -10, iy)), seg(30, 0, 44, 0)],
+        texts: [],
+      };
+    }
     case "nand-gate":
       return gate2(-26, -16, 24, 32, box(-16, -16, 24, 16), el.label);
     case "nor-gate":
@@ -207,6 +225,29 @@ function localGeometry(el: SchematicElement): LocalGeometry | null {
         leads: [seg(-22, 0, -14, 0), seg(18, 0, 26, 0)],
         texts: txt(0, -18, el.label, 9),
       };
+    case "block":
+    case "terminal":
+    case "decision":
+      return {
+        pins: [
+          pt(-el.w / 2, 0),
+          pt(el.w / 2, 0),
+          pt(0, -el.h / 2),
+          pt(0, el.h / 2),
+        ],
+        body: box(-el.w / 2, -el.h / 2, el.w / 2, el.h / 2),
+        leads: [],
+        texts: txt(0, 4, el.label, 11),
+      };
+    case "memword": {
+      const width = el.bits ? 216 : 176;
+      return {
+        pins: [pt(0, 0), pt(width, 0)],
+        body: box(0, -14, width, 14),
+        leads: [],
+        texts: [],
+      };
+    }
     default:
       return null;
   }

@@ -21,6 +21,7 @@ export { buildBreadboard, buildBreadboardStandalone } from "./breadboard";
 export {
   buildLongBreadboard,
   buildLongBreadboardStandalone,
+  buildWideBreadboard,
 } from "./long-breadboard";
 export {
   buildWire,

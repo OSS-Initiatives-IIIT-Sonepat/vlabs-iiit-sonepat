@@ -30,6 +30,7 @@ export type ComponentInstance =
   // ── Board / structure ──────────────────────────────────────────────────
   | { id: string; type: "breadboard" }
   | { id: string; type: "long-breadboard" }
+  | { id: string; type: "wide-breadboard" }
   | { id: string; type: "wire"; from: PinRef; to: PinRef; color: WireColor }
 
   // ── Passives ───────────────────────────────────────────────────────────
@@ -59,10 +60,20 @@ export type ComponentInstance =
   | { id: string; type: "and-gate"; mountedAt: MountPoint } // 74HC08
   | { id: string; type: "or-gate"; mountedAt: MountPoint } // 74HC32
   | { id: string; type: "nand-gate"; mountedAt: MountPoint } // 74HC00
+  /** All six inverters of a 74HC04. Pins `1A`/`1Y` … `6A`/`6Y`. */
+  | { id: string; type: "not-hex"; mountedAt: MountPoint }
+  /** All four gates of a 74HC08. Pins `1A`/`1B`/`1Y` … `4A`/`4B`/`4Y`. */
+  | { id: string; type: "and-quad"; mountedAt: MountPoint }
+  /** All four gates of a 74HC32. Same pin names as `and-quad`. */
+  | { id: string; type: "or-quad"; mountedAt: MountPoint }
+  /** All four gates of a 74HC00. Same pin names as `and-quad`. */
+  | { id: string; type: "nand-quad"; mountedAt: MountPoint }
+  /** All four gates of a 74HC86. Same pin names as `and-quad`. */
+  | { id: string; type: "xor-quad"; mountedAt: MountPoint }
   | { id: string; type: "nor-gate"; mountedAt: MountPoint } // 74HC02
   | { id: string; type: "xor-gate"; mountedAt: MountPoint } // 74HC86
   | { id: string; type: "xnor-gate"; mountedAt: MountPoint } // 74HC266
-  | { id: string; type: "buffer-gate"; mountedAt: MountPoint } // 74HC125 / non-inverting buffer
+  | { id: string; type: "buffer-gate"; mountedAt: MountPoint } // 74HC125: A data, B active-low enable, Y output
 
   // ── Reducing gates — N-bit input → 1-bit output (DigitalJS: gates.mjs) ─
   | { id: string; type: "and-reduce"; bits: number; mountedAt: MountPoint }
@@ -266,6 +277,16 @@ export type ComponentInstance =
   // ── Microprocessor / interfacing ──────────────────────────────────────
   | { id: string; type: "cpu-8085"; mountedAt: MountPoint } // 8085
   | { id: string; type: "ppi-8255"; mountedAt: MountPoint } // 8255 PPI
+  /** 16-pin RAM. Address `a0`–`a3`, data `d0`–`d3`, active-low `cs` and `oe`. */
+  | { id: string; type: "ram"; mountedAt: MountPoint; words?: number[] }
+  /** Same pins as `ram`, without a write. */
+  | { id: string; type: "rom"; mountedAt: MountPoint; words?: number[] }
+  /** 16-pin fetch unit. A rising `clk` increments the program counter onto `a0`–`a3`. */
+  | { id: string; type: "cpu"; mountedAt: MountPoint }
+  /** 14-pin port. A rising `stb` latches `d0`–`d3` and raises `flag`. `name` is the silkscreen, used when the port stands in for a register. */
+  | { id: string; type: "io-port"; mountedAt: MountPoint; name?: string }
+  /** A labeled DIP used as a pipeline stage. It does not compute. */
+  | { id: string; type: "block-module"; mountedAt: MountPoint; name: string }
 
   // ── Power / misc ──────────────────────────────────────────────────────
   | {

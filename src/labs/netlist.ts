@@ -147,6 +147,8 @@ export class Netlist {
     for (const inst of components) {
       switch (inst.type) {
         case "breadboard":
+        case "long-breadboard":
+        case "wide-breadboard":
           break; // already seeded above
 
         case "wire": {
@@ -209,6 +211,25 @@ export class Netlist {
         }
         case "not-gate": {
           this.registerDip14Not(
+            inst.id,
+            inst.mountedAt.col,
+            inst.mountedAt.row as Row,
+          );
+          break;
+        }
+        case "not-hex": {
+          this.registerNotHex(
+            inst.id,
+            inst.mountedAt.col,
+            inst.mountedAt.row as Row,
+          );
+          break;
+        }
+        case "and-quad":
+        case "or-quad":
+        case "nand-quad":
+        case "xor-quad": {
+          this.registerQuad2(
             inst.id,
             inst.mountedAt.col,
             inst.mountedAt.row as Row,
@@ -561,6 +582,72 @@ export class Netlist {
         case "xnor-reduce":
         case "register-4bit":
           break;
+
+        case "block-module": {
+          const c = inst.mountedAt.col;
+          this.registerPin(inst.id, "out", tieKey(c + 0, "e"));
+          this.registerPin(inst.id, "GND", tieKey(c + 6, "e"));
+          this.registerPin(inst.id, "VCC", tieKey(c + 0, "f"));
+          break;
+        }
+
+        case "ram":
+        case "rom": {
+          const c = inst.mountedAt.col;
+          this.registerPin(inst.id, "a0", tieKey(c + 0, "e"));
+          this.registerPin(inst.id, "a1", tieKey(c + 1, "e"));
+          this.registerPin(inst.id, "a2", tieKey(c + 2, "e"));
+          this.registerPin(inst.id, "a3", tieKey(c + 3, "e"));
+          this.registerPin(inst.id, "d0", tieKey(c + 4, "e"));
+          this.registerPin(inst.id, "d1", tieKey(c + 5, "e"));
+          this.registerPin(inst.id, "d2", tieKey(c + 6, "e"));
+          this.registerPin(inst.id, "GND", tieKey(c + 7, "e"));
+          this.registerPin(inst.id, "VCC", tieKey(c + 0, "f"));
+          this.registerPin(inst.id, "cs", tieKey(c + 1, "f"));
+          this.registerPin(inst.id, "oe", tieKey(c + 2, "f"));
+          this.registerPin(inst.id, "d3", tieKey(c + 3, "f"));
+          this.registerPin(inst.id, "d4", tieKey(c + 4, "f"));
+          this.registerPin(inst.id, "d5", tieKey(c + 5, "f"));
+          this.registerPin(inst.id, "d6", tieKey(c + 6, "f"));
+          this.registerPin(inst.id, "d7", tieKey(c + 7, "f"));
+          break;
+        }
+
+        case "cpu": {
+          const c = inst.mountedAt.col;
+          this.registerPin(inst.id, "clk", tieKey(c + 0, "e"));
+          this.registerPin(inst.id, "a0", tieKey(c + 1, "e"));
+          this.registerPin(inst.id, "a1", tieKey(c + 2, "e"));
+          this.registerPin(inst.id, "a2", tieKey(c + 3, "e"));
+          this.registerPin(inst.id, "a3", tieKey(c + 4, "e"));
+          this.registerPin(inst.id, "rd", tieKey(c + 5, "e"));
+          this.registerPin(inst.id, "wr", tieKey(c + 6, "e"));
+          this.registerPin(inst.id, "GND", tieKey(c + 7, "e"));
+          this.registerPin(inst.id, "VCC", tieKey(c + 0, "f"));
+          this.registerPin(inst.id, "d0", tieKey(c + 1, "f"));
+          this.registerPin(inst.id, "d1", tieKey(c + 2, "f"));
+          this.registerPin(inst.id, "d2", tieKey(c + 3, "f"));
+          this.registerPin(inst.id, "d3", tieKey(c + 4, "f"));
+          this.registerPin(inst.id, "int", tieKey(c + 5, "f"));
+          break;
+        }
+
+        case "io-port": {
+          const c = inst.mountedAt.col;
+          this.registerPin(inst.id, "stb", tieKey(c + 0, "e"));
+          this.registerPin(inst.id, "d0", tieKey(c + 1, "e"));
+          this.registerPin(inst.id, "d1", tieKey(c + 2, "e"));
+          this.registerPin(inst.id, "d2", tieKey(c + 3, "e"));
+          this.registerPin(inst.id, "d3", tieKey(c + 4, "e"));
+          this.registerPin(inst.id, "flag", tieKey(c + 5, "e"));
+          this.registerPin(inst.id, "GND", tieKey(c + 6, "e"));
+          this.registerPin(inst.id, "VCC", tieKey(c + 0, "f"));
+          this.registerPin(inst.id, "q0", tieKey(c + 1, "f"));
+          this.registerPin(inst.id, "q1", tieKey(c + 2, "f"));
+          this.registerPin(inst.id, "q2", tieKey(c + 3, "f"));
+          this.registerPin(inst.id, "q3", tieKey(c + 4, "f"));
+          break;
+        }
       } // end switch
     } // end for
   } // end seed()
@@ -636,6 +723,58 @@ export class Netlist {
     // Aliases
     this.registerPin(id, "A", tieKey(col + 0, sideA));
     this.registerPin(id, "Y", tieKey(col + 1, sideA));
+  }
+
+  /** 74HC04 hex inverter. Gates 1–3 on the top row, 4–6 on the bottom. */
+  private registerNotHex(id: string, col: number, mountRow: Row = "e") {
+    const sideA = mountRow;
+    const sideB = this.oppositeRow(sideA);
+    this.registerPin(id, "1A", tieKey(col + 0, sideA));
+    this.registerPin(id, "1Y", tieKey(col + 1, sideA));
+    this.registerPin(id, "2A", tieKey(col + 2, sideA));
+    this.registerPin(id, "2Y", tieKey(col + 3, sideA));
+    this.registerPin(id, "3A", tieKey(col + 4, sideA));
+    this.registerPin(id, "3Y", tieKey(col + 5, sideA));
+    this.registerPin(id, "GND", tieKey(col + 6, sideA));
+    this.registerPin(id, "4Y", tieKey(col + 6, sideB));
+    this.registerPin(id, "4A", tieKey(col + 5, sideB));
+    this.registerPin(id, "5Y", tieKey(col + 4, sideB));
+    this.registerPin(id, "5A", tieKey(col + 3, sideB));
+    this.registerPin(id, "6Y", tieKey(col + 2, sideB));
+    this.registerPin(id, "6A", tieKey(col + 1, sideB));
+    this.registerPin(id, "VCC", tieKey(col + 0, sideB));
+  }
+
+  /** Quad 2-input gate (74HC08 / 74HC32 / 74HC00). Gates 1–2 top, 3–4 bottom. */
+  private registerQuad2(id: string, col: number, mountRow: Row = "e") {
+    const sideA = mountRow;
+    const sideB = this.oppositeRow(sideA);
+    this.registerPin(id, "1A", tieKey(col + 0, sideA));
+    this.registerPin(id, "1B", tieKey(col + 1, sideA));
+    this.registerPin(id, "1Y", tieKey(col + 2, sideA));
+    this.registerPin(id, "2A", tieKey(col + 3, sideA));
+    this.registerPin(id, "2B", tieKey(col + 4, sideA));
+    this.registerPin(id, "2Y", tieKey(col + 5, sideA));
+    this.registerPin(id, "GND", tieKey(col + 6, sideA));
+    this.registerPin(id, "3Y", tieKey(col + 6, sideB));
+    this.registerPin(id, "3A", tieKey(col + 5, sideB));
+    this.registerPin(id, "3B", tieKey(col + 4, sideB));
+    this.registerPin(id, "4Y", tieKey(col + 3, sideB));
+    this.registerPin(id, "4A", tieKey(col + 2, sideB));
+    this.registerPin(id, "4B", tieKey(col + 1, sideB));
+    this.registerPin(id, "VCC", tieKey(col + 0, sideB));
+  }
+
+  private oppositeRow(sideA: Row): Row {
+    return sideA === "e"
+      ? "f"
+      : sideA === "h"
+        ? "i"
+        : sideA === "d"
+          ? "g"
+          : sideA === "c"
+            ? "h"
+            : "f";
   }
 
   private registerPin(compId: string, pin: string, ufKey: string) {

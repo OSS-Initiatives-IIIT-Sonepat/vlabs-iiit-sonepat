@@ -28,6 +28,7 @@ import * as THREE from "three";
 export const PITCH = 0.22; // hole-to-hole spacing (world units)
 export const COLS = 30; // columns 1..30 (standard breadboard)
 export const LONG_COLS = 60; // columns 1..60 (long / full-size breadboard)
+export const WIDE_COLS = 100; // columns 1..100, for a circuit that will not fit on 60
 export const ROWS = 5; // rows per bank (a-e and f-j)
 export const BOARD_H = 0.18; // board thickness (Y axis)
 export const TOP_Y = BOARD_H / 2; // Y of top surface
@@ -89,6 +90,7 @@ Z["rail_bot_red"] = cur;
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 export function colsForBoardType(type: string): number {
+  if (type === "wide-breadboard") return WIDE_COLS;
   return type === "long-breadboard" ? LONG_COLS : COLS;
 }
 

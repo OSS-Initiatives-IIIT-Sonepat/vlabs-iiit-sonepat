@@ -24,6 +24,7 @@ import {
 import { LabSidebar } from "@/labs/LabSidebar";
 import { FloatingLabCard } from "@/labs/FloatingLabCard";
 import { FloatingCircuitCard } from "@/labs/FloatingCircuitCard";
+import { FloatingObservationCard } from "@/labs/FloatingObservationCard";
 import {
   CircuitSchematic,
   type SchematicElement,
@@ -446,9 +447,36 @@ const SceneRenderer = React.memo(function SceneRenderer({
   if (section.type === "apparatus") {
     return <ApparatusScene items={section.items} />;
   }
-  // For text-only labs (labType === 'text'), do not render a bare breadboard
-  // when there is no real circuit — return null so sections show cleanly.
-  if (circuit.id === "__breadboard" && section.type !== "text") {
+  // A diagram lab has no breadboard. The step schematic is the scene.
+  if (
+    circuit.id === "__breadboard" &&
+    section.type === "procedure" &&
+    section.steps[sceneStepIndex]?.schematic
+  ) {
+    return (
+      <div className="flex h-full w-full items-center justify-center bg-[#fafafa] p-4">
+        <div className="h-full max-h-[720px] w-full max-w-[960px]">
+          <CircuitSchematic animate schematic={section.steps[sceneStepIndex].schematic!} />
+        </div>
+      </div>
+    );
+  }
+  // Theory of a diagram lab. The figure is the scene, same as a procedure step.
+  if (
+    circuit.id === "__breadboard" &&
+    section.type === "text" &&
+    section.circuitDiagram
+  ) {
+    return (
+      <div className="flex h-full w-full items-center justify-center bg-[#fafafa] p-4">
+        <div className="h-full max-h-[720px] w-full max-w-[960px]">
+          <CircuitSchematic animate schematic={section.circuitDiagram} />
+        </div>
+      </div>
+    );
+  }
+  // A diagram lab has no breadboard on aim, observations, or conclusion either.
+  if (circuit.id === "__breadboard") {
     return null;
   }
   // Procedure / observation / conclusion / theory without schematic: show breadboard
@@ -589,6 +617,13 @@ function LabPageStandard({ content }: Props) {
   const { sceneStepIndex, activeMarkers } = useMemo(() => {
     if (activeSection?.type === "procedure") {
       const step = activeSection.steps[procedureStepIndex];
+      // A diagram lab has no circuit steps. The procedure index is the frame.
+      if (circuit.id === "__breadboard" && step?.schematic) {
+        return {
+          sceneStepIndex: procedureStepIndex,
+          activeMarkers: step.markers ?? EMPTY_MARKERS,
+        };
+      }
       if (!step) {
         return {
           sceneStepIndex: resolveFinalCircuitStepIndex(circuit),
@@ -717,7 +752,20 @@ function LabPageStandard({ content }: Props) {
             </div>
           )}
 
-          {/* Floating 2D circuit schematic — shows per-step diagram */}
+          {/* Observation table sits above the bottom-right schematic and grows with the step. */}
+          {activeSection?.type === "procedure" &&
+            activeSection.steps[procedureStepIndex]?.table && (
+              <div className="pointer-events-auto">
+                <FloatingObservationCard
+                  table={activeSection.steps[procedureStepIndex].table!}
+                  bottom={
+                    activeSection.steps[procedureStepIndex]?.schematic ? 316 : 24
+                  }
+                />
+              </div>
+            )}
+
+          {/* Floating 2D schematic sits bottom-right, including on flowchart labs. */}
           {activeSection?.type === "procedure" &&
             activeSection.steps[procedureStepIndex]?.schematic && (
               <div className="pointer-events-auto">
@@ -727,6 +775,7 @@ function LabPageStandard({ content }: Props) {
                   onStepChange={setProcedureStepIndex}
                   expandedContent={
                     <CircuitSchematic
+                      animate
                       schematic={
                         activeSection.steps[procedureStepIndex].schematic!
                       }
@@ -735,6 +784,7 @@ function LabPageStandard({ content }: Props) {
                   }
                 >
                   <CircuitSchematic
+                    animate
                     schematic={
                       activeSection.steps[procedureStepIndex].schematic!
                     }
