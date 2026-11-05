@@ -6,24 +6,39 @@ export const apparatus: ApparatusSection = {
   title: "Apparatus Required",
   items: [
     {
-      name: "Pencil/Pen and Graph Paper",
-      specification: "For drawing the partial product array",
+      name: "Breadboard",
+      specification: "Long solderless breadboard, 60 columns",
+      quantity: "1",
+    },
+    {
+      name: "DC Power Supply",
+      specification: "5 V regulated",
+      quantity: "1",
+    },
+    {
+      name: "74HC08 quad AND gate IC",
+      specification: "DIP-14, the four partial products",
+      quantity: "1",
+    },
+    {
+      name: "74HC283 4-bit adder IC",
+      specification: "DIP-16, adds the shifted partial products",
+      quantity: "1",
+    },
+    {
+      name: "LED",
+      specification: "5 mm, product bits",
+      quantity: "4",
+    },
+    {
+      name: "330 ohm resistor",
+      specification: "0.25 W, LED current limit",
+      quantity: "4",
+    },
+    {
+      name: "Jumper wire",
+      specification: "22 AWG solid-core",
       quantity: "1 set",
-    },
-    {
-      name: "Half/Full Adder Reference",
-      specification: "Truth tables and logic diagrams",
-      quantity: "1",
-    },
-    {
-      name: "Circuit Simulator (optional)",
-      specification: "Logisim / Digital for 4×4 array demo",
-      quantity: "1",
-    },
-    {
-      name: "Digital Design Textbook",
-      specification: "Mano — Chapter on combinational multipliers",
-      quantity: "1",
     },
   ],
 };
