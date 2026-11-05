@@ -11,6 +11,8 @@ export const SITE_URLS: Record<
   | "docsUserGuide"
   | "github"
   | "linkedin"
+  | "participateEmail"
+  | "participateForm"
   | "trustCenter"
   | "x",
   string
@@ -28,6 +30,11 @@ export const SITE_URLS: Record<
   github: "https://github.com/OSS-Initiatives-IIIT-Sonepat/vlabs-iiit-sonepat",
   linkedin:
     "https://www.linkedin.com/company/technical-society-iiit-sonepat/posts/?feedView=all",
+  // Replace participateForm with the live Google Form URL when ready.
+  participateEmail:
+    "mailto:technicalsociety@iiitsonepat.ac.in?subject=VLabs%20Institutional%20Participation",
+  participateForm:
+    "https://docs.google.com/forms/d/e/1FAIpQLSfPLACEHOLDER/viewform",
   trustCenter:
     "https://github.com/OSS-Initiatives-IIIT-Sonepat/vlabs-iiit-sonepat",
   x: "https://github.com/OSS-Initiatives-IIIT-Sonepat/vlabs-iiit-sonepat",
