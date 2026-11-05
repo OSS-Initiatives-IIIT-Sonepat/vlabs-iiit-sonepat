@@ -5,7 +5,7 @@ export const observations: ObservationSection = {
   type: "observation",
   title: "Observations",
   paragraphs: [
-  "Before the strobe the flag is off and the outputs are 0.",
-  "After the rising strobe the outputs are 0101 and the flag is on."
-],
+    "Before the strobe the flag is off and the outputs are 0.",
+    "After the rising strobe the outputs are 0101 and the flag is on.",
+  ],
 };

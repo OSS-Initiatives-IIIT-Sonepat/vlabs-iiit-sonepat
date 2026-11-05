@@ -12,7 +12,8 @@ import { procedureSteps } from "./04-procedure";
 export const timingAndControlExperiment: ExperimentDefinition = {
   id: "timing-and-control",
   title: "Timing and Control",
-  description: "Follow a direct ADD from T0 through T5, and watch the sequence counter reset.",
+  description:
+    "Follow a direct ADD from T0 through T5, and watch the sequence counter reset.",
   labType: "text",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],
@@ -20,4 +21,6 @@ export const timingAndControlExperiment: ExperimentDefinition = {
 };
 
 export const TimingAndControlCircuit = buildCircuit(timingAndControlExperiment);
-export const TimingAndControlContent = buildLabContent(timingAndControlExperiment);
+export const TimingAndControlContent = buildLabContent(
+  timingAndControlExperiment,
+);

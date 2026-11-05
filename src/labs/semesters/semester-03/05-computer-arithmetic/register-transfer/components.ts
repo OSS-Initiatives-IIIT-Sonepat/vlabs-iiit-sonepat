@@ -9,7 +9,12 @@ const r2Col = 24;
 
 export const components: ComponentInstance[] = [
   ...power(),
-  { id: "r1", type: "io-port", name: "R1", mountedAt: { board: "bb", col: r1Col, row: "e" } },
+  {
+    id: "r1",
+    type: "io-port",
+    name: "R1",
+    mountedAt: { board: "bb", col: r1Col, row: "e" },
+  },
   ...powers("r1", r1Col),
   // 1101, bit 0 on d0.
   rail("w_d0", "r1", "d0", "vcc", 1),
@@ -22,7 +27,12 @@ export const components: ComponentInstance[] = [
   ...lamp("r1b1", "r1", "q1", 44, "c", "red"),
   ...lamp("r1b0", "r1", "q0", 50, "c", "red"),
 
-  { id: "r2", type: "io-port", name: "R2", mountedAt: { board: "bb", col: r2Col, row: "e" } },
+  {
+    id: "r2",
+    type: "io-port",
+    name: "R2",
+    mountedAt: { board: "bb", col: r2Col, row: "e" },
+  },
   ...powers("r2", r2Col),
   link("w_b0", "r1", "q0", "r2", "d0", "yellow"),
   link("w_b1", "r1", "q1", "r2", "d1", "yellow"),
@@ -34,7 +44,11 @@ export const components: ComponentInstance[] = [
   ...lamp("r2b0", "r2", "q0", 50, "h", "green"),
 
   // P AND clock. The output is the load strobe of R2, and it also lights Load.
-  { id: "gate", type: "and-gate", mountedAt: { board: "bb", col: gateCol, row: "e" } },
+  {
+    id: "gate",
+    type: "and-gate",
+    mountedAt: { board: "bb", col: gateCol, row: "e" },
+  },
   ...powers("gate", gateCol),
   input("p", "gate", "A", 12, "blue"),
   input("clk", "gate", "B", 13, "orange"),

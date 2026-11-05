@@ -15,7 +15,9 @@ export const cacheVirtualStepSchematics = frames([
       memword("addr", 140, 120, "15 bit", "index", "tag", true),
       block("line", 500, 120, 120, 48, "one line"),
     ],
-    notes: ["32K words need 15 address bits. The index picks the only line that may hold this address."],
+    notes: [
+      "32K words need 15 address bits. The index picks the only line that may hold this address.",
+    ],
   },
   {
     title: "Set-associative cache",
@@ -24,7 +26,9 @@ export const cacheVirtualStepSchematics = frames([
       block("s1", 360, 120, 120, 48, "way 1", true),
       block("idx", 520, 120, 100, 48, "set"),
     ],
-    notes: ["The index picks a set. The tag is compared with each way in that set."],
+    notes: [
+      "The index picks a set. The tag is compared with each way in that set.",
+    ],
   },
   {
     title: "One page is in memory, one is not",
@@ -33,7 +37,9 @@ export const cacheVirtualStepSchematics = frames([
       memword("p0", 160, 100, "page 0", "frame 3", "in memory", true),
       memword("p1", 160, 160, "page 1", "—", "on disk"),
     ],
-    notes: ["The page table says where the page is. A missing page is a page fault."],
+    notes: [
+      "The page table says where the page is. A missing page is a page fault.",
+    ],
   },
 ]);
 

@@ -79,7 +79,13 @@ export type SimResult = {
 // Keyed by circuit.id so state resets when circuit changes.
 const sequentialRegistry = new Map<string, Map<string, SequentialState>>();
 
-type MachineState = { pc: number; clk: number; latch: number; flag: number; stb: number };
+type MachineState = {
+  pc: number;
+  clk: number;
+  latch: number;
+  flag: number;
+  stb: number;
+};
 const machineState = new Map<string, MachineState>();
 
 function machineOf(circuitId: string, id: string): MachineState {
@@ -190,249 +196,260 @@ export function simulate(
   );
 
   const runComb = () => {
-  for (let iter = 0; iter < 40; iter++) {
-    let changed = false;
+    for (let iter = 0; iter < 40; iter++) {
+      let changed = false;
 
-    for (const gate of combGates) {
-      if (!("mountedAt" in gate)) continue;
-      const id = gate.id;
-      const type = gate.type;
+      for (const gate of combGates) {
+        if (!("mountedAt" in gate)) continue;
+        const id = gate.id;
+        const type = gate.type;
 
-      // ── Standard gates (not/and/or/xor/nand/nor/xnor + reduce) ────
-      if (type === "not-hex") {
-        for (const n of [1, 2, 3, 4, 5, 6]) {
-          const nY = nl.componentPinNet(id, `${n}Y`);
-          if (!nY) continue;
-          const res = evaluateGate(
-            "not-gate",
-            { in: sig(nv, nl.componentPinNet(id, `${n}A`)) },
-            1,
+        // ── Standard gates (not/and/or/xor/nand/nor/xnor + reduce) ────
+        if (type === "not-hex") {
+          for (const n of [1, 2, 3, 4, 5, 6]) {
+            const nY = nl.componentPinNet(id, `${n}Y`);
+            if (!nY) continue;
+            const res = evaluateGate(
+              "not-gate",
+              { in: sig(nv, nl.componentPinNet(id, `${n}A`)) },
+              1,
+            );
+            if (res && !signalsEqual(nv.get(nY), res.out)) {
+              nv.set(nY, res.out);
+              changed = true;
+            }
+          }
+        } else if (QUAD_GATE[type]) {
+          for (const n of [1, 2, 3, 4]) {
+            const nY = nl.componentPinNet(id, `${n}Y`);
+            if (!nY) continue;
+            const res = evaluateGate(
+              QUAD_GATE[type],
+              {
+                in1: sig(nv, nl.componentPinNet(id, `${n}A`)),
+                in2: sig(nv, nl.componentPinNet(id, `${n}B`)),
+              },
+              1,
+            );
+            if (res && !signalsEqual(nv.get(nY), res.out)) {
+              nv.set(nY, res.out);
+              changed = true;
+            }
+          }
+        } else if (type === "buffer-gate") {
+          // 74HC125: A is the data pin, B is active-low output enable.
+          // Y is driven only while enable is low. A high enable is high impedance.
+          const nY =
+            nl.componentPinNet(id, "Y") ?? nl.componentPinNet(id, "1Y");
+          const oe = sig(
+            nv,
+            nl.componentPinNet(id, "B") ?? nl.componentPinNet(id, "1B"),
           );
-          if (res && !signalsEqual(nv.get(nY), res.out)) {
-            nv.set(nY, res.out);
-            changed = true;
+          if (nY && oe[0] === 0) {
+            const data = sig(
+              nv,
+              nl.componentPinNet(id, "A") ?? nl.componentPinNet(id, "1A"),
+            );
+            if (!signalsEqual(nv.get(nY), data)) {
+              nv.set(nY, data);
+              changed = true;
+            }
+          }
+        } else if (GATE_TYPES.has(type)) {
+          // Gate 1 only (alias pins A/1A, B/1B → Y/1Y)
+          const nA =
+            nl.componentPinNet(id, "A") ?? nl.componentPinNet(id, "1A");
+          const nB =
+            nl.componentPinNet(id, "B") ?? nl.componentPinNet(id, "1B");
+          const nY =
+            nl.componentPinNet(id, "Y") ?? nl.componentPinNet(id, "1Y");
+
+          if (nY) {
+            const res = evaluateGate(
+              type,
+              { in1: sig(nv, nA), in2: sig(nv, nB), in: sig(nv, nA) },
+              1,
+            );
+            if (res && !signalsEqual(nv.get(nY), res.out)) {
+              nv.set(nY, res.out);
+              changed = true;
+            }
           }
         }
-      } else if (QUAD_GATE[type]) {
-        for (const n of [1, 2, 3, 4]) {
-          const nY = nl.componentPinNet(id, `${n}Y`);
-          if (!nY) continue;
-          const res = evaluateGate(
-            QUAD_GATE[type],
-            {
-              in1: sig(nv, nl.componentPinNet(id, `${n}A`)),
-              in2: sig(nv, nl.componentPinNet(id, `${n}B`)),
-            },
-            1,
-          );
-          if (res && !signalsEqual(nv.get(nY), res.out)) {
-            nv.set(nY, res.out);
-            changed = true;
-          }
-        }
-      } else if (type === "buffer-gate") {
-        // 74HC125: A is the data pin, B is active-low output enable.
-        // Y is driven only while enable is low. A high enable is high impedance.
-        const nY = nl.componentPinNet(id, "Y") ?? nl.componentPinNet(id, "1Y");
-        const oe = sig(nv, nl.componentPinNet(id, "B") ?? nl.componentPinNet(id, "1B"));
-        if (nY && oe[0] === 0) {
-          const data = sig(nv, nl.componentPinNet(id, "A") ?? nl.componentPinNet(id, "1A"));
-          if (!signalsEqual(nv.get(nY), data)) {
-            nv.set(nY, data);
-            changed = true;
-          }
-        }
-      } else if (GATE_TYPES.has(type)) {
-        // Gate 1 only (alias pins A/1A, B/1B → Y/1Y)
-        const nA = nl.componentPinNet(id, "A") ?? nl.componentPinNet(id, "1A");
-        const nB = nl.componentPinNet(id, "B") ?? nl.componentPinNet(id, "1B");
-        const nY = nl.componentPinNet(id, "Y") ?? nl.componentPinNet(id, "1Y");
 
-        if (nY) {
-          const res = evaluateGate(
-            type,
-            { in1: sig(nv, nA), in2: sig(nv, nB), in: sig(nv, nA) },
-            1,
-          );
-          if (res && !signalsEqual(nv.get(nY), res.out)) {
-            nv.set(nY, res.out);
+        // ── Arithmetic ────────────────────────────────────────────────
+        else if (type === "adder" && "bits" in gate) {
+          const bits = (gate as any).bits as number;
+          const signed = (gate as any).signed ?? false;
+          const nA = nl.componentPinNet(id, "in1");
+          const nB = nl.componentPinNet(id, "in2");
+          const nY = nl.componentPinNet(id, "out");
+          if (nA && nB && nY) {
+            const out = opAdd(sig(nv, nA), sig(nv, nB), bits, signed);
+            if (!signalsEqual(nv.get(nY), out)) {
+              nv.set(nY, out);
+              changed = true;
+            }
+          }
+        } else if (type === "adder-4bit") {
+          // 74HC283: A[1-4], B[1-4], C0 → S[1-4], C4
+          const a = [
+            nl.componentPinNet(id, "a1"),
+            nl.componentPinNet(id, "a2"),
+            nl.componentPinNet(id, "a3"),
+            nl.componentPinNet(id, "a4"),
+          ].map((n) => sig(nv, n)[0] ?? ("x" as any));
+          const b = [
+            nl.componentPinNet(id, "b1"),
+            nl.componentPinNet(id, "b2"),
+            nl.componentPinNet(id, "b3"),
+            nl.componentPinNet(id, "b4"),
+          ].map((n) => sig(nv, n)[0] ?? ("x" as any));
+          const cin = sig(nv, nl.componentPinNet(id, "c0"));
+          const { sum, cout } = op4BitAdder(a as Signal, b as Signal, cin);
+          [
+            nl.componentPinNet(id, "s1"),
+            nl.componentPinNet(id, "s2"),
+            nl.componentPinNet(id, "s3"),
+            nl.componentPinNet(id, "s4"),
+          ].forEach((net, i) => {
+            if (net && !signalsEqual(nv.get(net), [sum[i]])) {
+              nv.set(net, [sum[i]]);
+              changed = true;
+            }
+          });
+          const nC4 = nl.componentPinNet(id, "c4");
+          if (nC4 && !signalsEqual(nv.get(nC4), cout)) {
+            nv.set(nC4, cout);
             changed = true;
+          }
+        } else if (type === "mux" && "bits" in gate) {
+          const bits = (gate as any).bits as { in: number; sel: number };
+          const nSel = nl.componentPinNet(id, "sel");
+          const selSig = sig(nv, nSel);
+          const numInputs = 1 << bits.sel;
+          const inputs: Signal[] = [];
+          for (let i = 0; i < numInputs; i++) {
+            inputs.push(sig(nv, nl.componentPinNet(id, `in${i}`)));
+          }
+          const nOut = nl.componentPinNet(id, "out");
+          if (nOut) {
+            const out = opMux(selSig, inputs, bits.in);
+            if (!signalsEqual(nv.get(nOut), out)) {
+              nv.set(nOut, out);
+              changed = true;
+            }
+          }
+        } else if (type === "zero-extend" && "extend" in gate) {
+          const ext = (gate as any).extend as { input: number; output: number };
+          const nIn = nl.componentPinNet(id, "in");
+          const nOut = nl.componentPinNet(id, "out");
+          if (nIn && nOut) {
+            const out = opZeroExtend(sig(nv, nIn), ext.output);
+            if (!signalsEqual(nv.get(nOut), out)) {
+              nv.set(nOut, out);
+              changed = true;
+            }
+          }
+        } else if (type === "sign-extend" && "extend" in gate) {
+          const ext = (gate as any).extend as { input: number; output: number };
+          const nIn = nl.componentPinNet(id, "in");
+          const nOut = nl.componentPinNet(id, "out");
+          if (nIn && nOut) {
+            const out = opSignExtend(sig(nv, nIn), ext.output);
+            if (!signalsEqual(nv.get(nOut), out)) {
+              nv.set(nOut, out);
+              changed = true;
+            }
+          }
+        } else if (type === "bus-slice" && "slice" in gate) {
+          const sl = (gate as any).slice as { first: number; count: number };
+          const nIn = nl.componentPinNet(id, "in");
+          const nOut = nl.componentPinNet(id, "out");
+          if (nIn && nOut) {
+            const out = opBusSlice(sig(nv, nIn), sl.first, sl.count);
+            if (!signalsEqual(nv.get(nOut), out)) {
+              nv.set(nOut, out);
+              changed = true;
+            }
+          }
+        } else if (type === "mux-4to1") {
+          const s0 = sig(nv, nl.componentPinNet(id, "s0"));
+          const s1 = sig(nv, nl.componentPinNet(id, "s1"));
+          const y = op74HC153_MUX(
+            [s0[0] ?? "x", s1[0] ?? "x"],
+            sig(nv, nl.componentPinNet(id, "en1_bar")),
+            sig(nv, nl.componentPinNet(id, "i0_1")),
+            sig(nv, nl.componentPinNet(id, "i1_1")),
+            sig(nv, nl.componentPinNet(id, "i2_1")),
+            sig(nv, nl.componentPinNet(id, "i3_1")),
+          );
+          const nY = nl.componentPinNet(id, "y1");
+          if (nY && !signalsEqual(nv.get(nY), y)) {
+            nv.set(nY, y);
+            changed = true;
+          }
+          const y2 = op74HC153_MUX(
+            [s0[0] ?? "x", s1[0] ?? "x"],
+            sig(nv, nl.componentPinNet(id, "en2_bar")),
+            sig(nv, nl.componentPinNet(id, "i0_2")),
+            sig(nv, nl.componentPinNet(id, "i1_2")),
+            sig(nv, nl.componentPinNet(id, "i2_2")),
+            sig(nv, nl.componentPinNet(id, "i3_2")),
+          );
+          const nY2 = nl.componentPinNet(id, "y2");
+          if (nY2 && !signalsEqual(nv.get(nY2), y2)) {
+            nv.set(nY2, y2);
+            changed = true;
+          }
+        } else if (type === "demux-1to4") {
+          const out = op74HC139_DEMUX(
+            sig(nv, nl.componentPinNet(id, "a")),
+            sig(nv, nl.componentPinNet(id, "b")),
+            sig(nv, nl.componentPinNet(id, "en_bar")),
+          );
+          for (const [pin, val] of Object.entries(out)) {
+            const net = nl.componentPinNet(id, pin);
+            if (net && !signalsEqual(nv.get(net), val)) {
+              nv.set(net, val);
+              changed = true;
+            }
+          }
+        } else if (type === "decoder-3to8" || type === "demux-1to8") {
+          const out = op74HC138_DEMUX(
+            sig(nv, nl.componentPinNet(id, "a0")),
+            sig(nv, nl.componentPinNet(id, "a1")),
+            sig(nv, nl.componentPinNet(id, "a2")),
+            sig(nv, nl.componentPinNet(id, "e1")),
+            sig(nv, nl.componentPinNet(id, "e2")),
+            sig(nv, nl.componentPinNet(id, "e3")),
+          );
+          for (const [pin, val] of Object.entries(out)) {
+            const net = nl.componentPinNet(id, pin);
+            if (net && !signalsEqual(nv.get(net), val)) {
+              nv.set(net, val);
+              changed = true;
+            }
           }
         }
       }
 
-      // ── Arithmetic ────────────────────────────────────────────────
-      else if (type === "adder" && "bits" in gate) {
-        const bits = (gate as any).bits as number;
-        const signed = (gate as any).signed ?? false;
-        const nA = nl.componentPinNet(id, "in1");
-        const nB = nl.componentPinNet(id, "in2");
-        const nY = nl.componentPinNet(id, "out");
-        if (nA && nB && nY) {
-          const out = opAdd(sig(nv, nA), sig(nv, nB), bits, signed);
-          if (!signalsEqual(nv.get(nY), out)) {
-            nv.set(nY, out);
+      for (const inst of components) {
+        if (inst.type !== "ram" && inst.type !== "rom") continue;
+        const cs = pinBit(nv, nl, inst.id, "cs");
+        const oe = pinBit(nv, nl, inst.id, "oe");
+        if (cs !== 0 || oe !== 0) continue;
+        const addr = nibble(nv, nl, inst.id, "a");
+        if (addr === null) continue;
+        const word = (inst.words?.[addr] ?? 0) & 0xff;
+        for (let i = 0; i < 8; i++) {
+          if (driveBit(nv, nl, inst.id, `d${i}`, (word >> i) & 1))
             changed = true;
-          }
-        }
-      } else if (type === "adder-4bit") {
-        // 74HC283: A[1-4], B[1-4], C0 → S[1-4], C4
-        const a = [
-          nl.componentPinNet(id, "a1"),
-          nl.componentPinNet(id, "a2"),
-          nl.componentPinNet(id, "a3"),
-          nl.componentPinNet(id, "a4"),
-        ].map((n) => sig(nv, n)[0] ?? ("x" as any));
-        const b = [
-          nl.componentPinNet(id, "b1"),
-          nl.componentPinNet(id, "b2"),
-          nl.componentPinNet(id, "b3"),
-          nl.componentPinNet(id, "b4"),
-        ].map((n) => sig(nv, n)[0] ?? ("x" as any));
-        const cin = sig(nv, nl.componentPinNet(id, "c0"));
-        const { sum, cout } = op4BitAdder(a as Signal, b as Signal, cin);
-        [
-          nl.componentPinNet(id, "s1"),
-          nl.componentPinNet(id, "s2"),
-          nl.componentPinNet(id, "s3"),
-          nl.componentPinNet(id, "s4"),
-        ].forEach((net, i) => {
-          if (net && !signalsEqual(nv.get(net), [sum[i]])) {
-            nv.set(net, [sum[i]]);
-            changed = true;
-          }
-        });
-        const nC4 = nl.componentPinNet(id, "c4");
-        if (nC4 && !signalsEqual(nv.get(nC4), cout)) {
-          nv.set(nC4, cout);
-          changed = true;
-        }
-      } else if (type === "mux" && "bits" in gate) {
-        const bits = (gate as any).bits as { in: number; sel: number };
-        const nSel = nl.componentPinNet(id, "sel");
-        const selSig = sig(nv, nSel);
-        const numInputs = 1 << bits.sel;
-        const inputs: Signal[] = [];
-        for (let i = 0; i < numInputs; i++) {
-          inputs.push(sig(nv, nl.componentPinNet(id, `in${i}`)));
-        }
-        const nOut = nl.componentPinNet(id, "out");
-        if (nOut) {
-          const out = opMux(selSig, inputs, bits.in);
-          if (!signalsEqual(nv.get(nOut), out)) {
-            nv.set(nOut, out);
-            changed = true;
-          }
-        }
-      } else if (type === "zero-extend" && "extend" in gate) {
-        const ext = (gate as any).extend as { input: number; output: number };
-        const nIn = nl.componentPinNet(id, "in");
-        const nOut = nl.componentPinNet(id, "out");
-        if (nIn && nOut) {
-          const out = opZeroExtend(sig(nv, nIn), ext.output);
-          if (!signalsEqual(nv.get(nOut), out)) {
-            nv.set(nOut, out);
-            changed = true;
-          }
-        }
-      } else if (type === "sign-extend" && "extend" in gate) {
-        const ext = (gate as any).extend as { input: number; output: number };
-        const nIn = nl.componentPinNet(id, "in");
-        const nOut = nl.componentPinNet(id, "out");
-        if (nIn && nOut) {
-          const out = opSignExtend(sig(nv, nIn), ext.output);
-          if (!signalsEqual(nv.get(nOut), out)) {
-            nv.set(nOut, out);
-            changed = true;
-          }
-        }
-      } else if (type === "bus-slice" && "slice" in gate) {
-        const sl = (gate as any).slice as { first: number; count: number };
-        const nIn = nl.componentPinNet(id, "in");
-        const nOut = nl.componentPinNet(id, "out");
-        if (nIn && nOut) {
-          const out = opBusSlice(sig(nv, nIn), sl.first, sl.count);
-          if (!signalsEqual(nv.get(nOut), out)) {
-            nv.set(nOut, out);
-            changed = true;
-          }
-        }
-      } else if (type === "mux-4to1") {
-        const s0 = sig(nv, nl.componentPinNet(id, "s0"));
-        const s1 = sig(nv, nl.componentPinNet(id, "s1"));
-        const y = op74HC153_MUX(
-          [s0[0] ?? "x", s1[0] ?? "x"],
-          sig(nv, nl.componentPinNet(id, "en1_bar")),
-          sig(nv, nl.componentPinNet(id, "i0_1")),
-          sig(nv, nl.componentPinNet(id, "i1_1")),
-          sig(nv, nl.componentPinNet(id, "i2_1")),
-          sig(nv, nl.componentPinNet(id, "i3_1")),
-        );
-        const nY = nl.componentPinNet(id, "y1");
-        if (nY && !signalsEqual(nv.get(nY), y)) {
-          nv.set(nY, y);
-          changed = true;
-        }
-        const y2 = op74HC153_MUX(
-          [s0[0] ?? "x", s1[0] ?? "x"],
-          sig(nv, nl.componentPinNet(id, "en2_bar")),
-          sig(nv, nl.componentPinNet(id, "i0_2")),
-          sig(nv, nl.componentPinNet(id, "i1_2")),
-          sig(nv, nl.componentPinNet(id, "i2_2")),
-          sig(nv, nl.componentPinNet(id, "i3_2")),
-        );
-        const nY2 = nl.componentPinNet(id, "y2");
-        if (nY2 && !signalsEqual(nv.get(nY2), y2)) {
-          nv.set(nY2, y2);
-          changed = true;
-        }
-      } else if (type === "demux-1to4") {
-        const out = op74HC139_DEMUX(
-          sig(nv, nl.componentPinNet(id, "a")),
-          sig(nv, nl.componentPinNet(id, "b")),
-          sig(nv, nl.componentPinNet(id, "en_bar")),
-        );
-        for (const [pin, val] of Object.entries(out)) {
-          const net = nl.componentPinNet(id, pin);
-          if (net && !signalsEqual(nv.get(net), val)) {
-            nv.set(net, val);
-            changed = true;
-          }
-        }
-      } else if (type === "decoder-3to8" || type === "demux-1to8") {
-        const out = op74HC138_DEMUX(
-          sig(nv, nl.componentPinNet(id, "a0")),
-          sig(nv, nl.componentPinNet(id, "a1")),
-          sig(nv, nl.componentPinNet(id, "a2")),
-          sig(nv, nl.componentPinNet(id, "e1")),
-          sig(nv, nl.componentPinNet(id, "e2")),
-          sig(nv, nl.componentPinNet(id, "e3")),
-        );
-        for (const [pin, val] of Object.entries(out)) {
-          const net = nl.componentPinNet(id, pin);
-          if (net && !signalsEqual(nv.get(net), val)) {
-            nv.set(net, val);
-            changed = true;
-          }
         }
       }
+
+      if (!changed) break;
     }
-
-    for (const inst of components) {
-      if (inst.type !== "ram" && inst.type !== "rom") continue;
-      const cs = pinBit(nv, nl, inst.id, "cs");
-      const oe = pinBit(nv, nl, inst.id, "oe");
-      if (cs !== 0 || oe !== 0) continue;
-      const addr = nibble(nv, nl, inst.id, "a");
-      if (addr === null) continue;
-      const word = (inst.words?.[addr] ?? 0) & 0xff;
-      for (let i = 0; i < 8; i++) {
-        if (driveBit(nv, nl, inst.id, `d${i}`, (word >> i) & 1)) changed = true;
-      }
-    }
-
-    if (!changed) break;
-  }
   };
   runComb();
 
@@ -485,7 +502,11 @@ export function simulate(
       if (net) nv.set(net, outSig);
     }
     // 74HC161 publishes one 4-bit bus named `q`. The DIP pins are q0–q3.
-    if (inst.type === "counter-4bit-sync" && outputs.q && outputs.q.length >= 4) {
+    if (
+      inst.type === "counter-4bit-sync" &&
+      outputs.q &&
+      outputs.q.length >= 4
+    ) {
       for (let i = 0; i < 4; i++) {
         const net = nl.componentPinNet(inst.id, `q${i}`);
         if (net) nv.set(net, [outputs.q[i]]);

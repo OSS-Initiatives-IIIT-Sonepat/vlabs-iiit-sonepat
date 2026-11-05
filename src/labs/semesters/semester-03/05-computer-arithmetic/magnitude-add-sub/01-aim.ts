@@ -4,5 +4,7 @@ export const aim: TheorySection = {
   id: "aim",
   type: "text",
   title: "Aim",
-  paragraphs: ["To trace signed-magnitude subtraction when the minuend is smaller, and addition when the magnitudes overflow."],
+  paragraphs: [
+    "To trace signed-magnitude subtraction when the minuend is smaller, and addition when the magnitudes overflow.",
+  ],
 };

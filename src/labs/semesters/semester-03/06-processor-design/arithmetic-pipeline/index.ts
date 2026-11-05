@@ -19,5 +19,9 @@ export const arithmeticPipelineExperiment: ExperimentDefinition = {
   procedureSteps,
 };
 
-export const ArithmeticPipelineCircuit = buildCircuit(arithmeticPipelineExperiment);
-export const ArithmeticPipelineContent = buildLabContent(arithmeticPipelineExperiment);
+export const ArithmeticPipelineCircuit = buildCircuit(
+  arithmeticPipelineExperiment,
+);
+export const ArithmeticPipelineContent = buildLabContent(
+  arithmeticPipelineExperiment,
+);

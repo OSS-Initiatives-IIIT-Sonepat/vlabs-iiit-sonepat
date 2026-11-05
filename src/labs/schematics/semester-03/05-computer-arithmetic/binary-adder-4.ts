@@ -53,13 +53,30 @@ xs.forEach((x, i) => {
   const bit = bits[i];
   const bX = x + 42;
   const aX = x + 108;
-  circuit.push(arrow(`bIn${bit}`, [[bX, 128], [bX, boxY]]));
+  circuit.push(
+    arrow(`bIn${bit}`, [
+      [bX, 128],
+      [bX, boxY],
+    ]),
+  );
   circuit.push(label(`bVal${bit}`, bX, 96, String(bBits[i])));
   circuit.push(label(`bName${bit}`, bX, 120, `B${bit}`));
-  circuit.push(arrow(`aIn${bit}`, [[aX, 128], [aX, boxY]]));
+  circuit.push(
+    arrow(`aIn${bit}`, [
+      [aX, 128],
+      [aX, boxY],
+    ]),
+  );
   circuit.push(label(`aVal${bit}`, aX, 96, String(aBits[i])));
   circuit.push(label(`aName${bit}`, aX, 120, `A${bit}`));
-  groups[1].push(`bIn${bit}`, `bVal${bit}`, `bName${bit}`, `aIn${bit}`, `aVal${bit}`, `aName${bit}`);
+  groups[1].push(
+    `bIn${bit}`,
+    `bVal${bit}`,
+    `bName${bit}`,
+    `aIn${bit}`,
+    `aVal${bit}`,
+    `aName${bit}`,
+  );
 });
 
 xs.forEach((x, i) => {
@@ -68,13 +85,23 @@ xs.forEach((x, i) => {
     const x1 = x + boxW;
     const x2 = xs[i + 1];
     const mid = (x1 + x2) / 2;
-    circuit.push(arrow(`c${bit}`, [[x2, midY], [x1, midY]]));
+    circuit.push(
+      arrow(`c${bit}`, [
+        [x2, midY],
+        [x1, midY],
+      ]),
+    );
     circuit.push(label(`cName${bit}`, mid, midY - 16, `C${bit}`));
     circuit.push(label(`cVal${bit}`, x1 + 18, midY - 14, String(carries[i])));
     groups[2].push(`c${bit}`, `cName${bit}`, `cVal${bit}`);
   } else {
     const tail = x + boxW + 36;
-    circuit.push(arrow("c0", [[tail, midY], [x + boxW, midY]]));
+    circuit.push(
+      arrow("c0", [
+        [tail, midY],
+        [x + boxW, midY],
+      ]),
+    );
     circuit.push(label("c0val", tail, midY - 8, "0"));
     circuit.push(label("c0name", tail, midY + 14, "C0"));
     groups[2].push("c0", "c0val", "c0name");
@@ -84,13 +111,28 @@ xs.forEach((x, i) => {
 xs.forEach((x, i) => {
   const bit = bits[i];
   const sX = x + 108;
-  circuit.push(arrow(`s${bit}`, [[sX, boxY + boxH], [sX, boxY + boxH + 28]]));
+  circuit.push(
+    arrow(`s${bit}`, [
+      [sX, boxY + boxH],
+      [sX, boxY + boxH + 28],
+    ]),
+  );
   circuit.push(label(`sName${bit}`, sX, boxY + boxH + 40, `S${bit}`));
   circuit.push(label(`sVal${bit}`, sX, boxY + boxH + 58, String(sumBits[i])));
   groups[3].push(`s${bit}`, `sName${bit}`, `sVal${bit}`);
 });
 const c4x = xs[0] - 28;
-circuit.push(arrow("c4", [[xs[0], midY], [c4x, midY], [c4x, boxY + boxH + 28]], true));
+circuit.push(
+  arrow(
+    "c4",
+    [
+      [xs[0], midY],
+      [c4x, midY],
+      [c4x, boxY + boxH + 28],
+    ],
+    true,
+  ),
+);
 circuit.push(label("c4name", c4x - 16, boxY + boxH + 8, "C4"));
 circuit.push(label("c4val", c4x, boxY + boxH + 42, "1"));
 groups[3].push("c4", "c4name", "c4val");

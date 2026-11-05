@@ -20,5 +20,9 @@ export const completeComputerDescriptionExperiment: ExperimentDefinition = {
   procedureSteps,
 };
 
-export const CompleteComputerDescriptionCircuit = buildCircuit(completeComputerDescriptionExperiment);
-export const CompleteComputerDescriptionContent = buildLabContent(completeComputerDescriptionExperiment);
+export const CompleteComputerDescriptionCircuit = buildCircuit(
+  completeComputerDescriptionExperiment,
+);
+export const CompleteComputerDescriptionContent = buildLabContent(
+  completeComputerDescriptionExperiment,
+);

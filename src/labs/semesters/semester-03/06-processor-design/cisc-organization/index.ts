@@ -20,4 +20,6 @@ export const ciscOrganizationExperiment: ExperimentDefinition = {
 };
 
 export const CiscOrganizationCircuit = buildCircuit(ciscOrganizationExperiment);
-export const CiscOrganizationContent = buildLabContent(ciscOrganizationExperiment);
+export const CiscOrganizationContent = buildLabContent(
+  ciscOrganizationExperiment,
+);

@@ -1,11 +1,22 @@
 import { type ComponentInstance } from "@/labs/types";
-import { chip, input, lamp, link, power, powers, rail } from "../../_coa/breadboard";
+import {
+  chip,
+  input,
+  lamp,
+  link,
+  power,
+  powers,
+  rail,
+} from "../../_coa/breadboard";
 
 // Four 4×1 muxes, one per bit. Input 0 is A, 1 is B, 2 is C, 3 is D.
 // A = 1001, B = 0110, C = 1100, D = 0011. Bit 3 is the MSB.
 const col = { m3: 4, m2: 14, m1: 24, m0: 34 };
 
-const bits: Record<"m3" | "m2" | "m1" | "m0", [number, number, number, number]> = {
+const bits: Record<
+  "m3" | "m2" | "m1" | "m0",
+  [number, number, number, number]
+> = {
   m3: [1, 0, 1, 0],
   m2: [0, 1, 1, 0],
   m1: [0, 1, 0, 1],
@@ -17,7 +28,9 @@ let railCol = 20;
 for (const id of ["m3", "m2", "m1", "m0"] as const) {
   const pins = ["i0_1", "i1_1", "i2_1", "i3_1"] as const;
   bits[id].forEach((level, i) => {
-    data.push(rail(`w_${pins[i]}_${id}`, id, pins[i], level ? "vcc" : "gnd", railCol));
+    data.push(
+      rail(`w_${pins[i]}_${id}`, id, pins[i], level ? "vcc" : "gnd", railCol),
+    );
     railCol += 1;
   });
 }
@@ -62,9 +75,23 @@ const lampIds = (name: string) => [
 ];
 
 const supply = ["bb", "psu", "w_vcc_link", "w_gnd_link"];
-const muxes = ["m3", "m2", "m1", "m0"].flatMap((id) => [id, `w_vcc_${id}`, `w_gnd_${id}`, `w_en_${id}`]);
+const muxes = ["m3", "m2", "m1", "m0"].flatMap((id) => [
+  id,
+  `w_vcc_${id}`,
+  `w_gnd_${id}`,
+  `w_en_${id}`,
+]);
 const wires = data.map((part) => part.id);
-const selects = ["w_s1_m3", "w_s0_m3", "w_s1_m2", "w_s1_m1", "w_s1_m0", "w_s0_m2", "w_s0_m1", "w_s0_m0"];
+const selects = [
+  "w_s1_m3",
+  "w_s0_m3",
+  "w_s1_m2",
+  "w_s1_m1",
+  "w_s1_m0",
+  "w_s0_m2",
+  "w_s0_m1",
+  "w_s0_m0",
+];
 const lamps = ["b3", "b2", "b1", "b0"].flatMap(lampIds);
 
 const built = ids(supply, muxes, wires, selects, lamps);

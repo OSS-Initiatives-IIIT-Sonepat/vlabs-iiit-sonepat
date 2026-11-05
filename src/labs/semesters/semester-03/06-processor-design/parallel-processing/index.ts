@@ -19,5 +19,9 @@ export const parallelProcessingExperiment: ExperimentDefinition = {
   procedureSteps,
 };
 
-export const ParallelProcessingCircuit = buildCircuit(parallelProcessingExperiment);
-export const ParallelProcessingContent = buildLabContent(parallelProcessingExperiment);
+export const ParallelProcessingCircuit = buildCircuit(
+  parallelProcessingExperiment,
+);
+export const ParallelProcessingContent = buildLabContent(
+  parallelProcessingExperiment,
+);

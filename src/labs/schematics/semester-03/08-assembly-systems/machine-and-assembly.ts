@@ -2,10 +2,42 @@ import { flow } from "../diagram";
 
 /** One arithmetic and logic program, in assembly and in the stored machine word. */
 const nodes = [
-  { id: "lda", kind: "block" as const, x: 250, y: 78, w: 240, h: 40, label: "LDA A" },
-  { id: "add", kind: "block" as const, x: 250, y: 178, w: 240, h: 40, label: "ADD B" },
-  { id: "cma", kind: "block" as const, x: 250, y: 278, w: 240, h: 40, label: "CMA" },
-  { id: "sta", kind: "block" as const, x: 250, y: 378, w: 240, h: 40, label: "STA C" },
+  {
+    id: "lda",
+    kind: "block" as const,
+    x: 250,
+    y: 78,
+    w: 240,
+    h: 40,
+    label: "LDA A",
+  },
+  {
+    id: "add",
+    kind: "block" as const,
+    x: 250,
+    y: 178,
+    w: 240,
+    h: 40,
+    label: "ADD B",
+  },
+  {
+    id: "cma",
+    kind: "block" as const,
+    x: 250,
+    y: 278,
+    w: 240,
+    h: 40,
+    label: "CMA",
+  },
+  {
+    id: "sta",
+    kind: "block" as const,
+    x: 250,
+    y: 378,
+    w: 240,
+    h: 40,
+    label: "STA C",
+  },
 ];
 
 const links = [
@@ -20,7 +52,9 @@ export const machineAndAssemblyStepSchematics = flow(nodes, links, [
     show: ["lda"],
     highlight: "lda",
     labels: { lda: "LDA A    =    206A" },
-    notes: ["Assembly LDA A and machine word 206A are one instruction. A is at address 106."],
+    notes: [
+      "Assembly LDA A and machine word 206A are one instruction. A is at address 106.",
+    ],
   },
   {
     title: "Add",
@@ -45,4 +79,5 @@ export const machineAndAssemblyStepSchematics = flow(nodes, links, [
   },
 ]);
 
-export const machineAndAssemblyTheoryDiagram = machineAndAssemblyStepSchematics[3];
+export const machineAndAssemblyTheoryDiagram =
+  machineAndAssemblyStepSchematics[3];

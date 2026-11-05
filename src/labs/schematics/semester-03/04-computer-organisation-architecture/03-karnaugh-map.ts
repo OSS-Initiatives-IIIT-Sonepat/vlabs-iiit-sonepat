@@ -41,7 +41,10 @@ export const karnaughMapStepSchematics = frames([
       ...stub("t2", "C·D'", 130, 120, true),
       ...stub("t3", "A'·B·D", 165, 120, true),
     ],
-    notes: ["A'BD uses two AND gates", "Gate 3 makes A'B, gate 4 AND that with D"],
+    notes: [
+      "A'BD uses two AND gates",
+      "Gate 3 makes A'B, gate 4 AND that with D",
+    ],
   },
   {
     title: "OR the three products",

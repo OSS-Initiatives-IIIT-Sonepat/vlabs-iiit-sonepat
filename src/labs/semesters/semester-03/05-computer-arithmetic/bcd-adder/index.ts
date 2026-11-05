@@ -12,7 +12,8 @@ import { procedureSteps } from "./04-procedure";
 export const bcdAdderExperiment: ExperimentDefinition = {
   id: "bcd-adder",
   title: "BCD Adder",
-  description: "Add two BCD digits and correct the sum by 6 when it is greater than 9.",
+  description:
+    "Add two BCD digits and correct the sum by 6 when it is greater than 9.",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],
   procedureSteps,

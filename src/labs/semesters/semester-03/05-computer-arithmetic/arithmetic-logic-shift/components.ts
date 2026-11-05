@@ -103,19 +103,43 @@ const arith: ComponentInstance[] = [
   ),
   ...bits.map((bit) => {
     const { yChip, n } = slot(bit);
-    return tie(`w_z${bit}`, yChip, `i0_${n}`, "gnd", col[yChip] + muxInOff[`i0_${n}`]);
+    return tie(
+      `w_z${bit}`,
+      yChip,
+      `i0_${n}`,
+      "gnd",
+      col[yChip] + muxInOff[`i0_${n}`],
+    );
   }),
   ...bits.map((bit) => {
     const { yChip, n } = slot(bit);
-    return tie(`w_bm${bit}`, yChip, `i1_${n}`, bLevel[bit], col[yChip] + muxInOff[`i1_${n}`]);
+    return tie(
+      `w_bm${bit}`,
+      yChip,
+      `i1_${n}`,
+      bLevel[bit],
+      col[yChip] + muxInOff[`i1_${n}`],
+    );
   }),
   ...bits.map((bit) => {
     const { yChip, n } = slot(bit);
-    return tie(`w_bp${bit}`, yChip, `i2_${n}`, bpLevel[bit], col[yChip] + muxInOff[`i2_${n}`]);
+    return tie(
+      `w_bp${bit}`,
+      yChip,
+      `i2_${n}`,
+      bpLevel[bit],
+      col[yChip] + muxInOff[`i2_${n}`],
+    );
   }),
   ...bits.map((bit) => {
     const { yChip, n } = slot(bit);
-    return tie(`w_o${bit}`, yChip, `i3_${n}`, "vcc", col[yChip] + muxInOff[`i3_${n}`]);
+    return tie(
+      `w_o${bit}`,
+      yChip,
+      `i3_${n}`,
+      "vcc",
+      col[yChip] + muxInOff[`i3_${n}`],
+    );
   }),
   ...bits.map((bit) => {
     const { yChip, y } = slot(bit);
@@ -184,11 +208,23 @@ const finalStage: ComponentInstance[] = [
   }),
   ...bits.map((bit) => {
     const { fChip, n } = slot(bit);
-    return tie(`w_shr${bit}`, fChip, `i2_${n}`, shrLevel[bit], col[fChip] + muxInOff[`i2_${n}`]);
+    return tie(
+      `w_shr${bit}`,
+      fChip,
+      `i2_${n}`,
+      shrLevel[bit],
+      col[fChip] + muxInOff[`i2_${n}`],
+    );
   }),
   ...bits.map((bit) => {
     const { fChip, n } = slot(bit);
-    return tie(`w_shl${bit}`, fChip, `i3_${n}`, shlLevel[bit], col[fChip] + muxInOff[`i3_${n}`]);
+    return tie(
+      `w_shl${bit}`,
+      fChip,
+      `i3_${n}`,
+      shlLevel[bit],
+      col[fChip] + muxInOff[`i3_${n}`],
+    );
   }),
   input("s3", "fmH", "s1", col.fmH + 1, "blue"),
   input("s2", "fmH", "s0", col.fmH + 1, "orange", "j"),

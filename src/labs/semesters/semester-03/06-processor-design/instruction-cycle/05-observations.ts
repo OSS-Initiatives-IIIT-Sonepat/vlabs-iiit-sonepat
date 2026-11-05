@@ -13,7 +13,11 @@ export const observations: ObservationSection = {
     rows: [
       ["T0", "every instruction", "AR ← PC"],
       ["T1", "every instruction", "IR ← M[AR], PC ← PC + 1"],
-      ["T2", "every instruction", "Decode IR(12-14), AR ← IR(0-11), I ← IR(15)"],
+      [
+        "T2",
+        "every instruction",
+        "Decode IR(12-14), AR ← IR(0-11), I ← IR(15)",
+      ],
       ["T3", "D7 = 1, I = 0", "Execute register-reference, SC ← 0"],
       ["T3", "D7 = 1, I = 1", "Execute input-output, SC ← 0"],
       ["T3", "D7 = 0, I = 0", "Nothing"],

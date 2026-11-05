@@ -57,10 +57,12 @@ const copy = [
   ],
 ] as const;
 
-export const procedureSteps: SceneProcedureStep[] = copy.map(([label, body, count], i) => ({
-  label,
-  body,
-  show: [],
-  schematic: fig[i],
-  table: revealedTable(headers, rows, count),
-}));
+export const procedureSteps: SceneProcedureStep[] = copy.map(
+  ([label, body, count], i) => ({
+    label,
+    body,
+    show: [],
+    schematic: fig[i],
+    table: revealedTable(headers, rows, count),
+  }),
+);

@@ -6,7 +6,15 @@ export const apparatus: ApparatusSection = {
   title: "Apparatus Required",
   items: [
     { name: "Command", specification: "Write a block", quantity: "1" },
-    { name: "Channel program", specification: "In memory, fetched by the IOP", quantity: "1" },
-    { name: "Status", specification: "Written when the IOP finishes", quantity: "1" },
+    {
+      name: "Channel program",
+      specification: "In memory, fetched by the IOP",
+      quantity: "1",
+    },
+    {
+      name: "Status",
+      specification: "Written when the IOP finishes",
+      quantity: "1",
+    },
   ],
 };

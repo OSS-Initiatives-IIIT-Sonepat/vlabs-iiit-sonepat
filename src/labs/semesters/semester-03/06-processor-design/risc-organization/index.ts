@@ -12,7 +12,8 @@ import { procedureSteps } from "./04-procedure";
 export const riscOrganizationExperiment: ExperimentDefinition = {
   id: "risc-organization",
   title: "RISC",
-  description: "Run a load, a register add, and a store as three fixed-length instructions.",
+  description:
+    "Run a load, a register add, and a store as three fixed-length instructions.",
   labType: "text",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],
@@ -20,4 +21,6 @@ export const riscOrganizationExperiment: ExperimentDefinition = {
 };
 
 export const RiscOrganizationCircuit = buildCircuit(riscOrganizationExperiment);
-export const RiscOrganizationContent = buildLabContent(riscOrganizationExperiment);
+export const RiscOrganizationContent = buildLabContent(
+  riscOrganizationExperiment,
+);

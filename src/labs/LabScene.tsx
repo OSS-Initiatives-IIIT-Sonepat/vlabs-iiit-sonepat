@@ -479,7 +479,11 @@ function buildInstance(
     case "diode": {
       const { col, row, board } = inst.mountedAt;
       const cols = colsForBoardId(board, all);
-      return buildDiode(hole(col, row, cols), hole(col + 3, row, cols), inst.model ?? "1N4148");
+      return buildDiode(
+        hole(col, row, cols),
+        hole(col + 3, row, cols),
+        inst.model ?? "1N4148",
+      );
     }
 
     case "zener": {
@@ -955,7 +959,11 @@ function inspectComponent(
 // ── Camera framing & screen projection ────────────────────────────────────
 const HOME_POS = new THREE.Vector3(0, 6.5, 7.0);
 const HOME_TARGET = new THREE.Vector3(0, 0.1, 0);
-const NON_FOCUSABLE = new Set(["breadboard", "long-breadboard", "wide-breadboard"]);
+const NON_FOCUSABLE = new Set([
+  "breadboard",
+  "long-breadboard",
+  "wide-breadboard",
+]);
 const WORLD_UP = new THREE.Vector3(0, 1, 0);
 
 /** Bench instruments frame their chassis, not the long probe cables. */
@@ -1585,7 +1593,8 @@ export function LabSceneCanvas({
       wasSelectedRef.current = true;
     } else {
       focusBoxRef.current = null;
-      if (wasSelectedRef.current) animateCameraTo(homePosRef.current, HOME_TARGET, 560);
+      if (wasSelectedRef.current)
+        animateCameraTo(homePosRef.current, HOME_TARGET, 560);
       wasSelectedRef.current = false;
     }
   }, [selectedId, focusCamera, animateCameraTo, previewMode, setSelectedId]);

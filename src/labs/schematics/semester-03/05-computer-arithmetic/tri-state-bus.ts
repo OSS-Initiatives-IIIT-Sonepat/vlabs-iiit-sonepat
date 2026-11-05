@@ -34,11 +34,21 @@ const symbol: SchematicElement[] = [
     [250, 170],
     [250, 110],
   ]),
-  wire("wA", [[150, 140], [250, 140]]),
+  wire("wA", [
+    [150, 140],
+    [250, 140],
+  ]),
   label("aName", 120, 132, "Normal input A"),
-  wire("wC", [[130, 210], [278, 210], [278, 155]]),
+  wire("wC", [
+    [130, 210],
+    [278, 210],
+    [278, 155],
+  ]),
   label("cName", 100, 202, "Control input C"),
-  wire("wY", [[306, 140], [400, 140]]),
+  wire("wY", [
+    [306, 140],
+    [400, 140],
+  ]),
   label("yOn", 430, 132, "Y = A if C = 1"),
   label("yOff", 470, 154, "High impedance if C = 0"),
 ];
@@ -51,50 +61,134 @@ names.forEach((name, i) => {
   const mark = name === "C";
   bus.push(triangle(`tri${name}`, y, mark));
   bus.push(label(`src${name}`, 360, y - 8, `${name}0`));
-  bus.push(wire(`wIn${name}`, [[360, y], [triX, y]], mark));
+  bus.push(
+    wire(
+      `wIn${name}`,
+      [
+        [360, y],
+        [triX, y],
+      ],
+      mark,
+    ),
+  );
   groups[0].push(`tri${name}`, `src${name}`, `wIn${name}`);
 });
 
 names.forEach((name, i) => {
   const y = yBuf[i];
   const mark = name === "C";
-  bus.push(wire(`wOut${name}`, [[triX + triW, y], [busX, y]], mark));
+  bus.push(
+    wire(
+      `wOut${name}`,
+      [
+        [triX + triW, y],
+        [busX, y],
+      ],
+      mark,
+    ),
+  );
   groups[1].push(`wOut${name}`);
 });
-bus.push(wire("busV", [[busX, yBuf[0]], [busX, yBuf[3] + 16]]));
+bus.push(
+  wire("busV", [
+    [busX, yBuf[0]],
+    [busX, yBuf[3] + 16],
+  ]),
+);
 bus.push(label("busEnd", busX, yBuf[3] + 16, "."));
-bus.push(wire("busH", [[busX, yBuf[0]], [700, yBuf[0]]], true));
+bus.push(
+  wire(
+    "busH",
+    [
+      [busX, yBuf[0]],
+      [700, yBuf[0]],
+    ],
+    true,
+  ),
+);
 bus.push(label("busTip", 700, yBuf[0], "."));
 bus.push(label("busName", 620, 48, "Bus line for bit 0"));
 yBuf.forEach((y, i) => {
   bus.push({ type: "junction", id: `dot${i}`, x: busX, y });
 });
-groups[1].push("busV", "busEnd", "busH", "busTip", "busName", "dot0", "dot1", "dot2", "dot3");
+groups[1].push(
+  "busV",
+  "busEnd",
+  "busH",
+  "busTip",
+  "busName",
+  "dot0",
+  "dot1",
+  "dot2",
+  "dot3",
+);
 
-bus.push(wire("dec", [[70, 300], [200, 300], [200, 450], [70, 450], [70, 300]]));
+bus.push(
+  wire("dec", [
+    [70, 300],
+    [200, 300],
+    [200, 450],
+    [70, 450],
+    [70, 300],
+  ]),
+);
 bus.push(label("decKind", 135, 360, "2×4"));
 bus.push(label("decName", 135, 380, "Decoder"));
-bus.push(wire("wS1", [[40, 330], [70, 330]]));
+bus.push(
+  wire("wS1", [
+    [40, 330],
+    [70, 330],
+  ]),
+);
 bus.push(label("s1", 36, 322, "S1 = 1"));
-bus.push(wire("wS0", [[40, 365], [70, 365]]));
+bus.push(
+  wire("wS0", [
+    [40, 365],
+    [70, 365],
+  ]),
+);
 bus.push(label("s0", 36, 357, "S0 = 0"));
-bus.push(wire("wE", [[48, 420], [70, 420]]));
+bus.push(
+  wire("wE", [
+    [48, 420],
+    [70, 420],
+  ]),
+);
 bus.push(label("en", 44, 412, "Enable E"));
 ["0", "1", "2", "3"].forEach((text, i) => {
   bus.push(label(`n${text}`, 186, outY[i], text));
 });
 groups[2].push(
-  "dec", "decKind", "decName", "wS1", "s1", "wS0", "s0", "wE", "en", "n0", "n1", "n2", "n3",
+  "dec",
+  "decKind",
+  "decName",
+  "wS1",
+  "s1",
+  "wS0",
+  "s0",
+  "wE",
+  "en",
+  "n0",
+  "n1",
+  "n2",
+  "n3",
 );
 
 names.forEach((name, i) => {
   const mark = name === "C";
   const y = yBuf[i] + 20;
-  bus.push(wire(
-    `wCtrl${name}`,
-    [[200, outY[i]], [chan[i], outY[i]], [chan[i], y], [triX, y]],
-    mark,
-  ));
+  bus.push(
+    wire(
+      `wCtrl${name}`,
+      [
+        [200, outY[i]],
+        [chan[i], outY[i]],
+        [chan[i], y],
+        [triX, y],
+      ],
+      mark,
+    ),
+  );
   groups[2].push(`wCtrl${name}`);
 });
 bus.push(label("one", 250, 392, "1"));
@@ -124,7 +218,16 @@ const notes = [
   "11 selects D0, which is 0. Only one buffer may drive the line.",
 ];
 
-const highlight = ["buf", "triC", "busH", "dec", "wE", "wInA", "wCtrlC", "wInD"];
+const highlight = [
+  "buf",
+  "triC",
+  "busH",
+  "dec",
+  "wE",
+  "wInA",
+  "wCtrlC",
+  "wInD",
+];
 
 const byId = new Map(bus.map((el) => [el.id, el]));
 

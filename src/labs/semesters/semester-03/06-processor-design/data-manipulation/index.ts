@@ -20,4 +20,6 @@ export const dataManipulationExperiment: ExperimentDefinition = {
 };
 
 export const DataManipulationCircuit = buildCircuit(dataManipulationExperiment);
-export const DataManipulationContent = buildLabContent(dataManipulationExperiment);
+export const DataManipulationContent = buildLabContent(
+  dataManipulationExperiment,
+);

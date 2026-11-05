@@ -8,7 +8,16 @@ const wired = [...placed, ...stages.wire];
 const all = [...wired, ...stages.lamps];
 
 const add = { A4: 1, A3: 0, A2: 1, A1: 0, B4: 0, B3: 0, B2: 1, B1: 1 } as const;
-const overflow = { A4: 1, A3: 1, A2: 1, A1: 1, B4: 0, B3: 0, B2: 0, B1: 1 } as const;
+const overflow = {
+  A4: 1,
+  A3: 1,
+  A2: 1,
+  A1: 1,
+  B4: 0,
+  B3: 0,
+  B2: 0,
+  B1: 1,
+} as const;
 
 export const procedureSteps: SceneProcedureStep[] = [
   {

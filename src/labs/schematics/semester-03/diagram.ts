@@ -67,7 +67,14 @@ export function stub(
   const half = (text.length * 9 * 0.56) / 2;
   return [
     label(`lbl_${id}`, xWire - 4 - half, y, text),
-    wire(`w_${id}`, [[xWire, y], [xBox, y]], highlight),
+    wire(
+      `w_${id}`,
+      [
+        [xWire, y],
+        [xBox, y],
+      ],
+      highlight,
+    ),
   ];
 }
 
@@ -82,7 +89,14 @@ export function outStub(
   const xEnd = xBox + 36;
   const half = (text.length * 9 * 0.56) / 2;
   return [
-    wire(`w_${id}`, [[xBox, y], [xEnd, y]], highlight),
+    wire(
+      `w_${id}`,
+      [
+        [xBox, y],
+        [xEnd, y],
+      ],
+      highlight,
+    ),
     label(`lbl_${id}`, xEnd + 4 + half, y, text),
   ];
 }
@@ -95,7 +109,14 @@ export function hop(
   y: number,
   highlight?: boolean,
 ): SchematicElement {
-  return wire(id, [[x1, y], [x2, y]], highlight);
+  return wire(
+    id,
+    [
+      [x1, y],
+      [x2, y],
+    ],
+    highlight,
+  );
 }
 
 /**
@@ -113,9 +134,19 @@ export function ledChain(
   const ledC = rCenter + 60;
   const gndX = ledC + 36;
   return [
-    wire(`w_${id}`, [[x1, y], [rCenter - 30, y]], highlight),
+    wire(
+      `w_${id}`,
+      [
+        [x1, y],
+        [rCenter - 30, y],
+      ],
+      highlight,
+    ),
     { type: "resistor", id: `r_${id}`, x: rCenter, y, highlight },
-    wire(`w_${id}_b`, [[rCenter + 30, y], [ledC - 20, y]]),
+    wire(`w_${id}_b`, [
+      [rCenter + 30, y],
+      [ledC - 20, y],
+    ]),
     {
       type: "led",
       id: `led_${id}`,
@@ -125,7 +156,11 @@ export function ledChain(
       color: "green",
       highlight,
     },
-    wire(`w_${id}_g`, [[ledC + 20, y], [gndX, y], [gndX, y + 14]]),
+    wire(`w_${id}_g`, [
+      [ledC + 20, y],
+      [gndX, y],
+      [gndX, y + 14],
+    ]),
     { type: "ground", id: `g_${id}`, x: gndX, y: y + 14 },
   ];
 }
@@ -211,7 +246,12 @@ export function frames(list: Frame[]): SchematicData[] {
       label("lbl_title", width / 2, 22, frame.title),
       ...(frame.elements ?? []),
       ...notes.map((text, i) =>
-        label(`lbl_note${i}`, width / 2, height - 18 - (notes.length - 1 - i) * 20, text),
+        label(
+          `lbl_note${i}`,
+          width / 2,
+          height - 18 - (notes.length - 1 - i) * 20,
+          text,
+        ),
       ),
     ];
     return { width, height, elements };
@@ -254,7 +294,10 @@ function flowSize(node: FlowNode): { w: number; h: number } {
   return { w: node.w ?? 200, h: node.h ?? 40 };
 }
 
-function flowPin(node: FlowNode, side: "top" | "bottom" | "left" | "right"): Pt {
+function flowPin(
+  node: FlowNode,
+  side: "top" | "bottom" | "left" | "right",
+): Pt {
   const { w, h } = flowSize(node);
   if (side === "top") return [node.x, node.y - h / 2];
   if (side === "bottom") return [node.x, node.y + h / 2];
@@ -293,7 +336,8 @@ export function flow(
       for (const link of links) {
         const from = byId.get(link.from);
         const to = byId.get(link.to);
-        if (!from || !to || !visible.has(from.id) || !visible.has(to.id)) continue;
+        if (!from || !to || !visible.has(from.id) || !visible.has(to.id))
+          continue;
         const vertical = Math.abs(to.y - from.y) >= Math.abs(to.x - from.x);
         const start = vertical
           ? flowPin(from, to.y >= from.y ? "bottom" : "top")
@@ -301,13 +345,12 @@ export function flow(
         const end = vertical
           ? flowPin(to, to.y >= from.y ? "top" : "bottom")
           : flowPin(to, to.x >= from.x ? "left" : "right");
-        elements.push(
-          arrow(link.id, [start, end], step.highlight === link.to),
-        );
+        elements.push(arrow(link.id, [start, end], step.highlight === link.to));
         if (link.label) {
           const mx = start[0] + (end[0] - start[0]) * 0.42;
           const my = start[1] + (end[1] - start[1]) * 0.42;
-          const vertical = Math.abs(end[1] - start[1]) >= Math.abs(end[0] - start[0]);
+          const vertical =
+            Math.abs(end[1] - start[1]) >= Math.abs(end[0] - start[0]);
           elements.push(
             label(
               `edge_${link.id}`,

@@ -20,5 +20,9 @@ export const assemblerSecondPassExperiment: ExperimentDefinition = {
   procedureSteps,
 };
 
-export const AssemblerSecondPassCircuit = buildCircuit(assemblerSecondPassExperiment);
-export const AssemblerSecondPassContent = buildLabContent(assemblerSecondPassExperiment);
+export const AssemblerSecondPassCircuit = buildCircuit(
+  assemblerSecondPassExperiment,
+);
+export const AssemblerSecondPassContent = buildLabContent(
+  assemblerSecondPassExperiment,
+);

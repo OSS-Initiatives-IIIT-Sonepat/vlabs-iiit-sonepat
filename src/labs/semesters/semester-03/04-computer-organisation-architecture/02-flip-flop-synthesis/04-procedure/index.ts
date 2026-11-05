@@ -17,7 +17,14 @@ export const procedureSteps: SceneProcedureStep[] = [
   {
     label: "Hold SET and CLR inactive",
     body: "Place the 74HC73. SET and CLR are active-low, so tie both to +5 V. If either were low it would force Q and the clock would not matter. Give the chip power and ground as well.",
-    show: [...stages.power, "jk1", "w_vcc_jk1", "w_gnd_jk1", "w_set_vcc", "w_clr_vcc"],
+    show: [
+      ...stages.power,
+      "jk1",
+      "w_vcc_jk1",
+      "w_gnd_jk1",
+      "w_set_vcc",
+      "w_clr_vcc",
+    ],
     highlight: "jk1",
     schematic: fig[1],
   },

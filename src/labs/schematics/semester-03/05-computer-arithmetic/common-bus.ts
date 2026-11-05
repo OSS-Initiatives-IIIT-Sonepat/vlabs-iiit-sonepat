@@ -32,7 +32,13 @@ function inX(mi: number, input: number) {
 function bitX(ri: number, bit: number) {
   return regL[ri] + 22 + (3 - bit) * 34;
 }
-function box(id: string, x: number, y: number, w: number, h: number): SchematicElement {
+function box(
+  id: string,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+): SchematicElement {
   return wire(id, [
     [x, y],
     [x + w, y],
@@ -52,7 +58,9 @@ names.forEach((name, ri) => {
   const x = regL[ri];
   elements.push(box(`box${name}`, x, regT, regW, regH));
   elements.push(label(`bits${name}`, x + regW / 2, regT + 20, "3  2  1  0"));
-  elements.push(label(`name${name}`, x + regW / 2, regT + regH + 18, `Register ${name}`));
+  elements.push(
+    label(`name${name}`, x + regW / 2, regT + regH + 18, `Register ${name}`),
+  );
   groups[0].push(`box${name}`, `bits${name}`, `name${name}`);
 });
 
@@ -160,8 +168,18 @@ elements.push(label("s1", 28, yS1, "S1"));
 elements.push(label("s1v", 58, yS1, "0"));
 elements.push(label("s0", 28, yS0, "S0"));
 elements.push(label("s0v", 58, yS0, "0"));
-elements.push(wire("lineS1", [[58, yS1], [1000, yS1]]));
-elements.push(wire("lineS0", [[58, yS0], [1000, yS0]]));
+elements.push(
+  wire("lineS1", [
+    [58, yS1],
+    [1000, yS1],
+  ]),
+);
+elements.push(
+  wire("lineS0", [
+    [58, yS0],
+    [1000, yS0],
+  ]),
+);
 elements.push(label("s1end", 1000, yS1, "."));
 elements.push(label("s0end", 1000, yS0, "."));
 groups[4].push("s1", "s1v", "s0", "s0v", "lineS1", "lineS0", "s1end", "s0end");
@@ -174,15 +192,33 @@ bits.forEach((bit, mi) => {
   const y0 = muxT + 40;
   elements.push(dot(`jS1${bit}`, x1, yS1));
   elements.push(dot(`jS0${bit}`, x0, yS0));
-  elements.push(wire(`dS1${bit}`, [[x1, yS1], [x1, y1], [left, y1]]));
-  elements.push(wire(`dS0${bit}`, [[x0, yS0], [x0, y0], [left, y0]]));
+  elements.push(
+    wire(`dS1${bit}`, [
+      [x1, yS1],
+      [x1, y1],
+      [left, y1],
+    ]),
+  );
+  elements.push(
+    wire(`dS0${bit}`, [
+      [x0, yS0],
+      [x0, y0],
+      [left, y0],
+    ]),
+  );
   groups[4].push(`jS1${bit}`, `jS0${bit}`, `dS1${bit}`, `dS0${bit}`);
 });
 
 bits.forEach((bit, mi) => {
   const x = muxL[mi] + muxW - 40;
   const y = busY[mi];
-  elements.push(wire(`bus${bit}`, [[x, muxT], [x, y], [988, y]]));
+  elements.push(
+    wire(`bus${bit}`, [
+      [x, muxT],
+      [x, y],
+      [988, y],
+    ]),
+  );
   elements.push(label(`A${bit}`, x + 22, y - 9, `A${bit}`));
   elements.push(label(`tip${bit}`, 988, y, "."));
   groups[5].push(`bus${bit}`, `A${bit}`, `tip${bit}`);
@@ -223,7 +259,16 @@ const notes = [
   "11 carries D, 0 0 1 1. Eight 16-bit registers need 16 muxes of 8×1 and 3 select lines.",
 ];
 
-const highlight = ["nameD", "mux3", "wA", "lineS1", "bus3", "busName", "busName", "busName"];
+const highlight = [
+  "nameD",
+  "mux3",
+  "wA",
+  "lineS1",
+  "bus3",
+  "busName",
+  "busName",
+  "busName",
+];
 
 const byId = new Map(elements.map((el) => [el.id, el]));
 

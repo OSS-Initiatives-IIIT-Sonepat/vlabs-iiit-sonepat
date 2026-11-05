@@ -11,7 +11,8 @@ import { procedureSteps } from "./04-procedure";
 export const basicComputerExperiment: ExperimentDefinition = {
   id: "basic-computer",
   title: "Basic Computer",
-  description: "Clock a small CPU through two memory words, then read direct and indirect addressing.",
+  description:
+    "Clock a small CPU through two memory words, then read direct and indirect addressing.",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],
   procedureSteps,

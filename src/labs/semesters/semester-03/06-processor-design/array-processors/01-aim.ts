@@ -4,5 +4,7 @@ export const aim: TheorySection = {
   id: "aim",
   type: "text",
   title: "Aim",
-  paragraphs: ["To distinguish an attached array processor from a SIMD array of processing elements."],
+  paragraphs: [
+    "To distinguish an attached array processor from a SIMD array of processing elements.",
+  ],
 };

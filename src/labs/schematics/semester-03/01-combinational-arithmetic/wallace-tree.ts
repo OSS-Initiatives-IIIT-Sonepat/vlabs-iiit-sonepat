@@ -17,7 +17,10 @@ export const wallaceTreeStepSchematics = frames([
       ...stub("p", "A1·B0", 110, 160),
       ...stub("q", "A0·B1", 150, 160),
     ],
-    notes: ["Two partial-product bits in one column", "Sum stays, carry moves to the next column"],
+    notes: [
+      "Two partial-product bits in one column",
+      "Sum stays, carry moves to the next column",
+    ],
   },
   {
     title: "AND gates build the two partial products",
@@ -32,10 +35,7 @@ export const wallaceTreeStepSchematics = frames([
   },
   {
     title: "XOR is the sum, AND is the carry",
-    elements: [
-      ...reduce(true),
-      hop("h1", 170, 230, 120, true),
-    ],
+    elements: [...reduce(true), hop("h1", 170, 230, 120, true)],
     notes: ["Sum = (A1·B0) ⊕ (A0·B1)", "Carry = (A1·B0) · (A0·B1)"],
   },
   {
@@ -56,7 +56,10 @@ export const wallaceTreeStepSchematics = frames([
       ...ledChain("sum", 230, 100, "Sum 0"),
       ...ledChain("cy", 230, 155, "Carry 1", true),
     ],
-    notes: ["Two 1s compress to a carry", "A Wallace tree repeats this for every column"],
+    notes: [
+      "Two 1s compress to a carry",
+      "A Wallace tree repeats this for every column",
+    ],
   },
 ]);
 

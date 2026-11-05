@@ -18,18 +18,44 @@ const rows = [
 ];
 
 const copy = [
-  ["Memory", "The computer's memory is 4096 words of 16 bits. Program and data share it.", 1],
-  ["The common bus", "AR, PC, DR, AC, IR, INPR, OUTR, and memory all meet one bus. A three-state enable chooses the single driver.", 2],
-  ["The five processor registers", "AR holds the memory address. PC holds the next instruction address. DR holds data. AC is the accumulator. IR holds the current instruction.", 7],
-  ["The I/O registers", "INPR takes a character from the input device. OUTR holds a character for the output device. Both use the same bus.", 9],
-  ["Control", "The control unit is the sequence counter and the decoder. It raises one enable for the current T.", 10],
-  ["One read, on this diagram", "Control sets read. Memory drives the bus. DR takes M[AR]. That is the whole computer working as one system.", 11],
+  [
+    "Memory",
+    "The computer's memory is 4096 words of 16 bits. Program and data share it.",
+    1,
+  ],
+  [
+    "The common bus",
+    "AR, PC, DR, AC, IR, INPR, OUTR, and memory all meet one bus. A three-state enable chooses the single driver.",
+    2,
+  ],
+  [
+    "The five processor registers",
+    "AR holds the memory address. PC holds the next instruction address. DR holds data. AC is the accumulator. IR holds the current instruction.",
+    7,
+  ],
+  [
+    "The I/O registers",
+    "INPR takes a character from the input device. OUTR holds a character for the output device. Both use the same bus.",
+    9,
+  ],
+  [
+    "Control",
+    "The control unit is the sequence counter and the decoder. It raises one enable for the current T.",
+    10,
+  ],
+  [
+    "One read, on this diagram",
+    "Control sets read. Memory drives the bus. DR takes M[AR]. That is the whole computer working as one system.",
+    11,
+  ],
 ] as const;
 
-export const procedureSteps: SceneProcedureStep[] = copy.map(([label, body, count], i) => ({
-  label,
-  body,
-  show: [],
-  schematic: fig[i],
-  table: revealedTable(headers, rows, count),
-}));
+export const procedureSteps: SceneProcedureStep[] = copy.map(
+  ([label, body, count], i) => ({
+    label,
+    body,
+    show: [],
+    schematic: fig[i],
+    table: revealedTable(headers, rows, count),
+  }),
+);

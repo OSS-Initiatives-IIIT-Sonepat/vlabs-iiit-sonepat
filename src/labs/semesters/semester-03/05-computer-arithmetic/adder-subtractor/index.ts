@@ -12,11 +12,14 @@ import { procedureSteps } from "./04-procedure";
 export const adderSubtractorExperiment: ExperimentDefinition = {
   id: "adder-subtractor",
   title: "4-bit Binary Adder-Subtractor",
-  description: "M = 0 adds 1010 and 0011. M = 1 subtracts them, because B ⊕ 1 = B' and C0 = 1.",
+  description:
+    "M = 0 adds 1010 and 0011. M = 1 subtracts them, because B ⊕ 1 = B' and C0 = 1.",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],
   procedureSteps,
 };
 
 export const AdderSubtractorCircuit = buildCircuit(adderSubtractorExperiment);
-export const AdderSubtractorContent = buildLabContent(adderSubtractorExperiment);
+export const AdderSubtractorContent = buildLabContent(
+  adderSubtractorExperiment,
+);

@@ -149,7 +149,12 @@ export function lintSchematic(schematic: SchematicData): LintIssue[] {
     seen.add(el.id);
     if (el.type === "wire") wires.push(el);
     else if (el.type === "arrow")
-      wires.push({ type: "wire", id: el.id, points: el.points, highlight: el.highlight });
+      wires.push({
+        type: "wire",
+        id: el.id,
+        points: el.points,
+        highlight: el.highlight,
+      });
     else if (el.type === "junction") junctions.push({ x: el.x, y: el.y });
     else if (el.type === "label")
       labels.push({
@@ -423,7 +428,10 @@ export function lintSchematic(schematic: SchematicData): LintIssue[] {
     for (const s of symbols) {
       if (
         t.owner === s.id &&
-        (s.type === "block" || s.type === "terminal" || s.type === "decision" || s.type === "memword")
+        (s.type === "block" ||
+          s.type === "terminal" ||
+          s.type === "decision" ||
+          s.type === "memword")
       )
         continue;
       if (boxesOverlap(b, s.body))

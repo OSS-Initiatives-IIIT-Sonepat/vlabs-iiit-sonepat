@@ -12,7 +12,8 @@ import { procedureSteps } from "./04-procedure";
 export const accumulatorUnitExperiment: ExperimentDefinition = {
   id: "accumulator-unit",
   title: "Accumulator Unit",
-  description: "Add, AND, complement, and shift the same AC, each time starting from 0101.",
+  description:
+    "Add, AND, complement, and shift the same AC, each time starting from 0101.",
   labType: "text",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],
@@ -20,4 +21,6 @@ export const accumulatorUnitExperiment: ExperimentDefinition = {
 };
 
 export const AccumulatorUnitCircuit = buildCircuit(accumulatorUnitExperiment);
-export const AccumulatorUnitContent = buildLabContent(accumulatorUnitExperiment);
+export const AccumulatorUnitContent = buildLabContent(
+  accumulatorUnitExperiment,
+);

@@ -19,5 +19,9 @@ export const arithmeticCircuitExperiment: ExperimentDefinition = {
   procedureSteps,
 };
 
-export const ArithmeticCircuitCircuit = buildCircuit(arithmeticCircuitExperiment);
-export const ArithmeticCircuitContent = buildLabContent(arithmeticCircuitExperiment);
+export const ArithmeticCircuitCircuit = buildCircuit(
+  arithmeticCircuitExperiment,
+);
+export const ArithmeticCircuitContent = buildLabContent(
+  arithmeticCircuitExperiment,
+);

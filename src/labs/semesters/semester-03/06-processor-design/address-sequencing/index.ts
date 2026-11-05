@@ -12,12 +12,17 @@ import { procedureSteps } from "./04-procedure";
 export const addressSequencingExperiment: ExperimentDefinition = {
   id: "address-sequencing",
   title: "Address Sequencing",
-  description: "Choose the next microaddress by increment, mapping, branch, or return.",
+  description:
+    "Choose the next microaddress by increment, mapping, branch, or return.",
   labType: "text",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],
   procedureSteps,
 };
 
-export const AddressSequencingCircuit = buildCircuit(addressSequencingExperiment);
-export const AddressSequencingContent = buildLabContent(addressSequencingExperiment);
+export const AddressSequencingCircuit = buildCircuit(
+  addressSequencingExperiment,
+);
+export const AddressSequencingContent = buildLabContent(
+  addressSequencingExperiment,
+);

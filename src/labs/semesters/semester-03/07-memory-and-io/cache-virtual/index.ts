@@ -11,7 +11,8 @@ import { procedureSteps } from "./04-procedure";
 export const cacheVirtualExperiment: ExperimentDefinition = {
   id: "cache-virtual",
   title: "Cache and Virtual Memory",
-  description: "Read an associative map, a direct map, a set-associative map, and one page-table walk.",
+  description:
+    "Read an associative map, a direct map, a set-associative map, and one page-table walk.",
   labType: "text",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],

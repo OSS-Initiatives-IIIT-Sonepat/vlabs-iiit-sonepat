@@ -19,15 +19,51 @@ const rows = [
 ];
 
 const copy = [
-  ["Read the magnitude", "Start with the unsigned word 0110. That is the value 6, before any sign or point is attached.", 1],
-  ["Take the complements", "A sign of 0 makes 0 0110 mean +6. The 1's complement flips every bit to 1001. Adding 1 produces the 2's complement 1010, which is −6.", 4],
-  ["Place the binary point", "0110.10 is fixed-point 6.5. Move the point until the magnitude is a fraction: 0.1101 × 2³ is the same value, normalised.", 6],
-  ["Write a register transfer", "R2 ← R1 is a copy. The word 0110 arrives in R2. No arithmetic happens.", 7],
-  ["Enable the bus", "A three-state buffer, not a wire from every register, puts R1 on the common bus when E = 1. E = 0 disconnects it.", 8],
-  ["Add", "The arithmetic micro-operation is R1 ← R1 + R2. With R2 holding 0011, 0110 + 0011 = 1001.", 9],
-  ["Exclusive-or", "The logic micro-operation is R1 ← R1 ⊕ R2. 0110 ⊕ 0011 = 0101. Each bit is compared, not added.", 10],
-  ["Shift left", "shl 0110 is 1100. The bit that shifts in is 0. This is the shift micro-operation.", 11],
-  ["One unit, three operations", "The arithmetic logic shift unit is a single box. Select lines choose add, xor, or shift. The table is the record of those three results.", 12],
+  [
+    "Read the magnitude",
+    "Start with the unsigned word 0110. That is the value 6, before any sign or point is attached.",
+    1,
+  ],
+  [
+    "Take the complements",
+    "A sign of 0 makes 0 0110 mean +6. The 1's complement flips every bit to 1001. Adding 1 produces the 2's complement 1010, which is −6.",
+    4,
+  ],
+  [
+    "Place the binary point",
+    "0110.10 is fixed-point 6.5. Move the point until the magnitude is a fraction: 0.1101 × 2³ is the same value, normalised.",
+    6,
+  ],
+  [
+    "Write a register transfer",
+    "R2 ← R1 is a copy. The word 0110 arrives in R2. No arithmetic happens.",
+    7,
+  ],
+  [
+    "Enable the bus",
+    "A three-state buffer, not a wire from every register, puts R1 on the common bus when E = 1. E = 0 disconnects it.",
+    8,
+  ],
+  [
+    "Add",
+    "The arithmetic micro-operation is R1 ← R1 + R2. With R2 holding 0011, 0110 + 0011 = 1001.",
+    9,
+  ],
+  [
+    "Exclusive-or",
+    "The logic micro-operation is R1 ← R1 ⊕ R2. 0110 ⊕ 0011 = 0101. Each bit is compared, not added.",
+    10,
+  ],
+  [
+    "Shift left",
+    "shl 0110 is 1100. The bit that shifts in is 0. This is the shift micro-operation.",
+    11,
+  ],
+  [
+    "One unit, three operations",
+    "The arithmetic logic shift unit is a single box. Select lines choose add, xor, or shift. The table is the record of those three results.",
+    12,
+  ],
 ] as const;
 
 export const procedureSteps: SceneProcedureStep[] = copy.map(

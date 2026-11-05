@@ -27,7 +27,9 @@ export const basicComputerStepSchematics = frames([
   {
     title: "Direct addressing",
     height: 360,
-    elements: direct.map((el, i) => (i === 1 ? { ...el, highlight: true } : el)),
+    elements: direct.map((el, i) =>
+      i === 1 ? { ...el, highlight: true } : el,
+    ),
     notes: ["Mode 0: the address field 457 is the operand address."],
   },
   {
@@ -44,7 +46,9 @@ export const basicComputerStepSchematics = frames([
   {
     title: "T0 fetches the instruction",
     elements: [memword("t0", 160, 120, "T0", "IR ← M[PC]", "fetch", true)],
-    notes: ["The instruction cycle starts by copying one memory word into the IR."],
+    notes: [
+      "The instruction cycle starts by copying one memory word into the IR.",
+    ],
   },
   {
     title: "The next time slot decodes it",
@@ -52,7 +56,9 @@ export const basicComputerStepSchematics = frames([
       memword("t0", 160, 90, "T0", "IR ← M[PC]", "fetch"),
       memword("t1", 160, 150, "T1", "decode opcode", "decode", true),
     ],
-    notes: ["Decode reads the opcode. The address mode says where the operand is."],
+    notes: [
+      "Decode reads the opcode. The address mode says where the operand is.",
+    ],
   },
 ]);
 

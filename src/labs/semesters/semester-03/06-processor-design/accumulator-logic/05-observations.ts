@@ -20,7 +20,11 @@ export const observations: ObservationSection = {
       ["SHL", "r B6", "AC ← shl AC, AC(0) ← E"],
       ["INC", "r B5", "AC ← AC + 1"],
       ["CLR", "r B11", "AC ← 0"],
-      ["LD", "AND + ADD + DR + INPR + CMA + SHR + SHL", "Load the adder output"],
+      [
+        "LD",
+        "AND + ADD + DR + INPR + CMA + SHR + SHL",
+        "Load the adder output",
+      ],
     ],
   },
 };

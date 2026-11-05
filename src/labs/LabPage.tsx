@@ -456,7 +456,10 @@ const SceneRenderer = React.memo(function SceneRenderer({
     return (
       <div className="flex h-full w-full items-center justify-center bg-[#fafafa] p-4">
         <div className="h-full max-h-[720px] w-full max-w-[960px]">
-          <CircuitSchematic animate schematic={section.steps[sceneStepIndex].schematic!} />
+          <CircuitSchematic
+            animate
+            schematic={section.steps[sceneStepIndex].schematic!}
+          />
         </div>
       </div>
     );
@@ -759,7 +762,9 @@ function LabPageStandard({ content }: Props) {
                 <FloatingObservationCard
                   table={activeSection.steps[procedureStepIndex].table!}
                   bottom={
-                    activeSection.steps[procedureStepIndex]?.schematic ? 316 : 24
+                    activeSection.steps[procedureStepIndex]?.schematic
+                      ? 316
+                      : 24
                   }
                 />
               </div>

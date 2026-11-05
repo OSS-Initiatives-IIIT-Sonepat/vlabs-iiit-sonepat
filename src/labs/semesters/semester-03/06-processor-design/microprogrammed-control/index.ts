@@ -11,10 +11,15 @@ import { procedureSteps } from "./04-procedure";
 export const microprogrammedControlExperiment: ExperimentDefinition = {
   id: "microprogrammed-control",
   title: "Microprogrammed Control",
-  description: "Use a counter as the control address register and read one control word from a ROM.",
+  description:
+    "Use a counter as the control address register and read one control word from a ROM.",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],
   procedureSteps,
 };
-export const MicroprogrammedControlCircuit = buildCircuit(microprogrammedControlExperiment);
-export const MicroprogrammedControlContent = buildLabContent(microprogrammedControlExperiment);
+export const MicroprogrammedControlCircuit = buildCircuit(
+  microprogrammedControlExperiment,
+);
+export const MicroprogrammedControlContent = buildLabContent(
+  microprogrammedControlExperiment,
+);

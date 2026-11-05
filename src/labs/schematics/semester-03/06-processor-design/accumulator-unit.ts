@@ -2,10 +2,42 @@ import { flow } from "../diagram";
 
 /** Inside the accumulator. Each operation starts from AC = 0101 and DR = 0011. */
 const nodes = [
-  { id: "dr", kind: "block" as const, x: 230, y: 78, w: 180, h: 40, label: "DR = 0011" },
-  { id: "ac", kind: "block" as const, x: 230, y: 178, w: 180, h: 40, label: "AC = 0101" },
-  { id: "op", kind: "block" as const, x: 230, y: 288, w: 200, h: 40, label: "ADD" },
-  { id: "out", kind: "block" as const, x: 230, y: 388, w: 180, h: 40, label: "AC result" },
+  {
+    id: "dr",
+    kind: "block" as const,
+    x: 230,
+    y: 78,
+    w: 180,
+    h: 40,
+    label: "DR = 0011",
+  },
+  {
+    id: "ac",
+    kind: "block" as const,
+    x: 230,
+    y: 178,
+    w: 180,
+    h: 40,
+    label: "AC = 0101",
+  },
+  {
+    id: "op",
+    kind: "block" as const,
+    x: 230,
+    y: 288,
+    w: 200,
+    h: 40,
+    label: "ADD",
+  },
+  {
+    id: "out",
+    kind: "block" as const,
+    x: 230,
+    y: 388,
+    w: 180,
+    h: 40,
+    label: "AC result",
+  },
 ];
 
 const links = [
@@ -21,7 +53,9 @@ export const accumulatorUnitStepSchematics = flow(nodes, links, [
     title: "What the unit can see",
     show: ["dr", "ac"],
     highlight: "ac",
-    notes: ["AC holds 0101. DR holds 0011. Every row below starts from these two."],
+    notes: [
+      "AC holds 0101. DR holds 0011. Every row below starts from these two.",
+    ],
   },
   {
     title: "Add",

@@ -332,12 +332,7 @@ export function uprightTextCenter(
 /** Baseline offset that vertically centres a text run on a point. */
 export const textBaselineOffset = (fontSize: number) => fontSize * 0.275;
 
-function placeText(
-  t: TextSpec,
-  x: number,
-  y: number,
-  rot: number,
-): Box {
+function placeText(t: TextSpec, x: number, y: number, rot: number): Box {
   if (!(rot % 360)) return placeBox(textBox(t), x, y, 0);
   const c = uprightTextCenter(t, rot);
   const b = textBox(t);

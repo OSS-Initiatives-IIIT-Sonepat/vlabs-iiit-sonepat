@@ -21,4 +21,6 @@ export const accumulatorLogicExperiment: ExperimentDefinition = {
 };
 
 export const AccumulatorLogicCircuit = buildCircuit(accumulatorLogicExperiment);
-export const AccumulatorLogicContent = buildLabContent(accumulatorLogicExperiment);
+export const AccumulatorLogicContent = buildLabContent(
+  accumulatorLogicExperiment,
+);

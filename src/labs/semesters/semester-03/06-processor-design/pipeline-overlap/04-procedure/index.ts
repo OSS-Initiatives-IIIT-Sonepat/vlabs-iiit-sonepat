@@ -11,16 +11,34 @@ const rows = [
 ];
 
 const copy = [
-  ["First clock", "Four segments, each a circuit plus a register: S1 R1, S2 R2, S3 R3, S4 R4. I1 enters S1.", 1],
-  ["Second clock", "I1 moves into S2 and I2 enters S1. The register after each segment holds that segment's output.", 2],
-  ["Third clock", "I1 is in S3, I2 is in S2, and I3 is in S1. S4 is still empty.", 3],
-  ["Fourth clock", "I1 reaches S4. Once the pipe is full, one result leaves each clock, so the speedup approaches 4.", 4],
+  [
+    "First clock",
+    "Four segments, each a circuit plus a register: S1 R1, S2 R2, S3 R3, S4 R4. I1 enters S1.",
+    1,
+  ],
+  [
+    "Second clock",
+    "I1 moves into S2 and I2 enters S1. The register after each segment holds that segment's output.",
+    2,
+  ],
+  [
+    "Third clock",
+    "I1 is in S3, I2 is in S2, and I3 is in S1. S4 is still empty.",
+    3,
+  ],
+  [
+    "Fourth clock",
+    "I1 reaches S4. Once the pipe is full, one result leaves each clock, so the speedup approaches 4.",
+    4,
+  ],
 ] as const;
 
-export const procedureSteps: SceneProcedureStep[] = copy.map(([label, body, count], i) => ({
-  label,
-  body,
-  show: [],
-  schematic: fig[i],
-  table: revealedTable(headers, rows, count),
-}));
+export const procedureSteps: SceneProcedureStep[] = copy.map(
+  ([label, body, count], i) => ({
+    label,
+    body,
+    show: [],
+    schematic: fig[i],
+    table: revealedTable(headers, rows, count),
+  }),
+);

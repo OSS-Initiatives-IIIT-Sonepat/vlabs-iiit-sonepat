@@ -6,6 +6,10 @@ export const apparatus: ApparatusSection = {
   title: "Apparatus Required",
   items: [
     { name: "Byte", specification: "One input character", quantity: "1" },
-    { name: "CPU", specification: "Can poll, can be interrupted, or can release the bus", quantity: "1" },
+    {
+      name: "CPU",
+      specification: "Can poll, can be interrupted, or can release the bus",
+      quantity: "1",
+    },
   ],
 };

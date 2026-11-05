@@ -5,7 +5,7 @@ export const observations: ObservationSection = {
   type: "observation",
   title: "Observations",
   paragraphs: [
-  "Each clock moves the three instructions one stage to the right.",
-  "A branch clears every stage. The float add normalises 1.7704 to 0.1770 × 10³."
-],
+    "Each clock moves the three instructions one stage to the right.",
+    "A branch clears every stage. The float add normalises 1.7704 to 0.1770 × 10³.",
+  ],
 };

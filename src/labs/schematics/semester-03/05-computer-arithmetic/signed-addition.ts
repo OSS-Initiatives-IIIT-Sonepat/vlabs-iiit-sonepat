@@ -13,7 +13,14 @@ function ask(id: string, y: number, name: string, on = false) {
 
 /** Bottom pin of a 44px-tall box, top pin of the next shape. */
 const down = (id: string, y0: number, y1: number, on = false) =>
-  arrow(id, [[X, y0], [X, y1]], on);
+  arrow(
+    id,
+    [
+      [X, y0],
+      [X, y1],
+    ],
+    on,
+  );
 
 const signs = box("signs", 72, "Read As and Bs");
 const same = ask("same", 168, "As = Bs?");

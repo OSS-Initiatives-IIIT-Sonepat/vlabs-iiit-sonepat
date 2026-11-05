@@ -11,16 +11,34 @@ const rows = [
 ];
 
 const copy = [
-  ["Compare", "X = 0.9504 × 10³ and Y = 0.8200 × 10². The exponents differ by 1.", 1],
-  ["Align", "Y is shifted to 0.0820 × 10³ so both mantissas share exponent 3.", 2],
-  ["Add", "0.9504 + 0.0820 = 1.0324, with exponent 3. The integer digit means the fraction overflowed.", 3],
-  ["Normalize", "Shift the mantissa right and add 1 to the exponent: Z = 0.10324 × 10⁴.", 4],
+  [
+    "Compare",
+    "X = 0.9504 × 10³ and Y = 0.8200 × 10². The exponents differ by 1.",
+    1,
+  ],
+  [
+    "Align",
+    "Y is shifted to 0.0820 × 10³ so both mantissas share exponent 3.",
+    2,
+  ],
+  [
+    "Add",
+    "0.9504 + 0.0820 = 1.0324, with exponent 3. The integer digit means the fraction overflowed.",
+    3,
+  ],
+  [
+    "Normalize",
+    "Shift the mantissa right and add 1 to the exponent: Z = 0.10324 × 10⁴.",
+    4,
+  ],
 ] as const;
 
-export const procedureSteps: SceneProcedureStep[] = copy.map(([label, body, count], i) => ({
-  label,
-  body,
-  show: [],
-  schematic: fig[i],
-  table: revealedTable(headers, rows, count),
-}));
+export const procedureSteps: SceneProcedureStep[] = copy.map(
+  ([label, body, count], i) => ({
+    label,
+    body,
+    show: [],
+    schematic: fig[i],
+    table: revealedTable(headers, rows, count),
+  }),
+);

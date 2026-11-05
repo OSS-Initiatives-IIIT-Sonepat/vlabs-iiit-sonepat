@@ -6,6 +6,10 @@ export const apparatus: ApparatusSection = {
   title: "Apparatus Required",
   items: [
     { name: "Segments", specification: "FI, DA, FO, EX", quantity: "1" },
-    { name: "Branch", specification: "Empties the pipe and updates PC", quantity: "1" },
+    {
+      name: "Branch",
+      specification: "Empties the pipe and updates PC",
+      quantity: "1",
+    },
   ],
 };

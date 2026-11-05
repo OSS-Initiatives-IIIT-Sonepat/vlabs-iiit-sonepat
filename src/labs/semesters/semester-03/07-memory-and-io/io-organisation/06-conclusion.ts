@@ -5,7 +5,7 @@ export const conclusion: ConclusionSection = {
   type: "conclusion",
   title: "Conclusion",
   paragraphs: [
-  "A strobe latches the input and raises a flag. Wired to the CPU, that flag is an interrupt.",
-  "Handshake, serial start bits, a daisy chain, DMA, and an I/O processor are the other ways a device and a CPU agree on a transfer."
-],
+    "A strobe latches the input and raises a flag. Wired to the CPU, that flag is an interrupt.",
+    "Handshake, serial start bits, a daisy chain, DMA, and an I/O processor are the other ways a device and a CPU agree on a transfer.",
+  ],
 };

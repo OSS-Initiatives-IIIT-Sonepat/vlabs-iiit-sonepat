@@ -19,5 +19,9 @@ export const priorityInterruptExperiment: ExperimentDefinition = {
   procedureSteps,
 };
 
-export const PriorityInterruptCircuit = buildCircuit(priorityInterruptExperiment);
-export const PriorityInterruptContent = buildLabContent(priorityInterruptExperiment);
+export const PriorityInterruptCircuit = buildCircuit(
+  priorityInterruptExperiment,
+);
+export const PriorityInterruptContent = buildLabContent(
+  priorityInterruptExperiment,
+);

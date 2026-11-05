@@ -8,12 +8,16 @@ export const ioOrganisationStepSchematics = frames([
   {
     title: "A strobe from the source",
     elements: [cpu(), ram(), port(true)],
-    notes: ["The source pulses STB. The port copies DIN onto DOUT and raises the flag."],
+    notes: [
+      "The source pulses STB. The port copies DIN onto DOUT and raises the flag.",
+    ],
   },
   {
     title: "The flag is the interrupt",
     elements: [cpu(true), ram(), port(true)],
-    notes: ["The flag wire is the interrupt into the CPU. The CPU then reads DOUT."],
+    notes: [
+      "The flag wire is the interrupt into the CPU. The CPU then reads DOUT.",
+    ],
   },
   {
     title: "Source-initiated and destination-initiated handshake",
@@ -36,17 +40,23 @@ export const ioOrganisationStepSchematics = frames([
       block("d1", 320, 120, 100, 44, "device 1"),
       block("d2", 500, 120, 100, 44, "device 2"),
     ],
-    notes: ["The grant passes down the chain. The first device that wants it keeps it."],
+    notes: [
+      "The grant passes down the chain. The first device that wants it keeps it.",
+    ],
   },
   {
     title: "DMA writes memory without the CPU",
     elements: [cpu(), ram(true), port()],
-    notes: ["The data wire goes to RAM. The CPU's read wire is not in this picture."],
+    notes: [
+      "The data wire goes to RAM. The CPU's read wire is not in this picture.",
+    ],
   },
   {
     title: "An I/O processor beside the CPU",
     elements: [cpu(), ram(), block("iop", 500, 110, 120, 44, "IOP", true)],
-    notes: ["The IOP runs the transfer program. The CPU keeps its own instruction stream."],
+    notes: [
+      "The IOP runs the transfer program. The CPU keeps its own instruction stream.",
+    ],
   },
 ]);
 

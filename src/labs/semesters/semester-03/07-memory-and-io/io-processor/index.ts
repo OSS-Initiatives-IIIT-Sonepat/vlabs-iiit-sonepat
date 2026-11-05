@@ -12,7 +12,8 @@ import { procedureSteps } from "./04-procedure";
 export const ioProcessorExperiment: ExperimentDefinition = {
   id: "io-processor",
   title: "Input-Output Processor",
-  description: "Send a channel program to an IOP and wait for its completion interrupt.",
+  description:
+    "Send a channel program to an IOP and wait for its completion interrupt.",
   labType: "text",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],

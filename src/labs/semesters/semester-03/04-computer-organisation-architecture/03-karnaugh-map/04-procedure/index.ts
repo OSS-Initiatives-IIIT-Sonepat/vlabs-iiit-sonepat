@@ -18,14 +18,34 @@ export const procedureSteps: SceneProcedureStep[] = [
   {
     label: "Build the four complements",
     body: "Place the 74HC04. Gate 1 inverts B, gate 2 inverts C, gate 3 inverts D, and gate 4 inverts A. The true variables are still on the input jumpers, so each product can take a variable or its complement.",
-    show: [...stages.power, "inv", "w_vcc_inv", "w_gnd_inv", "w_a_inv", "w_b_inv", "w_c_inv", "w_d_inv"],
+    show: [
+      ...stages.power,
+      "inv",
+      "w_vcc_inv",
+      "w_gnd_inv",
+      "w_a_inv",
+      "w_b_inv",
+      "w_c_inv",
+      "w_d_inv",
+    ],
     highlight: "inv",
     schematic: fig[1],
   },
   {
     label: "AND each product",
     body: "Place the 74HC08. Gate 1 is $\\bar{B}\\bar{C}$. Gate 2 is $C\\bar{D}$, so it takes C true and D complement. $\\bar{A}BD$ is three literals, and the chip is a 2-input AND, so gate 3 makes $\\bar{A}B$ and gate 4 ANDs that with D.",
-    show: [...wired.filter((id) => !id.startsWith("sum") && id !== "w_vcc_sum" && id !== "w_gnd_sum" && id !== "w_t1_or" && id !== "w_t2_or" && id !== "w_or_f" && id !== "w_t3_or")],
+    show: [
+      ...wired.filter(
+        (id) =>
+          !id.startsWith("sum") &&
+          id !== "w_vcc_sum" &&
+          id !== "w_gnd_sum" &&
+          id !== "w_t1_or" &&
+          id !== "w_t2_or" &&
+          id !== "w_or_f" &&
+          id !== "w_t3_or",
+      ),
+    ],
     highlight: "prod",
     schematic: fig[2],
   },

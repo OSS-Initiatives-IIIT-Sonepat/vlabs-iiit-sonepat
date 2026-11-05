@@ -209,8 +209,10 @@ export const schematicModules = {
   "semester-02/03-combinational-logic/01-decoder-3to8-ic": s2_Decoder3to8Ic,
   "semester-02/03-combinational-logic/02-priority-encoder-8to3-ic":
     s2_PriorityEncoder8to3Ic,
-  "semester-02/04-sequential-logic/01-sync-counter-74hc161": s2_SyncCounter74hc161,
-  "semester-02/04-sequential-logic/02-ripple-counter-74hc93": s2_RippleCounter74hc93,
+  "semester-02/04-sequential-logic/01-sync-counter-74hc161":
+    s2_SyncCounter74hc161,
+  "semester-02/04-sequential-logic/02-ripple-counter-74hc93":
+    s2_RippleCounter74hc93,
   "semester-02/02-advanced-adders/full-adder-ripple": s2_FullAdderRipple,
   "semester-03/01-combinational-arithmetic/cla-adder": s3_ClaAdder,
   "semester-03/01-combinational-arithmetic/wallace-tree": s3_WallaceTree,
@@ -242,15 +244,19 @@ export const schematicModules = {
   "semester-03/05-computer-arithmetic/adder-subtractor": s3_AdderSubtractor,
   "semester-03/05-computer-arithmetic/binary-incrementer": s3_BinaryIncrementer,
   "semester-03/05-computer-arithmetic/arithmetic-circuit": s3_ArithmeticCircuit,
-  "semester-03/05-computer-arithmetic/combinational-shifter": s3_CombinationalShifter,
-  "semester-03/05-computer-arithmetic/arithmetic-logic-shift": s3_ArithmeticLogicShift,
-  "semester-03/05-computer-arithmetic/representation-and-alsu": s3_Representation,
+  "semester-03/05-computer-arithmetic/combinational-shifter":
+    s3_CombinationalShifter,
+  "semester-03/05-computer-arithmetic/arithmetic-logic-shift":
+    s3_ArithmeticLogicShift,
+  "semester-03/05-computer-arithmetic/representation-and-alsu":
+    s3_Representation,
   "semester-03/05-computer-arithmetic/bus-and-memory": s3_BusAndMemory,
   "semester-03/06-processor-design/basic-computer": s3_BasicComputer,
   "semester-03/06-processor-design/microprogrammed-control": s3_Microprogram,
   "semester-03/06-processor-design/register-organisation": s3_RegisterOrg,
   "semester-03/06-processor-design/instruction-pipeline": s3_Pipeline,
-  "semester-03/06-processor-design/computer-description": s3_ComputerDescription,
+  "semester-03/06-processor-design/computer-description":
+    s3_ComputerDescription,
   "semester-03/06-processor-design/instruction-set": s3_InstructionSet,
   "semester-03/06-processor-design/timing-and-control": s3_TimingAndControl,
   "semester-03/06-processor-design/complete-computer": s3_CompleteComputer,
@@ -267,7 +273,8 @@ export const schematicModules = {
   "semester-03/06-processor-design/instruction-cycle": s3_InstructionCycle,
   "semester-03/06-processor-design/memory-reference": s3_MemoryReference,
   "semester-03/06-processor-design/io-interrupt": s3_IoInterrupt,
-  "semester-03/06-processor-design/complete-computer-description": s3_CompleteComputerDescription,
+  "semester-03/06-processor-design/complete-computer-description":
+    s3_CompleteComputerDescription,
   "semester-03/06-processor-design/accumulator-logic": s3_AccumulatorLogic,
   "semester-03/06-processor-design/addressing-modes": s3_AddressingModes,
   "semester-03/06-processor-design/data-manipulation": s3_DataManipulation,
@@ -276,7 +283,8 @@ export const schematicModules = {
   "semester-03/06-processor-design/cisc-organization": s3_CiscOrganization,
   "semester-03/06-processor-design/control-memory": s3_ControlMemory,
   "semester-03/06-processor-design/address-sequencing": s3_AddressSequencing,
-  "semester-03/06-processor-design/microinstruction-format": s3_MicroinstructionFormat,
+  "semester-03/06-processor-design/microinstruction-format":
+    s3_MicroinstructionFormat,
   "semester-03/06-processor-design/flynn-taxonomy": s3_FlynnTaxonomy,
   "semester-03/06-processor-design/parallel-processing": s3_ParallelProcessing,
   "semester-03/06-processor-design/pipeline-overlap": s3_PipelineOverlap,

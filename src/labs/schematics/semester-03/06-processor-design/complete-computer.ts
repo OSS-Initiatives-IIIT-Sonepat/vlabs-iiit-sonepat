@@ -2,11 +2,51 @@ import { flow } from "../diagram";
 
 /** The basic computer as one block diagram, not a breadboard. */
 const nodes = [
-  { id: "mem", kind: "block" as const, x: 230, y: 78, w: 200, h: 40, label: "Memory 4096 × 16" },
-  { id: "bus", kind: "block" as const, x: 230, y: 178, w: 200, h: 40, label: "Common bus" },
-  { id: "regs", kind: "block" as const, x: 230, y: 278, w: 240, h: 40, label: "AR  PC  DR  AC  IR" },
-  { id: "io", kind: "block" as const, x: 520, y: 278, w: 160, h: 40, label: "INPR  OUTR" },
-  { id: "ctl", kind: "block" as const, x: 230, y: 388, w: 220, h: 40, label: "Control unit" },
+  {
+    id: "mem",
+    kind: "block" as const,
+    x: 230,
+    y: 78,
+    w: 200,
+    h: 40,
+    label: "Memory 4096 × 16",
+  },
+  {
+    id: "bus",
+    kind: "block" as const,
+    x: 230,
+    y: 178,
+    w: 200,
+    h: 40,
+    label: "Common bus",
+  },
+  {
+    id: "regs",
+    kind: "block" as const,
+    x: 230,
+    y: 278,
+    w: 240,
+    h: 40,
+    label: "AR  PC  DR  AC  IR",
+  },
+  {
+    id: "io",
+    kind: "block" as const,
+    x: 520,
+    y: 278,
+    w: 160,
+    h: 40,
+    label: "INPR  OUTR",
+  },
+  {
+    id: "ctl",
+    kind: "block" as const,
+    x: 230,
+    y: 388,
+    w: 220,
+    h: 40,
+    label: "Control unit",
+  },
 ];
 
 const links = [
@@ -33,19 +73,25 @@ export const completeComputerStepSchematics = flow(nodes, links, [
     title: "The processor registers",
     show: ["mem", "bus", "regs"],
     highlight: "regs",
-    notes: ["AR addresses memory. PC sequences instructions. DR and AC hold data. IR holds the instruction."],
+    notes: [
+      "AR addresses memory. PC sequences instructions. DR and AC hold data. IR holds the instruction.",
+    ],
   },
   {
     title: "Input and output registers",
     show: ["mem", "bus", "regs", "io"],
     highlight: "io",
-    notes: ["INPR receives a character. OUTR sends one. Both meet the same bus."],
+    notes: [
+      "INPR receives a character. OUTR sends one. Both meet the same bus.",
+    ],
   },
   {
     title: "Control",
     show: ["mem", "bus", "regs", "io", "ctl"],
     highlight: "ctl",
-    notes: ["Control turns the enables and the read or write line on for one time T."],
+    notes: [
+      "Control turns the enables and the read or write line on for one time T.",
+    ],
   },
   {
     title: "A memory read on this computer",

@@ -11,10 +11,13 @@ import { procedureSteps } from "./04-procedure";
 export const memoryAddressMapExperiment: ExperimentDefinition = {
   id: "memory-address-map",
   title: "Main Memory",
-  description: "Select one of two ROMs with a decoder, the way a memory map selects one PROM.",
+  description:
+    "Select one of two ROMs with a decoder, the way a memory map selects one PROM.",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],
   procedureSteps,
 };
 export const MemoryAddressMapCircuit = buildCircuit(memoryAddressMapExperiment);
-export const MemoryAddressMapContent = buildLabContent(memoryAddressMapExperiment);
+export const MemoryAddressMapContent = buildLabContent(
+  memoryAddressMapExperiment,
+);

@@ -6,7 +6,10 @@ const word = (on = false) =>
 export const microprogramStepSchematics = frames([
   {
     title: "The control address register",
-    elements: [block("car", 200, 120, 140, 48, "CAR", true), block("seq", 460, 120, 160, 48, "sequencer")],
+    elements: [
+      block("car", 200, 120, 140, 48, "CAR", true),
+      block("seq", 460, 120, 160, 48, "sequencer"),
+    ],
     notes: ["CAR holds the address of the current microinstruction."],
   },
   {
@@ -22,7 +25,9 @@ export const microprogramStepSchematics = frames([
   {
     title: "One clock: control word 0010",
     elements: [memword("cw", 160, 120, "CAR", "0010", "control", true)],
-    notes: ["The counter advanced CAR by one. The next control word is on the lamps."],
+    notes: [
+      "The counter advanced CAR by one. The next control word is on the lamps.",
+    ],
   },
   {
     title: "Hardwired control uses gates instead",
@@ -30,7 +35,9 @@ export const microprogramStepSchematics = frames([
       block("sc", 180, 120, 180, 48, "sequence counter", true),
       block("gates", 460, 120, 180, 48, "decode gates", true),
     ],
-    notes: ["Hardwired control is a counter and gates. There is no control memory."],
+    notes: [
+      "Hardwired control is a counter and gates. There is no control memory.",
+    ],
   },
 ]);
 

@@ -41,35 +41,115 @@ function registerMap(show: string[], hot: string[]): SchematicElement[] {
   const left = 70;
   if (has("pc"))
     els.push(
-      ...regBar("pc", left, 78, 150, ["11", "0"], "Program Counter (12)", "Holds address of instruction", on("pc"), "beside"),
+      ...regBar(
+        "pc",
+        left,
+        78,
+        150,
+        ["11", "0"],
+        "Program Counter (12)",
+        "Holds address of instruction",
+        on("pc"),
+        "beside",
+      ),
     );
   if (has("ar"))
     els.push(
-      ...regBar("ar", left, 158, 150, ["11", "0"], "Address Register (12)", "Holds address for memory", on("ar"), "beside"),
+      ...regBar(
+        "ar",
+        left,
+        158,
+        150,
+        ["11", "0"],
+        "Address Register (12)",
+        "Holds address for memory",
+        on("ar"),
+        "beside",
+      ),
     );
   if (has("ir"))
     els.push(
-      ...regBar("ir", left, 238, 200, ["15", "0"], "Instruction Register (16)", "Holds instruction code", on("ir"), "beside"),
+      ...regBar(
+        "ir",
+        left,
+        238,
+        200,
+        ["15", "0"],
+        "Instruction Register (16)",
+        "Holds instruction code",
+        on("ir"),
+        "beside",
+      ),
     );
   if (has("tr"))
     els.push(
-      ...regBar("tr", left, 318, 200, ["15", "0"], "Temporary Register (16)", "Holds temporary data", on("tr"), "beside"),
+      ...regBar(
+        "tr",
+        left,
+        318,
+        200,
+        ["15", "0"],
+        "Temporary Register (16)",
+        "Holds temporary data",
+        on("tr"),
+        "beside",
+      ),
     );
   if (has("dr"))
     els.push(
-      ...regBar("dr", left, 398, 200, ["15", "0"], "Data Register (16)", "Holds memory operand", on("dr"), "beside"),
+      ...regBar(
+        "dr",
+        left,
+        398,
+        200,
+        ["15", "0"],
+        "Data Register (16)",
+        "Holds memory operand",
+        on("dr"),
+        "beside",
+      ),
     );
   if (has("ac"))
     els.push(
-      ...regBar("ac", 680, 78, 200, ["15", "0"], "Accumulator (16)", "Processor register", on("ac"), "below"),
+      ...regBar(
+        "ac",
+        680,
+        78,
+        200,
+        ["15", "0"],
+        "Accumulator (16)",
+        "Processor register",
+        on("ac"),
+        "below",
+      ),
     );
   if (has("outr"))
     els.push(
-      ...regBar("outr", 700, 250, 120, ["7", "0"], "Output Register (8)", "Holds output character", on("outr"), "below"),
+      ...regBar(
+        "outr",
+        700,
+        250,
+        120,
+        ["7", "0"],
+        "Output Register (8)",
+        "Holds output character",
+        on("outr"),
+        "below",
+      ),
     );
   if (has("inpr"))
     els.push(
-      ...regBar("inpr", 700, 360, 120, ["7", "0"], "Input Register (8)", "Holds input character", on("inpr"), "below"),
+      ...regBar(
+        "inpr",
+        700,
+        360,
+        120,
+        ["7", "0"],
+        "Input Register (8)",
+        "Holds input character",
+        on("inpr"),
+        "below",
+      ),
     );
   if (has("mem")) {
     els.push(block("mem", 860, 180, 150, 70, "Memory", on("mem")));
@@ -100,23 +180,58 @@ const NUM_X = FRAME_R + 18;
 const DROP = 700;
 const INK = "#171717";
 
-function box(id: string, x: number, y: number, w: number, h: number, name: string, fill = GRAY): SchematicElement {
+function box(
+  id: string,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  name: string,
+  fill = GRAY,
+): SchematicElement {
   return { type: "block", id, x, y, w, h, label: name, fill };
 }
 
-function ink(id: string, pts: [number, number][], color?: string): SchematicElement {
+function ink(
+  id: string,
+  pts: [number, number][],
+  color?: string,
+): SchematicElement {
   return { type: "wire", id, points: pts.map(([x, y]) => ({ x, y })), color };
 }
 
-function head(id: string, pts: [number, number][], color?: string, size = 12): SchematicElement {
-  return { type: "arrow", id, points: pts.map(([x, y]) => ({ x, y })), color, size };
+function head(
+  id: string,
+  pts: [number, number][],
+  color?: string,
+  size = 12,
+): SchematicElement {
+  return {
+    type: "arrow",
+    id,
+    points: pts.map(([x, y]) => ({ x, y })),
+    color,
+    size,
+  };
 }
 
-function text(id: string, x: number, y: number, value: string, size = 11, color = INK): SchematicElement {
+function text(
+  id: string,
+  x: number,
+  y: number,
+  value: string,
+  size = 11,
+  color = INK,
+): SchematicElement {
   return { type: "label", id, x, y, text: value, size, color };
 }
 
-function dot(id: string, x: number, y: number, color?: string): SchematicElement {
+function dot(
+  id: string,
+  x: number,
+  y: number,
+  color?: string,
+): SchematicElement {
   return { type: "junction", id, x, y, color };
 }
 
@@ -135,15 +250,37 @@ function intoBox(id: string, y: number, pinX: number): SchematicElement[] {
   const start = RAIL_R - 5;
   return [
     dot(`jin_${id}`, start, y, BAR),
-    head(`ain_${id}`, [[start, y], [pinX, y]], undefined, 11),
+    head(
+      `ain_${id}`,
+      [
+        [start, y],
+        [pinX, y],
+      ],
+      undefined,
+      11,
+    ),
   ];
 }
 
 /** From the left rail into the register, and the elbow out to a numbered bus dot. */
-function hooked(id: string, y: number, tapY: number, color?: string): SchematicElement[] {
+function hooked(
+  id: string,
+  y: number,
+  tapY: number,
+  color?: string,
+): SchematicElement[] {
   return [
     ...intoBox(id, y, PIN_L),
-    ink(`wout_${id}`, [[PIN_R, y], [DROP, y], [DROP, tapY], [BUS_L, tapY]], color),
+    ink(
+      `wout_${id}`,
+      [
+        [PIN_R, y],
+        [DROP, y],
+        [DROP, tapY],
+        [BUS_L, tapY],
+      ],
+      color,
+    ),
     dot(`jout_${id}`, BUS_L, tapY, color),
     text(`n_${id}`, NUM_X, tapY, id),
   ];
@@ -156,7 +293,17 @@ function hooked(id: string, y: number, tapY: number, color?: string): SchematicE
 function busSystem(show: string[], colors: boolean): SchematicElement[] {
   const has = (id: string) => show.includes(id);
   const els: SchematicElement[] = [];
-  const y = { mem: 74, ar: 152, pc: 208, dr: 264, ac: 364, inpr: 436, ir: 492, tr: 548, outr: 604 };
+  const y = {
+    mem: 74,
+    ar: 152,
+    pc: 208,
+    dr: 264,
+    ac: 364,
+    inpr: 436,
+    ir: 492,
+    tr: 548,
+    outr: 604,
+  };
 
   els.push({
     type: "panel",
@@ -179,7 +326,17 @@ function busSystem(show: string[], colors: boolean): SchematicElement[] {
     els.push(text(`bit_${name}`, 860, by, bit, 14, RED));
     els.push(text(`sel_${name}`, 892, by, name, 11));
     els.push(dot(`jsel_${name}`, BUS_L, by, BAR));
-    els.push(head(`arr_${name}`, [[904, by], [BUS_L, by]], undefined, 12));
+    els.push(
+      head(
+        `arr_${name}`,
+        [
+          [904, by],
+          [BUS_L, by],
+        ],
+        undefined,
+        12,
+      ),
+    );
   }
 
   if (has("mem")) {
@@ -191,7 +348,14 @@ function busSystem(show: string[], colors: boolean): SchematicElement[] {
     const memR = RX + memW / 2;
     const memDrop = DROP + 40;
     els.push(...intoBox("7", y.mem, RX - memW / 2));
-    els.push(ink("wout_7", [[memR, y.mem], [memDrop, y.mem], [memDrop, y.mem + 36], [BUS_L, y.mem + 36]]));
+    els.push(
+      ink("wout_7", [
+        [memR, y.mem],
+        [memDrop, y.mem],
+        [memDrop, y.mem + 36],
+        [BUS_L, y.mem + 36],
+      ]),
+    );
     els.push(dot("jout_7", BUS_L, y.mem + 36));
     els.push(text("n_7", NUM_X, y.mem + 36, "7"));
   }
@@ -214,14 +378,44 @@ function busSystem(show: string[], colors: boolean): SchematicElement[] {
     els.push(...controls("dr", y.dr + 22, true));
     els.push(text("actag", FRAME_L - 24, y.dr, "AC"));
     els.push(...intoBox("3", y.dr, PIN_L));
-    els.push(ink("wdrop_3", [[PIN_R, y.dr], [bend, y.dr], [bend, tapY]], drColor));
-    els.push(ink("wout_3", [[colors && has("ac") ? 310 : DROP, tapY], [BUS_L, tapY]], drColor));
+    els.push(
+      ink(
+        "wdrop_3",
+        [
+          [PIN_R, y.dr],
+          [bend, y.dr],
+          [bend, tapY],
+        ],
+        drColor,
+      ),
+    );
+    els.push(
+      ink(
+        "wout_3",
+        [
+          [colors && has("ac") ? 310 : DROP, tapY],
+          [BUS_L, tapY],
+        ],
+        drColor,
+      ),
+    );
     els.push(dot("jout_3", BUS_L, tapY, drColor));
     els.push(text("n_3", NUM_X, tapY, "3"));
     if (colors && has("ac")) {
       els.push(dot("jdrop_3", near, tapY));
       els.push(text("ld1", RX - 62, y.dr + 22, "1", 13, RED));
-      els.push(head("w_blue", [[310, tapY], [310, y.ac], [337, y.ac]], BLUE, 14));
+      els.push(
+        head(
+          "w_blue",
+          [
+            [310, tapY],
+            [310, y.ac],
+            [337, y.ac],
+          ],
+          BLUE,
+          14,
+        ),
+      );
     }
   }
   if (has("ac")) {
@@ -230,12 +424,33 @@ function busSystem(show: string[], colors: boolean): SchematicElement[] {
     els.push(box("e", 422, y.ac - 25, 22, 16, "E"));
     els.push(box("ac", RX, y.ac, RW, 22, "AC"));
     els.push(...controls("ac", y.ac + 22, true));
-    els.push(ink("w_alu", [[433, y.ac], [PIN_L, y.ac]]));
-    els.push(ink("w_acbus", [[PIN_R, y.ac], [BUS_L, y.ac]], acColor));
+    els.push(
+      ink("w_alu", [
+        [433, y.ac],
+        [PIN_L, y.ac],
+      ]),
+    );
+    els.push(
+      ink(
+        "w_acbus",
+        [
+          [PIN_R, y.ac],
+          [BUS_L, y.ac],
+        ],
+        acColor,
+      ),
+    );
     els.push(dot("j_4", BUS_L, y.ac, acColor));
     els.push(text("n_4", NUM_X, y.ac, "4"));
     const elbowY = y.ac + 52;
-    els.push(ink("w_acelbow", [[594, y.ac + 28], [736, y.ac + 28], [736, elbowY], [BUS_L, elbowY]]));
+    els.push(
+      ink("w_acelbow", [
+        [594, y.ac + 28],
+        [736, y.ac + 28],
+        [736, elbowY],
+        [BUS_L, elbowY],
+      ]),
+    );
     els.push(dot("j_acelbow", BUS_L, elbowY));
   }
   if (has("inpr")) {
@@ -262,7 +477,12 @@ function busSystem(show: string[], colors: boolean): SchematicElement[] {
     const clockY = FRAME_B - FRAME_W - 56;
     els.push(text("clock", 860, clockY, "Clock"));
     els.push(dot("j_clk", BUS_L, clockY));
-    els.push(ink("w_clk", [[880, clockY], [BUS_L, clockY]]));
+    els.push(
+      ink("w_clk", [
+        [880, clockY],
+        [BUS_L, clockY],
+      ]),
+    );
     els.push(text("acfoot", RX, FRAME_B - FRAME_W - 16, "AC", 14));
   }
   if (colors) {
@@ -277,56 +497,86 @@ function busSystem(show: string[], colors: boolean): SchematicElement[] {
 }
 
 const allRegs = ["mem", "pc", "ar", "ir", "tr", "dr", "ac", "outr", "inpr"];
-const busAll = ["mem", "ar", "pc", "dr", "ac", "inpr", "ir", "tr", "outr", "clock", "drac", "acdr"];
+const busAll = [
+  "mem",
+  "ar",
+  "pc",
+  "dr",
+  "ac",
+  "inpr",
+  "ir",
+  "tr",
+  "outr",
+  "clock",
+  "drac",
+  "acdr",
+];
 
 export const computerRegistersStepSchematics = frames([
   {
     title: "Memory",
     width: W,
     height: 360,
-    notes: ["4096 words, 16 bits each. Instructions and operands both live here."],
+    notes: [
+      "4096 words, 16 bits each. Instructions and operands both live here.",
+    ],
     elements: registerMap(["mem"], ["mem"]),
   },
   {
     title: "Address registers",
     width: W,
     height: 420,
-    notes: ["PC holds the address of the next instruction. AR holds the address sent to memory."],
+    notes: [
+      "PC holds the address of the next instruction. AR holds the address sent to memory.",
+    ],
     elements: registerMap(["mem", "pc", "ar"], ["pc", "ar"]),
   },
   {
     title: "Instruction and data registers",
     width: W,
     height: 480,
-    notes: ["IR holds the 16-bit instruction. DR holds the operand read from memory. TR holds a temporary word."],
-    elements: registerMap(["mem", "pc", "ar", "ir", "tr", "dr"], ["ir", "tr", "dr"]),
+    notes: [
+      "IR holds the 16-bit instruction. DR holds the operand read from memory. TR holds a temporary word.",
+    ],
+    elements: registerMap(
+      ["mem", "pc", "ar", "ir", "tr", "dr"],
+      ["ir", "tr", "dr"],
+    ),
   },
   {
     title: "Accumulator and input-output",
     width: W,
     height: 500,
-    notes: ["AC is the processor register. INPR and OUTR hold one 8-bit character each."],
+    notes: [
+      "AC is the processor register. INPR and OUTR hold one 8-bit character each.",
+    ],
     elements: registerMap(allRegs, ["ac", "inpr", "outr"]),
   },
   {
     title: "Common bus",
     width: 1080,
     height: 760,
-    notes: ["S2 S1 S0 choose which unit places its word on the single bus. 111 selects memory."],
+    notes: [
+      "S2 S1 S0 choose which unit places its word on the single bus. 111 selects memory.",
+    ],
     elements: busSystem(["mem"], false),
   },
   {
     title: "AR and PC",
     width: 1080,
     height: 760,
-    notes: ["001 selects AR. 010 selects PC. The address into memory comes from AR."],
+    notes: [
+      "001 selects AR. 010 selects PC. The address into memory comes from AR.",
+    ],
     elements: busSystem(["mem", "ar", "pc"], false),
   },
   {
     title: "DR, adder, and AC",
     width: 1080,
     height: 760,
-    notes: ["011 selects DR. 100 selects AC. The adder and logic operate on AC, and E keeps the carry."],
+    notes: [
+      "011 selects DR. 100 selects AC. The adder and logic operate on AC, and E keeps the carry.",
+    ],
     elements: busSystem(["mem", "ar", "pc", "dr", "ac"], false),
   },
   {
@@ -352,4 +602,5 @@ export const computerRegistersStepSchematics = frames([
   },
 ]);
 
-export const computerRegistersTheoryDiagram = computerRegistersStepSchematics[7];
+export const computerRegistersTheoryDiagram =
+  computerRegistersStepSchematics[7];

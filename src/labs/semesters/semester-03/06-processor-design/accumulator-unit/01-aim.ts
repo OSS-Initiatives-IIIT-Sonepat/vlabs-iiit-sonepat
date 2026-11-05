@@ -4,5 +4,7 @@ export const aim: TheorySection = {
   id: "aim",
   type: "text",
   title: "Aim",
-  paragraphs: ["To operate the accumulator on one starting word: add, AND, complement, and shift."],
+  paragraphs: [
+    "To operate the accumulator on one starting word: add, AND, complement, and shift.",
+  ],
 };

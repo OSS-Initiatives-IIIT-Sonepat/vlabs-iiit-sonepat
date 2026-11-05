@@ -12,7 +12,8 @@ import { procedureSteps } from "./04-procedure";
 export const transferModesExperiment: ExperimentDefinition = {
   id: "transfer-modes",
   title: "Modes of Transfer",
-  description: "Choose programmed I/O, interrupt-initiated I/O, or DMA for one byte.",
+  description:
+    "Choose programmed I/O, interrupt-initiated I/O, or DMA for one byte.",
   labType: "text",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],

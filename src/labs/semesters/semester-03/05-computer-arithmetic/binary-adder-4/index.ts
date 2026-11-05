@@ -12,7 +12,8 @@ import { procedureSteps } from "./04-procedure";
 export const binaryAdder4Experiment: ExperimentDefinition = {
   id: "binary-adder-4",
   title: "4-bit Binary Adder",
-  description: "Add 1101 and 0111 with four full adders. C0 is 0, and the sum is 10100.",
+  description:
+    "Add 1101 and 0111 with four full adders. C0 is 0, and the sum is 10100.",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],
   procedureSteps,

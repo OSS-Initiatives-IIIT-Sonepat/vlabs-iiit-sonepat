@@ -12,7 +12,8 @@ import { procedureSteps } from "./04-procedure";
 export const instructionCodesExperiment: ExperimentDefinition = {
   id: "instruction-codes",
   title: "Instruction Codes",
-  description: "Read ADD 1547, a 4096 x 16 stored program, and the direct and indirect paths into the accumulator.",
+  description:
+    "Read ADD 1547, a 4096 x 16 stored program, and the direct and indirect paths into the accumulator.",
   labType: "text",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],
@@ -20,4 +21,6 @@ export const instructionCodesExperiment: ExperimentDefinition = {
 };
 
 export const InstructionCodesCircuit = buildCircuit(instructionCodesExperiment);
-export const InstructionCodesContent = buildLabContent(instructionCodesExperiment);
+export const InstructionCodesContent = buildLabContent(
+  instructionCodesExperiment,
+);

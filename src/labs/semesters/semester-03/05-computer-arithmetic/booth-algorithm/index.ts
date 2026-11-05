@@ -12,7 +12,8 @@ import { procedureSteps } from "./04-procedure";
 export const boothAlgorithmExperiment: ExperimentDefinition = {
   id: "booth-algorithm",
   title: "Booth's Algorithm",
-  description: "Multiply (−9) by (−13) by inspecting Q0 and Q−1. The product is 117.",
+  description:
+    "Multiply (−9) by (−13) by inspecting Q0 and Q−1. The product is 117.",
   labType: "text",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],

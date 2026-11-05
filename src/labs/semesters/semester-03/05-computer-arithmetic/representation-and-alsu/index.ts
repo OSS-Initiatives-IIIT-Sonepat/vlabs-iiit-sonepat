@@ -20,5 +20,9 @@ export const representationAndAlsuExperiment: ExperimentDefinition = {
   procedureSteps,
 };
 
-export const RepresentationAndAlsuCircuit = buildCircuit(representationAndAlsuExperiment);
-export const RepresentationAndAlsuContent = buildLabContent(representationAndAlsuExperiment);
+export const RepresentationAndAlsuCircuit = buildCircuit(
+  representationAndAlsuExperiment,
+);
+export const RepresentationAndAlsuContent = buildLabContent(
+  representationAndAlsuExperiment,
+);

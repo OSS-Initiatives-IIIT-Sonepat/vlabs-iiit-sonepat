@@ -37,7 +37,12 @@ const elements: SchematicElement[] = [
 
   label("srcL", 52, 410, "R1"),
   ...copyX.map((x, i) => block(`s${i}`, x, 410, 40, 36, copyBits[i])),
-  ...copyX.map((x, i) => arrow(`a${i}`, [[x, 428], [x, 492]])),
+  ...copyX.map((x, i) =>
+    arrow(`a${i}`, [
+      [x, 428],
+      [x, 492],
+    ]),
+  ),
   label("dstL", 52, 510, "R2"),
   ...copyX.map((x, i) => block(`d${i}`, x, 510, 40, 36, copyBits[i])),
 
@@ -45,11 +50,17 @@ const elements: SchematicElement[] = [
   block("pstmt", 560, 390, 240, 44, "P : R2 ← R1"),
 
   block("ctrl", 160, 610, 170, 44, "Control circuit"),
-  arrow("aP", [[245, 610], [300, 610]]),
+  arrow("aP", [
+    [245, 610],
+    [300, 610],
+  ]),
   label("pLbl", 272, 592, "P"),
   label("loadLbl", 272, 630, "Load"),
   block("hwR2", 360, 610, 120, 44, "R2"),
-  wire("wN", [[360, 632], [360, 688]]),
+  wire("wN", [
+    [360, 632],
+    [360, 688],
+  ]),
   label("nLbl", 384, 660, "n"),
   block("hwR1", 360, 710, 120, 44, "R1"),
 
@@ -86,7 +97,10 @@ const elements: SchematicElement[] = [
   label("loadEnd", 860, 656, "."),
   { type: "junction", id: "jLoad", x: 720, y: 638 },
   { type: "junction", id: "jClk", x: 720, y: 604 },
-  arrow("xfer", [[720, 638], [720, 604]]),
+  arrow("xfer", [
+    [720, 638],
+    [720, 604],
+  ]),
   label("xferLbl", 720, 700, "Transfer occurs here"),
 ];
 
@@ -96,10 +110,38 @@ const order = [
   ["b0", "b1", "b2", "b3", "b4", "b5", "b6", "b7", "capBits"],
   ["pch", "pcl", "p15", "p8", "p7", "p0", "capSplit"],
   ["stmt"],
-  ["srcL", "s0", "s1", "s2", "s3", "a0", "a1", "a2", "a3", "dstL", "d0", "d1", "d2", "d3"],
+  [
+    "srcL",
+    "s0",
+    "s1",
+    "s2",
+    "s3",
+    "a0",
+    "a1",
+    "a2",
+    "a3",
+    "dstL",
+    "d0",
+    "d1",
+    "d2",
+    "d3",
+  ],
   ["ifLine", "pstmt"],
   ["ctrl", "aP", "pLbl", "loadLbl", "hwR2", "wN", "nLbl", "hwR1"],
-  ["clkLbl", "clk", "tLbl", "t1Lbl", "clkEnd", "loadName", "load", "loadEnd", "jLoad", "jClk", "xfer", "xferLbl"],
+  [
+    "clkLbl",
+    "clk",
+    "tLbl",
+    "t1Lbl",
+    "clkEnd",
+    "loadName",
+    "load",
+    "loadEnd",
+    "jLoad",
+    "jClk",
+    "xfer",
+    "xferLbl",
+  ],
 ];
 
 const titles = [
@@ -126,7 +168,17 @@ const notes = [
   "Load is 1, and the copy happens on the clock edge.",
 ];
 
-const highlight = ["r1", "r2", "b0", "pch", "stmt", "s0", "pstmt", "ctrl", "xfer"];
+const highlight = [
+  "r1",
+  "r2",
+  "b0",
+  "pch",
+  "stmt",
+  "s0",
+  "pstmt",
+  "ctrl",
+  "xfer",
+];
 
 const byId = new Map(elements.map((el) => [el.id, el]));
 

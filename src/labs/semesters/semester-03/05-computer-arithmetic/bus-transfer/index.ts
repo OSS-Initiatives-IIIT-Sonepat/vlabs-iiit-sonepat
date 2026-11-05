@@ -12,7 +12,8 @@ import { procedureSteps } from "./04-procedure";
 export const busTransferExperiment: ExperimentDefinition = {
   id: "bus-transfer",
   title: "Bus and Shifts",
-  description: "Select one register onto a shared bus, then read the three shifts and a normalised mantissa.",
+  description:
+    "Select one register onto a shared bus, then read the three shifts and a normalised mantissa.",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],
   procedureSteps,

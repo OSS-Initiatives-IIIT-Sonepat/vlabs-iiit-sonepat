@@ -4,5 +4,7 @@ export const aim: TheorySection = {
   id: "aim",
   type: "text",
   title: "Aim",
-  paragraphs: ["To name every block of the basic computer and to watch one memory read travel the common bus into DR."],
+  paragraphs: [
+    "To name every block of the basic computer and to watch one memory read travel the common bus into DR.",
+  ],
 };

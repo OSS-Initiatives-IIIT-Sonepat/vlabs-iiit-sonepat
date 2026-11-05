@@ -12,7 +12,8 @@ import { procedureSteps } from "./04-procedure";
 export const dmaTransferExperiment: ExperimentDefinition = {
   id: "dma-transfer",
   title: "DMA",
-  description: "Transfer three words starting at address 200, then return the bus.",
+  description:
+    "Transfer three words starting at address 200, then return the bus.",
   labType: "text",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],

@@ -34,18 +34,36 @@ export const registerOrganisationStepSchematics = frames([
       memword("s0", 180, 90, "SP 0", "0101", "pushed", true),
       memword("s1", 180, 140, "SP 1", "0011", "next"),
     ],
-    notes: ["The counter is the stack pointer. Address 0 holds the word that was pushed."],
+    notes: [
+      "The counter is the stack pointer. Address 0 holds the word that was pushed.",
+    ],
   },
   {
     title: "Immediate, register, and indexed",
     height: 320,
     elements: [
-      block("imm", 320, 70, 280, 40, "immediate: the operand is in the instruction"),
-      block("reg", 320, 130, 280, 40, "register: the field names a register", true),
+      block(
+        "imm",
+        320,
+        70,
+        280,
+        40,
+        "immediate: the operand is in the instruction",
+      ),
+      block(
+        "reg",
+        320,
+        130,
+        280,
+        40,
+        "register: the field names a register",
+        true,
+      ),
       block("idx", 320, 190, 280, 40, "indexed: address + index register"),
     ],
     notes: ["Direct and indirect addressing are in the basic-computer lab."],
   },
 ]);
 
-export const registerOrganisationTheoryDiagram = registerOrganisationStepSchematics[0];
+export const registerOrganisationTheoryDiagram =
+  registerOrganisationStepSchematics[0];

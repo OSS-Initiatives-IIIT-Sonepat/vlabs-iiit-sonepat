@@ -4,5 +4,7 @@ export const aim: TheorySection = {
   id: "aim",
   type: "text",
   title: "Aim",
-  paragraphs: ["To assign independent operations to free processors and join the results."],
+  paragraphs: [
+    "To assign independent operations to free processors and join the results.",
+  ],
 };

@@ -1,5 +1,13 @@
 import { type ComponentInstance } from "@/labs/types";
-import { chip, input, lamp, link, power, powers, rail } from "../../_coa/breadboard";
+import {
+  chip,
+  input,
+  lamp,
+  link,
+  power,
+  powers,
+  rail,
+} from "../../_coa/breadboard";
 
 // A = 1101, B = 0011, so B' = 1100. One 74HC153 per bit picks Y.
 // S1 S0: 00 B, 01 B', 10 0, 11 1. Cin is the adder's C0.
@@ -15,13 +23,23 @@ export const components: ComponentInstance[] = [
   ...powers("fa", 16),
   ...[0, 1, 2, 3].map((bit) => chip(`m${bit}`, "mux-4to1", muxCol[bit])),
   ...[0, 1, 2, 3].flatMap((bit) => powers(`m${bit}`, muxCol[bit])),
-  ...[0, 1, 2, 3].map((bit) => rail(`w_en_${bit}`, `m${bit}`, "en1_bar", "gnd", 2)),
-  ...[0, 1, 2, 3].map((bit) => rail(`w_a${bit + 1}`, "fa", `a${bit + 1}`, aLevel[bit], 3)),
-  ...[0, 1, 2, 3].map((bit) => rail(`w_b${bit}`, `m${bit}`, "i0_1", bLevel[bit], 15)),
-  ...[0, 1, 2, 3].map((bit) => rail(`w_bp${bit}`, `m${bit}`, "i1_1", bpLevel[bit], 16)),
+  ...[0, 1, 2, 3].map((bit) =>
+    rail(`w_en_${bit}`, `m${bit}`, "en1_bar", "gnd", 2),
+  ),
+  ...[0, 1, 2, 3].map((bit) =>
+    rail(`w_a${bit + 1}`, "fa", `a${bit + 1}`, aLevel[bit], 3),
+  ),
+  ...[0, 1, 2, 3].map((bit) =>
+    rail(`w_b${bit}`, `m${bit}`, "i0_1", bLevel[bit], 15),
+  ),
+  ...[0, 1, 2, 3].map((bit) =>
+    rail(`w_bp${bit}`, `m${bit}`, "i1_1", bpLevel[bit], 16),
+  ),
   ...[0, 1, 2, 3].map((bit) => rail(`w_z${bit}`, `m${bit}`, "i2_1", "gnd", 17)),
   ...[0, 1, 2, 3].map((bit) => rail(`w_o${bit}`, `m${bit}`, "i3_1", "vcc", 19)),
-  ...[0, 1, 2, 3].map((bit) => link(`w_y${bit}`, `m${bit}`, "y1", "fa", `b${bit + 1}`, "green")),
+  ...[0, 1, 2, 3].map((bit) =>
+    link(`w_y${bit}`, `m${bit}`, "y1", "fa", `b${bit + 1}`, "green"),
+  ),
   input("s1", "m3", "s1", 5, "blue"),
   input("s0", "m3", "s0", 6, "orange"),
   link("w_s1_32", "m3", "s1", "m2", "s1", "blue"),
@@ -49,9 +67,31 @@ const lampIds = (name: string) => [
 
 const supply = ["bb", "psu", "w_vcc_link", "w_gnd_link"];
 const adder = ["fa", "w_vcc_fa", "w_gnd_fa"];
-const muxes = [0, 1, 2, 3].flatMap((bit) => [`m${bit}`, `w_vcc_m${bit}`, `w_gnd_m${bit}`, `w_en_${bit}`]);
-const data = [0, 1, 2, 3].flatMap((bit) => [`w_a${bit + 1}`, `w_b${bit}`, `w_bp${bit}`, `w_z${bit}`, `w_o${bit}`, `w_y${bit}`]);
-const select = ["w_s1_m3", "w_s0_m3", "w_s1_32", "w_s1_21", "w_s1_10", "w_s0_32", "w_s0_21", "w_s0_10", "w_cin_fa"];
+const muxes = [0, 1, 2, 3].flatMap((bit) => [
+  `m${bit}`,
+  `w_vcc_m${bit}`,
+  `w_gnd_m${bit}`,
+  `w_en_${bit}`,
+]);
+const data = [0, 1, 2, 3].flatMap((bit) => [
+  `w_a${bit + 1}`,
+  `w_b${bit}`,
+  `w_bp${bit}`,
+  `w_z${bit}`,
+  `w_o${bit}`,
+  `w_y${bit}`,
+]);
+const select = [
+  "w_s1_m3",
+  "w_s0_m3",
+  "w_s1_32",
+  "w_s1_21",
+  "w_s1_10",
+  "w_s0_32",
+  "w_s0_21",
+  "w_s0_10",
+  "w_cin_fa",
+];
 const lamps = ["cout", "d3", "d2", "d1", "d0"].flatMap(lampIds);
 const wired = ids(supply, adder, muxes, data, select);
 const built = ids(wired, lamps);

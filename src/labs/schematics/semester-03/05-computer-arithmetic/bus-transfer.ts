@@ -8,7 +8,9 @@ export const busTransferStepSchematics = frames([
   {
     title: "Two registers, one set of wires",
     elements: [r0(true), bus(), r1()],
-    notes: ["A bus is a set of muxes, not a wire from every register to every other."],
+    notes: [
+      "A bus is a set of muxes, not a wire from every register to every other.",
+    ],
   },
   {
     title: "Select R0 onto the lamps",
@@ -28,17 +30,23 @@ export const busTransferStepSchematics = frames([
   {
     title: "Circular shift",
     elements: [block("sh", 320, 120, 260, 48, "1011 → 0111", true)],
-    notes: ["A circular shift puts the bit that falls off back in at the other end."],
+    notes: [
+      "A circular shift puts the bit that falls off back in at the other end.",
+    ],
   },
   {
     title: "Arithmetic shift",
     elements: [block("sh", 320, 120, 260, 48, "1101 → 1110", true)],
-    notes: ["An arithmetic right shift copies the sign bit into the vacant place."],
+    notes: [
+      "An arithmetic right shift copies the sign bit into the vacant place.",
+    ],
   },
   {
     title: "A normalised mantissa",
     elements: [block("sh", 320, 120, 300, 48, "0.001011 → 0.101100", true)],
-    notes: ["Shift until the leading digit is not zero. That is a normalised mantissa."],
+    notes: [
+      "Shift until the leading digit is not zero. That is a normalised mantissa.",
+    ],
   },
 ]);
 

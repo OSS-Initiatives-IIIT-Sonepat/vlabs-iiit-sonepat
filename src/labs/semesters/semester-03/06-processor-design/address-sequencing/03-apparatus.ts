@@ -7,6 +7,10 @@ export const apparatus: ApparatusSection = {
   items: [
     { name: "Opcode mapping", specification: "Sends CAR to 40", quantity: "1" },
     { name: "Increment", specification: "40 becomes 41", quantity: "1" },
-    { name: "Branch and return", specification: "60, and the saved 16", quantity: "1" },
+    {
+      name: "Branch and return",
+      specification: "60, and the saved 16",
+      quantity: "1",
+    },
   ],
 };

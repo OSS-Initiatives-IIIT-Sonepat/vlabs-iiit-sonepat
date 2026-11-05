@@ -40,7 +40,10 @@ export const quineMccluskeyStepSchematics = frames([
       hop("h", 160, 220, 125, true),
       ...ledChain("f", 370, 125, "F", true),
     ],
-    notes: ["F = (T1' · T2' · T3')'", "Two-input NANDs build that 3-input NAND"],
+    notes: [
+      "F = (T1' · T2' · T3')'",
+      "Two-input NANDs build that 3-input NAND",
+    ],
   },
   {
     title: "m0 lights, same as the map",
@@ -67,7 +70,10 @@ export const quineMccluskeyStepSchematics = frames([
       ...stub("m", "0101", 125, 80, true),
       ...ledChain("f", 260, 125, "F=1", true),
     ],
-    notes: ["Chart and map agree", "This board is NAND-NAND, the map board is AND-OR"],
+    notes: [
+      "Chart and map agree",
+      "This board is NAND-NAND, the map board is AND-OR",
+    ],
   },
 ]);
 

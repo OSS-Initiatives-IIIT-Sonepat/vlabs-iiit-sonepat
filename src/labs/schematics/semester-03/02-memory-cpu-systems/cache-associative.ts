@@ -22,7 +22,11 @@ export const cacheAssociativeStepSchematics = frames([
   },
   {
     title: "NOR the two differences",
-    elements: [...cmp(true), hop("a", 140, 180, 115), hop("b", 280, 340, 120, true)],
+    elements: [
+      ...cmp(true),
+      hop("a", 140, 180, 115),
+      hop("b", 280, 340, 120, true),
+    ],
     notes: ["A match on both bits makes both XOR outputs 0"],
   },
   {
@@ -40,7 +44,10 @@ export const cacheAssociativeStepSchematics = frames([
       ...stub("t", "10", 120, 60, true),
       ...ledChain("hit", 220, 125, "HIT", true),
     ],
-    notes: ["Change T0 to 1 and the LED goes out", "There is no index. The compare is the whole address check."],
+    notes: [
+      "Change T0 to 1 and the LED goes out",
+      "There is no index. The compare is the whole address check.",
+    ],
   },
 ]);
 

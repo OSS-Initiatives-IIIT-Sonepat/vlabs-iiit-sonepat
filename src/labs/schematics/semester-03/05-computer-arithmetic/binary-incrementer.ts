@@ -53,13 +53,25 @@ xs.forEach((x, i) => {
   circuit.push(label(`yLab${bit}`, yIn, boxY + 22, "y"));
   circuit.push(label(`cLab${bit}`, xIn, bot - 16, "C"));
   circuit.push(label(`sLab${bit}`, yIn, bot - 16, "S"));
-  groups[0].push(`ha${bit}`, `haName${bit}`, `xLab${bit}`, `yLab${bit}`, `cLab${bit}`, `sLab${bit}`);
+  groups[0].push(
+    `ha${bit}`,
+    `haName${bit}`,
+    `xLab${bit}`,
+    `yLab${bit}`,
+    `cLab${bit}`,
+    `sLab${bit}`,
+  );
 });
 
 xs.forEach((x, i) => {
   const bit = bits[i];
   const xIn = x + 46;
-  circuit.push(arrow(`aIn${bit}`, [[xIn, 96], [xIn, boxY]]));
+  circuit.push(
+    arrow(`aIn${bit}`, [
+      [xIn, 96],
+      [xIn, boxY],
+    ]),
+  );
   circuit.push(label(`aVal${bit}`, xIn, 64, String(aBits[i])));
   circuit.push(label(`aName${bit}`, xIn, 88, `A${bit}`));
   groups[1].push(`aIn${bit}`, `aVal${bit}`, `aName${bit}`);
@@ -69,7 +81,12 @@ xs.forEach((x, i) => {
   const bit = bits[i];
   const yIn = x + 114;
   if (i === 3) {
-    circuit.push(arrow("plus", [[yIn, 96], [yIn, boxY]]));
+    circuit.push(
+      arrow("plus", [
+        [yIn, 96],
+        [yIn, boxY],
+      ]),
+    );
     circuit.push(label("plusVal", yIn, 88, "1"));
     groups[2].push("plus", "plusVal");
     return;
@@ -77,25 +94,69 @@ xs.forEach((x, i) => {
   const gapX = x + boxW + (xs[i + 1] - (x + boxW)) / 2;
   const cX = xs[i + 1] + 46;
   const yTop = 108;
-  circuit.push(wire(`cDown${bit}`, [[cX, bot], [cX, bot + 22]]));
-  circuit.push(wire(`cAcross${bit}`, [[cX, bot + 22], [gapX, bot + 22]]));
-  circuit.push(wire(`cUp${bit}`, [[gapX, bot + 22], [gapX, yTop]]));
-  circuit.push(wire(`cOver${bit}`, [[gapX, yTop], [yIn, yTop]]));
-  circuit.push(arrow(`yIn${bit}`, [[yIn, yTop], [yIn, boxY]]));
-  circuit.push(label(`yVal${bit}`, (gapX + yIn) / 2, yTop - 16, String(yBits[i])));
-  groups[2].push(`cDown${bit}`, `cAcross${bit}`, `cUp${bit}`, `cOver${bit}`, `yIn${bit}`, `yVal${bit}`);
+  circuit.push(
+    wire(`cDown${bit}`, [
+      [cX, bot],
+      [cX, bot + 22],
+    ]),
+  );
+  circuit.push(
+    wire(`cAcross${bit}`, [
+      [cX, bot + 22],
+      [gapX, bot + 22],
+    ]),
+  );
+  circuit.push(
+    wire(`cUp${bit}`, [
+      [gapX, bot + 22],
+      [gapX, yTop],
+    ]),
+  );
+  circuit.push(
+    wire(`cOver${bit}`, [
+      [gapX, yTop],
+      [yIn, yTop],
+    ]),
+  );
+  circuit.push(
+    arrow(`yIn${bit}`, [
+      [yIn, yTop],
+      [yIn, boxY],
+    ]),
+  );
+  circuit.push(
+    label(`yVal${bit}`, (gapX + yIn) / 2, yTop - 16, String(yBits[i])),
+  );
+  groups[2].push(
+    `cDown${bit}`,
+    `cAcross${bit}`,
+    `cUp${bit}`,
+    `cOver${bit}`,
+    `yIn${bit}`,
+    `yVal${bit}`,
+  );
 });
 
 xs.forEach((x, i) => {
   const bit = bits[i];
   const sX = x + 114;
-  circuit.push(arrow(`s${bit}`, [[sX, bot], [sX, bot + 36]]));
+  circuit.push(
+    arrow(`s${bit}`, [
+      [sX, bot],
+      [sX, bot + 36],
+    ]),
+  );
   circuit.push(label(`sName${bit}`, sX, bot + 48, `S${bit}`));
   circuit.push(label(`sVal${bit}`, sX, bot + 68, String(sBits[i])));
   groups[3].push(`s${bit}`, `sName${bit}`, `sVal${bit}`);
 });
 const c4x = xs[0] + 46;
-circuit.push(arrow("c4", [[c4x, bot], [c4x, bot + 36]]));
+circuit.push(
+  arrow("c4", [
+    [c4x, bot],
+    [c4x, bot + 36],
+  ]),
+);
 circuit.push(label("c4name", c4x, bot + 48, "C4"));
 circuit.push(label("c4val", c4x, bot + 68, "0"));
 groups[3].push("c4", "c4name", "c4val");
@@ -141,4 +202,5 @@ export const binaryIncrementerStepSchematics = frames(
   })),
 );
 
-export const binaryIncrementerTheoryDiagram = binaryIncrementerStepSchematics[4];
+export const binaryIncrementerTheoryDiagram =
+  binaryIncrementerStepSchematics[4];

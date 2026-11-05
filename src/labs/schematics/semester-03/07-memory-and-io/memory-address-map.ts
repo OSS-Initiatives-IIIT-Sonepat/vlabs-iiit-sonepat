@@ -19,7 +19,9 @@ export const memoryMapStepSchematics = frames([
       block("sram", 180, 120, 180, 56, "SRAM: a latch", true),
       block("dram", 460, 120, 180, 56, "DRAM: a capacitor"),
     ],
-    notes: ["SRAM keeps a bit in a latch. DRAM keeps it on a capacitor and must be refreshed."],
+    notes: [
+      "SRAM keeps a bit in a latch. DRAM keeps it on a capacitor and must be refreshed.",
+    ],
   },
   {
     title: "High address bit selects the ROM",
@@ -28,7 +30,9 @@ export const memoryMapStepSchematics = frames([
       block("r0", 400, 80, 140, 40, "ROM 0  0011"),
       block("r1", 400, 160, 140, 40, "ROM 1  1100", true),
     ],
-    notes: ["Four 1K×8 PROMs make a 4K×8 map. This board uses two ROMs and one select bit."],
+    notes: [
+      "Four 1K×8 PROMs make a 4K×8 map. This board uses two ROMs and one select bit.",
+    ],
   },
   {
     title: "Select 0 lights 0011",
@@ -36,7 +40,9 @@ export const memoryMapStepSchematics = frames([
       block("r0", 220, 120, 180, 48, "ROM 0 = 0011", true),
       block("r1", 460, 120, 180, 48, "ROM 1 off"),
     ],
-    notes: ["The decoder's Y0 enables ROM 0. ROM 1 must not drive the data lamps."],
+    notes: [
+      "The decoder's Y0 enables ROM 0. ROM 1 must not drive the data lamps.",
+    ],
   },
   {
     title: "Select 1 lights 1100",

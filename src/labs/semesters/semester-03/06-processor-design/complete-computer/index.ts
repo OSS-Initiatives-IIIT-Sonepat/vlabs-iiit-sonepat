@@ -12,7 +12,8 @@ import { procedureSteps } from "./04-procedure";
 export const completeComputerExperiment: ExperimentDefinition = {
   id: "complete-computer",
   title: "Complete Computer",
-  description: "Place memory, the common bus, the registers, INPR, OUTR, and control on one diagram.",
+  description:
+    "Place memory, the common bus, the registers, INPR, OUTR, and control on one diagram.",
   labType: "text",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],
@@ -20,4 +21,6 @@ export const completeComputerExperiment: ExperimentDefinition = {
 };
 
 export const CompleteComputerCircuit = buildCircuit(completeComputerExperiment);
-export const CompleteComputerContent = buildLabContent(completeComputerExperiment);
+export const CompleteComputerContent = buildLabContent(
+  completeComputerExperiment,
+);

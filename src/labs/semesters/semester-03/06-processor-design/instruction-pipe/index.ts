@@ -12,7 +12,8 @@ import { procedureSteps } from "./04-procedure";
 export const instructionPipeExperiment: ExperimentDefinition = {
   id: "instruction-pipe",
   title: "Instruction Pipeline",
-  description: "Step FI, DA, FO, and EX, and empty the pipe on a branch or interrupt.",
+  description:
+    "Step FI, DA, FO, and EX, and empty the pipe on a branch or interrupt.",
   labType: "text",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],
@@ -20,4 +21,6 @@ export const instructionPipeExperiment: ExperimentDefinition = {
 };
 
 export const InstructionPipeCircuit = buildCircuit(instructionPipeExperiment);
-export const InstructionPipeContent = buildLabContent(instructionPipeExperiment);
+export const InstructionPipeContent = buildLabContent(
+  instructionPipeExperiment,
+);

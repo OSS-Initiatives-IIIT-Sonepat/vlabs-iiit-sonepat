@@ -2,12 +2,44 @@ import { flow } from "../diagram";
 
 /** The three classes of basic-computer instruction. */
 const nodes = [
-  { id: "word", kind: "block" as const, x: 220, y: 78, w: 230, h: 40, label: "I  |  opcode  |  address" },
+  {
+    id: "word",
+    kind: "block" as const,
+    x: 220,
+    y: 78,
+    w: 230,
+    h: 40,
+    label: "I  |  opcode  |  address",
+  },
   { id: "mri", kind: "decision" as const, x: 220, y: 198, label: "MRI?" },
-  { id: "ops", kind: "block" as const, x: 500, y: 198, w: 240, h: 40, label: "Memory reference" },
+  {
+    id: "ops",
+    kind: "block" as const,
+    x: 500,
+    y: 198,
+    w: 240,
+    h: 40,
+    label: "Memory reference",
+  },
   { id: "ibit", kind: "decision" as const, x: 220, y: 330, label: "I = 1?" },
-  { id: "reg", kind: "block" as const, x: 220, y: 450, w: 220, h: 40, label: "Register reference" },
-  { id: "io", kind: "block" as const, x: 490, y: 330, w: 250, h: 40, label: "I/O instruction" },
+  {
+    id: "reg",
+    kind: "block" as const,
+    x: 220,
+    y: 450,
+    w: 220,
+    h: 40,
+    label: "Register reference",
+  },
+  {
+    id: "io",
+    kind: "block" as const,
+    x: 490,
+    y: 330,
+    w: 250,
+    h: 40,
+    label: "I/O instruction",
+  },
 ];
 
 const links = [
@@ -46,7 +78,9 @@ export const instructionSetStepSchematics = flow(nodes, links, [
     show: [...head, "ibit", "reg"],
     highlight: "reg",
     labels: { reg: "CLA 7800   CMA 7200" },
-    notes: ["Opcode 111 and I = 0. The address field is a set of flags, not a memory address."],
+    notes: [
+      "Opcode 111 and I = 0. The address field is a set of flags, not a memory address.",
+    ],
   },
   {
     title: "Input and output, I = 1",

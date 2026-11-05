@@ -21,7 +21,13 @@ const notY = 358;
 
 const bits = [0, 1, 2, 3] as const;
 
-function rect(id: string, x: number, y: number, w: number, h: number): SchematicElement {
+function rect(
+  id: string,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+): SchematicElement {
   return wire(id, [
     [x, y],
     [x + w, y],
@@ -57,20 +63,45 @@ xs.forEach((x, i) => {
   fas.push(label(`faName${bit}`, x + faW / 2, midY + 4, "FA"));
   fas.push(label(`xName${bit}`, x + 44, midY - 16, `X${bit}`));
   fas.push(label(`yName${bit}`, x + 140, midY - 16, `Y${bit}`));
-  fas.push(arrow(`d${bit}`, [[dX, faY], [dX, 74]]));
+  fas.push(
+    arrow(`d${bit}`, [
+      [dX, faY],
+      [dX, 74],
+    ]),
+  );
   fas.push(label(`dName${bit}`, dX + 16, 88, `D${bit}`));
   if (i < 3) {
     const x1 = x + faW;
     const x2 = xs[i + 1];
-    fas.push(arrow(`c${bit + 1}`, [[x1, midY], [x2, midY]]));
+    fas.push(
+      arrow(`c${bit + 1}`, [
+        [x1, midY],
+        [x2, midY],
+      ]),
+    );
     fas.push(label(`cName${bit + 1}`, (x1 + x2) / 2, midY - 16, `C${bit + 1}`));
   }
 });
 
-fas.push(wire("cinUp", [[30, 520], [30, midY]]));
-fas.push(arrow("cin", [[30, midY], [xs[0], midY]]));
+fas.push(
+  wire("cinUp", [
+    [30, 520],
+    [30, midY],
+  ]),
+);
+fas.push(
+  arrow("cin", [
+    [30, midY],
+    [xs[0], midY],
+  ]),
+);
 fas.push(label("cinName", 30, 532, "Cin"));
-fas.push(arrow("cout", [[xs[3] + faW, midY], [xs[3] + faW + 36, midY]]));
+fas.push(
+  arrow("cout", [
+    [xs[3] + faW, midY],
+    [xs[3] + faW + 36, midY],
+  ]),
+);
 fas.push(label("coutName", xs[3] + faW + 52, midY, "Cout"));
 
 xs.forEach((x, i) => {
@@ -80,12 +111,27 @@ xs.forEach((x, i) => {
   muxes.push(label(`muxName${bit}`, x + faW / 2, muxY + 28, "4 x 1"));
   muxes.push(label(`muxSel${bit}`, x + faW / 2, muxY + 48, "MUX"));
   muxes.push(label(`muxIn${bit}`, x + faW / 2, muxBot - 14, "0   1   2   3"));
-  muxes.push(arrow(`y${bit}`, [[yX, muxY], [yX, faBot]]));
+  muxes.push(
+    arrow(`y${bit}`, [
+      [yX, muxY],
+      [yX, faBot],
+    ]),
+  );
 });
 
-muxes.push(arrow("s1", [[46, 248], [xs[0], 248]]));
+muxes.push(
+  arrow("s1", [
+    [46, 248],
+    [xs[0], 248],
+  ]),
+);
 muxes.push(label("s1Name", 46, 240, "S1"));
-muxes.push(arrow("s0", [[46, 286], [xs[0], 286]]));
+muxes.push(
+  arrow("s0", [
+    [46, 286],
+    [xs[0], 286],
+  ]),
+);
 muxes.push(label("s0Name", 46, 278, "S0"));
 
 const in2s: number[] = [];
@@ -100,26 +146,78 @@ xs.forEach((x, i) => {
   const aX = x - 18;
   in2s.push(in2);
   in3s.push(in3);
-  inputs.push({ type: "not-gate", id: `not${bit}`, x: in1, y: notY, rotation: 270 });
-  inputs.push(wire(`bp${bit}`, [[in1, notY + 22], [in1, 410], [in1, 520]]));
+  inputs.push({
+    type: "not-gate",
+    id: `not${bit}`,
+    x: in1,
+    y: notY,
+    rotation: 270,
+  });
+  inputs.push(
+    wire(`bp${bit}`, [
+      [in1, notY + 22],
+      [in1, 410],
+      [in1, 520],
+    ]),
+  );
   inputs.push(dot(`bDot${bit}`, in1, 410));
-  inputs.push(wire(`b${bit}`, [[in1, 410], [in0, 410], [in0, muxBot]]));
+  inputs.push(
+    wire(`b${bit}`, [
+      [in1, 410],
+      [in0, 410],
+      [in0, muxBot],
+    ]),
+  );
   inputs.push(label(`bName${bit}`, in1, 532, `B${bit}`));
-  inputs.push(wire(`z${bit}`, [[in2, muxBot], [in2, 450]]));
+  inputs.push(
+    wire(`z${bit}`, [
+      [in2, muxBot],
+      [in2, 450],
+    ]),
+  );
   if (i > 0) inputs.push(dot(`zDot${bit}`, in2, 450));
-  inputs.push(wire(`o${bit}`, [[in3, muxBot], [in3, 490]]));
+  inputs.push(
+    wire(`o${bit}`, [
+      [in3, muxBot],
+      [in3, 490],
+    ]),
+  );
   if (i > 0) inputs.push(dot(`oDot${bit}`, in3, 490));
-  inputs.push(wire(`a${bit}`, [[aX, 520], [aX, 192], [x + 44, 192], [x + 44, faBot]]));
+  inputs.push(
+    wire(`a${bit}`, [
+      [aX, 520],
+      [aX, 192],
+      [x + 44, 192],
+      [x + 44, faBot],
+    ]),
+  );
   inputs.push(label(`aName${bit}`, aX, 532, `A${bit}`));
-  inputs.push(arrow(`notOut${bit}`, [[in1, notY - 26], [in1, muxBot]]));
+  inputs.push(
+    arrow(`notOut${bit}`, [
+      [in1, notY - 26],
+      [in1, muxBot],
+    ]),
+  );
 });
 
-inputs.push(wire("rail0", [[in2s[0], 450], [in2s[3] + 40, 450]]));
+inputs.push(
+  wire("rail0", [
+    [in2s[0], 450],
+    [in2s[3] + 40, 450],
+  ]),
+);
 inputs.push(label("zeroName", in2s[3] + 46, 450, "0"));
-inputs.push(wire("rail1", [[in3s[0], 490], [in3s[3] + 40, 490]]));
+inputs.push(
+  wire("rail1", [
+    [in3s[0], 490],
+    [in3s[3] + 40, 490],
+  ]),
+);
 inputs.push(label("oneName", in3s[3] + 46, 490, "1"));
 
-const ones: SchematicElement[] = xs.map((x, i) => label(`one${bits[i]}`, x + 156, 192, "1"));
+const ones: SchematicElement[] = xs.map((x, i) =>
+  label(`one${bits[i]}`, x + 156, 192, "1"),
+);
 ones.push(label("cin0", 48, 118, "0"));
 
 const full = [...fas, ...muxes, ...inputs];
@@ -128,10 +226,14 @@ const byId = new Map(full.map((el) => [el.id, el]));
 function shown(step: number): SchematicElement[] {
   if (step === 0) return pencil;
   const base = step === 1 ? fas : full;
-  const hi = step === 9 ? new Set(["y0", "y1", "y2", "y3", "rail1", "cin"]) : new Set<string>();
+  const hi =
+    step === 9
+      ? new Set(["y0", "y1", "y2", "y3", "rail1", "cin"])
+      : new Set<string>();
   const banner = step === 9 ? "Decremented content of A" : "D = A + Y + Cin";
   const drawn = base.map((el) => {
-    if (el.id === "bannerText" && el.type === "label") return { ...el, text: banner };
+    if (el.id === "bannerText" && el.type === "label")
+      return { ...el, text: banner };
     return hi.has(el.id) ? { ...el, highlight: true } : el;
   });
   return step === 9 ? [...drawn, ...ones] : drawn;
@@ -175,4 +277,5 @@ export const arithmeticCircuitStepSchematics = frames(
   })),
 );
 
-export const arithmeticCircuitTheoryDiagram = arithmeticCircuitStepSchematics[9];
+export const arithmeticCircuitTheoryDiagram =
+  arithmeticCircuitStepSchematics[9];

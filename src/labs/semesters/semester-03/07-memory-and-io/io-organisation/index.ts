@@ -11,7 +11,8 @@ import { procedureSteps } from "./04-procedure";
 export const ioOrganisationExperiment: ExperimentDefinition = {
   id: "io-organisation",
   title: "I/O Organisation",
-  description: "Strobe a byte into an I/O port, watch the flag, and then read the transfer methods.",
+  description:
+    "Strobe a byte into an I/O port, watch the flag, and then read the transfer methods.",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],
   procedureSteps,

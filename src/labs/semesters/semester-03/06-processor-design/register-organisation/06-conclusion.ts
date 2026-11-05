@@ -5,7 +5,7 @@ export const conclusion: ConclusionSection = {
   type: "conclusion",
   title: "Conclusion",
   paragraphs: [
-  "A register read is a multiplexer. The select is the register address.",
-  "A memory stack is a counter used as a pointer. Immediate, register, and indexed addressing differ in where the operand lives."
-],
+    "A register read is a multiplexer. The select is the register address.",
+    "A memory stack is a counter used as a pointer. Immediate, register, and indexed addressing differ in where the operand lives.",
+  ],
 };

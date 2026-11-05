@@ -14,10 +14,7 @@ export const cpuDesignStepSchematics = frames([
   },
   {
     title: "74HC161 is the program counter",
-    elements: [
-      ...cpu(true),
-      ...stub("en", "EN=1", 110, 90),
-    ],
+    elements: [...cpu(true), ...stub("en", "EN=1", 110, 90)],
     notes: ["CLR' and LD' stay high", "ENP and ENT stay high"],
   },
   {

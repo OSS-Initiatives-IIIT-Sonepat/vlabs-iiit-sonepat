@@ -23,7 +23,12 @@ const decoderParts: ComponentInstance[] = [
   rail("w_e3_gnd", "dec", "e3", "gnd", 20),
 ];
 
-function rom(id: string, col: number, word: number, select: "y0" | "y1"): ComponentInstance[] {
+function rom(
+  id: string,
+  col: number,
+  word: number,
+  select: "y0" | "y1",
+): ComponentInstance[] {
   return [
     memory(id, "rom", col, [word]),
     ...powers(id, col),

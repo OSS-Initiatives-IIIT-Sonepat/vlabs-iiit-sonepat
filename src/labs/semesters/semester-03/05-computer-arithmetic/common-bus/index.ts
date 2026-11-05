@@ -12,7 +12,8 @@ import { procedureSteps } from "./04-procedure";
 export const commonBusExperiment: ExperimentDefinition = {
   id: "common-bus",
   title: "Common Bus System for 4 Registers",
-  description: "Build a 4-line common bus with four 4×1 multiplexers and select A, B, C, or D onto it with S1 and S0.",
+  description:
+    "Build a 4-line common bus with four 4×1 multiplexers and select A, B, C, or D onto it with S1 and S0.",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],
   procedureSteps,

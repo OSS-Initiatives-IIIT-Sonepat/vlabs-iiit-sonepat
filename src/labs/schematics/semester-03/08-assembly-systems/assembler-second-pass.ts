@@ -6,15 +6,63 @@ import { flow } from "../diagram";
  * highlight while the observation table records each assembled line.
  */
 const nodes = [
-  { id: "lc", kind: "block" as const, x: 230, y: 78, w: 200, h: 40, label: "LC ← 0" },
-  { id: "scan", kind: "block" as const, x: 230, y: 168, w: 200, h: 40, label: "Scan next line" },
+  {
+    id: "lc",
+    kind: "block" as const,
+    x: 230,
+    y: 78,
+    w: 200,
+    h: 40,
+    label: "LC ← 0",
+  },
+  {
+    id: "scan",
+    kind: "block" as const,
+    x: 230,
+    y: 168,
+    w: 200,
+    h: 40,
+    label: "Scan next line",
+  },
   { id: "pseudo", kind: "decision" as const, x: 230, y: 278, label: "Pseudo?" },
-  { id: "org", kind: "block" as const, x: 490, y: 278, w: 180, h: 40, label: "ORG sets LC, END stops" },
+  {
+    id: "org",
+    kind: "block" as const,
+    x: 490,
+    y: 278,
+    w: 180,
+    h: 40,
+    label: "ORG sets LC, END stops",
+  },
   { id: "mri", kind: "decision" as const, x: 230, y: 398, label: "MRI?" },
-  { id: "sym", kind: "block" as const, x: 490, y: 398, w: 190, h: 40, label: "Opcode and symbol table" },
+  {
+    id: "sym",
+    kind: "block" as const,
+    x: 490,
+    y: 398,
+    w: 190,
+    h: 40,
+    label: "Opcode and symbol table",
+  },
   { id: "valid", kind: "decision" as const, x: 230, y: 518, label: "Non-MRI?" },
-  { id: "conv", kind: "block" as const, x: 490, y: 518, w: 180, h: 40, label: "DEC or HEX, or error" },
-  { id: "store", kind: "block" as const, x: 230, y: 628, w: 220, h: 40, label: "Store at LC, then LC+1" },
+  {
+    id: "conv",
+    kind: "block" as const,
+    x: 490,
+    y: 518,
+    w: 180,
+    h: 40,
+    label: "DEC or HEX, or error",
+  },
+  {
+    id: "store",
+    kind: "block" as const,
+    x: 230,
+    y: 628,
+    w: 220,
+    h: 40,
+    label: "Store at LC, then LC+1",
+  },
 ];
 
 const links = [
@@ -28,7 +76,17 @@ const links = [
   { id: "a8", from: "valid", to: "store" },
 ];
 
-const pass = ["lc", "scan", "pseudo", "org", "mri", "sym", "valid", "conv", "store"];
+const pass = [
+  "lc",
+  "scan",
+  "pseudo",
+  "org",
+  "mri",
+  "sym",
+  "valid",
+  "conv",
+  "store",
+];
 const beforeMri = ["lc", "scan", "pseudo", "org", "mri", "sym"];
 
 export const assemblerSecondPassStepSchematics = flow(nodes, links, [
@@ -48,7 +106,9 @@ export const assemblerSecondPassStepSchematics = flow(nodes, links, [
     title: "ORG sets the location counter",
     show: ["lc", "scan", "pseudo", "org"],
     highlight: "org",
-    notes: ["ORG changes LC and writes nothing. END will stop the pass the same way."],
+    notes: [
+      "ORG changes LC and writes nothing. END will stop the pass the same way.",
+    ],
   },
   {
     title: "LDA, a memory read",
@@ -90,8 +150,11 @@ export const assemblerSecondPassStepSchematics = flow(nodes, links, [
     show: pass,
     highlight: "org",
     labels: { org: "END stops" },
-    notes: ["END is a pseudo-instruction. LC is not incremented and no word is stored."],
+    notes: [
+      "END is a pseudo-instruction. LC is not incremented and no word is stored.",
+    ],
   },
 ]);
 
-export const assemblerSecondPassTheoryDiagram = assemblerSecondPassStepSchematics[8];
+export const assemblerSecondPassTheoryDiagram =
+  assemblerSecondPassStepSchematics[8];

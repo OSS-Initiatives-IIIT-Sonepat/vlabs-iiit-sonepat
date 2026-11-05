@@ -12,17 +12,35 @@ const rows = [
 ];
 
 const copy = [
-  ["The two inputs", "The accumulator unit sees AC and, for the arithmetic and logic operations, DR. Here AC is 0101 and DR is 0011. Each following row starts again from 0101.", 1],
+  [
+    "The two inputs",
+    "The accumulator unit sees AC and, for the arithmetic and logic operations, DR. Here AC is 0101 and DR is 0011. Each following row starts again from 0101.",
+    1,
+  ],
   ["Add", "ADD is AC ← AC + DR. 0101 + 0011 = 1000.", 2],
-  ["Mask with AND", "AND is AC ← AC ∧ DR. 0101 ∧ 0011 = 0001. This is the logic operation inside the same unit.", 3],
-  ["Complement", "CMA ignores DR and flips every bit of AC. 0101 becomes 1010.", 4],
-  ["Shift", "A logical shift right brings in a 0. 0101 becomes 0010. CIR would rotate through the end-carry bit; this row is the plain shift.", 5],
+  [
+    "Mask with AND",
+    "AND is AC ← AC ∧ DR. 0101 ∧ 0011 = 0001. This is the logic operation inside the same unit.",
+    3,
+  ],
+  [
+    "Complement",
+    "CMA ignores DR and flips every bit of AC. 0101 becomes 1010.",
+    4,
+  ],
+  [
+    "Shift",
+    "A logical shift right brings in a 0. 0101 becomes 0010. CIR would rotate through the end-carry bit; this row is the plain shift.",
+    5,
+  ],
 ] as const;
 
-export const procedureSteps: SceneProcedureStep[] = copy.map(([label, body, count], i) => ({
-  label,
-  body,
-  show: [],
-  schematic: fig[i],
-  table: revealedTable(headers, rows, count),
-}));
+export const procedureSteps: SceneProcedureStep[] = copy.map(
+  ([label, body, count], i) => ({
+    label,
+    body,
+    show: [],
+    schematic: fig[i],
+    table: revealedTable(headers, rows, count),
+  }),
+);

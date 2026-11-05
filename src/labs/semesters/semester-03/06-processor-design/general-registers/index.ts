@@ -20,4 +20,6 @@ export const generalRegistersExperiment: ExperimentDefinition = {
 };
 
 export const GeneralRegistersCircuit = buildCircuit(generalRegistersExperiment);
-export const GeneralRegistersContent = buildLabContent(generalRegistersExperiment);
+export const GeneralRegistersContent = buildLabContent(
+  generalRegistersExperiment,
+);

@@ -2,11 +2,51 @@ import { flow } from "../diagram";
 
 /** Three-state bus plus a memory read and a memory write. */
 const nodes = [
-  { id: "ar", kind: "block" as const, x: 220, y: 78, w: 200, h: 40, label: "AR holds 5" },
-  { id: "buf", kind: "block" as const, x: 220, y: 178, w: 220, h: 40, label: "Three-state buffer" },
-  { id: "bus", kind: "block" as const, x: 220, y: 278, w: 200, h: 40, label: "Common bus" },
-  { id: "mem", kind: "block" as const, x: 500, y: 278, w: 160, h: 40, label: "M[5]" },
-  { id: "dr", kind: "block" as const, x: 220, y: 388, w: 200, h: 40, label: "DR" },
+  {
+    id: "ar",
+    kind: "block" as const,
+    x: 220,
+    y: 78,
+    w: 200,
+    h: 40,
+    label: "AR holds 5",
+  },
+  {
+    id: "buf",
+    kind: "block" as const,
+    x: 220,
+    y: 178,
+    w: 220,
+    h: 40,
+    label: "Three-state buffer",
+  },
+  {
+    id: "bus",
+    kind: "block" as const,
+    x: 220,
+    y: 278,
+    w: 200,
+    h: 40,
+    label: "Common bus",
+  },
+  {
+    id: "mem",
+    kind: "block" as const,
+    x: 500,
+    y: 278,
+    w: 160,
+    h: 40,
+    label: "M[5]",
+  },
+  {
+    id: "dr",
+    kind: "block" as const,
+    x: 220,
+    y: 388,
+    w: 200,
+    h: 40,
+    label: "DR",
+  },
 ];
 
 const links = [
@@ -30,7 +70,9 @@ export const busAndMemoryStepSchematics = flow(nodes, links, [
     show: ["ar", "buf", "bus"],
     highlight: "buf",
     labels: { buf: "E = 1, R1 drives" },
-    notes: ["R1 holds 1010. Its three-state buffer is the only driver enabled."],
+    notes: [
+      "R1 holds 1010. Its three-state buffer is the only driver enabled.",
+    ],
   },
   {
     title: "Memory read",

@@ -14,20 +14,27 @@ export const boothMultiplierStepSchematics = frames([
       ...stub("m", "M", 110, 140),
       ...stub("sub", "SUB", 150, 140),
     ],
-    notes: ["SUB = 0 adds the multiplicand bit", "SUB = 1 inverts it and adds 1"],
+    notes: [
+      "SUB = 0 adds the multiplicand bit",
+      "SUB = 1 inverts it and adds 1",
+    ],
   },
   {
     title: "XOR inverts M when SUB is 1",
-    elements: [...pair(true), ...stub("m", "M", 115, 60, true), ...stub("s", "SUB", 155, 60, true)],
+    elements: [
+      ...pair(true),
+      ...stub("m", "M", 115, 60, true),
+      ...stub("s", "SUB", 155, 60, true),
+    ],
     notes: ["XOR output is the adder's A1", "Cin is SUB, which is the +1"],
   },
   {
     title: "Accumulator bit is B1",
-    elements: [
-      ...pair(),
-      ...stub("acc", "ACC", 120, 230, true),
+    elements: [...pair(), ...stub("acc", "ACC", 120, 230, true)],
+    notes: [
+      "Higher adder inputs stay 0",
+      "S2 is the carry out of this one bit",
     ],
-    notes: ["Higher adder inputs stay 0", "S2 is the carry out of this one bit"],
   },
   {
     title: "LEDs: result bit and its carry",
@@ -36,7 +43,10 @@ export const boothMultiplierStepSchematics = frames([
       ...ledChain("s1", 240, 110, "S1", true),
       ...ledChain("s2", 240, 165, "S2", true),
     ],
-    notes: ["Green S1 is the new accumulator bit", "Yellow S2 is the carry into the next bit"],
+    notes: [
+      "Green S1 is the new accumulator bit",
+      "Yellow S2 is the carry into the next bit",
+    ],
   },
   {
     title: "Add: M=1, ACC=1, SUB=0",

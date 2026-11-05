@@ -12,12 +12,17 @@ import { procedureSteps } from "./04-procedure";
 export const computerRegistersExperiment: ExperimentDefinition = {
   id: "computer-registers",
   title: "Computer Registers",
-  description: "Name each register of the basic computer, then move AC onto DR and DR onto AC across the common bus.",
+  description:
+    "Name each register of the basic computer, then move AC onto DR and DR onto AC across the common bus.",
   labType: "text",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],
   procedureSteps,
 };
 
-export const ComputerRegistersCircuit = buildCircuit(computerRegistersExperiment);
-export const ComputerRegistersContent = buildLabContent(computerRegistersExperiment);
+export const ComputerRegistersCircuit = buildCircuit(
+  computerRegistersExperiment,
+);
+export const ComputerRegistersContent = buildLabContent(
+  computerRegistersExperiment,
+);

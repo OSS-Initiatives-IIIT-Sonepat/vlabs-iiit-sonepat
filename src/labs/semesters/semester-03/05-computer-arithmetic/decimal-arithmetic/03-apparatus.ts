@@ -7,6 +7,10 @@ export const apparatus: ApparatusSection = {
   items: [
     { name: "Digit A", specification: "BCD 1001, the value 9", quantity: "1" },
     { name: "Digit B", specification: "BCD 0111, the value 7", quantity: "1" },
-    { name: "Correction", specification: "0110, added when K = 1", quantity: "1" },
+    {
+      name: "Correction",
+      specification: "0110, added when K = 1",
+      quantity: "1",
+    },
   ],
 };

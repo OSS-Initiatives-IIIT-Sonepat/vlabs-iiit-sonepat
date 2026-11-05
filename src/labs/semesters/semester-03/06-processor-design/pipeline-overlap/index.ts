@@ -12,7 +12,8 @@ import { procedureSteps } from "./04-procedure";
 export const pipelineOverlapExperiment: ExperimentDefinition = {
   id: "pipeline-overlap",
   title: "Pipelining",
-  description: "Overlap instructions in a four-segment pipeline. Speedup approaches 4.",
+  description:
+    "Overlap instructions in a four-segment pipeline. Speedup approaches 4.",
   labType: "text",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],
@@ -20,4 +21,6 @@ export const pipelineOverlapExperiment: ExperimentDefinition = {
 };
 
 export const PipelineOverlapCircuit = buildCircuit(pipelineOverlapExperiment);
-export const PipelineOverlapContent = buildLabContent(pipelineOverlapExperiment);
+export const PipelineOverlapContent = buildLabContent(
+  pipelineOverlapExperiment,
+);

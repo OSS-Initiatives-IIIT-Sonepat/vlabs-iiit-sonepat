@@ -5,7 +5,7 @@ export const observations: ObservationSection = {
   type: "observation",
   title: "Observations",
   paragraphs: [
-  "After the clock, select 0 lights the lamp and select 1 puts it out.",
-  "The stack diagram shows the pushed word at SP and the next word at SP+1."
-],
+    "After the clock, select 0 lights the lamp and select 1 puts it out.",
+    "The stack diagram shows the pushed word at SP and the next word at SP+1.",
+  ],
 };

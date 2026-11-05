@@ -3,7 +3,16 @@ import { bcdAdderStepSchematics as fig } from "@/labs/schematics/semester-03/05-
 
 import { stages } from "../components";
 
-const nine = { a4: 1, a3: 0, a2: 0, a1: 1, b4: 0, b3: 1, b2: 0, b1: 1 } as const;
+const nine = {
+  a4: 1,
+  a3: 0,
+  a2: 0,
+  a1: 1,
+  b4: 0,
+  b3: 1,
+  b2: 0,
+  b1: 1,
+} as const;
 const placed = [...stages.power, ...stages.add1];
 const withAnd = [...placed, ...stages.and];
 const withOr = [...withAnd, ...stages.or];

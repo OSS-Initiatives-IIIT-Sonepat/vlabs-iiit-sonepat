@@ -5,13 +5,61 @@ import { flow } from "../diagram";
  * then a skip loop waits for input.
  */
 const nodes = [
-  { id: "bsa", kind: "block" as const, x: 230, y: 78, w: 220, h: 40, label: "BSA SUB" },
-  { id: "save", kind: "block" as const, x: 230, y: 178, w: 240, h: 40, label: "M[SUB] ← return" },
-  { id: "body", kind: "block" as const, x: 230, y: 278, w: 200, h: 40, label: "CMA" },
-  { id: "ret", kind: "block" as const, x: 230, y: 378, w: 220, h: 40, label: "BUN I SUB" },
+  {
+    id: "bsa",
+    kind: "block" as const,
+    x: 230,
+    y: 78,
+    w: 220,
+    h: 40,
+    label: "BSA SUB",
+  },
+  {
+    id: "save",
+    kind: "block" as const,
+    x: 230,
+    y: 178,
+    w: 240,
+    h: 40,
+    label: "M[SUB] ← return",
+  },
+  {
+    id: "body",
+    kind: "block" as const,
+    x: 230,
+    y: 278,
+    w: 200,
+    h: 40,
+    label: "CMA",
+  },
+  {
+    id: "ret",
+    kind: "block" as const,
+    x: 230,
+    y: 378,
+    w: 220,
+    h: 40,
+    label: "BUN I SUB",
+  },
   { id: "ski", kind: "decision" as const, x: 230, y: 488, label: "FGI = 1?" },
-  { id: "wait", kind: "block" as const, x: 500, y: 488, w: 150, h: 40, label: "BUN SKI" },
-  { id: "inp", kind: "block" as const, x: 230, y: 608, w: 200, h: 40, label: "INP then STA X" },
+  {
+    id: "wait",
+    kind: "block" as const,
+    x: 500,
+    y: 488,
+    w: 150,
+    h: 40,
+    label: "BUN SKI",
+  },
+  {
+    id: "inp",
+    kind: "block" as const,
+    x: 230,
+    y: 608,
+    w: 200,
+    h: 40,
+    label: "INP then STA X",
+  },
 ];
 
 const links = [
@@ -36,7 +84,9 @@ export const subroutineAndIoStepSchematics = flow(nodes, links, [
     title: "The return address is saved",
     show: ["bsa", "save"],
     highlight: "save",
-    notes: ["M[108] ← 101, then PC ← 109. The word after the call is the return point."],
+    notes: [
+      "M[108] ← 101, then PC ← 109. The word after the call is the return point.",
+    ],
   },
   {
     title: "The subroutine body",
@@ -60,7 +110,9 @@ export const subroutineAndIoStepSchematics = flow(nodes, links, [
     title: "Read and store",
     show: [...call, "ski", "wait", "inp"],
     highlight: "inp",
-    notes: ["FGI is 1. SKI skips the branch. INP puts 0101 in AC, and STA writes it."],
+    notes: [
+      "FGI is 1. SKI skips the branch. INP puts 0101 in AC, and STA writes it.",
+    ],
   },
 ]);
 

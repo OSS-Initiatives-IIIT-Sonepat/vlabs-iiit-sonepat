@@ -19,5 +19,9 @@ export const arithmeticLogicShiftExperiment: ExperimentDefinition = {
   procedureSteps,
 };
 
-export const ArithmeticLogicShiftCircuit = buildCircuit(arithmeticLogicShiftExperiment);
-export const ArithmeticLogicShiftContent = buildLabContent(arithmeticLogicShiftExperiment);
+export const ArithmeticLogicShiftCircuit = buildCircuit(
+  arithmeticLogicShiftExperiment,
+);
+export const ArithmeticLogicShiftContent = buildLabContent(
+  arithmeticLogicShiftExperiment,
+);

@@ -12,7 +12,8 @@ import { procedureSteps } from "./04-procedure";
 export const subroutineAndIoExperiment: ExperimentDefinition = {
   id: "subroutine-and-io",
   title: "Subroutines and I/O",
-  description: "Call a subroutine with BSA, return, then wait on SKI and read INP.",
+  description:
+    "Call a subroutine with BSA, return, then wait on SKI and read INP.",
   labType: "text",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],
@@ -20,4 +21,6 @@ export const subroutineAndIoExperiment: ExperimentDefinition = {
 };
 
 export const SubroutineAndIoCircuit = buildCircuit(subroutineAndIoExperiment);
-export const SubroutineAndIoContent = buildLabContent(subroutineAndIoExperiment);
+export const SubroutineAndIoContent = buildLabContent(
+  subroutineAndIoExperiment,
+);

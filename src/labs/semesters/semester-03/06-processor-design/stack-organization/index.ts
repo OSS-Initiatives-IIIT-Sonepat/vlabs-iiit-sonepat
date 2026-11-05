@@ -12,12 +12,17 @@ import { procedureSteps } from "./04-procedure";
 export const stackOrganizationExperiment: ExperimentDefinition = {
   id: "stack-organization",
   title: "Stack Organization",
-  description: "Push on a 64-word register stack (SP + 1) and on a memory stack (SP − 1).",
+  description:
+    "Push on a 64-word register stack (SP + 1) and on a memory stack (SP − 1).",
   labType: "text",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],
   procedureSteps,
 };
 
-export const StackOrganizationCircuit = buildCircuit(stackOrganizationExperiment);
-export const StackOrganizationContent = buildLabContent(stackOrganizationExperiment);
+export const StackOrganizationCircuit = buildCircuit(
+  stackOrganizationExperiment,
+);
+export const StackOrganizationContent = buildLabContent(
+  stackOrganizationExperiment,
+);

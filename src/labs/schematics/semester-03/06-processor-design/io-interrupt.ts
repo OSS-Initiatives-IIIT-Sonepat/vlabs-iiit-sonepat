@@ -17,18 +17,55 @@ function pin(b: Box, s: Side): [number, number] {
 }
 
 function gbox(b: Box, text: string, hot = false): SchematicElement {
-  return { type: "block", id: b.id, x: b.x, y: b.y, w: b.w, h: b.h, label: text, highlight: hot, fill: GRAY, ink: INK };
+  return {
+    type: "block",
+    id: b.id,
+    x: b.x,
+    y: b.y,
+    w: b.w,
+    h: b.h,
+    label: text,
+    highlight: hot,
+    fill: GRAY,
+    ink: INK,
+  };
 }
 
 function dia(b: Box, text: string, hot = false): SchematicElement {
-  return { type: "decision", id: b.id, x: b.x, y: b.y, w: b.w, h: b.h, label: text, highlight: hot };
+  return {
+    type: "decision",
+    id: b.id,
+    x: b.x,
+    y: b.y,
+    w: b.w,
+    h: b.h,
+    label: text,
+    highlight: hot,
+  };
 }
 
-function arr(id: string, pts: [number, number][], color?: string, both = false): SchematicElement {
-  return { type: "arrow", id, points: pts.map(([x, y]) => ({ x, y })), color, double: both || undefined };
+function arr(
+  id: string,
+  pts: [number, number][],
+  color?: string,
+  both = false,
+): SchematicElement {
+  return {
+    type: "arrow",
+    id,
+    points: pts.map(([x, y]) => ({ x, y })),
+    color,
+    double: both || undefined,
+  };
 }
 
-function tag(id: string, x: number, y: number, text: string, color?: string): SchematicElement {
+function tag(
+  id: string,
+  x: number,
+  y: number,
+  text: string,
+  color?: string,
+): SchematicElement {
   return { type: "label", id, x, y, text, color };
 }
 
@@ -52,8 +89,10 @@ function ioSystem(show: string[], hot: string[]): SchematicElement[] {
     if (on(b.id)) els.push(gbox(b, text, hi(b.id)));
   };
   if (on("printer")) els.push(tag("h_term", 180, 58, "Input-Output terminal"));
-  if (on("recv")) els.push(tag("h_ser", 430, 58, "Serial communication interface"));
-  if (on("outr")) els.push(tag("h_reg", 700, 58, "Computer registers and flip-flop"));
+  if (on("recv"))
+    els.push(tag("h_ser", 430, 58, "Serial communication interface"));
+  if (on("outr"))
+    els.push(tag("h_reg", 700, 58, "Computer registers and flip-flop"));
 
   put(printer, "Printer");
   put(recv, "Receiver\nInterface");
@@ -74,7 +113,8 @@ function ioSystem(show: string[], hot: string[]): SchematicElement[] {
   }
 
   const link = (id: string, a: Box, b: Box) => {
-    if (on(a.id) && on(b.id)) els.push(arr(id, [pin(a, "r"), pin(b, "l")], RED, true));
+    if (on(a.id) && on(b.id))
+      els.push(arr(id, [pin(a, "r"), pin(b, "l")], RED, true));
   };
   link("w_pr", printer, recv);
   link("w_ro", recv, outr);
@@ -84,8 +124,12 @@ function ioSystem(show: string[], hot: string[]): SchematicElement[] {
   if (on("outr") && on("ac") && on("inpr")) {
     const rail = RAIL;
     const ay = ac.y;
-    els.push(arr("w_outr_ac", [pin(outr, "r"), [rail, outr.y], [rail, ay]], RED));
-    els.push(arr("w_inpr_ac", [pin(inpr, "r"), [rail, inpr.y], [rail, ay]], RED));
+    els.push(
+      arr("w_outr_ac", [pin(outr, "r"), [rail, outr.y], [rail, ay]], RED),
+    );
+    els.push(
+      arr("w_inpr_ac", [pin(inpr, "r"), [rail, inpr.y], [rail, ay]], RED),
+    );
     els.push(arr("w_ac", [[rail, ay], pin(ac, "r")], RED));
     els.push({ type: "junction", id: "j_ac", x: rail, y: ay, color: RED });
   }
@@ -135,7 +179,12 @@ function interruptFlow(full: boolean, hot: string[]): SchematicElement[] {
 
   els.push(
     arr("w_fetch", [pin(rdec, "l"), [fetch.x, rdec.y], pin(fetch, "t")]),
-    tag("lbl_cyc", (pin(rdec, "l")[0] + fetch.x) / 2, rdec.y - 16, "Instruction cycle = 0"),
+    tag(
+      "lbl_cyc",
+      (pin(rdec, "l")[0] + fetch.x) / 2,
+      rdec.y - 16,
+      "Instruction cycle = 0",
+    ),
     arr("w_exec", [pin(fetch, "b"), pin(exec, "t")]),
     arr("w_ien", [pin(exec, "b"), pin(ien, "t")]),
     arr("w_ien0", [pin(ien, "r"), [400, ien.y], [400, FY1]]),
@@ -150,16 +199,29 @@ function interruptFlow(full: boolean, hot: string[]): SchematicElement[] {
     tag("lbl_fgo1", (pin(fgoD, "l")[0] + rset.x) / 2, fgoD.y - 14, "= 1"),
     arr("w_fgo0", [pin(fgoD, "b"), [fgoD.x, FY1]]),
     tag("lbl_fgo0", fgoD.x + 28, pin(fgoD, "b")[1] + 18, "= 0"),
-    arr("w_rset", [pin(rset, "l"), [pin(rset, "l")[0] - 8, rset.y], [pin(rset, "l")[0] - 8, FY1]]),
+    arr("w_rset", [
+      pin(rset, "l"),
+      [pin(rset, "l")[0] - 8, rset.y],
+      [pin(rset, "l")[0] - 8, FY1],
+    ]),
   );
 
   if (full) {
     els.push(
-      gbox(store, "Store return address\nin location 0\nM[0] ← PC", hi("store")),
+      gbox(
+        store,
+        "Store return address\nin location 0\nM[0] ← PC",
+        hi("store"),
+      ),
       gbox(branch, "Branch to location 1\nPC ← 1", hi("branch")),
       gbox(clear, "IEN ← 0\nR ← 0", hi("clear")),
       arr("w_store", [pin(rdec, "r"), [store.x, rdec.y], pin(store, "t")]),
-      tag("lbl_int", (pin(rdec, "r")[0] + store.x) / 2, rdec.y - 16, "= 1 Interrupt cycle"),
+      tag(
+        "lbl_int",
+        (pin(rdec, "r")[0] + store.x) / 2,
+        rdec.y - 16,
+        "= 1 Interrupt cycle",
+      ),
       arr("w_branch", [pin(store, "b"), pin(branch, "t")]),
       arr("w_clear", [pin(branch, "b"), pin(clear, "t")]),
       arr("w_clear_b", [pin(clear, "b"), [clear.x, FY1]]),
@@ -172,16 +234,36 @@ const CW = 64;
 const CH = 32;
 const SPAN = CW * 3;
 
-function triple(id: string, cx: number, y: number, texts: [string, string, string]) {
+function triple(
+  id: string,
+  cx: number,
+  y: number,
+  texts: [string, string, string],
+) {
   const left = cx - SPAN / 2;
-  return texts.map((text, i) => block(`${id}_${i}`, left + CW / 2 + i * CW, y, CW, CH, text));
+  return texts.map((text, i) =>
+    block(`${id}_${i}`, left + CW / 2 + i * CW, y, CW, CH, text),
+  );
 }
 
-function wide(id: string, cx: number, y: number, h: number, text: string, hot = false) {
+function wide(
+  id: string,
+  cx: number,
+  y: number,
+  h: number,
+  text: string,
+  hot = false,
+) {
   return block(id, cx, y, SPAN, h, text, hot);
 }
 
-function beside(id: string, cx: number, y: number, text: string, color?: string): SchematicElement {
+function beside(
+  id: string,
+  cx: number,
+  y: number,
+  text: string,
+  color?: string,
+): SchematicElement {
   const half = (text.length * 9 * 0.56) / 2;
   return tag(id, cx - SPAN / 2 - half - 12, y, text, color);
 }
@@ -201,7 +283,14 @@ function demo(after: boolean): SchematicElement[] {
 
   const column = (cx: number, side: "before" | "after") => {
     els.push(
-      wide(`${side}_z`, cx, row0, CH, side === "after" ? "256" : "", side === "after"),
+      wide(
+        `${side}_z`,
+        cx,
+        row0,
+        CH,
+        side === "after" ? "256" : "",
+        side === "after",
+      ),
       ...triple(`${side}_b`, cx, row1, ["0", "BUN", "1120"]),
       wide(`${side}_main`, cx, mainY, mainH, "Main Program"),
       wide(`${side}_io`, cx, ioY, ioH, "I/O program"),
@@ -262,10 +351,17 @@ function transfers(): SchematicElement[] {
     "RT1:  M[AR] ← TR, PC ← 0",
     "RT2:  PC ← PC + 1, IEN ← 0, R ← 0, SC ← 0",
   ];
-  return lines.map((text, i) => block(`rt${i}`, 550, 140 + i * 64, 560, 46, text, true));
+  return lines.map((text, i) =>
+    block(`rt${i}`, 550, 140 + i * 64, 560, 46, text, true),
+  );
 }
 
-const steps: { title: string; height: number; notes: string[]; elements: SchematicElement[] }[] = [
+const steps: {
+  title: string;
+  height: number;
+  notes: string[];
+  elements: SchematicElement[];
+}[] = [
   {
     title: "The input-output terminal",
     height: 520,
@@ -281,37 +377,58 @@ const steps: { title: string; height: number; notes: string[]; elements: Schemat
   {
     title: "INPR, OUTR, and the flags",
     height: 580,
-    notes: ["INPR and OUTR talk to the interfaces serially and to AC in parallel."],
-    elements: ioSystem(["printer", "keyb", "recv", "tx", "outr", "inpr", "ac", "fgo", "fgi"], []),
+    notes: [
+      "INPR and OUTR talk to the interfaces serially and to AC in parallel.",
+    ],
+    elements: ioSystem(
+      ["printer", "keyb", "recv", "tx", "outr", "inpr", "ac", "fgo", "fgi"],
+      [],
+    ),
   },
   {
     title: "Input transfer",
     height: 580,
-    notes: ["A key sets FGI. The computer copies INPR into AC and clears the flag."],
-    elements: ioSystem(["printer", "keyb", "recv", "tx", "outr", "inpr", "ac", "fgo", "fgi"], ["keyb", "tx", "inpr", "fgi"]),
+    notes: [
+      "A key sets FGI. The computer copies INPR into AC and clears the flag.",
+    ],
+    elements: ioSystem(
+      ["printer", "keyb", "recv", "tx", "outr", "inpr", "ac", "fgo", "fgi"],
+      ["keyb", "tx", "inpr", "fgi"],
+    ),
   },
   {
     title: "Output transfer",
     height: 580,
-    notes: ["FGO starts at 1. The printer sets it again when the character is done."],
-    elements: ioSystem(["printer", "keyb", "recv", "tx", "outr", "inpr", "ac", "fgo", "fgi"], ["printer", "recv", "outr", "fgo", "ac"]),
+    notes: [
+      "FGO starts at 1. The printer sets it again when the character is done.",
+    ],
+    elements: ioSystem(
+      ["printer", "keyb", "recv", "tx", "outr", "inpr", "ac", "fgo", "fgi"],
+      ["printer", "recv", "outr", "fgo", "ac"],
+    ),
   },
   {
     title: "Input-output instructions",
     height: 460,
-    notes: ["All six share D7 I T3 = p. One bit of IR(6-11) picks the operation."],
+    notes: [
+      "All six share D7 I T3 = p. One bit of IR(6-11) picks the operation.",
+    ],
     elements: instructions(),
   },
   {
     title: "R = 0: another instruction cycle",
     height: 760,
-    notes: ["IEN, FGI, and FGO are tested at the end of execute. Either flag sets R."],
+    notes: [
+      "IEN, FGI, and FGO are tested at the end of execute. Either flag sets R.",
+    ],
     elements: interruptFlow(false, ["rdec", "fetch", "exec"]),
   },
   {
     title: "R = 1: the interrupt cycle",
     height: 760,
-    notes: ["The return address is saved at 0, and the next fetch is taken from 1."],
+    notes: [
+      "The return address is saved at 0, and the next fetch is taken from 1.",
+    ],
     elements: interruptFlow(true, ["store", "branch", "clear"]),
   },
   {
@@ -329,7 +446,9 @@ const steps: { title: string; height: number; notes: string[]; elements: Schemat
   {
     title: "Memory after the interrupt",
     height: 560,
-    notes: ["Location 0 holds 256. The I/O program returns with indirect BUN 0."],
+    notes: [
+      "Location 0 holds 256. The I/O program returns with indirect BUN 0.",
+    ],
     elements: demo(true),
   },
 ];

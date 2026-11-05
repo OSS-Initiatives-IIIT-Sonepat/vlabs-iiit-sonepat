@@ -5,7 +5,15 @@ export const apparatus: ApparatusSection = {
   type: "apparatus",
   title: "Apparatus Required",
   items: [
-    { name: "Uniprocessor", specification: "One program, one data path", quantity: "1" },
-    { name: "Array", specification: "One program, many data paths", quantity: "1" },
+    {
+      name: "Uniprocessor",
+      specification: "One program, one data path",
+      quantity: "1",
+    },
+    {
+      name: "Array",
+      specification: "One program, many data paths",
+      quantity: "1",
+    },
   ],
 };

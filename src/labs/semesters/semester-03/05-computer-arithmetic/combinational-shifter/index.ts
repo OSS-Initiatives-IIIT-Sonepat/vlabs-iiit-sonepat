@@ -19,5 +19,9 @@ export const combinationalShifterExperiment: ExperimentDefinition = {
   procedureSteps,
 };
 
-export const CombinationalShifterCircuit = buildCircuit(combinationalShifterExperiment);
-export const CombinationalShifterContent = buildLabContent(combinationalShifterExperiment);
+export const CombinationalShifterCircuit = buildCircuit(
+  combinationalShifterExperiment,
+);
+export const CombinationalShifterContent = buildLabContent(
+  combinationalShifterExperiment,
+);

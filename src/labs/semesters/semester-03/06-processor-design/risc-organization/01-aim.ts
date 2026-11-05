@@ -4,5 +4,7 @@ export const aim: TheorySection = {
   id: "aim",
   type: "text",
   title: "Aim",
-  paragraphs: ["To separate memory access from arithmetic in a load/store machine."],
+  paragraphs: [
+    "To separate memory access from arithmetic in a load/store machine.",
+  ],
 };

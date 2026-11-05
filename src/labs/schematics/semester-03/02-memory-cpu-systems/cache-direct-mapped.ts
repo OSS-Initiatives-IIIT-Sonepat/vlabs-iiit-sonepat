@@ -58,7 +58,10 @@ export const cacheDirectStepSchematics = frames([
       ...icBox("tag", 250, 80, 140, 90, "tag still 1"),
       ...ledChain("hit", 390, 125, "miss"),
     ],
-    notes: ["The tag matches and the line does not", "Direct mapping allows that block in only one line"],
+    notes: [
+      "The tag matches and the line does not",
+      "Direct mapping allows that block in only one line",
+    ],
   },
 ]);
 

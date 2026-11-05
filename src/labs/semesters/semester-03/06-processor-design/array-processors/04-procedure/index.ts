@@ -9,14 +9,24 @@ const rows = [
 ];
 
 const copy = [
-  ["Attached processor", "An attached array processor sits beside a general-purpose computer. It has its own local memory and a high-speed bus.", 1],
-  ["SIMD array", "A SIMD array has a master control unit and processing elements PE1 through PEn. Each element has its own local memory Mi, and one instruction drives them all.", 2],
+  [
+    "Attached processor",
+    "An attached array processor sits beside a general-purpose computer. It has its own local memory and a high-speed bus.",
+    1,
+  ],
+  [
+    "SIMD array",
+    "A SIMD array has a master control unit and processing elements PE1 through PEn. Each element has its own local memory Mi, and one instruction drives them all.",
+    2,
+  ],
 ] as const;
 
-export const procedureSteps: SceneProcedureStep[] = copy.map(([label, body, count], i) => ({
-  label,
-  body,
-  show: [],
-  schematic: fig[i],
-  table: revealedTable(headers, rows, count),
-}));
+export const procedureSteps: SceneProcedureStep[] = copy.map(
+  ([label, body, count], i) => ({
+    label,
+    body,
+    show: [],
+    schematic: fig[i],
+    table: revealedTable(headers, rows, count),
+  }),
+);

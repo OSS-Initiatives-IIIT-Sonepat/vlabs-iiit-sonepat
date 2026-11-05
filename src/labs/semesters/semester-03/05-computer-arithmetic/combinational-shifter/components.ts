@@ -1,5 +1,13 @@
 import { type ComponentInstance } from "@/labs/types";
-import { chip, input, lamp, link, power, powers, rail } from "../../_coa/breadboard";
+import {
+  chip,
+  input,
+  lamp,
+  link,
+  power,
+  powers,
+  rail,
+} from "../../_coa/breadboard";
 
 // The word is written left to right, so index 0 is the left bit.
 // A0 A1 A2 A3 = 1 1 0 1. S = 0 shifts right (down the drawing), S = 1 shifts left.

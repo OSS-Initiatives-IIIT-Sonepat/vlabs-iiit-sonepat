@@ -12,7 +12,8 @@ import { procedureSteps } from "./04-procedure";
 export const arrayProcessorsExperiment: ExperimentDefinition = {
   id: "array-processors",
   title: "Array Processors",
-  description: "Compare an attached array processor with a SIMD array of PE and local memory.",
+  description:
+    "Compare an attached array processor with a SIMD array of PE and local memory.",
   labType: "text",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],
@@ -20,4 +21,6 @@ export const arrayProcessorsExperiment: ExperimentDefinition = {
 };
 
 export const ArrayProcessorsCircuit = buildCircuit(arrayProcessorsExperiment);
-export const ArrayProcessorsContent = buildLabContent(arrayProcessorsExperiment);
+export const ArrayProcessorsContent = buildLabContent(
+  arrayProcessorsExperiment,
+);

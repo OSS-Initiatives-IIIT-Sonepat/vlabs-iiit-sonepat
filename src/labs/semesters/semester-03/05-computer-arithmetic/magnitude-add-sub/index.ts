@@ -12,7 +12,8 @@ import { procedureSteps } from "./04-procedure";
 export const magnitudeAddSubExperiment: ExperimentDefinition = {
   id: "magnitude-add-sub",
   title: "Addition and Subtraction",
-  description: "Follow the signed-magnitude flowchart for +5 minus +7, then the overflow case of addition.",
+  description:
+    "Follow the signed-magnitude flowchart for +5 minus +7, then the overflow case of addition.",
   labType: "text",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],
@@ -20,4 +21,6 @@ export const magnitudeAddSubExperiment: ExperimentDefinition = {
 };
 
 export const MagnitudeAddSubCircuit = buildCircuit(magnitudeAddSubExperiment);
-export const MagnitudeAddSubContent = buildLabContent(magnitudeAddSubExperiment);
+export const MagnitudeAddSubContent = buildLabContent(
+  magnitudeAddSubExperiment,
+);

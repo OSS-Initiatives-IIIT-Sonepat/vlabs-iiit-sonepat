@@ -13,12 +13,18 @@ export const claAdderStepSchematics = frames([
       ...stub("p", "P = A⊕B", 140, L),
       ...stub("c", "Cin = 0", 180, L),
     ],
-    notes: ["Every carry is a function of G, P, and Cin", "No carry waits for the previous sum"],
+    notes: [
+      "Every carry is a function of G, P, and Cin",
+      "No carry waits for the previous sum",
+    ],
   },
   {
     title: "One 74HC283 computes all four carries",
     elements: [...box(true)],
-    notes: ["Generate and propagate are inside the chip", "C4 does not walk through four stages"],
+    notes: [
+      "Generate and propagate are inside the chip",
+      "C4 does not walk through four stages",
+    ],
   },
   {
     title: "Wire A[4:1], B[4:1], and Cin = 0",

@@ -18,7 +18,17 @@ export const procedureSteps: SceneProcedureStep[] = [
   {
     label: "Tie the stored tag to 10",
     body: "Place both XOR gates. The stored bit S0 is ground, so it is 0. S1 is +5 V, so it is 1. The incoming tag bits T0 and T1 are the jumpers you will change. Nothing on this board cares which 'row' you meant. The compare is the whole check.",
-    show: [...stages.power, "xor0", "xor1", "w_vcc_xor0", "w_gnd_xor0", "w_vcc_xor1", "w_gnd_xor1", "w_s0_gnd", "w_s1_vcc"],
+    show: [
+      ...stages.power,
+      "xor0",
+      "xor1",
+      "w_vcc_xor0",
+      "w_gnd_xor0",
+      "w_vcc_xor1",
+      "w_gnd_xor1",
+      "w_s0_gnd",
+      "w_s1_vcc",
+    ],
     highlight: "xor0",
     schematic: fig[1],
   },

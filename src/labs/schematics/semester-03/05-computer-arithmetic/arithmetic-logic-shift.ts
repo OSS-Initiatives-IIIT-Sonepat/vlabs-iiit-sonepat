@@ -63,48 +63,181 @@ function stage(hot: string[]): SchematicElement[] {
     label("lbl_3", mx + 16, 340, "3"),
 
     beside("lbl_s3", x0, 42, "S3", "left"),
-    wire("w_s3", [[x0, 42], [880, 42], [880, my]], on("w_s3")),
+    wire(
+      "w_s3",
+      [
+        [x0, 42],
+        [880, 42],
+        [880, my],
+      ],
+      on("w_s3"),
+    ),
     beside("lbl_s2", x0, 60, "S2", "left"),
-    wire("w_s2", [[x0, 60], [840, 60], [840, my]], on("w_s2")),
+    wire(
+      "w_s2",
+      [
+        [x0, 60],
+        [840, 60],
+        [840, my],
+      ],
+      on("w_s2"),
+    ),
 
     beside("lbl_s1", x0, s1Y, "S1", "left"),
-    wire("w_s1", [[x0, s1Y], [vR, s1Y], [vR, l1], [ax, l1]], arith),
-    wire("w_s1tap", [[vR, a1], [ax, a1]], arith),
+    wire(
+      "w_s1",
+      [
+        [x0, s1Y],
+        [vR, s1Y],
+        [vR, l1],
+        [ax, l1],
+      ],
+      arith,
+    ),
+    wire(
+      "w_s1tap",
+      [
+        [vR, a1],
+        [ax, a1],
+      ],
+      arith,
+    ),
     { type: "junction", id: "j_s1", x: vR, y: a1 },
 
     beside("lbl_s0", x0, s0Y, "S0", "left"),
-    wire("w_s0", [[x0, s0Y], [vM, s0Y], [vM, aiY]], arith || on("w_ai")),
-    wire("w_s0tap", [[vM, a2], [ax, a2]], arith),
-    wire("w_s0log", [[vM, l2], [ax, l2]], logic),
+    wire(
+      "w_s0",
+      [
+        [x0, s0Y],
+        [vM, s0Y],
+        [vM, aiY],
+      ],
+      arith || on("w_ai"),
+    ),
+    wire(
+      "w_s0tap",
+      [
+        [vM, a2],
+        [ax, a2],
+      ],
+      arith,
+    ),
+    wire(
+      "w_s0log",
+      [
+        [vM, l2],
+        [ax, l2],
+      ],
+      logic,
+    ),
     { type: "junction", id: "j_s0", x: vM, y: a2 },
     { type: "junction", id: "j_s0l", x: vM, y: l2 },
     { type: "junction", id: "j_ai", x: vM, y: aiY },
 
-    wire("w_alo", [[ax, a3], [vL, a3], [vL, biY]], arith),
+    wire(
+      "w_alo",
+      [
+        [ax, a3],
+        [vL, a3],
+        [vL, biY],
+      ],
+      arith,
+    ),
     { type: "junction", id: "j_bi", x: vL, y: biY },
     beside("lbl_bi", x0, biY, "Bi", "left"),
-    wire("w_bi", [[x0, biY], [ax, biY]], logic),
+    wire(
+      "w_bi",
+      [
+        [x0, biY],
+        [ax, biY],
+      ],
+      logic,
+    ),
     beside("lbl_ai", x0, aiY, "Ai", "left"),
-    wire("w_ai", [[x0, aiY], [ax, aiY]], logic),
+    wire(
+      "w_ai",
+      [
+        [x0, aiY],
+        [ax, aiY],
+      ],
+      logic,
+    ),
 
     beside("lbl_ci", cx, ay - 18, "Ci", "right"),
-    arrow("w_ci", [[cx, ay - 18], [cx, ay]], on("boxA")),
-    arrow("w_co", [[cx, ay + ah], [cx, 240]], on("boxA")),
+    arrow(
+      "w_ci",
+      [
+        [cx, ay - 18],
+        [cx, ay],
+      ],
+      on("boxA"),
+    ),
+    arrow(
+      "w_co",
+      [
+        [cx, ay + ah],
+        [cx, 240],
+      ],
+      on("boxA"),
+    ),
     beside("lbl_co", cx, 240, "Ci+1", "right"),
 
-    wire("w_di", [[right, 160], [610, 160], [610, 185], [mx, 185]], on("w_di")),
+    wire(
+      "w_di",
+      [
+        [right, 160],
+        [610, 160],
+        [610, 185],
+        [mx, 185],
+      ],
+      on("w_di"),
+    ),
     label("lbl_di", 555, 148, "Di"),
-    wire("w_ei", [[right, 310], [610, 310], [610, 250], [mx, 250]], on("w_ei")),
+    wire(
+      "w_ei",
+      [
+        [right, 310],
+        [610, 310],
+        [610, 250],
+        [mx, 250],
+      ],
+      on("w_ei"),
+    ),
     label("lbl_ei", 555, 298, "Ei"),
 
     beside("lbl_aim", x0, 392, "Ai−1", "left"),
-    wire("w_shr", [[x0, 392], [740, 392], [740, 300], [mx, 300]], on("w_shr")),
+    wire(
+      "w_shr",
+      [
+        [x0, 392],
+        [740, 392],
+        [740, 300],
+        [mx, 300],
+      ],
+      on("w_shr"),
+    ),
     label("lbl_shr", 620, 380, "shr"),
     beside("lbl_aip", x0, 420, "Ai+1", "left"),
-    wire("w_shl", [[x0, 420], [770, 420], [770, 340], [mx, 340]], on("w_shl")),
+    wire(
+      "w_shl",
+      [
+        [x0, 420],
+        [770, 420],
+        [770, 340],
+        [mx, 340],
+      ],
+      on("w_shl"),
+    ),
     label("lbl_shl", 660, 408, "shl"),
 
-    wire("w_fi", [[mx + mw, 260], [1020, 260]], on("w_fi")),
+    wire(
+      "w_fi",
+      [
+        [mx + mw, 260],
+        [1020, 260],
+      ],
+      on("w_fi"),
+    ),
     beside("lbl_fi", 1020, 260, "Fi", "right"),
   ];
 }
@@ -170,4 +303,5 @@ export const arithmeticLogicShiftStepSchematics = frames(
   })),
 );
 
-export const arithmeticLogicShiftTheoryDiagram = arithmeticLogicShiftStepSchematics[0];
+export const arithmeticLogicShiftTheoryDiagram =
+  arithmeticLogicShiftStepSchematics[0];

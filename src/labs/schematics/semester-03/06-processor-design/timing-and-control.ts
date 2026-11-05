@@ -2,13 +2,61 @@ import { flow } from "../diagram";
 
 /** Hardwired timing for a direct ADD. SC clears on the last execute step. */
 const nodes = [
-  { id: "sc", kind: "block" as const, x: 230, y: 78, w: 200, h: 40, label: "Sequence counter" },
-  { id: "t0", kind: "block" as const, x: 230, y: 168, w: 200, h: 40, label: "T0" },
-  { id: "t1", kind: "block" as const, x: 230, y: 258, w: 220, h: 40, label: "T1" },
-  { id: "t2", kind: "block" as const, x: 230, y: 348, w: 220, h: 40, label: "T2  decode" },
+  {
+    id: "sc",
+    kind: "block" as const,
+    x: 230,
+    y: 78,
+    w: 200,
+    h: 40,
+    label: "Sequence counter",
+  },
+  {
+    id: "t0",
+    kind: "block" as const,
+    x: 230,
+    y: 168,
+    w: 200,
+    h: 40,
+    label: "T0",
+  },
+  {
+    id: "t1",
+    kind: "block" as const,
+    x: 230,
+    y: 258,
+    w: 220,
+    h: 40,
+    label: "T1",
+  },
+  {
+    id: "t2",
+    kind: "block" as const,
+    x: 230,
+    y: 348,
+    w: 220,
+    h: 40,
+    label: "T2  decode",
+  },
   { id: "ind", kind: "decision" as const, x: 230, y: 458, label: "I = 1?" },
-  { id: "t4", kind: "block" as const, x: 230, y: 568, w: 200, h: 40, label: "T4" },
-  { id: "t5", kind: "block" as const, x: 230, y: 658, w: 220, h: 40, label: "T5  then SC ← 0" },
+  {
+    id: "t4",
+    kind: "block" as const,
+    x: 230,
+    y: 568,
+    w: 200,
+    h: 40,
+    label: "T4",
+  },
+  {
+    id: "t5",
+    kind: "block" as const,
+    x: 230,
+    y: 658,
+    w: 220,
+    h: 40,
+    label: "T5  then SC ← 0",
+  },
 ];
 
 const links = [
@@ -20,7 +68,8 @@ const links = [
   { id: "a6", from: "t4", to: "t5" },
 ];
 
-const upto = (n: number) => ["sc", "t0", "t1", "t2", "ind", "t4", "t5"].slice(0, n);
+const upto = (n: number) =>
+  ["sc", "t0", "t1", "t2", "ind", "t4", "t5"].slice(0, n);
 
 export const timingAndControlStepSchematics = flow(nodes, links, [
   {

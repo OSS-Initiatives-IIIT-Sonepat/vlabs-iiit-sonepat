@@ -12,11 +12,16 @@ import { procedureSteps } from "./04-procedure";
 export const binaryIncrementerExperiment: ExperimentDefinition = {
   id: "binary-incrementer",
   title: "4-bit Binary Incrementer",
-  description: "Add one to 1101 with four half adders. The sum is 1110, and C4 is 0.",
+  description:
+    "Add one to 1101 with four half adders. The sum is 1110, and C4 is 0.",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],
   procedureSteps,
 };
 
-export const BinaryIncrementerCircuit = buildCircuit(binaryIncrementerExperiment);
-export const BinaryIncrementerContent = buildLabContent(binaryIncrementerExperiment);
+export const BinaryIncrementerCircuit = buildCircuit(
+  binaryIncrementerExperiment,
+);
+export const BinaryIncrementerContent = buildLabContent(
+  binaryIncrementerExperiment,
+);

@@ -21,4 +21,6 @@ export const memoryReferenceExperiment: ExperimentDefinition = {
 };
 
 export const MemoryReferenceCircuit = buildCircuit(memoryReferenceExperiment);
-export const MemoryReferenceContent = buildLabContent(memoryReferenceExperiment);
+export const MemoryReferenceContent = buildLabContent(
+  memoryReferenceExperiment,
+);

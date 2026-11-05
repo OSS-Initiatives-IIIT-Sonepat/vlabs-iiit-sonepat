@@ -12,12 +12,17 @@ import { procedureSteps } from "./04-procedure";
 export const instructionFormatExperiment: ExperimentDefinition = {
   id: "instruction-format",
   title: "Instruction Format",
-  description: "Place X = (A+B)*(C+D) in three-, two-, one-, and zero-address form.",
+  description:
+    "Place X = (A+B)*(C+D) in three-, two-, one-, and zero-address form.",
   labType: "text",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],
   procedureSteps,
 };
 
-export const InstructionFormatCircuit = buildCircuit(instructionFormatExperiment);
-export const InstructionFormatContent = buildLabContent(instructionFormatExperiment);
+export const InstructionFormatCircuit = buildCircuit(
+  instructionFormatExperiment,
+);
+export const InstructionFormatContent = buildLabContent(
+  instructionFormatExperiment,
+);

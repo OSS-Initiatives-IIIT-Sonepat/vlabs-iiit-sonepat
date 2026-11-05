@@ -11,10 +11,15 @@ import { procedureSteps } from "./04-procedure";
 export const instructionPipelineExperiment: ExperimentDefinition = {
   id: "instruction-pipeline",
   title: "Instruction Pipeline",
-  description: "Watch three instructions occupy IF, ID, EX, and WB, then read a branch, a float add, and Flynn's classes.",
+  description:
+    "Watch three instructions occupy IF, ID, EX, and WB, then read a branch, a float add, and Flynn's classes.",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],
   procedureSteps,
 };
-export const InstructionPipelineCircuit = buildCircuit(instructionPipelineExperiment);
-export const InstructionPipelineContent = buildLabContent(instructionPipelineExperiment);
+export const InstructionPipelineCircuit = buildCircuit(
+  instructionPipelineExperiment,
+);
+export const InstructionPipelineContent = buildLabContent(
+  instructionPipelineExperiment,
+);

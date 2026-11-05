@@ -34,12 +34,18 @@ function roster(): SchematicElement[] {
 }
 
 /** One instruction: its name, then the micro-operations in order. */
-function micro(title: string, lines: string[], hot: string[]): SchematicElement[] {
+function micro(
+  title: string,
+  lines: string[],
+  hot: string[],
+): SchematicElement[] {
   const els: SchematicElement[] = [
     block("who", 540, 96, 320, 48, title, hot.includes("who")),
   ];
   lines.forEach((text, i) => {
-    els.push(block(`op${i}`, 540, 180 + i * 58, 680, 44, text, hot.includes(`op${i}`)));
+    els.push(
+      block(`op${i}`, 540, 180 + i * 58, 680, 44, text, hot.includes(`op${i}`)),
+    );
   });
   return els;
 }
@@ -48,19 +54,38 @@ const CW = 68;
 const CH = 32;
 const SPAN = CW * 3;
 
-function triple(id: string, cx: number, y: number, texts: [string, string, string], hot = false) {
+function triple(
+  id: string,
+  cx: number,
+  y: number,
+  texts: [string, string, string],
+  hot = false,
+) {
   const left = cx - SPAN / 2;
   return texts.map((text, i) =>
     block(`${id}_${i}`, left + CW / 2 + i * CW, y, CW, CH, text, hot),
   );
 }
 
-function wide(id: string, cx: number, y: number, h: number, text: string, hot = false) {
+function wide(
+  id: string,
+  cx: number,
+  y: number,
+  h: number,
+  text: string,
+  hot = false,
+) {
   return block(id, cx, y, SPAN, h, text, hot);
 }
 
 /** Address or register name, sitting just to the left of the memory word. */
-function beside(id: string, cx: number, y: number, text: string, color?: string): SchematicElement {
+function beside(
+  id: string,
+  cx: number,
+  y: number,
+  text: string,
+  color?: string,
+): SchematicElement {
   const half = (text.length * 9 * 0.56) / 2;
   const x = cx - SPAN / 2 - half - 12;
   return { type: "label", id, x, y, text, color };
@@ -114,7 +139,12 @@ function bsaMemory(after: boolean): SchematicElement[] {
   return els;
 }
 
-const steps: { title: string; height: number; notes: string[]; elements: SchematicElement[] }[] = [
+const steps: {
+  title: string;
+  height: number;
+  notes: string[];
+  elements: SchematicElement[];
+}[] = [
   {
     title: "Seven memory-reference instructions",
     height: 450,
@@ -125,19 +155,31 @@ const steps: { title: string; height: number; notes: string[]; elements: Schemat
     title: "AND to AC",
     height: 340,
     notes: ["Each bit of AC is ANDed with the same bit of the operand."],
-    elements: micro("AND   opcode 000", ["D0T4:  DR ← M[AR]", "D0T5:  AC ← AC ∧ DR, SC ← 0"], ["op0", "op1"]),
+    elements: micro(
+      "AND   opcode 000",
+      ["D0T4:  DR ← M[AR]", "D0T5:  AC ← AC ∧ DR, SC ← 0"],
+      ["op0", "op1"],
+    ),
   },
   {
     title: "ADD to AC",
     height: 340,
     notes: ["The carry out of the sum is kept in E."],
-    elements: micro("ADD   opcode 001", ["D1T4:  DR ← M[AR]", "D1T5:  AC ← AC + DR, E ← Cout, SC ← 0"], ["op0", "op1"]),
+    elements: micro(
+      "ADD   opcode 001",
+      ["D1T4:  DR ← M[AR]", "D1T5:  AC ← AC + DR, E ← Cout, SC ← 0"],
+      ["op0", "op1"],
+    ),
   },
   {
     title: "LDA: load to AC",
     height: 340,
     notes: ["AC is replaced. The memory word is not changed."],
-    elements: micro("LDA   opcode 010", ["D2T4:  DR ← M[AR]", "D2T5:  AC ← DR, SC ← 0"], ["op0", "op1"]),
+    elements: micro(
+      "LDA   opcode 010",
+      ["D2T4:  DR ← M[AR]", "D2T5:  AC ← DR, SC ← 0"],
+      ["op0", "op1"],
+    ),
   },
   {
     title: "STA: store AC",
@@ -155,7 +197,11 @@ const steps: { title: string; height: number; notes: string[]; elements: Schemat
     title: "BSA: branch and save return address",
     height: 340,
     notes: ["PC already holds the address of the instruction after the BSA."],
-    elements: micro("BSA   opcode 101", ["D5T4:  M[AR] ← PC, AR ← AR + 1", "D5T5:  PC ← AR, SC ← 0"], ["op0", "op1"]),
+    elements: micro(
+      "BSA   opcode 101",
+      ["D5T4:  M[AR] ← PC, AR ← AR + 1", "D5T5:  PC ← AR, SC ← 0"],
+      ["op0", "op1"],
+    ),
   },
   {
     title: "BSA at time T4",
@@ -166,13 +212,17 @@ const steps: { title: string; height: number; notes: string[]; elements: Schemat
   {
     title: "Memory after BSA",
     height: 450,
-    notes: ["Location 135 now holds 21. The 1 on BUN 135 makes the return indirect."],
+    notes: [
+      "Location 135 now holds 21. The 1 on BUN 135 makes the return indirect.",
+    ],
     elements: bsaMemory(true),
   },
   {
     title: "ISZ: increment and skip if zero",
     height: 400,
-    notes: ["A memory word cannot be incremented in place, so it travels through DR."],
+    notes: [
+      "A memory word cannot be incremented in place, so it travels through DR.",
+    ],
     elements: micro(
       "ISZ   opcode 110",
       [

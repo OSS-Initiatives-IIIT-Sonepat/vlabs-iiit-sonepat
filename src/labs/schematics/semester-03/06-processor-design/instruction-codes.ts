@@ -11,9 +11,31 @@ function example(hot: string[]): SchematicElement[] {
     block("code", 560, 180, 170, 52, "ADD 1547", on("code")),
     block("opname", 210, 180, 300, 52, "Operation Code (Opcode)", on("opname")),
     terminal("unique", 830, 78, 240, 52, "Unique binary code", on("unique")),
-    arrow("w_ex", [[560, 124], [560, 154]], on("w_ex")),
-    arrow("w_op", [[475, 180], [360, 180]], on("w_op")),
-    arrow("w_uniq", [[645, 180], [830, 180], [830, 104]], on("w_uniq")),
+    arrow(
+      "w_ex",
+      [
+        [560, 124],
+        [560, 154],
+      ],
+      on("w_ex"),
+    ),
+    arrow(
+      "w_op",
+      [
+        [475, 180],
+        [360, 180],
+      ],
+      on("w_op"),
+    ),
+    arrow(
+      "w_uniq",
+      [
+        [645, 180],
+        [830, 180],
+        [830, 104],
+      ],
+      on("w_uniq"),
+    ),
   ];
 }
 
@@ -46,10 +68,31 @@ function basicFormat(hot: string[]): SchematicElement[] {
     block("address", adX, fieldY, 12 * bitW, fieldH, "Address", on("address")),
     label("fmt", 520, 78, "Instruction Format"),
     ...cells,
-    arrow("w_i", [[iX, fieldY + fieldH / 2], [iX, bitY - bitH / 2]], on("w_i")),
-    arrow("w_op", [[opX, fieldY + fieldH / 2], [opX, bitY - bitH / 2]], on("w_op")),
+    arrow(
+      "w_i",
+      [
+        [iX, fieldY + fieldH / 2],
+        [iX, bitY - bitH / 2],
+      ],
+      on("w_i"),
+    ),
+    arrow(
+      "w_op",
+      [
+        [opX, fieldY + fieldH / 2],
+        [opX, bitY - bitH / 2],
+      ],
+      on("w_op"),
+    ),
     { type: "junction", id: "j_ad", x: adX, y: bitY - bitH / 2 },
-    arrow("w_ad", [[adX, fieldY + fieldH / 2], [adX, bitY - bitH / 2]], on("w_ad")),
+    arrow(
+      "w_ad",
+      [
+        [adX, fieldY + fieldH / 2],
+        [adX, bitY - bitH / 2],
+      ],
+      on("w_ad"),
+    ),
     label("cap", 520, 268, "Add Instruction – ADD 457"),
   ];
 }
@@ -62,7 +105,16 @@ function stored(parts: "memory" | "full", hot: string[]): SchematicElement[] {
   const mw = 210;
   const mh = 180;
   const memory: SchematicElement[] = [
-    { type: "stack", id: "mem", x: mx, y: my, w: mw, h: mh, split: true, highlight: on("mem") },
+    {
+      type: "stack",
+      id: "mem",
+      x: mx,
+      y: my,
+      w: mw,
+      h: mh,
+      split: true,
+      highlight: on("mem"),
+    },
     label("memtitle", mx, 62, "Memory"),
     label("memsize", mx, 80, "4096 x 16"),
     label("instr", mx, my - 45, "Instructions (program)"),
@@ -84,9 +136,31 @@ function stored(parts: "memory" | "full", hot: string[]): SchematicElement[] {
     block("operand", 415, 255, 480, 46, "Binary Operand", on("operand")),
     { type: "junction", id: "j_fmt", x: edge, y: 165 },
     { type: "junction", id: "j_opnd", x: edge, y: 255 },
-    arrow("w_fmt", [[edge, 165], [665, 165]], on("w_fmt")),
-    arrow("w_opnd", [[edge, 255], [655, 255]], on("w_opnd")),
-    block("ac", mx, 400, 300, 56, "Processor Register (accumulator or AC)", on("ac")),
+    arrow(
+      "w_fmt",
+      [
+        [edge, 165],
+        [665, 165],
+      ],
+      on("w_fmt"),
+    ),
+    arrow(
+      "w_opnd",
+      [
+        [edge, 255],
+        [655, 255],
+      ],
+      on("w_opnd"),
+    ),
+    block(
+      "ac",
+      mx,
+      400,
+      300,
+      56,
+      "Processor Register (accumulator or AC)",
+      on("ac"),
+    ),
   ];
 }
 
@@ -95,7 +169,12 @@ function stored(parts: "memory" | "full", hot: string[]): SchematicElement[] {
  * Addresses sit outside the stack. The arrow drops from the address cell,
  * through each next word, then left and down into the circled plus and AC.
  */
-function column(prefix: string, x: number, mode: "direct" | "indirect", hot: string[]): SchematicElement[] {
+function column(
+  prefix: string,
+  x: number,
+  mode: "direct" | "indirect",
+  hot: string[],
+): SchematicElement[] {
   const on = (id: string) => hot.includes(id);
   const stackW = 220;
   const stackH = 196;
@@ -120,11 +199,35 @@ function column(prefix: string, x: number, mode: "direct" | "indirect", hot: str
   const acY = 424;
   const turnY = 312;
   const elements: SchematicElement[] = [
-    { type: "stack", id: `${prefix}mem`, x, y: stackY, w: stackW, h: stackH, highlight: on(`${prefix}mem`) },
+    {
+      type: "stack",
+      id: `${prefix}mem`,
+      x,
+      y: stackY,
+      w: stackW,
+      h: stackH,
+      highlight: on(`${prefix}mem`),
+    },
     label(`${prefix}la`, left - 16, instrY, mode === "direct" ? "22" : "35"),
-    block(`${prefix}i`, iX, instrY, iW, rowH, mode === "direct" ? "0" : "1", on(`${prefix}i`)),
+    block(
+      `${prefix}i`,
+      iX,
+      instrY,
+      iW,
+      rowH,
+      mode === "direct" ? "0" : "1",
+      on(`${prefix}i`),
+    ),
     block(`${prefix}add`, addX, instrY, addW, rowH, "ADD", on(`${prefix}add`)),
-    block(`${prefix}addr`, addrX, instrY, addrW, rowH, mode === "direct" ? "457" : "300", on(`${prefix}addr`)),
+    block(
+      `${prefix}addr`,
+      addrX,
+      instrY,
+      addrW,
+      rowH,
+      mode === "direct" ? "457" : "300",
+      on(`${prefix}addr`),
+    ),
     label(`${prefix}lop`, left - 18, opY, mode === "direct" ? "457" : "1350"),
     block(`${prefix}op`, opX, opY, wordW, opH, "Operand", on(`${prefix}op`)),
     { type: "junction", id: `${prefix}jtop`, x: addrX, y: opY - opH / 2 },
@@ -133,21 +236,54 @@ function column(prefix: string, x: number, mode: "direct" | "indirect", hot: str
     block(`${prefix}ac`, x, acY, 140, 40, "AC", on(`${prefix}ac`)),
     arrow(
       `${prefix}wac`,
-      [[addrX, opY + opH / 2], [addrX, turnY], [x, turnY], [x, plusY - plusH / 2]],
+      [
+        [addrX, opY + opH / 2],
+        [addrX, turnY],
+        [x, turnY],
+        [x, plusY - plusH / 2],
+      ],
       on(`${prefix}wac`),
     ),
-    arrow(`${prefix}wdn`, [[x, plusY + plusH / 2], [x, acY - 20]], on(`${prefix}wdn`)),
+    arrow(
+      `${prefix}wdn`,
+      [
+        [x, plusY + plusH / 2],
+        [x, acY - 20],
+      ],
+      on(`${prefix}wdn`),
+    ),
   ];
   if (mode === "direct") {
     elements.push(
-      arrow(`${prefix}wop`, [[addrX, instrY + rowH / 2], [addrX, opY - opH / 2]], on(`${prefix}wop`)),
+      arrow(
+        `${prefix}wop`,
+        [
+          [addrX, instrY + rowH / 2],
+          [addrX, opY - opH / 2],
+        ],
+        on(`${prefix}wop`),
+      ),
     );
   } else {
     elements.push(
       label(`${prefix}lptr`, left - 18, midY, "300"),
       block(`${prefix}ptr`, addrX, midY, 84, 32, "1350", on(`${prefix}ptr`)),
-      arrow(`${prefix}w0`, [[addrX, instrY + rowH / 2], [addrX, midY - 16]], on(`${prefix}w0`)),
-      arrow(`${prefix}wop`, [[addrX, midY + 16], [addrX, opY - opH / 2]], on(`${prefix}wop`)),
+      arrow(
+        `${prefix}w0`,
+        [
+          [addrX, instrY + rowH / 2],
+          [addrX, midY - 16],
+        ],
+        on(`${prefix}w0`),
+      ),
+      arrow(
+        `${prefix}wop`,
+        [
+          [addrX, midY + 16],
+          [addrX, opY - opH / 2],
+        ],
+        on(`${prefix}wop`),
+      ),
     );
   }
   return elements;
@@ -158,51 +294,91 @@ export const instructionCodesStepSchematics = frames([
     title: "Program",
     width: W,
     height: 220,
-    notes: ["A program is the sequence of instructions the computer will follow."],
+    notes: [
+      "A program is the sequence of instructions the computer will follow.",
+    ],
     elements: [block("program", 520, 110, 280, 52, "Program", true)],
   },
   {
     title: "Computer instruction",
     width: W,
     height: 460,
-    notes: ["Memory is read into the control register, which then issues micro-operations."],
+    notes: [
+      "Memory is read into the control register, which then issues micro-operations.",
+    ],
     elements: [
       block("program", 520, 90, 260, 48, "Program"),
       block("instruction", 520, 180, 320, 48, "Computer instruction", true),
       block("control", 520, 270, 280, 48, "Control register"),
       block("micro", 520, 360, 300, 48, "Micro-operations"),
-      arrow("w0", [[520, 114], [520, 156]]),
-      arrow("w1", [[520, 204], [520, 246]], true),
-      arrow("w2", [[520, 294], [520, 336]]),
+      arrow("w0", [
+        [520, 114],
+        [520, 156],
+      ]),
+      arrow(
+        "w1",
+        [
+          [520, 204],
+          [520, 246],
+        ],
+        true,
+      ),
+      arrow("w2", [
+        [520, 294],
+        [520, 336],
+      ]),
     ],
   },
   {
     title: "Instruction code",
     width: W,
     height: 340,
-    notes: ["ADD 1547 is one instruction. ADD is the opcode and 1547 is the address."],
+    notes: [
+      "ADD 1547 is one instruction. ADD is the opcode and 1547 is the address.",
+    ],
     elements: example(["code", "w_ex", "w_op", "w_uniq"]),
   },
   {
     title: "Instruction format of the basic computer",
     width: W,
     height: 360,
-    notes: ["Bit 15 is I, bits 14-12 are the opcode, bits 11-0 are the address. ADD 457 is 0001 0100 0101 0111."],
-    elements: basicFormat(["i", "opcode", "address", "bits", "w_i", "w_op", "w_ad"]),
+    notes: [
+      "Bit 15 is I, bits 14-12 are the opcode, bits 11-0 are the address. ADD 457 is 0001 0100 0101 0111.",
+    ],
+    elements: basicFormat([
+      "i",
+      "opcode",
+      "address",
+      "bits",
+      "w_i",
+      "w_op",
+      "w_ad",
+    ]),
   },
   {
     title: "Stored program",
     width: W,
     height: 420,
-    notes: ["4096 words of 16 bits. Instructions and operands share this memory."],
+    notes: [
+      "4096 words of 16 bits. Instructions and operands share this memory.",
+    ],
     elements: stored("memory", ["instr", "data"]),
   },
   {
     title: "Instruction format",
     width: W,
     height: 490,
-    notes: ["Bits 15-12 are the opcode. Bits 11-0 are the address. The AC is a processor register."],
-    elements: stored("full", ["opcode", "address", "w_fmt", "operand", "w_opnd", "ac"]),
+    notes: [
+      "Bits 15-12 are the opcode. Bits 11-0 are the address. The AC is a processor register.",
+    ],
+    elements: stored("full", [
+      "opcode",
+      "address",
+      "w_fmt",
+      "operand",
+      "w_opnd",
+      "ac",
+    ]),
   },
   {
     title: "Direct address",
@@ -211,19 +387,45 @@ export const instructionCodesStepSchematics = frames([
     notes: ["I is 0, so 457 is the operand address. That word is added to AC."],
     elements: [
       label("dtitle", 250, 42, "Direct"),
-      ...column("d", 250, "direct", ["dmem", "di", "dadd", "daddr", "dop", "dwop", "dwac", "dplus", "dac", "dwdn"]),
+      ...column("d", 250, "direct", [
+        "dmem",
+        "di",
+        "dadd",
+        "daddr",
+        "dop",
+        "dwop",
+        "dwac",
+        "dplus",
+        "dac",
+        "dwdn",
+      ]),
     ],
   },
   {
     title: "Direct and indirect address",
     width: 1080,
     height: 520,
-    notes: ["I is 1, so address 300 holds 1350. The operand at 1350 is added to AC."],
+    notes: [
+      "I is 1, so address 300 holds 1350. The operand at 1350 is added to AC.",
+    ],
     elements: [
       label("dtitle", 250, 42, "Direct"),
       label("ititle", 790, 42, "Indirect"),
       ...column("d", 250, "direct", []),
-      ...column("i", 790, "indirect", ["imem", "ii", "iadd", "iaddr", "iptr", "iop", "iw0", "iwop", "iwac", "iplus", "iac", "iwdn"]),
+      ...column("i", 790, "indirect", [
+        "imem",
+        "ii",
+        "iadd",
+        "iaddr",
+        "iptr",
+        "iop",
+        "iw0",
+        "iwop",
+        "iwac",
+        "iplus",
+        "iac",
+        "iwdn",
+      ]),
     ],
   },
 ]);

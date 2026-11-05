@@ -7,6 +7,10 @@ export const apparatus: ApparatusSection = {
   items: [
     { name: "Count word", specification: "CNT starts at 2", quantity: "1" },
     { name: "NEG1", specification: "All ones, the value −1", quantity: "1" },
-    { name: "SZA and BUN", specification: "The test and the branch", quantity: "1" },
+    {
+      name: "SZA and BUN",
+      specification: "The test and the branch",
+      quantity: "1",
+    },
   ],
 };

@@ -12,7 +12,8 @@ import { procedureSteps } from "./04-procedure";
 export const boothTraceExperiment: ExperimentDefinition = {
   id: "booth-trace",
   title: "Booth Multiplication Trace",
-  description: "Step through Booth's algorithm for (−9) × (−13) and read the product 117.",
+  description:
+    "Step through Booth's algorithm for (−9) × (−13) and read the product 117.",
   labType: "text",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],

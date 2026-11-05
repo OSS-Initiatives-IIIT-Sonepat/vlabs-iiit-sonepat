@@ -8,7 +8,10 @@ export const arrayMultiplierStepSchematics = frames([
       ...icBox("add", 250, 80, 150, 90, "74HC283"),
       hop("h", 200, 250, 125),
     ],
-    notes: ["Each AND is one bit of a partial product", "The adder sums a column, the shift is in the wiring"],
+    notes: [
+      "Each AND is one bit of a partial product",
+      "The adder sums a column, the shift is in the wiring",
+    ],
   },
   {
     title: "Four AND gates",
@@ -29,7 +32,10 @@ export const arrayMultiplierStepSchematics = frames([
       ...stub("b", "B1", 130, 280, true),
       ...stub("c", "B2", 160, 280, true),
     ],
-    notes: ["A1 is A1·B0, B1 is A0·B1, B2 is A1·B1", "P0 is already the least significant bit"],
+    notes: [
+      "A1 is A1·B0, B1 is A0·B1, B2 is A1·B1",
+      "P0 is already the least significant bit",
+    ],
   },
   {
     title: "Product LEDs",
@@ -56,7 +62,10 @@ export const arrayMultiplierStepSchematics = frames([
       ...stub("c1", "col1: 1+1", 110, 140),
       ...stub("c2", "col2: 1+carry", 150, 140),
     ],
-    notes: ["Column 1 sums to 0 and sends a carry", "Column 2 plus that carry sums to 0 and sends the 1 in S3"],
+    notes: [
+      "Column 1 sums to 0 and sends a carry",
+      "Column 2 plus that carry sums to 0 and sends the 1 in S3",
+    ],
   },
 ]);
 

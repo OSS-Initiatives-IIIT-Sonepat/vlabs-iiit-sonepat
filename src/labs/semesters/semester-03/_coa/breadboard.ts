@@ -85,7 +85,11 @@ export function memory(
 }
 
 /** A labeled DIP that stands for a pipeline stage. Pin `out` is a tie point. */
-export function stage(id: string, name: string, col: number): ComponentInstance {
+export function stage(
+  id: string,
+  name: string,
+  col: number,
+): ComponentInstance {
   return {
     id,
     type: "block-module",

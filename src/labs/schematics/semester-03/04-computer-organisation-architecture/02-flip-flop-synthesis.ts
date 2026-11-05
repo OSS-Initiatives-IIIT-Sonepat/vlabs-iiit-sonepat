@@ -14,7 +14,10 @@ export const flipFlopSynthesisStepSchematics = frames([
       ...stub("j", "J = D", 110, 140),
       ...stub("k", "K = D'", 155, 140),
     ],
-    notes: ["Excitation: Q to 1 needs J=1, Q to 0 needs K=1", "J = D and K = NOT D does both"],
+    notes: [
+      "Excitation: Q to 1 needs J=1, Q to 0 needs K=1",
+      "J = D and K = NOT D does both",
+    ],
   },
   {
     title: "SET and CLR stay inactive",
@@ -27,34 +30,69 @@ export const flipFlopSynthesisStepSchematics = frames([
   },
   {
     title: "J follows D, K follows NOT D",
-    elements: [...jk(true), ...stub("d", "D", 100, 80, true), ...stub("clk", "CLK", 150, 250, true)],
-    notes: ["The inverter is the excitation logic", "74HC73 clocks on the falling edge"],
+    elements: [
+      ...jk(true),
+      ...stub("d", "D", 100, 80, true),
+      ...stub("clk", "CLK", 150, 250, true),
+    ],
+    notes: [
+      "The inverter is the excitation logic",
+      "74HC73 clocks on the falling edge",
+    ],
   },
   {
     title: "D = 1, clock low",
-    elements: [...jk(), ...stub("d", "D=1", 100, 80), ...stub("clk", "CLK=0", 165, 250), ...ledChain("q", 360, 120, "Q")],
+    elements: [
+      ...jk(),
+      ...stub("d", "D=1", 100, 80),
+      ...stub("clk", "CLK=0", 165, 250),
+      ...ledChain("q", 360, 120, "Q"),
+    ],
     notes: ["No falling edge yet, so Q holds"],
   },
   {
     title: "Clock rises. Still no capture.",
-    elements: [...jk(), ...stub("clk", "CLK=1", 165, 250, true), ...ledChain("q", 360, 130, "Q")],
+    elements: [
+      ...jk(),
+      ...stub("clk", "CLK=1", 165, 250, true),
+      ...ledChain("q", 360, 130, "Q"),
+    ],
     notes: ["This chip waits for the fall"],
   },
   {
     title: "Falling edge, D = 1, Q becomes 1",
-    elements: [...jk(true), ...stub("d", "D=1", 100, 80), ...stub("clk", "CLK fall", 165, 250, true), ...ledChain("q", 360, 120, "Q=1", true)],
+    elements: [
+      ...jk(true),
+      ...stub("d", "D=1", 100, 80),
+      ...stub("clk", "CLK fall", 165, 250, true),
+      ...ledChain("q", 360, 120, "Q=1", true),
+    ],
     notes: ["J=1 and K=0 sets Q"],
   },
   {
     title: "D = 0 while the clock is high",
-    elements: [...jk(), ...stub("d", "D=0", 100, 80, true), ...stub("clk", "CLK=1", 165, 250), ...ledChain("q", 360, 120, "Q=1")],
+    elements: [
+      ...jk(),
+      ...stub("d", "D=0", 100, 80, true),
+      ...stub("clk", "CLK=1", 165, 250),
+      ...ledChain("q", 360, 120, "Q=1"),
+    ],
     notes: ["Q stays 1 until the next fall"],
   },
   {
     title: "Falling edge, D = 0, Q becomes 0",
-    elements: [...jk(true), ...stub("d", "D=0", 100, 80, true), ...stub("clk", "CLK fall", 165, 250, true), ...ledChain("q", 360, 120, "Q=0")],
-    notes: ["J=0 and K=1 clears Q", "Q followed D. The JK is now a D flip-flop."],
+    elements: [
+      ...jk(true),
+      ...stub("d", "D=0", 100, 80, true),
+      ...stub("clk", "CLK fall", 165, 250, true),
+      ...ledChain("q", 360, 120, "Q=0"),
+    ],
+    notes: [
+      "J=0 and K=1 clears Q",
+      "Q followed D. The JK is now a D flip-flop.",
+    ],
   },
 ]);
 
-export const flipFlopSynthesisTheoryDiagram = flipFlopSynthesisStepSchematics[0];
+export const flipFlopSynthesisTheoryDiagram =
+  flipFlopSynthesisStepSchematics[0];

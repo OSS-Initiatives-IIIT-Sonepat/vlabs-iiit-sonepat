@@ -41,7 +41,9 @@ export const instructionPipelineStepSchematics = frames([
   {
     title: "A branch empties the pipe",
     elements: stages([false, false, false, false]),
-    notes: ["Instructions fetched after the branch are discarded. The lamps go dark."],
+    notes: [
+      "Instructions fetched after the branch are discarded. The lamps go dark.",
+    ],
   },
   {
     title: "An arithmetic pipeline adds two normalised floats",
@@ -50,7 +52,9 @@ export const instructionPipelineStepSchematics = frames([
       block("y", 480, 80, 220, 40, "Y = 0.8200 × 10²"),
       block("sum", 320, 170, 280, 48, "1.7704 → 0.1770 × 10³", true),
     ],
-    notes: ["Add the mantissas, then shift until the leading digit is not zero."],
+    notes: [
+      "Add the mantissas, then shift until the leading digit is not zero.",
+    ],
   },
   {
     title: "Flynn's four classes",
@@ -70,7 +74,9 @@ export const instructionPipelineStepSchematics = frames([
       block("ram", 320, 120, 100, 44, "RAM"),
       block("c1", 500, 120, 100, 44, "CPU 1"),
     ],
-    notes: ["Only one CPU's address wires are shown. The other waits for the bus."],
+    notes: [
+      "Only one CPU's address wires are shown. The other waits for the bus.",
+    ],
   },
   {
     title: "A crossbar",
@@ -80,13 +86,18 @@ export const instructionPipelineStepSchematics = frames([
       block("m0", 460, 70, 90, 36, "M0"),
       block("m1", 460, 130, 90, 36, "M1"),
     ],
-    notes: ["Each CPU can be connected to each memory. This frame is the switch, not another board."],
+    notes: [
+      "Each CPU can be connected to each memory. This frame is the switch, not another board.",
+    ],
   },
   {
     title: "IF, ID, EX, WB",
     elements: stages([false, false, false, false]),
-    notes: ["Four stages. A lamp will light when that stage holds an instruction."],
+    notes: [
+      "Four stages. A lamp will light when that stage holds an instruction.",
+    ],
   },
 ]);
 
-export const instructionPipelineTheoryDiagram = instructionPipelineStepSchematics[2];
+export const instructionPipelineTheoryDiagram =
+  instructionPipelineStepSchematics[2];

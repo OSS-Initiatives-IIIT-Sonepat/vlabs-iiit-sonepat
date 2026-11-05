@@ -19,5 +19,9 @@ export const flipFlopSynthesisExperiment: ExperimentDefinition = {
   procedureSteps,
 };
 
-export const FlipFlopSynthesisCircuit = buildCircuit(flipFlopSynthesisExperiment);
-export const FlipFlopSynthesisContent = buildLabContent(flipFlopSynthesisExperiment);
+export const FlipFlopSynthesisCircuit = buildCircuit(
+  flipFlopSynthesisExperiment,
+);
+export const FlipFlopSynthesisContent = buildLabContent(
+  flipFlopSynthesisExperiment,
+);

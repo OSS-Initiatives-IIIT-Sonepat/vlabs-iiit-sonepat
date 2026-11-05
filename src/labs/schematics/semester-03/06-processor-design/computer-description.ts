@@ -2,13 +2,69 @@ import { flow } from "../diagram";
 
 /** The basic computer as boxes. Each step reveals the next register transfer. */
 const nodes = [
-  { id: "word", kind: "block" as const, x: 280, y: 78, w: 240, h: 40, label: "I  |  opcode  |  address" },
-  { id: "regs", kind: "block" as const, x: 280, y: 168, w: 240, h: 40, label: "PC   AR   IR   AC   DR" },
-  { id: "t0", kind: "block" as const, x: 280, y: 258, w: 240, h: 40, label: "T0:  AR ← PC" },
-  { id: "t1", kind: "block" as const, x: 280, y: 348, w: 240, h: 40, label: "T1:  IR ← M[AR],  PC+1" },
-  { id: "t2", kind: "block" as const, x: 280, y: 438, w: 240, h: 40, label: "T2:  AR ← address" },
-  { id: "t3", kind: "block" as const, x: 280, y: 528, w: 240, h: 40, label: "T3:  AC ← AC + DR" },
-  { id: "io", kind: "block" as const, x: 530, y: 528, w: 140, h: 40, label: "Interrupt" },
+  {
+    id: "word",
+    kind: "block" as const,
+    x: 280,
+    y: 78,
+    w: 240,
+    h: 40,
+    label: "I  |  opcode  |  address",
+  },
+  {
+    id: "regs",
+    kind: "block" as const,
+    x: 280,
+    y: 168,
+    w: 240,
+    h: 40,
+    label: "PC   AR   IR   AC   DR",
+  },
+  {
+    id: "t0",
+    kind: "block" as const,
+    x: 280,
+    y: 258,
+    w: 240,
+    h: 40,
+    label: "T0:  AR ← PC",
+  },
+  {
+    id: "t1",
+    kind: "block" as const,
+    x: 280,
+    y: 348,
+    w: 240,
+    h: 40,
+    label: "T1:  IR ← M[AR],  PC+1",
+  },
+  {
+    id: "t2",
+    kind: "block" as const,
+    x: 280,
+    y: 438,
+    w: 240,
+    h: 40,
+    label: "T2:  AR ← address",
+  },
+  {
+    id: "t3",
+    kind: "block" as const,
+    x: 280,
+    y: 528,
+    w: 240,
+    h: 40,
+    label: "T3:  AC ← AC + DR",
+  },
+  {
+    id: "io",
+    kind: "block" as const,
+    x: 530,
+    y: 528,
+    w: 140,
+    h: 40,
+    label: "Interrupt",
+  },
 ];
 
 const links = [
@@ -63,8 +119,11 @@ export const computerDescriptionStepSchematics = flow(nodes, links, [
     title: "The same computer, with interrupt",
     show: [...cycle, "io"],
     highlight: "io",
-    notes: ["I/O joins this computer as one more box. It does not need another board."],
+    notes: [
+      "I/O joins this computer as one more box. It does not need another board.",
+    ],
   },
 ]);
 
-export const computerDescriptionTheoryDiagram = computerDescriptionStepSchematics[6];
+export const computerDescriptionTheoryDiagram =
+  computerDescriptionStepSchematics[6];

@@ -20,4 +20,6 @@ export const vectorProcessingExperiment: ExperimentDefinition = {
 };
 
 export const VectorProcessingCircuit = buildCircuit(vectorProcessingExperiment);
-export const VectorProcessingContent = buildLabContent(vectorProcessingExperiment);
+export const VectorProcessingContent = buildLabContent(
+  vectorProcessingExperiment,
+);

@@ -2,12 +2,52 @@ import { flow } from "../diagram";
 
 /** A counted loop: add −1, store, branch while the count is not zero. */
 const nodes = [
-  { id: "lda", kind: "block" as const, x: 240, y: 78, w: 220, h: 40, label: "LDA CNT" },
-  { id: "add", kind: "block" as const, x: 240, y: 178, w: 220, h: 40, label: "ADD NEG1" },
-  { id: "sta", kind: "block" as const, x: 240, y: 278, w: 220, h: 40, label: "STA CNT" },
+  {
+    id: "lda",
+    kind: "block" as const,
+    x: 240,
+    y: 78,
+    w: 220,
+    h: 40,
+    label: "LDA CNT",
+  },
+  {
+    id: "add",
+    kind: "block" as const,
+    x: 240,
+    y: 178,
+    w: 220,
+    h: 40,
+    label: "ADD NEG1",
+  },
+  {
+    id: "sta",
+    kind: "block" as const,
+    x: 240,
+    y: 278,
+    w: 220,
+    h: 40,
+    label: "STA CNT",
+  },
   { id: "zero", kind: "decision" as const, x: 240, y: 388, label: "AC = 0?" },
-  { id: "bun", kind: "block" as const, x: 500, y: 388, w: 160, h: 40, label: "BUN LOP" },
-  { id: "hlt", kind: "block" as const, x: 240, y: 508, w: 160, h: 40, label: "HLT" },
+  {
+    id: "bun",
+    kind: "block" as const,
+    x: 500,
+    y: 388,
+    w: 160,
+    h: 40,
+    label: "BUN LOP",
+  },
+  {
+    id: "hlt",
+    kind: "block" as const,
+    x: 240,
+    y: 508,
+    w: 160,
+    h: 40,
+    label: "HLT",
+  },
 ];
 
 const links = [

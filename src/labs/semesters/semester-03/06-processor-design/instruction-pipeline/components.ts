@@ -16,11 +16,19 @@ const stages: [string, string, number, number][] = [
   ["wb0", "WB", 36, 34],
 ];
 
-const chipParts: ComponentInstance[] = stages.flatMap(([id, name, col, hole]) => [
-  stage(id, name, col),
-  ...powers(id, col),
-  input(id === "if0" ? "t0" : id === "id0" ? "t1" : id === "ex0" ? "t2" : "t3", id, "out", hole, "yellow"),
-]);
+const chipParts: ComponentInstance[] = stages.flatMap(
+  ([id, name, col, hole]) => [
+    stage(id, name, col),
+    ...powers(id, col),
+    input(
+      id === "if0" ? "t0" : id === "id0" ? "t1" : id === "ex0" ? "t2" : "t3",
+      id,
+      "out",
+      hole,
+      "yellow",
+    ),
+  ],
+);
 
 const lampParts: ComponentInstance[] = [
   ...lamp("if", "if0", "out", 46, "c", "green"),

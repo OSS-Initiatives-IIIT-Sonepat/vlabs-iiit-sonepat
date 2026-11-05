@@ -77,12 +77,17 @@ function wrap(
   const start: [number, number] = left
     ? [fromX - 20, SRC_Y]
     : [fromX + 20, SRC_Y];
-  const end: [number, number] = left
-    ? [toX + 20, DST_Y]
-    : [toX - 20, DST_Y];
+  const end: [number, number] = left ? [toX + 20, DST_Y] : [toX - 20, DST_Y];
   const out = left ? fromX - 48 : fromX + 48;
   const inn = left ? toX + 48 : toX - 48;
-  return arrow(id, [start, [out, SRC_Y], [out, 330], [inn, 330], [inn, DST_Y], end]);
+  return arrow(id, [
+    start,
+    [out, SRC_Y],
+    [out, 330],
+    [inn, 330],
+    [inn, DST_Y],
+    end,
+  ]);
 }
 
 const logical: SchematicElement[] = [
@@ -208,38 +213,106 @@ function muxFigure(opts: MuxOpts): SchematicElement[] {
       [470, tops[2]],
       [470, tops[3]],
     ]),
-    ...tops.map((y, i) => wire(`w_s${i}`, [[470, y], [boxX, y]])),
+    ...tops.map((y, i) =>
+      wire(`w_s${i}`, [
+        [470, y],
+        [boxX, y],
+      ]),
+    ),
     { type: "junction", id: "j_s1", x: 470, y: tops[1] },
     { type: "junction", id: "j_s2", x: 470, y: tops[2] },
     label("lbl_s", 470, tops[0] - 8, "S"),
     beside("lbl_ir", 150, in0(0), opts.ir, "left"),
-    wire("w_ir", [[150, in0(0)], [boxX, in0(0)]], on0),
+    wire(
+      "w_ir",
+      [
+        [150, in0(0)],
+        [boxX, in0(0)],
+      ],
+      on0,
+    ),
     beside("lbl_a0", 170, in0(1), "A0 = 1", "left"),
-    wire("w_a0", [[170, in0(1)], [boxX, in0(1)]], on0),
+    wire(
+      "w_a0",
+      [
+        [170, in0(1)],
+        [boxX, in0(1)],
+      ],
+      on0,
+    ),
     beside("lbl_a1", 190, in1(0), "A1 = 1", "left"),
     wire("w_a1", [
       [190, in1(0)],
       [190, in0(2)],
     ]),
-    wire("w_a1_h0", [[190, in1(0)], [boxX, in1(0)]], on1),
-    wire("w_a1_h2", [[190, in0(2)], [boxX, in0(2)]], on0),
+    wire(
+      "w_a1_h0",
+      [
+        [190, in1(0)],
+        [boxX, in1(0)],
+      ],
+      on1,
+    ),
+    wire(
+      "w_a1_h2",
+      [
+        [190, in0(2)],
+        [boxX, in0(2)],
+      ],
+      on0,
+    ),
     beside("lbl_a2", 280, in1(1), "A2 = 0", "left"),
     wire("w_a2", [
       [280, in1(1)],
       [280, in0(3)],
     ]),
-    wire("w_a2_h1", [[280, in1(1)], [boxX, in1(1)]], on1),
-    wire("w_a2_h3", [[280, in0(3)], [boxX, in0(3)]], on0),
+    wire(
+      "w_a2_h1",
+      [
+        [280, in1(1)],
+        [boxX, in1(1)],
+      ],
+      on1,
+    ),
+    wire(
+      "w_a2_h3",
+      [
+        [280, in0(3)],
+        [boxX, in0(3)],
+      ],
+      on0,
+    ),
     beside("lbl_a3", 330, in1(2), "A3 = 1", "left"),
-    wire("w_a3", [[330, in1(2)], [boxX, in1(2)]], on1),
+    wire(
+      "w_a3",
+      [
+        [330, in1(2)],
+        [boxX, in1(2)],
+      ],
+      on1,
+    ),
     beside("lbl_il", 330, in1(3), opts.il, "left"),
-    wire("w_il", [[330, in1(3)], [boxX, in1(3)]], on1),
+    wire(
+      "w_il",
+      [
+        [330, in1(3)],
+        [boxX, in1(3)],
+      ],
+      on1,
+    ),
   ];
   opts.outputs.forEach((value, i) => {
     const text = opts.sel === null ? names[i] : `${names[i]} = ${value}`;
     const xEnd = 760;
     els.push(
-      arrow(`w_h${i}`, [[boxX + boxW, outY(i)], [xEnd, outY(i)]], opts.sel !== null),
+      arrow(
+        `w_h${i}`,
+        [
+          [boxX + boxW, outY(i)],
+          [xEnd, outY(i)],
+        ],
+        opts.sel !== null,
+      ),
       beside(`lbl_h${i}`, xEnd, outY(i), text, "right"),
     );
   });
@@ -338,4 +411,5 @@ export const combinationalShifterStepSchematics = frames(
   })),
 );
 
-export const combinationalShifterTheoryDiagram = combinationalShifterStepSchematics[4];
+export const combinationalShifterTheoryDiagram =
+  combinationalShifterStepSchematics[4];

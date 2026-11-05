@@ -4,5 +4,7 @@ export const aim: TheorySection = {
   id: "aim",
   type: "text",
   title: "Aim",
-  paragraphs: ["To follow one instruction per stage of a four-stage pipeline, and to see what a branch does to that pipe."],
+  paragraphs: [
+    "To follow one instruction per stage of a four-stage pipeline, and to see what a branch does to that pipe.",
+  ],
 };

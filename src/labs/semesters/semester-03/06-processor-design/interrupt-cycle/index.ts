@@ -12,7 +12,8 @@ import { procedureSteps } from "./04-procedure";
 export const interruptCycleExperiment: ExperimentDefinition = {
   id: "interrupt-cycle",
   title: "Input-Output and Interrupt",
-  description: "Raise FGI, save PC at memory 0, and enter the service program at address 1.",
+  description:
+    "Raise FGI, save PC at memory 0, and enter the service program at address 1.",
   labType: "text",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],

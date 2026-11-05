@@ -20,7 +20,10 @@ export const memoryDesignStepSchematics = frames([
       ...stub("e2", "E2 = 0", 135, 160, true),
       ...stub("e3", "E3 = 0", 170, 160, true),
     ],
-    notes: ["All three enables must be active", "Y outputs are active-low, so a NOT makes the LED active-high"],
+    notes: [
+      "All three enables must be active",
+      "Y outputs are active-low, so a NOT makes the LED active-high",
+    ],
   },
   {
     title: "Address bits and the data bit",

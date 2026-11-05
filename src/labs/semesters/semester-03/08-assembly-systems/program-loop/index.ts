@@ -12,7 +12,8 @@ import { procedureSteps } from "./04-procedure";
 export const programLoopExperiment: ExperimentDefinition = {
   id: "program-loop",
   title: "A Program Loop",
-  description: "Decrement a count from 2 and branch back until the accumulator is zero.",
+  description:
+    "Decrement a count from 2 and branch back until the accumulator is zero.",
   labType: "text",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],

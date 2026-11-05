@@ -21,4 +21,6 @@ export const instructionCycleExperiment: ExperimentDefinition = {
 };
 
 export const InstructionCycleCircuit = buildCircuit(instructionCycleExperiment);
-export const InstructionCycleContent = buildLabContent(instructionCycleExperiment);
+export const InstructionCycleContent = buildLabContent(
+  instructionCycleExperiment,
+);

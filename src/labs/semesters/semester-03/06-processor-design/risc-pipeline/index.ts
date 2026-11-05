@@ -12,7 +12,8 @@ import { procedureSteps } from "./04-procedure";
 export const riscPipelineExperiment: ExperimentDefinition = {
   id: "risc-pipeline",
   title: "RISC Pipeline",
-  description: "Insert a NOP when an add follows two loads in a three-segment RISC pipe.",
+  description:
+    "Insert a NOP when an add follows two loads in a three-segment RISC pipe.",
   labType: "text",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],

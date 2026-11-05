@@ -12,7 +12,8 @@ import { procedureSteps } from "./04-procedure";
 export const addressingModesExperiment: ExperimentDefinition = {
   id: "addressing-modes",
   title: "Addressing Modes",
-  description: "Trace implied, immediate, register, indirect, direct, and register-offset addressing.",
+  description:
+    "Trace implied, immediate, register, indirect, direct, and register-offset addressing.",
   labType: "text",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],
@@ -20,4 +21,6 @@ export const addressingModesExperiment: ExperimentDefinition = {
 };
 
 export const AddressingModesCircuit = buildCircuit(addressingModesExperiment);
-export const AddressingModesContent = buildLabContent(addressingModesExperiment);
+export const AddressingModesContent = buildLabContent(
+  addressingModesExperiment,
+);

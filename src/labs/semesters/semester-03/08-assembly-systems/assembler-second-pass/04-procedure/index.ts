@@ -16,15 +16,51 @@ const rows = [
 ];
 
 const copy = [
-  ["Set LC to 0", "The second pass begins with the location counter at 0. Nothing has been stored.", 1],
-  ["Scan the next line", "The pass reads one source line and decides what kind of line it is.", 2],
-  ["ORG is a pseudo-instruction", "ORG 100 does not write memory. It sets LC to 100. END, later, is the other pseudo-instruction: it stops the pass.", 3],
-  ["LDA is a memory-reference instruction", "LDA is opcode 010. X is at address 106, so the stored word is 206A. Bit 1 stays 0 because the address is direct.", 4],
-  ["ADD is the arithmetic operation", "ADD is opcode 001. Y is at 107, so the word is 106B. The accumulator will add that memory word when the instruction runs.", 5],
-  ["BSA calls a subroutine", "BSA is opcode 101. SUB is at 108, so the word is 506C. That is the subroutine call.", 6],
-  ["BUN closes the loop", "BUN is opcode 100. The address is 100, the LDA, so the word is 4064. Execution will return there.", 7],
-  ["INP is an I/O instruction", "INP is not a memory reference. The non-MRI path recognises it and stores F800.", 8],
-  ["END stops the pass", "END is a pseudo-instruction. No word is stored and LC does not move. The second pass is done.", 9],
+  [
+    "Set LC to 0",
+    "The second pass begins with the location counter at 0. Nothing has been stored.",
+    1,
+  ],
+  [
+    "Scan the next line",
+    "The pass reads one source line and decides what kind of line it is.",
+    2,
+  ],
+  [
+    "ORG is a pseudo-instruction",
+    "ORG 100 does not write memory. It sets LC to 100. END, later, is the other pseudo-instruction: it stops the pass.",
+    3,
+  ],
+  [
+    "LDA is a memory-reference instruction",
+    "LDA is opcode 010. X is at address 106, so the stored word is 206A. Bit 1 stays 0 because the address is direct.",
+    4,
+  ],
+  [
+    "ADD is the arithmetic operation",
+    "ADD is opcode 001. Y is at 107, so the word is 106B. The accumulator will add that memory word when the instruction runs.",
+    5,
+  ],
+  [
+    "BSA calls a subroutine",
+    "BSA is opcode 101. SUB is at 108, so the word is 506C. That is the subroutine call.",
+    6,
+  ],
+  [
+    "BUN closes the loop",
+    "BUN is opcode 100. The address is 100, the LDA, so the word is 4064. Execution will return there.",
+    7,
+  ],
+  [
+    "INP is an I/O instruction",
+    "INP is not a memory reference. The non-MRI path recognises it and stores F800.",
+    8,
+  ],
+  [
+    "END stops the pass",
+    "END is a pseudo-instruction. No word is stored and LC does not move. The second pass is done.",
+    9,
+  ],
 ] as const;
 
 export const procedureSteps: SceneProcedureStep[] = copy.map(

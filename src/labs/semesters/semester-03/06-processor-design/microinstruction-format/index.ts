@@ -12,12 +12,17 @@ import { procedureSteps } from "./04-procedure";
 export const microinstructionFormatExperiment: ExperimentDefinition = {
   id: "microinstruction-format",
   title: "Microinstruction Format",
-  description: "Split one control word into micro-operation fields and a next-address field.",
+  description:
+    "Split one control word into micro-operation fields and a next-address field.",
   labType: "text",
   components,
   sections: [aim, theory, apparatus, observations, conclusion],
   procedureSteps,
 };
 
-export const MicroinstructionFormatCircuit = buildCircuit(microinstructionFormatExperiment);
-export const MicroinstructionFormatContent = buildLabContent(microinstructionFormatExperiment);
+export const MicroinstructionFormatCircuit = buildCircuit(
+  microinstructionFormatExperiment,
+);
+export const MicroinstructionFormatContent = buildLabContent(
+  microinstructionFormatExperiment,
+);
