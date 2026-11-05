@@ -1,4 +1,4 @@
-import { IconBulb, IconCode } from "@tabler/icons-react";
+import { IconBuilding, IconCode, IconUsersGroup } from "@tabler/icons-react";
 
 import { DiscordMark, GitHubMark } from "@/icons";
 import { SITE_URLS } from "@/platform/site-urls";
@@ -48,6 +48,34 @@ export const MENU: {
             title: "Build on an open platform",
             description:
               "Explore the source, open issues, and contribute to VLabs on GitHub.",
+          },
+        },
+        {
+          label: "Host Institute",
+          description: "IIIT Sonepat & Technical Society",
+          href: "/host-institute",
+          icon: IconBuilding,
+          preview: {
+            image: "/host-institute.png",
+            imageAlt: "Stylised blueprint of the IIIT Sonepat campus",
+            imagePosition: "center",
+            title: "Where VLabs began",
+            description:
+              "Started by the Technical Society of IIIT Sonepat as an open-source virtual ECE lab initiative.",
+          },
+        },
+        {
+          label: "Participating Institutions",
+          description: "Partner with us on modules & labs",
+          href: "/participating-institutions",
+          icon: IconUsersGroup,
+          preview: {
+            image: "/participating-institutes.png",
+            imageAlt: "Handshake between institutions under campus icons",
+            imagePosition: "center",
+            title: "Build VLabs with us",
+            description:
+              "We have been building alone — join us, especially other IIITs, in authoring modules and labs.",
           },
         },
       ],

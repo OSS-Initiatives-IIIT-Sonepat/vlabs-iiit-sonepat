@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { IconBulb, IconCode } from "@tabler/icons-react";
+import { IconBuilding, IconCode, IconUsersGroup } from "@tabler/icons-react";
 
 import { DiscordMark, GitHubMark } from "@/icons";
 import { SITE_URLS } from "@/platform/site-urls";
@@ -47,6 +47,32 @@ export function useMenuData() {
             imageScale: 1.6,
             title: t("resources.developersTitle"),
             description: t("resources.developersPreview"),
+          },
+        },
+        {
+          label: t("resources.hostInstitute"),
+          description: t("resources.hostInstituteDesc"),
+          href: "/host-institute",
+          icon: IconBuilding,
+          preview: {
+            image: "/host-institute.png",
+            imageAlt: t("resources.hostInstituteAlt"),
+            imagePosition: "center",
+            title: t("resources.hostInstituteTitle"),
+            description: t("resources.hostInstitutePreview"),
+          },
+        },
+        {
+          label: t("resources.participatingInstitutions"),
+          description: t("resources.participatingInstitutionsDesc"),
+          href: "/participating-institutions",
+          icon: IconUsersGroup,
+          preview: {
+            image: "/participating-institutes.png",
+            imageAlt: t("resources.participatingInstitutionsAlt"),
+            imagePosition: "center",
+            title: t("resources.participatingInstitutionsTitle"),
+            description: t("resources.participatingInstitutionsPreview"),
           },
         },
       ],
