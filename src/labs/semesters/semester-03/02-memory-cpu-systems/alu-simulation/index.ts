@@ -4,19 +4,18 @@ import { type ExperimentDefinition } from "@/labs/experiments/types";
 import { aim } from "./01-aim";
 import { theory } from "./02-theory";
 import { apparatus } from "./03-apparatus";
-import { simulation } from "./03-simulation";
+import { components } from "./components";
 import { observations } from "./05-observations";
 import { conclusion } from "./06-conclusion";
 import { procedureSteps } from "./04-procedure";
 
 export const aluSimulationExperiment: ExperimentDefinition = {
   id: "alu-simulation",
-  title: "4-bit ALU Operations",
+  title: "Arithmetic Logic Unit",
   description:
-    "An Arithmetic Logic Unit (ALU) is the combinational circuit within a CPU that performs integer arithmetic and bitwise logic operations. A 4-bit ALU operates on two 4-bit operands (A and B) and produce",
-  labType: "simulation",
-  components: [],
-  sections: [aim, theory, apparatus, simulation, observations, conclusion],
+    "Build a 1-bit ALU from AND, OR, and XOR, and select the operation with a 74HC153.",
+  components,
+  sections: [aim, theory, apparatus, observations, conclusion],
   procedureSteps,
 };
 
