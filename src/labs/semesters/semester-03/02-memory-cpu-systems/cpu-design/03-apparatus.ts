@@ -3,32 +3,47 @@ import { type ApparatusSection } from "@/labs/lab-content.types";
 export const apparatus: ApparatusSection = {
   id: "apparatus",
   type: "apparatus",
-  title: "Apparatus",
+  title: "Apparatus Required",
   items: [
     {
-      name: "Program Counter (PC)",
-      specification:
-        "8-bit register holding the address of the next instruction",
+      name: "Breadboard",
+      specification: "Long solderless breadboard, 60 columns",
+      quantity: "1",
     },
     {
-      name: "Instruction Register (IR)",
-      specification: "Holds the currently fetched instruction text",
+      name: "DC Power Supply",
+      specification: "5 V regulated",
+      quantity: "1",
     },
     {
-      name: "Register File",
-      specification: "4 × 8-bit general-purpose registers: R0, R1, R2, R3",
+      name: "74HC161 4-bit counter IC",
+      specification: "DIP-16, the program counter",
+      quantity: "1",
     },
     {
-      name: "ALU",
-      specification: "8-bit adder for ADD instruction",
+      name: "74HC138 decoder IC",
+      specification: "DIP-16, instruction select",
+      quantity: "1",
     },
     {
-      name: "Data Memory",
-      specification: "256 bytes — writeable at runtime",
+      name: "74HC04 hex inverter IC",
+      specification: "DIP-14, active-low decode to the lamps",
+      quantity: "2",
     },
     {
-      name: "Control Unit",
-      specification: "Decodes ISA instructions and drives datapath",
+      name: "LED",
+      specification: "5 mm, instruction 0 and instruction 1",
+      quantity: "2",
+    },
+    {
+      name: "330 ohm resistor",
+      specification: "0.25 W, LED current limit",
+      quantity: "2",
+    },
+    {
+      name: "Jumper wire",
+      specification: "22 AWG solid-core",
+      quantity: "1 set",
     },
   ],
 };
