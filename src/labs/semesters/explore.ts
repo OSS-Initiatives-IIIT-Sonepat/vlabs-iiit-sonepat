@@ -6,6 +6,16 @@ import {
 
 import { SEMESTER_SUBJECTS } from "./catalog";
 
+const BREADBOARD_IDS = new Set(
+  SEMESTER_SUBJECTS.flatMap((subject) =>
+    subject.experiments
+      .filter(
+        (item) => (item.experiment.labType ?? "breadboard") === "breadboard",
+      )
+      .map((item) => item.experiment.id),
+  ),
+);
+
 function toExploreExperiment(
   entry: (typeof SEMESTER_SUBJECTS)[number]["experiments"][number],
   defaultCircuitId: string,
@@ -30,6 +40,7 @@ function subjectToExplore(
     title: subject.subjectLabel,
     description: subject.subjectDescription,
     circuitId: subject.defaultCircuitId,
+    hasPreview: BREADBOARD_IDS.has(subject.defaultCircuitId),
     experiments: subject.experiments.map((entry) =>
       toExploreExperiment(entry, subject.defaultCircuitId),
     ),

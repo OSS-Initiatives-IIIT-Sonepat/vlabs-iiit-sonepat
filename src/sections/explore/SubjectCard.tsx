@@ -10,21 +10,30 @@ import { type ExploreSubject } from "./explore.data";
 const ENABLED_SUBJECTS = new Set([
   "01-analog-electronics",
   "01-digital-electronics",
+  "01-combinational-arithmetic",
+  "03-programming-fundamentals",
+  "04-computer-organisation-architecture",
+  "05-computer-arithmetic",
+  "06-processor-design",
+  "07-memory-and-io",
+  "08-assembly-systems",
 ]);
 
 type Props = {
   subject: ExploreSubject;
   onClick: (subject: ExploreSubject) => void;
+  /** WebGL previews mount only while this semester is open. */
+  showPreview: boolean;
 };
 
-export function SubjectCard({ subject, onClick }: Props) {
+export function SubjectCard({ subject, onClick, showPreview }: Props) {
   const comingSoon = !ENABLED_SUBJECTS.has(subject.id);
 
   return (
     <button
       className={[
         "native-button-reset box-border",
-        "flex flex-col h-full isolate min-h-0 min-w-0 overflow-hidden",
+        "flex flex-col isolate min-h-0 min-w-0 overflow-hidden",
         "p-[calc(var(--spacing-base)*4)] pb-0 pt-[calc(var(--spacing-base)*4)]",
         "relative text-left w-full",
         comingSoon
@@ -111,18 +120,23 @@ export function SubjectCard({ subject, onClick }: Props) {
         </Body>
       </div>
 
-      {/* 3D canvas bleeds to card bottom + sides */}
-      <div
-        className={[
-          "relative flex-1 h-[220px] min-h-0 -mx-[calc(var(--spacing-base)*4)] overflow-hidden",
-          "transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
-          "motion-reduce:transition-none",
-          comingSoon ? "grayscale opacity-40" : "",
-        ].join(" ")}
-        data-slot="card-image"
-      >
-        <CircuitModel circuitId={subject.circuitId} />
-      </div>
+      {/* Fixed slot. A flex-grow canvas was stretching the card into a tall
+          white panel and squeezing the breadboard into a thin strip. */}
+      {showPreview && subject.hasPreview && (
+        <div
+          className={[
+            "relative mt-auto h-[220px] shrink-0 -mx-[calc(var(--spacing-base)*4)] overflow-hidden",
+            "transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
+            "motion-reduce:transition-none",
+            comingSoon ? "grayscale opacity-40" : "",
+          ].join(" ")}
+          data-slot="card-image"
+        >
+          <div className="absolute inset-0">
+            <CircuitModel circuitId={subject.circuitId} />
+          </div>
+        </div>
+      )}
     </button>
   );
 }

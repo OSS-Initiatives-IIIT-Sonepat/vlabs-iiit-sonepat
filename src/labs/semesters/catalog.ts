@@ -389,6 +389,361 @@ import {
 } from "./semester-03/02-memory-cpu-systems/cpu-design";
 
 import {
+  FullAdderRippleCircuit,
+  FullAdderRippleContent,
+  fullAdderRippleExperiment,
+} from "./semester-02/02-advanced-adders/full-adder-ripple";
+
+import {
+  FlipFlopSynthesisCircuit,
+  FlipFlopSynthesisContent,
+  flipFlopSynthesisExperiment,
+} from "./semester-03/04-computer-organisation-architecture/02-flip-flop-synthesis";
+
+import {
+  KarnaughMapCircuit,
+  KarnaughMapContent,
+  karnaughMapExperiment,
+} from "./semester-03/04-computer-organisation-architecture/03-karnaugh-map";
+
+import {
+  QuineMccluskeyCircuit,
+  QuineMccluskeyContent,
+  quineMccluskeyExperiment,
+} from "./semester-03/04-computer-organisation-architecture/04-quine-mccluskey";
+
+import {
+  SignedAdditionCircuit,
+  SignedAdditionContent,
+  signedAdditionExperiment,
+} from "./semester-03/05-computer-arithmetic/signed-addition";
+import {
+  BoothTraceCircuit,
+  BoothTraceContent,
+  boothTraceExperiment,
+} from "./semester-03/05-computer-arithmetic/booth-trace";
+import {
+  BcdAdderCircuit,
+  BcdAdderContent,
+  bcdAdderExperiment,
+} from "./semester-03/05-computer-arithmetic/bcd-adder";
+import {
+  BusTransferCircuit,
+  BusTransferContent,
+  busTransferExperiment,
+} from "./semester-03/05-computer-arithmetic/bus-transfer";
+import {
+  RegisterTransferCircuit,
+  RegisterTransferContent,
+  registerTransferExperiment,
+} from "./semester-03/05-computer-arithmetic/register-transfer";
+import {
+  CommonBusCircuit,
+  CommonBusContent,
+  commonBusExperiment,
+} from "./semester-03/05-computer-arithmetic/common-bus";
+import {
+  TriStateBusCircuit,
+  TriStateBusContent,
+  triStateBusExperiment,
+} from "./semester-03/05-computer-arithmetic/tri-state-bus";
+import {
+  BinaryAdder4Circuit,
+  BinaryAdder4Content,
+  binaryAdder4Experiment,
+} from "./semester-03/05-computer-arithmetic/binary-adder-4";
+import {
+  AdderSubtractorCircuit,
+  AdderSubtractorContent,
+  adderSubtractorExperiment,
+} from "./semester-03/05-computer-arithmetic/adder-subtractor";
+import {
+  BinaryIncrementerCircuit,
+  BinaryIncrementerContent,
+  binaryIncrementerExperiment,
+} from "./semester-03/05-computer-arithmetic/binary-incrementer";
+import {
+  ArithmeticCircuitCircuit,
+  ArithmeticCircuitContent,
+  arithmeticCircuitExperiment,
+} from "./semester-03/05-computer-arithmetic/arithmetic-circuit";
+import {
+  CombinationalShifterCircuit,
+  CombinationalShifterContent,
+  combinationalShifterExperiment,
+} from "./semester-03/05-computer-arithmetic/combinational-shifter";
+import {
+  ArithmeticLogicShiftCircuit,
+  ArithmeticLogicShiftContent,
+  arithmeticLogicShiftExperiment,
+} from "./semester-03/05-computer-arithmetic/arithmetic-logic-shift";
+import {
+  RepresentationAndAlsuCircuit,
+  RepresentationAndAlsuContent,
+  representationAndAlsuExperiment,
+} from "./semester-03/05-computer-arithmetic/representation-and-alsu";
+import {
+  BusAndMemoryCircuit,
+  BusAndMemoryContent,
+  busAndMemoryExperiment,
+} from "./semester-03/05-computer-arithmetic/bus-and-memory";
+import {
+  MagnitudeAddSubCircuit,
+  MagnitudeAddSubContent,
+  magnitudeAddSubExperiment,
+} from "./semester-03/05-computer-arithmetic/magnitude-add-sub";
+import {
+  BoothAlgorithmCircuit,
+  BoothAlgorithmContent,
+  boothAlgorithmExperiment,
+} from "./semester-03/05-computer-arithmetic/booth-algorithm";
+import {
+  DecimalArithmeticCircuit,
+  DecimalArithmeticContent,
+  decimalArithmeticExperiment,
+} from "./semester-03/05-computer-arithmetic/decimal-arithmetic";
+import {
+  InstructionCodesCircuit,
+  InstructionCodesContent,
+  instructionCodesExperiment,
+} from "./semester-03/06-processor-design/instruction-codes";
+import {
+  ComputerRegistersCircuit,
+  ComputerRegistersContent,
+  computerRegistersExperiment,
+} from "./semester-03/06-processor-design/computer-registers";
+import {
+  InstructionCycleCircuit,
+  InstructionCycleContent,
+  instructionCycleExperiment,
+} from "./semester-03/06-processor-design/instruction-cycle";
+import {
+  MemoryReferenceCircuit,
+  MemoryReferenceContent,
+  memoryReferenceExperiment,
+} from "./semester-03/06-processor-design/memory-reference";
+import {
+  IoInterruptCircuit,
+  IoInterruptContent,
+  ioInterruptExperiment,
+} from "./semester-03/06-processor-design/io-interrupt";
+import {
+  CompleteComputerDescriptionCircuit,
+  CompleteComputerDescriptionContent,
+  completeComputerDescriptionExperiment,
+} from "./semester-03/06-processor-design/complete-computer-description";
+import {
+  AccumulatorLogicCircuit,
+  AccumulatorLogicContent,
+  accumulatorLogicExperiment,
+} from "./semester-03/06-processor-design/accumulator-logic";
+import {
+  BasicComputerCircuit,
+  BasicComputerContent,
+  basicComputerExperiment,
+} from "./semester-03/06-processor-design/basic-computer";
+import {
+  MicroprogrammedControlCircuit,
+  MicroprogrammedControlContent,
+  microprogrammedControlExperiment,
+} from "./semester-03/06-processor-design/microprogrammed-control";
+import {
+  RegisterOrganisationCircuit,
+  RegisterOrganisationContent,
+  registerOrganisationExperiment,
+} from "./semester-03/06-processor-design/register-organisation";
+import {
+  InstructionPipelineCircuit,
+  InstructionPipelineContent,
+  instructionPipelineExperiment,
+} from "./semester-03/06-processor-design/instruction-pipeline";
+import {
+  ComputerDescriptionCircuit,
+  ComputerDescriptionContent,
+  computerDescriptionExperiment,
+} from "./semester-03/06-processor-design/computer-description";
+import {
+  InstructionSetCircuit,
+  InstructionSetContent,
+  instructionSetExperiment,
+} from "./semester-03/06-processor-design/instruction-set";
+import {
+  TimingAndControlCircuit,
+  TimingAndControlContent,
+  timingAndControlExperiment,
+} from "./semester-03/06-processor-design/timing-and-control";
+import {
+  CompleteComputerCircuit,
+  CompleteComputerContent,
+  completeComputerExperiment,
+} from "./semester-03/06-processor-design/complete-computer";
+import {
+  AccumulatorUnitCircuit,
+  AccumulatorUnitContent,
+  accumulatorUnitExperiment,
+} from "./semester-03/06-processor-design/accumulator-unit";
+import {
+  InterruptCycleCircuit,
+  InterruptCycleContent,
+  interruptCycleExperiment,
+} from "./semester-03/06-processor-design/interrupt-cycle";
+import {
+  GeneralRegistersCircuit,
+  GeneralRegistersContent,
+  generalRegistersExperiment,
+} from "./semester-03/06-processor-design/general-registers";
+import {
+  StackOrganizationCircuit,
+  StackOrganizationContent,
+  stackOrganizationExperiment,
+} from "./semester-03/06-processor-design/stack-organization";
+import {
+  InstructionFormatCircuit,
+  InstructionFormatContent,
+  instructionFormatExperiment,
+} from "./semester-03/06-processor-design/instruction-format";
+import {
+  AddressingModesCircuit,
+  AddressingModesContent,
+  addressingModesExperiment,
+} from "./semester-03/06-processor-design/addressing-modes";
+import {
+  DataManipulationCircuit,
+  DataManipulationContent,
+  dataManipulationExperiment,
+} from "./semester-03/06-processor-design/data-manipulation";
+import {
+  ProgramControlCircuit,
+  ProgramControlContent,
+  programControlExperiment,
+} from "./semester-03/06-processor-design/program-control";
+import {
+  RiscOrganizationCircuit,
+  RiscOrganizationContent,
+  riscOrganizationExperiment,
+} from "./semester-03/06-processor-design/risc-organization";
+import {
+  CiscOrganizationCircuit,
+  CiscOrganizationContent,
+  ciscOrganizationExperiment,
+} from "./semester-03/06-processor-design/cisc-organization";
+import {
+  ControlMemoryCircuit,
+  ControlMemoryContent,
+  controlMemoryExperiment,
+} from "./semester-03/06-processor-design/control-memory";
+import {
+  AddressSequencingCircuit,
+  AddressSequencingContent,
+  addressSequencingExperiment,
+} from "./semester-03/06-processor-design/address-sequencing";
+import {
+  MicroinstructionFormatCircuit,
+  MicroinstructionFormatContent,
+  microinstructionFormatExperiment,
+} from "./semester-03/06-processor-design/microinstruction-format";
+import {
+  FlynnTaxonomyCircuit,
+  FlynnTaxonomyContent,
+  flynnTaxonomyExperiment,
+} from "./semester-03/06-processor-design/flynn-taxonomy";
+import {
+  ParallelProcessingCircuit,
+  ParallelProcessingContent,
+  parallelProcessingExperiment,
+} from "./semester-03/06-processor-design/parallel-processing";
+import {
+  PipelineOverlapCircuit,
+  PipelineOverlapContent,
+  pipelineOverlapExperiment,
+} from "./semester-03/06-processor-design/pipeline-overlap";
+import {
+  ArithmeticPipelineCircuit,
+  ArithmeticPipelineContent,
+  arithmeticPipelineExperiment,
+} from "./semester-03/06-processor-design/arithmetic-pipeline";
+import {
+  InstructionPipeCircuit,
+  InstructionPipeContent,
+  instructionPipeExperiment,
+} from "./semester-03/06-processor-design/instruction-pipe";
+import {
+  RiscPipelineCircuit,
+  RiscPipelineContent,
+  riscPipelineExperiment,
+} from "./semester-03/06-processor-design/risc-pipeline";
+import {
+  VectorProcessingCircuit,
+  VectorProcessingContent,
+  vectorProcessingExperiment,
+} from "./semester-03/06-processor-design/vector-processing";
+import {
+  ArrayProcessorsCircuit,
+  ArrayProcessorsContent,
+  arrayProcessorsExperiment,
+} from "./semester-03/06-processor-design/array-processors";
+import {
+  MemoryAddressMapCircuit,
+  MemoryAddressMapContent,
+  memoryAddressMapExperiment,
+} from "./semester-03/07-memory-and-io/memory-address-map";
+import {
+  CacheVirtualCircuit,
+  CacheVirtualContent,
+  cacheVirtualExperiment,
+} from "./semester-03/07-memory-and-io/cache-virtual";
+import {
+  IoOrganisationCircuit,
+  IoOrganisationContent,
+  ioOrganisationExperiment,
+} from "./semester-03/07-memory-and-io/io-organisation";
+import {
+  AsyncTransferCircuit,
+  AsyncTransferContent,
+  asyncTransferExperiment,
+} from "./semester-03/07-memory-and-io/async-transfer";
+import {
+  TransferModesCircuit,
+  TransferModesContent,
+  transferModesExperiment,
+} from "./semester-03/07-memory-and-io/transfer-modes";
+import {
+  PriorityInterruptCircuit,
+  PriorityInterruptContent,
+  priorityInterruptExperiment,
+} from "./semester-03/07-memory-and-io/priority-interrupt";
+import {
+  DmaTransferCircuit,
+  DmaTransferContent,
+  dmaTransferExperiment,
+} from "./semester-03/07-memory-and-io/dma-transfer";
+import {
+  IoProcessorCircuit,
+  IoProcessorContent,
+  ioProcessorExperiment,
+} from "./semester-03/07-memory-and-io/io-processor";
+import {
+  AssemblerSecondPassCircuit,
+  AssemblerSecondPassContent,
+  assemblerSecondPassExperiment,
+} from "./semester-03/08-assembly-systems/assembler-second-pass";
+import {
+  MachineAndAssemblyCircuit,
+  MachineAndAssemblyContent,
+  machineAndAssemblyExperiment,
+} from "./semester-03/08-assembly-systems/machine-and-assembly";
+import {
+  ProgramLoopCircuit,
+  ProgramLoopContent,
+  programLoopExperiment,
+} from "./semester-03/08-assembly-systems/program-loop";
+import {
+  SubroutineAndIoCircuit,
+  SubroutineAndIoContent,
+  subroutineAndIoExperiment,
+} from "./semester-03/08-assembly-systems/subroutine-and-io";
+
+import {
   CExpressionsCircuit,
   CExpressionsContent,
   cExpressionsExperiment,
@@ -968,7 +1323,7 @@ export const SEMESTER_SUBJECTS: readonly SemesterSubjectCatalog[] = [
     subjectId: "02-advanced-adders",
     subjectLabel: "Advanced Adder Circuits",
     subjectDescription:
-      "Revisit the half adder with focus on propagation delay and timing, then extend to a 4-bit ripple-carry adder.",
+      "Timing-focused adder labs. The 4-bit ripple-carry adder is listed under Semester 3, C.O.A.",
     defaultCircuitId: "half-adder-revisit",
     experiments: [
       // fromBuilt(
@@ -1087,8 +1442,8 @@ export const SEMESTER_SUBJECTS: readonly SemesterSubjectCatalog[] = [
     subjectId: "01-combinational-arithmetic",
     subjectLabel: "Combinational Arithmetic",
     subjectDescription:
-      "Advance from basic gates to multi-bit adders, carry-lookahead logic, and high-speed multiplier architectures.",
-    defaultCircuitId: "full-adder-ripple",
+      "Review gates and Boolean algebra before the Computer Organisation labs. The adders, multipliers, and registers from this track now live under C.O.A.",
+    defaultCircuitId: "cla-adder",
     experiments: [
       fromBuilt(
         introGatesReviewExperiment,
@@ -1096,12 +1451,23 @@ export const SEMESTER_SUBJECTS: readonly SemesterSubjectCatalog[] = [
         IntroGatesReviewContent,
         ["gates", "review", "boolean algebra", "de morgan", "theory"],
       ),
-      // fromBuilt(
-      //   fullAdderRippleExperiment,
-      //   FullAdderRippleCircuit,
-      //   FullAdderRippleContent,
-      //   ["ripple carry", "4-bit adder", "carry propagation", "alu", "delay"],
-      // ),
+    ],
+  },
+  {
+    semesterId: "semester-3",
+    semesterLabel: "Semester 3",
+    subjectId: "04-computer-organisation-architecture",
+    subjectLabel: "C.O.A.",
+    subjectDescription:
+      "Computer Organisation and Architecture, in the IIT Kharagpur virtual-lab order: ripple-carry and carry-lookahead adders, Wallace tree, flip-flop synthesis, registers, multipliers, the ALU, memory, both caches, a small CPU, then K-map and Quine–McCluskey.",
+    defaultCircuitId: "full-adder-ripple",
+    experiments: [
+      fromBuilt(
+        fullAdderRippleExperiment,
+        FullAdderRippleCircuit,
+        FullAdderRippleContent,
+        ["ripple carry", "full adder", "carry chain", "propagation delay", "adder"],
+      ),
       fromBuilt(claAdderExperiment, ClaAdderCircuit, ClaAdderContent, [
         "carry lookahead",
         "cla",
@@ -1110,12 +1476,6 @@ export const SEMESTER_SUBJECTS: readonly SemesterSubjectCatalog[] = [
         "propagate",
         "theory",
       ]),
-      fromBuilt(
-        registersCountersTheoryExperiment,
-        RegistersCountersTheoryCircuit,
-        RegistersCountersTheoryContent,
-        ["registers", "counters", "shift register", "binary counter", "theory"],
-      ),
       fromBuilt(wallaceTreeExperiment, WallaceTreeCircuit, WallaceTreeContent, [
         "wallace tree",
         "multiplier",
@@ -1123,6 +1483,18 @@ export const SEMESTER_SUBJECTS: readonly SemesterSubjectCatalog[] = [
         "fast adder",
         "theory",
       ]),
+      fromBuilt(
+        flipFlopSynthesisExperiment,
+        FlipFlopSynthesisCircuit,
+        FlipFlopSynthesisContent,
+        ["flip-flop", "jk", "excitation table", "characteristic equation", "d flip-flop"],
+      ),
+      fromBuilt(
+        registersCountersTheoryExperiment,
+        RegistersCountersTheoryCircuit,
+        RegistersCountersTheoryContent,
+        ["registers", "counters", "shift register", "binary counter", "theory"],
+      ),
       fromBuilt(
         combinationalMultipliersExperiment,
         CombinationalMultipliersCircuit,
@@ -1147,17 +1519,6 @@ export const SEMESTER_SUBJECTS: readonly SemesterSubjectCatalog[] = [
           "theory",
         ],
       ),
-    ],
-  },
-  {
-    semesterId: "semester-3",
-    semesterLabel: "Semester 3",
-    subjectId: "02-memory-cpu-systems",
-    subjectLabel: "Memory & CPU Systems",
-    subjectDescription:
-      "Explore ALU design, memory organisation, cache hierarchies, and the fetch-decode-execute cycle.",
-    defaultCircuitId: "alu-simulation",
-    experiments: [
       fromBuilt(
         aluSimulationExperiment,
         AluSimulationCircuit,
@@ -1171,6 +1532,12 @@ export const SEMESTER_SUBJECTS: readonly SemesterSubjectCatalog[] = [
         ["ram", "rom", "memory", "address decode", "read write"],
       ),
       fromBuilt(
+        cacheAssociativeExperiment,
+        CacheAssociativeCircuit,
+        CacheAssociativeContent,
+        ["cache", "fully associative", "lru", "replacement policy", "memory"],
+      ),
+      fromBuilt(
         cacheDirectMappedExperiment,
         CacheDirectMappedCircuit,
         CacheDirectMappedContent,
@@ -1182,12 +1549,6 @@ export const SEMESTER_SUBJECTS: readonly SemesterSubjectCatalog[] = [
           "memory hierarchy",
         ],
       ),
-      fromBuilt(
-        cacheAssociativeExperiment,
-        CacheAssociativeCircuit,
-        CacheAssociativeContent,
-        ["cache", "fully associative", "lru", "replacement policy", "memory"],
-      ),
       fromBuilt(cpuDesignExperiment, CpuDesignCircuit, CpuDesignContent, [
         "cpu",
         "fetch decode execute",
@@ -1195,6 +1556,499 @@ export const SEMESTER_SUBJECTS: readonly SemesterSubjectCatalog[] = [
         "register file",
         "simulation",
       ]),
+      fromBuilt(
+        karnaughMapExperiment,
+        KarnaughMapCircuit,
+        KarnaughMapContent,
+        ["karnaugh", "k-map", "minimisation", "sum of products", "boolean"],
+      ),
+      fromBuilt(
+        quineMccluskeyExperiment,
+        QuineMccluskeyCircuit,
+        QuineMccluskeyContent,
+        ["quine-mccluskey", "prime implicant", "tabular minimisation", "boolean"],
+      ),
+    ],
+  },
+  {
+    semesterId: "semester-3",
+    semesterLabel: "Semester 3",
+    subjectId: "05-computer-arithmetic",
+    subjectLabel: "Computer Arithmetic",
+    subjectDescription:
+      "Draw a register and the transfer R2 ← R1, build a common bus with multiplexers and again with tri-state buffers, add 1101 and 0111, add or subtract with one mode bit, increment 1101, and run all eight arithmetic microoperations on one circuit. Then shift 1101 left or right, and combine arithmetic, logic, and shift in one unit. Then add signed magnitudes, multiply with Booth, correct a BCD sum, and read or write memory.",
+    defaultCircuitId: "bcd-adder",
+    experiments: [
+      fromBuilt(
+        halfAdderSubtractorExperiment,
+        HalfAdderSubtractorCircuit,
+        HalfAdderSubtractorContent,
+        ["half adder", "sum", "carry", "xor"],
+      ),
+      fromBuilt(fullAdderExperiment, FullAdderCircuit, FullAdderContent, [
+        "full adder",
+        "carry-in",
+        "sum",
+        "carry-out",
+      ]),
+      fromBuilt(
+        fullAdderRippleExperiment,
+        FullAdderRippleCircuit,
+        FullAdderRippleContent,
+        ["ripple adder", "4-bit", "74hc283"],
+      ),
+      fromBuilt(
+        signedAdditionExperiment,
+        SignedAdditionCircuit,
+        SignedAdditionContent,
+        ["signed", "addition", "subtraction", "overflow", "avf"],
+      ),
+      fromBuilt(boothTraceExperiment, BoothTraceCircuit, BoothTraceContent, [
+        "booth",
+        "signed multiplication",
+        "arithmetic shift",
+      ]),
+      fromBuilt(bcdAdderExperiment, BcdAdderCircuit, BcdAdderContent, [
+        "bcd",
+        "adder",
+        "correction",
+        "74hc283",
+      ]),
+      fromBuilt(
+        busTransferExperiment,
+        BusTransferCircuit,
+        BusTransferContent,
+        ["bus", "shift", "multiplexer", "register"],
+      ),
+      fromBuilt(
+        registerTransferExperiment,
+        RegisterTransferCircuit,
+        RegisterTransferContent,
+        ["register transfer", "R2 ← R1", "control function", "PC"],
+      ),
+      fromBuilt(
+        commonBusExperiment,
+        CommonBusCircuit,
+        CommonBusContent,
+        ["common bus", "multiplexer", "S1 S0", "four registers"],
+      ),
+      fromBuilt(
+        triStateBusExperiment,
+        TriStateBusCircuit,
+        TriStateBusContent,
+        ["common bus", "tri-state", "decoder", "high impedance"],
+      ),
+      fromBuilt(
+        binaryAdder4Experiment,
+        BinaryAdder4Circuit,
+        BinaryAdder4Content,
+        ["4-bit adder", "full adder", "1101 + 0111", "carry"],
+      ),
+      fromBuilt(
+        adderSubtractorExperiment,
+        AdderSubtractorCircuit,
+        AdderSubtractorContent,
+        ["adder-subtractor", "mode M", "XOR", "2's complement"],
+      ),
+      fromBuilt(
+        binaryIncrementerExperiment,
+        BinaryIncrementerCircuit,
+        BinaryIncrementerContent,
+        ["increment", "half adder", "1101 + 1", "carry"],
+      ),
+      fromBuilt(
+        arithmeticCircuitExperiment,
+        ArithmeticCircuitCircuit,
+        ArithmeticCircuitContent,
+        ["arithmetic circuit", "multiplexer", "decrement", "microoperation"],
+      ),
+      fromBuilt(
+        combinationalShifterExperiment,
+        CombinationalShifterCircuit,
+        CombinationalShifterContent,
+        ["shifter", "logical shift", "circular shift", "arithmetic shift"],
+      ),
+      fromBuilt(
+        arithmeticLogicShiftExperiment,
+        ArithmeticLogicShiftCircuit,
+        ArithmeticLogicShiftContent,
+        ["ALU", "arithmetic logic shift", "multiplexer", "1101"],
+      ),
+      fromBuilt(
+        representationAndAlsuExperiment,
+        RepresentationAndAlsuCircuit,
+        RepresentationAndAlsuContent,
+        [
+          "data types",
+          "complements",
+          "fixed point",
+          "floating point",
+          "register transfer",
+          "three-state",
+          "alsu",
+          "micro-operation",
+        ],
+      ),
+      fromBuilt(
+        busAndMemoryExperiment,
+        BusAndMemoryCircuit,
+        BusAndMemoryContent,
+        ["bus", "memory transfer", "three-state", "read", "write", "address register"],
+      ),
+      fromBuilt(
+        magnitudeAddSubExperiment,
+        MagnitudeAddSubCircuit,
+        MagnitudeAddSubContent,
+        ["addition and subtraction"],
+      ),
+      fromBuilt(
+        boothAlgorithmExperiment,
+        BoothAlgorithmCircuit,
+        BoothAlgorithmContent,
+        ["booth's algorithm"],
+      ),
+      fromBuilt(
+        decimalArithmeticExperiment,
+        DecimalArithmeticCircuit,
+        DecimalArithmeticContent,
+        ["decimal arithmetic"],
+      ),
+    ],
+  },
+  {
+    semesterId: "semester-3",
+    semesterLabel: "Semester 3",
+    subjectId: "06-processor-design",
+    subjectLabel: "Processor Design",
+    subjectDescription:
+      "Read instruction codes and a stored program, then fetch, time, and interrupt a basic computer, and follow register, stack, addressing, RISC and CISC, microprogram, Flynn, and pipeline flowcharts.",
+    defaultCircuitId: "basic-computer",
+    experiments: [
+      fromBuilt(
+        instructionCodesExperiment,
+        InstructionCodesCircuit,
+        InstructionCodesContent,
+        ["instruction code", "opcode", "stored program", "direct", "indirect", "ADD 1547"],
+      ),
+      fromBuilt(
+        computerRegistersExperiment,
+        ComputerRegistersCircuit,
+        ComputerRegistersContent,
+        ["computer registers", "PC", "AR", "AC", "common bus", "DR"],
+      ),
+      fromBuilt(
+        instructionCycleExperiment,
+        InstructionCycleCircuit,
+        InstructionCycleContent,
+        ["instruction cycle", "fetch", "decode", "D7", "T0", "indirect"],
+      ),
+      fromBuilt(
+        memoryReferenceExperiment,
+        MemoryReferenceCircuit,
+        MemoryReferenceContent,
+        ["memory reference", "AND", "ADD", "LDA", "STA", "BUN", "BSA", "ISZ"],
+      ),
+      fromBuilt(
+        ioInterruptExperiment,
+        IoInterruptCircuit,
+        IoInterruptContent,
+        ["input output", "interrupt", "INPR", "OUTR", "FGI", "FGO", "IEN"],
+      ),
+      fromBuilt(
+        completeComputerDescriptionExperiment,
+        CompleteComputerDescriptionCircuit,
+        CompleteComputerDescriptionContent,
+        ["complete computer", "instruction cycle", "interrupt", "D7", "R", "SC"],
+      ),
+      fromBuilt(
+        accumulatorLogicExperiment,
+        AccumulatorLogicCircuit,
+        AccumulatorLogicContent,
+        ["accumulator", "LD", "INR", "CLR", "AND", "ADD", "CMA"],
+      ),
+      fromBuilt(
+        basicComputerExperiment,
+        BasicComputerCircuit,
+        BasicComputerContent,
+        ["cpu", "fetch", "direct", "indirect", "addressing"],
+      ),
+      fromBuilt(
+        microprogrammedControlExperiment,
+        MicroprogrammedControlCircuit,
+        MicroprogrammedControlContent,
+        ["microprogram", "control memory", "car", "rom"],
+      ),
+      fromBuilt(
+        registerOrganisationExperiment,
+        RegisterOrganisationCircuit,
+        RegisterOrganisationContent,
+        ["register file", "mux", "stack", "addressing mode"],
+      ),
+      fromBuilt(
+        instructionPipelineExperiment,
+        InstructionPipelineCircuit,
+        InstructionPipelineContent,
+        ["pipeline", "flynn", "branch", "speedup"],
+      ),
+      fromBuilt(
+        computerDescriptionExperiment,
+        ComputerDescriptionCircuit,
+        ComputerDescriptionContent,
+        [
+          "instruction",
+          "opcode",
+          "instruction cycle",
+          "accumulator",
+          "memory reference",
+          "interrupt",
+        ],
+      ),
+      fromBuilt(
+        instructionSetExperiment,
+        InstructionSetCircuit,
+        InstructionSetContent,
+        ["instruction code", "opcode", "memory reference", "register reference", "i/o"],
+      ),
+      fromBuilt(
+        timingAndControlExperiment,
+        TimingAndControlCircuit,
+        TimingAndControlContent,
+        ["timing", "sequence counter", "control", "T0", "direct"],
+      ),
+      fromBuilt(
+        completeComputerExperiment,
+        CompleteComputerCircuit,
+        CompleteComputerContent,
+        ["computer", "bus", "register", "control unit", "memory"],
+      ),
+      fromBuilt(
+        accumulatorUnitExperiment,
+        AccumulatorUnitCircuit,
+        AccumulatorUnitContent,
+        ["accumulator", "add", "and", "complement", "shift"],
+      ),
+      fromBuilt(
+        interruptCycleExperiment,
+        InterruptCycleCircuit,
+        InterruptCycleContent,
+        ["interrupt", "ien", "fgi", "service routine", "i/o"],
+      ),
+      fromBuilt(
+        generalRegistersExperiment,
+        GeneralRegistersCircuit,
+        GeneralRegistersContent,
+        ["general register organization"],
+      ),
+      fromBuilt(
+        stackOrganizationExperiment,
+        StackOrganizationCircuit,
+        StackOrganizationContent,
+        ["stack organization"],
+      ),
+      fromBuilt(
+        instructionFormatExperiment,
+        InstructionFormatCircuit,
+        InstructionFormatContent,
+        ["instruction format"],
+      ),
+      fromBuilt(
+        addressingModesExperiment,
+        AddressingModesCircuit,
+        AddressingModesContent,
+        ["addressing modes"],
+      ),
+      fromBuilt(
+        dataManipulationExperiment,
+        DataManipulationCircuit,
+        DataManipulationContent,
+        ["data transfer and manipulation"],
+      ),
+      fromBuilt(
+        programControlExperiment,
+        ProgramControlCircuit,
+        ProgramControlContent,
+        ["program control"],
+      ),
+      fromBuilt(
+        riscOrganizationExperiment,
+        RiscOrganizationCircuit,
+        RiscOrganizationContent,
+        ["risc"],
+      ),
+      fromBuilt(
+        ciscOrganizationExperiment,
+        CiscOrganizationCircuit,
+        CiscOrganizationContent,
+        ["cisc"],
+      ),
+      fromBuilt(
+        controlMemoryExperiment,
+        ControlMemoryCircuit,
+        ControlMemoryContent,
+        ["control memory"],
+      ),
+      fromBuilt(
+        addressSequencingExperiment,
+        AddressSequencingCircuit,
+        AddressSequencingContent,
+        ["address sequencing"],
+      ),
+      fromBuilt(
+        microinstructionFormatExperiment,
+        MicroinstructionFormatCircuit,
+        MicroinstructionFormatContent,
+        ["microinstruction format"],
+      ),
+      fromBuilt(
+        flynnTaxonomyExperiment,
+        FlynnTaxonomyCircuit,
+        FlynnTaxonomyContent,
+        ["flynn's taxonomy"],
+      ),
+      fromBuilt(
+        parallelProcessingExperiment,
+        ParallelProcessingCircuit,
+        ParallelProcessingContent,
+        ["parallel processing"],
+      ),
+      fromBuilt(
+        pipelineOverlapExperiment,
+        PipelineOverlapCircuit,
+        PipelineOverlapContent,
+        ["pipelining"],
+      ),
+      fromBuilt(
+        arithmeticPipelineExperiment,
+        ArithmeticPipelineCircuit,
+        ArithmeticPipelineContent,
+        ["arithmetic pipeline"],
+      ),
+      fromBuilt(
+        instructionPipeExperiment,
+        InstructionPipeCircuit,
+        InstructionPipeContent,
+        ["instruction pipeline"],
+      ),
+      fromBuilt(
+        riscPipelineExperiment,
+        RiscPipelineCircuit,
+        RiscPipelineContent,
+        ["risc pipeline"],
+      ),
+      fromBuilt(
+        vectorProcessingExperiment,
+        VectorProcessingCircuit,
+        VectorProcessingContent,
+        ["vector processing"],
+      ),
+      fromBuilt(
+        arrayProcessorsExperiment,
+        ArrayProcessorsCircuit,
+        ArrayProcessorsContent,
+        ["array processors"],
+      ),
+    ],
+  },
+  {
+    semesterId: "semester-3",
+    semesterLabel: "Semester 3",
+    subjectId: "07-memory-and-io",
+    subjectLabel: "Memory and I/O",
+    subjectDescription:
+      "Map two ROMs, compare caches, strobe a port, then follow handshake, transfer mode, priority, DMA, and IOP flowcharts.",
+    defaultCircuitId: "memory-address-map",
+    experiments: [
+      fromBuilt(
+        memoryAddressMapExperiment,
+        MemoryAddressMapCircuit,
+        MemoryAddressMapContent,
+        ["memory map", "rom", "decoder", "sram", "dram"],
+      ),
+      fromBuilt(
+        cacheVirtualExperiment,
+        CacheVirtualCircuit,
+        CacheVirtualContent,
+        ["cache", "direct mapped", "associative", "virtual memory", "page"],
+      ),
+      fromBuilt(
+        ioOrganisationExperiment,
+        IoOrganisationCircuit,
+        IoOrganisationContent,
+        ["i/o", "strobe", "interrupt", "dma", "handshake"],
+      ),
+      fromBuilt(
+        asyncTransferExperiment,
+        AsyncTransferCircuit,
+        AsyncTransferContent,
+        ["asynchronous data transfer"],
+      ),
+      fromBuilt(
+        transferModesExperiment,
+        TransferModesCircuit,
+        TransferModesContent,
+        ["modes of transfer"],
+      ),
+      fromBuilt(
+        priorityInterruptExperiment,
+        PriorityInterruptCircuit,
+        PriorityInterruptContent,
+        ["priority interrupt"],
+      ),
+      fromBuilt(
+        dmaTransferExperiment,
+        DmaTransferCircuit,
+        DmaTransferContent,
+        ["dma"],
+      ),
+      fromBuilt(
+        ioProcessorExperiment,
+        IoProcessorCircuit,
+        IoProcessorContent,
+        ["input-output processor"],
+      ),
+    ],
+  },
+  {
+    semesterId: "semester-3",
+    semesterLabel: "Semester 3",
+    subjectId: "08-assembly-systems",
+    subjectLabel: "Assembly Systems",
+    subjectDescription:
+      "Walk the second pass of an assembler, compare a machine word with its assembly line, trace a counted loop, and call a subroutine that waits for input.",
+    defaultCircuitId: "assembler-second-pass",
+    experiments: [
+      fromBuilt(
+        assemblerSecondPassExperiment,
+        AssemblerSecondPassCircuit,
+        AssemblerSecondPassContent,
+        [
+          "assembler",
+          "second pass",
+          "machine language",
+          "assembly language",
+          "subroutine",
+          "loop",
+          "i/o programming",
+        ],
+      ),
+      fromBuilt(
+        machineAndAssemblyExperiment,
+        MachineAndAssemblyCircuit,
+        MachineAndAssemblyContent,
+        ["machine language", "assembly language", "arithmetic", "logic"],
+      ),
+      fromBuilt(
+        programLoopExperiment,
+        ProgramLoopCircuit,
+        ProgramLoopContent,
+        ["loop", "branch", "sza", "count"],
+      ),
+      fromBuilt(
+        subroutineAndIoExperiment,
+        SubroutineAndIoCircuit,
+        SubroutineAndIoContent,
+        ["subroutine", "bsa", "return", "i/o", "ski", "inp"],
+      ),
     ],
   },
   {
