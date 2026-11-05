@@ -6,15 +6,15 @@ import { theory } from "./02-theory";
 import { apparatus } from "./03-apparatus";
 import { observations } from "./05-observations";
 import { conclusion } from "./06-conclusion";
+import { components } from "./components";
 import { procedureSteps } from "./04-procedure";
 
 export const claAdderExperiment: ExperimentDefinition = {
   id: "cla-adder",
   title: "Carry-Look-Ahead Adder (CLA)",
   description:
-    "A Ripple Carry Adder (RCA) chains n full adders in series: each stage must wait for the carry from the previous stage before it can compute its sum and carry. The total propagation delay is $n \\times ",
-  labType: "text",
-  components: [],
+    "Compute every carry in parallel from generate and propagate signals, instead of waiting for a ripple chain.",
+  components,
   sections: [aim, theory, apparatus, observations, conclusion],
   procedureSteps,
 };

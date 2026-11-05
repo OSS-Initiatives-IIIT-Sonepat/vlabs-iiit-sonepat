@@ -6,24 +6,34 @@ export const apparatus: ApparatusSection = {
   title: "Apparatus Required",
   items: [
     {
-      name: "Pencil/Pen and Paper",
-      specification: "For working through CLA equations",
-      quantity: "1 set",
-    },
-    {
-      name: "74HC283 CLA Adder IC",
-      specification: "4-bit binary full adder with fast carry",
-      quantity: "1 (ref)",
-    },
-    {
-      name: "Logic Analyser / Simulator",
-      specification: "For measuring propagation delay comparison",
-      quantity: "1 (opt)",
-    },
-    {
-      name: "Digital Logic Textbook",
-      specification: "Mano or Patterson & Hennessy for CLA chapter",
+      name: "Breadboard",
+      specification: "Long solderless breadboard, 60 columns",
       quantity: "1",
+    },
+    {
+      name: "DC Power Supply",
+      specification: "5 V regulated",
+      quantity: "1",
+    },
+    {
+      name: "74HC283 4-bit adder IC",
+      specification: "DIP-16 carry-lookahead adder",
+      quantity: "1",
+    },
+    {
+      name: "LED",
+      specification: "5 mm, sum bits S4 to S1 and carry C4",
+      quantity: "5",
+    },
+    {
+      name: "330 ohm resistor",
+      specification: "0.25 W, LED current limit",
+      quantity: "5",
+    },
+    {
+      name: "Jumper wire",
+      specification: "22 AWG solid-core",
+      quantity: "1 set",
     },
   ],
 };
