@@ -1,0 +1,44 @@
+import { type ApparatusSection } from "@/labs/lab-content.types";
+
+export const apparatus: ApparatusSection = {
+  id: "apparatus",
+  type: "apparatus",
+  title: "Apparatus Required",
+  items: [
+  {
+    "name": "Breadboard",
+    "specification": "Long solderless breadboard, 60 columns",
+    "quantity": "1"
+  },
+  {
+    "name": "DC Power Supply",
+    "specification": "5 V regulated",
+    "quantity": "1"
+  },
+  {
+    "name": "74HC138 decoder IC",
+    "specification": "DIP-16, selects the ROM",
+    "quantity": "1"
+  },
+  {
+    "name": "ROM chip",
+    "specification": "DIP-16, one word each",
+    "quantity": "2"
+  },
+  {
+    "name": "LED",
+    "specification": "5 mm, the selected data nibble",
+    "quantity": "4"
+  },
+  {
+    "name": "330 ohm resistor",
+    "specification": "0.25 W, LED current limit",
+    "quantity": "4"
+  },
+  {
+    "name": "Jumper wire",
+    "specification": "22 AWG solid-core",
+    "quantity": "1 set"
+  }
+],
+};
