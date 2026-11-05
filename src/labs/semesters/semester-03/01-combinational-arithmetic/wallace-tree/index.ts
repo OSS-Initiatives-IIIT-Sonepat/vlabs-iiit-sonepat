@@ -6,15 +6,15 @@ import { theory } from "./02-theory";
 import { apparatus } from "./03-apparatus";
 import { observations } from "./05-observations";
 import { conclusion } from "./06-conclusion";
+import { components } from "./components";
 import { procedureSteps } from "./04-procedure";
 
 export const wallaceTreeExperiment: ExperimentDefinition = {
   id: "wallace-tree",
   title: "Wallace Tree Multiplier",
   description:
-    "The Wallace Tree multiplier is a hardware multiplication algorithm designed to minimize the delay of computing the product of two n-bit numbers. It achieves O(log n) gate depth (vs O(n) for the naive ",
-  labType: "text",
-  components: [],
+    "Sum partial products in a Wallace tree so an n-bit multiply finishes in O(log n) adder stages.",
+  components,
   sections: [aim, theory, apparatus, observations, conclusion],
   procedureSteps,
 };

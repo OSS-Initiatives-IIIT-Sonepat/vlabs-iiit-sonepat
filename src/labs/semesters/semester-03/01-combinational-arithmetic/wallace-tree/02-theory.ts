@@ -1,9 +1,11 @@
 import { type TheorySection } from "@/labs/lab-content.types";
+import { wallaceTreeTheoryDiagram } from "@/labs/schematics/semester-03/01-combinational-arithmetic/wallace-tree";
 
 export const theory: TheorySection = {
   id: "theory",
   type: "text",
   title: "Theory",
+  circuitDiagram: wallaceTreeTheoryDiagram,
   paragraphs: [
     "The Wallace Tree multiplier is a hardware multiplication algorithm designed to minimize the delay of computing the product of two n-bit numbers. It achieves O(log n) gate depth (vs O(n) for the naive array multiplier) by reducing partial products using a tree of Carry-Save Adders (CSAs) before a final Carry-Propagate Adder (CPA) produces the result.",
     "Step 1 — Partial Product Generation: For two n-bit operands A and B, each bit of B is ANDed with every bit of A to produce n partial products. Each partial product is an n-bit row. For 4×4 multiplication, 4 rows of 4 bits each are generated using 16 AND gates. The AND gate for bit position $A_i \\cdot B_j$ contributes to sum column $i+j$.",
