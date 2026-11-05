@@ -3,8 +3,7 @@ import { SITE_URLS } from "@/platform/site-urls";
 export const PARTICIPATING_INSTITUTIONS = {
   eyebrow: "Participating institutions.",
   heading: "Build VLabs with us",
-  lead:
-    "We have been building VLabs largely on our own. We would love your help — especially from other IIITs and ECE departments ready to co-author modules and labs.",
+  lead: "We have been building VLabs largely on our own. We would love your help — especially from other IIITs and ECE departments ready to co-author modules and labs.",
   image: {
     src: "/participating-institutes.png",
     alt: "Handshake between institutions under a network of campus icons",

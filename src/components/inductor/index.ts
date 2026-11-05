@@ -17,26 +17,40 @@ function formatHenrys(h: number): string {
   return `${+(h * 1e6).toFixed(0)}µH`;
 }
 
-function buildInductorBodyMesh(bodyLen: number, coreR: number, henrys: number): THREE.Group {
+function buildInductorBodyMesh(
+  bodyLen: number,
+  coreR: number,
+  henrys: number,
+): THREE.Group {
   const grp = new THREE.Group();
 
   const ferriteMat = new THREE.MeshBasicMaterial({ color: 0x3a3a40 });
   const coreGeo = new THREE.CylinderGeometry(coreR, coreR, bodyLen, 20);
   coreGeo.rotateZ(Math.PI / 2);
   grp.add(new THREE.Mesh(coreGeo, ferriteMat));
-  grp.add(new THREE.LineSegments(new THREE.EdgesGeometry(coreGeo, 28), M.edge()));
+  grp.add(
+    new THREE.LineSegments(new THREE.EdgesGeometry(coreGeo, 28), M.edge()),
+  );
 
   // Flanged end caps hold the winding in place.
-  const capGeo = new THREE.CylinderGeometry(coreR * 1.45, coreR * 1.45, bodyLen * 0.08, 20);
+  const capGeo = new THREE.CylinderGeometry(
+    coreR * 1.45,
+    coreR * 1.45,
+    bodyLen * 0.08,
+    20,
+  );
   capGeo.rotateZ(Math.PI / 2);
   for (const sign of [-1, 1]) {
     const cap = new THREE.Mesh(capGeo, ferriteMat);
     cap.position.x = sign * bodyLen * 0.46;
     grp.add(cap);
     grp.add(
-      Object.assign(new THREE.LineSegments(new THREE.EdgesGeometry(capGeo, 28), M.edge()), {
-        position: cap.position.clone(),
-      }),
+      Object.assign(
+        new THREE.LineSegments(new THREE.EdgesGeometry(capGeo, 28), M.edge()),
+        {
+          position: cap.position.clone(),
+        },
+      ),
     );
   }
 
@@ -49,10 +63,24 @@ function buildInductorBodyMesh(bodyLen: number, coreR: number, henrys: number): 
   for (let i = 0; i <= steps; i++) {
     const t = i / steps;
     const a = t * turns * Math.PI * 2;
-    pts.push(new THREE.Vector3(-windLen / 2 + t * windLen, Math.cos(a) * windR, Math.sin(a) * windR));
+    pts.push(
+      new THREE.Vector3(
+        -windLen / 2 + t * windLen,
+        Math.cos(a) * windR,
+        Math.sin(a) * windR,
+      ),
+    );
   }
-  const helix = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), steps, coreR * 0.16, 6, false);
-  grp.add(new THREE.Mesh(helix, new THREE.MeshBasicMaterial({ color: 0xc8742c })));
+  const helix = new THREE.TubeGeometry(
+    new THREE.CatmullRomCurve3(pts),
+    steps,
+    coreR * 0.16,
+    6,
+    false,
+  );
+  grp.add(
+    new THREE.Mesh(helix, new THREE.MeshBasicMaterial({ color: 0xc8742c })),
+  );
 
   const lbl = textLabel(formatHenrys(henrys), bodyLen * 0.7, coreR * 1.3, {
     textColor: "#ffffff",
@@ -92,8 +120,16 @@ export function buildInductor(
   root.add(body);
 
   const halfLen = bodyLen * 0.5;
-  const endL = new THREE.Vector3(midX - Math.cos(angle) * halfLen, bodyY, midZ - Math.sin(angle) * halfLen);
-  const endR = new THREE.Vector3(midX + Math.cos(angle) * halfLen, bodyY, midZ + Math.sin(angle) * halfLen);
+  const endL = new THREE.Vector3(
+    midX - Math.cos(angle) * halfLen,
+    bodyY,
+    midZ - Math.sin(angle) * halfLen,
+  );
+  const endR = new THREE.Vector3(
+    midX + Math.cos(angle) * halfLen,
+    bodyY,
+    midZ + Math.sin(angle) * halfLen,
+  );
   const leadR = PITCH * 0.055;
   root.add(buildAxialLead(endL, lead1, leadR));
   root.add(buildAxialLead(endR, lead2, leadR));

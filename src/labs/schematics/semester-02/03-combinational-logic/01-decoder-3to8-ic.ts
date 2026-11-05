@@ -1,4 +1,7 @@
-import { type SchematicData, type SchematicElement } from "@/labs/CircuitSchematic";
+import {
+  type SchematicData,
+  type SchematicElement,
+} from "@/labs/CircuitSchematic";
 
 /*
  * 3:8 Decoder using the 74HC138 — progressive 2D schematics.
@@ -12,13 +15,30 @@ import { type SchematicData, type SchematicElement } from "@/labs/CircuitSchemat
 const W = 460;
 const H = 370;
 
-const wire = (id: string, ...pts: [number, number][]): Extract<SchematicElement, { type: "wire" }> =>
-  ({ type: "wire", id, points: pts.map(([x, y]) => ({ x, y })) });
-const label = (id: string, x: number, y: number, text: string): SchematicElement =>
-  ({ type: "label", id, x, y, text });
-const junction = (id: string, x: number, y: number): SchematicElement => ({ type: "junction", id, x, y });
-const hl = <T extends SchematicElement>(el: T, highlight?: boolean): T => (highlight ? { ...el, highlight } : el);
-const labelBefore = (id: string, x: number, y: number, text: string) => label(id, x - 4 - text.length * 2.52, y, text);
+const wire = (
+  id: string,
+  ...pts: [number, number][]
+): Extract<SchematicElement, { type: "wire" }> => ({
+  type: "wire",
+  id,
+  points: pts.map(([x, y]) => ({ x, y })),
+});
+const label = (
+  id: string,
+  x: number,
+  y: number,
+  text: string,
+): SchematicElement => ({ type: "label", id, x, y, text });
+const junction = (id: string, x: number, y: number): SchematicElement => ({
+  type: "junction",
+  id,
+  x,
+  y,
+});
+const hl = <T extends SchematicElement>(el: T, highlight?: boolean): T =>
+  highlight ? { ...el, highlight } : el;
+const labelBefore = (id: string, x: number, y: number, text: string) =>
+  label(id, x - 4 - text.length * 2.52, y, text);
 
 const BOX = { x0: 170, x1: 260, y0: 50, y1: 335 };
 const ADDR_Y = [80, 110, 140];
@@ -66,7 +86,10 @@ const decoder = (o: Opts = {}): SchematicElement[] => {
     ADDR_Y.forEach((y, i) => {
       const bit = o.value === undefined ? undefined : (o.value >> i) & 1;
       const t = bit === undefined ? `A${i}` : `A${i}=${bit}`;
-      els.push(labelBefore(`lbl_a${i}`, 110, y, t), hl(wire(`w_a${i}`, [110, y], [x0, y]), o.hlAddr));
+      els.push(
+        labelBefore(`lbl_a${i}`, 110, y, t),
+        hl(wire(`w_a${i}`, [110, y], [x0, y]), o.hlAddr),
+      );
     });
   }
   if (o.outs) {
@@ -78,7 +101,15 @@ const decoder = (o: Opts = {}): SchematicElement[] => {
       const lit = !o.disabled && o.value === i;
       els.push(
         hl(wire(`w_y${i}`, [x1, y], [290, y]), o.hlOuts),
-        { type: "led", id: `led_y${i}`, x: 310, y, rotation: 180, color: "red", highlight: o.hlOuts || lit },
+        {
+          type: "led",
+          id: `led_y${i}`,
+          x: 310,
+          y,
+          rotation: 180,
+          color: "red",
+          highlight: o.hlOuts || lit,
+        },
         wire(`w_led_r${i}`, [330, y], [340, y]),
         { type: "resistor", id: `r_y${i}`, x: 370, y },
         wire(`w_r_bus${i}`, [400, y], [BUS_X, y]),
@@ -92,20 +123,70 @@ const decoder = (o: Opts = {}): SchematicElement[] => {
 const complete = (extra: Opts = {}): SchematicElement[] =>
   decoder({ enables: true, addr: true, outs: true, ...extra });
 
-const sheet = (t: string, els: SchematicElement[], c: string): SchematicData =>
-  ({ width: W, height: H, elements: [label("title", W / 2, 20, t), ...els, label("caption", W / 2, 357, c)] });
+const sheet = (
+  t: string,
+  els: SchematicElement[],
+  c: string,
+): SchematicData => ({
+  width: W,
+  height: H,
+  elements: [
+    label("title", W / 2, 20, t),
+    ...els,
+    label("caption", W / 2, 357, c),
+  ],
+});
 
-export const step01 = sheet("Place the 74HC138", decoder(), "VCC = pin 16, GND = pin 8 · outputs Y0–Y7 are active LOW");
-export const step02 = sheet("Enable the Decoder", decoder({ enables: true, hlEn: true }), "E1 = 1 and E2' = E3' = 0 enable the outputs");
-export const step03 = sheet("Address Inputs A0–A2", decoder({ enables: true, addr: true, hlAddr: true }), "A0 is the least significant bit");
-export const step04 = sheet("Output LEDs (Sink Wiring)", complete({ hlOuts: true, value: 0 }), "LED lights when its output is LOW · 000 selects Y0");
-export const step05 = sheet("Test: A2A1A0 = 011 → Y3", complete({ value: 3 }), "Only Y3 goes LOW; the other seven stay HIGH");
-export const step06 = sheet("Test: A2A1A0 = 101 → Y5", complete({ value: 5 }), "Yn = 0 when n = 4·A2 + 2·A1 + A0");
-export const step07 = sheet("Test: A2A1A0 = 111 → Y7", complete({ value: 7 }), "Each address selects exactly one output");
-export const step08 = sheet("Disable: E1 = 0", complete({ value: 7, hlEn: true, disabled: true }), "Disabled: all outputs HIGH, every LED off");
+export const step01 = sheet(
+  "Place the 74HC138",
+  decoder(),
+  "VCC = pin 16, GND = pin 8 · outputs Y0–Y7 are active LOW",
+);
+export const step02 = sheet(
+  "Enable the Decoder",
+  decoder({ enables: true, hlEn: true }),
+  "E1 = 1 and E2' = E3' = 0 enable the outputs",
+);
+export const step03 = sheet(
+  "Address Inputs A0–A2",
+  decoder({ enables: true, addr: true, hlAddr: true }),
+  "A0 is the least significant bit",
+);
+export const step04 = sheet(
+  "Output LEDs (Sink Wiring)",
+  complete({ hlOuts: true, value: 0 }),
+  "LED lights when its output is LOW · 000 selects Y0",
+);
+export const step05 = sheet(
+  "Test: A2A1A0 = 011 → Y3",
+  complete({ value: 3 }),
+  "Only Y3 goes LOW; the other seven stay HIGH",
+);
+export const step06 = sheet(
+  "Test: A2A1A0 = 101 → Y5",
+  complete({ value: 5 }),
+  "Yn = 0 when n = 4·A2 + 2·A1 + A0",
+);
+export const step07 = sheet(
+  "Test: A2A1A0 = 111 → Y7",
+  complete({ value: 7 }),
+  "Each address selects exactly one output",
+);
+export const step08 = sheet(
+  "Disable: E1 = 0",
+  complete({ value: 7, hlEn: true, disabled: true }),
+  "Disabled: all outputs HIGH, every LED off",
+);
 
 export const decoder3to8IcStepSchematics: SchematicData[] = [
-  step01, step02, step03, step04, step05, step06, step07, step08,
+  step01,
+  step02,
+  step03,
+  step04,
+  step05,
+  step06,
+  step07,
+  step08,
 ];
 
 export const decoder3to8IcTheoryDiagram: SchematicData = sheet(

@@ -18,8 +18,18 @@ function outputChain(n: number): ComponentInstance[] {
   const k = CHAIN_COLS[n % 4];
   const rail = top ? "vcc_top" : "vcc_bot";
   return [
-    { id: `r_y${n}`, type: "resistor", ohms: 330, mountedAt: { board: "bb", col: k, row: top ? "c" : "h" } },
-    { id: `led_y${n}`, type: "led", color: top ? "red" : "green", mountedAt: { board: "bb", col: k + 3, row: top ? "b" : "i" } },
+    {
+      id: `r_y${n}`,
+      type: "resistor",
+      ohms: 330,
+      mountedAt: { board: "bb", col: k, row: top ? "c" : "h" },
+    },
+    {
+      id: `led_y${n}`,
+      type: "led",
+      color: top ? "red" : "green",
+      mountedAt: { board: "bb", col: k + 3, row: top ? "b" : "i" },
+    },
     {
       id: `w_y${n}_vcc`,
       type: "wire",
@@ -49,23 +59,93 @@ export const components: ComponentInstance[] = [
       { board: "bb", rail: "gnd_top", col: 2 },
     ],
   },
-  { id: "w_vcc_link", type: "wire", color: "red", from: { board: "bb", rail: "vcc_top", col: 4 }, to: { board: "bb", rail: "vcc_bot", col: 4 } },
-  { id: "w_gnd_link", type: "wire", color: "black", from: { board: "bb", rail: "gnd_top", col: 5 }, to: { board: "bb", rail: "gnd_bot", col: 5 } },
+  {
+    id: "w_vcc_link",
+    type: "wire",
+    color: "red",
+    from: { board: "bb", rail: "vcc_top", col: 4 },
+    to: { board: "bb", rail: "vcc_bot", col: 4 },
+  },
+  {
+    id: "w_gnd_link",
+    type: "wire",
+    color: "black",
+    from: { board: "bb", rail: "gnd_top", col: 5 },
+    to: { board: "bb", rail: "gnd_bot", col: 5 },
+  },
 
-  { id: "dec", type: "decoder-3to8", mountedAt: { board: "bb", col: 20, row: "e" } },
-  { id: "w_dec_vcc", type: "wire", color: "red", from: { ic: "dec", pin: "vcc" }, to: { board: "bb", rail: "vcc_bot", col: 19 } },
-  { id: "w_dec_gnd", type: "wire", color: "black", from: { ic: "dec", pin: "gnd" }, to: { board: "bb", rail: "gnd_top", col: 28 } },
+  {
+    id: "dec",
+    type: "decoder-3to8",
+    mountedAt: { board: "bb", col: 20, row: "e" },
+  },
+  {
+    id: "w_dec_vcc",
+    type: "wire",
+    color: "red",
+    from: { ic: "dec", pin: "vcc" },
+    to: { board: "bb", rail: "vcc_bot", col: 19 },
+  },
+  {
+    id: "w_dec_gnd",
+    type: "wire",
+    color: "black",
+    from: { ic: "dec", pin: "gnd" },
+    to: { board: "bb", rail: "gnd_top", col: 28 },
+  },
 
   // ---------------- Enables ----------------
-  { id: "w_en1_vcc", type: "wire", color: "red", from: { ic: "dec", pin: "e1" }, to: { board: "bb", rail: "vcc_top", col: 25 } },
-  { id: "w_en1_gnd", type: "wire", color: "black", from: { ic: "dec", pin: "e1" }, to: { board: "bb", rail: "gnd_top", col: 25 } },
-  { id: "w_en2_gnd", type: "wire", color: "black", from: { ic: "dec", pin: "e2" }, to: { board: "bb", rail: "gnd_top", col: 23 } },
-  { id: "w_en3_gnd", type: "wire", color: "black", from: { ic: "dec", pin: "e3" }, to: { board: "bb", rail: "gnd_top", col: 24 } },
+  {
+    id: "w_en1_vcc",
+    type: "wire",
+    color: "red",
+    from: { ic: "dec", pin: "e1" },
+    to: { board: "bb", rail: "vcc_top", col: 25 },
+  },
+  {
+    id: "w_en1_gnd",
+    type: "wire",
+    color: "black",
+    from: { ic: "dec", pin: "e1" },
+    to: { board: "bb", rail: "gnd_top", col: 25 },
+  },
+  {
+    id: "w_en2_gnd",
+    type: "wire",
+    color: "black",
+    from: { ic: "dec", pin: "e2" },
+    to: { board: "bb", rail: "gnd_top", col: 23 },
+  },
+  {
+    id: "w_en3_gnd",
+    type: "wire",
+    color: "black",
+    from: { ic: "dec", pin: "e3" },
+    to: { board: "bb", rail: "gnd_top", col: 24 },
+  },
 
   // ---------------- Address inputs (A0 = LSB) ----------------
-  { id: "w_a0_dec", type: "wire", color: "orange", from: { board: "bb", col: 10, row: "a" }, to: { ic: "dec", pin: "a0" } },
-  { id: "w_a1_dec", type: "wire", color: "blue", from: { board: "bb", col: 9, row: "a" }, to: { ic: "dec", pin: "a1" } },
-  { id: "w_a2_dec", type: "wire", color: "purple", from: { board: "bb", col: 8, row: "a" }, to: { ic: "dec", pin: "a2" } },
+  {
+    id: "w_a0_dec",
+    type: "wire",
+    color: "orange",
+    from: { board: "bb", col: 10, row: "a" },
+    to: { ic: "dec", pin: "a0" },
+  },
+  {
+    id: "w_a1_dec",
+    type: "wire",
+    color: "blue",
+    from: { board: "bb", col: 9, row: "a" },
+    to: { ic: "dec", pin: "a1" },
+  },
+  {
+    id: "w_a2_dec",
+    type: "wire",
+    color: "purple",
+    from: { board: "bb", col: 8, row: "a" },
+    to: { ic: "dec", pin: "a2" },
+  },
 
   ...Array.from({ length: 8 }, (_, n) => outputChain(n)).flat(),
 ];

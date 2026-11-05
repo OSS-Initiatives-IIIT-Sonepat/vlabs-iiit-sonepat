@@ -1,6 +1,13 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
 
-import { BASE, CLOCK_READING, LINK, OUTPUTS, RESETS_GND, countLeds } from "./parts";
+import {
+  BASE,
+  CLOCK_READING,
+  LINK,
+  OUTPUTS,
+  RESETS_GND,
+  countLeds,
+} from "./parts";
 
 export const step: SceneProcedureStep = {
   label: "Record the full count sequence and roll-over.",

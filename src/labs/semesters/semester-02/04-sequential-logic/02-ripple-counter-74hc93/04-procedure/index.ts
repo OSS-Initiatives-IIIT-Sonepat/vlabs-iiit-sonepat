@@ -11,6 +11,13 @@ import { step as s08 } from "./08-decade-roll-over";
 
 import { rippleCounter74hc93StepSchematics } from "@/labs/schematics/semester-02/04-sequential-logic/02-ripple-counter-74hc93";
 
-export const procedureSteps: SceneProcedureStep[] = [s01, s02, s03, s04, s05, s06, s07, s08].map(
-  (s, i) => ({ ...s, schematic: rippleCounter74hc93StepSchematics[i] }),
-);
+export const procedureSteps: SceneProcedureStep[] = [
+  s01,
+  s02,
+  s03,
+  s04,
+  s05,
+  s06,
+  s07,
+  s08,
+].map((s, i) => ({ ...s, schematic: rippleCounter74hc93StepSchematics[i] }));

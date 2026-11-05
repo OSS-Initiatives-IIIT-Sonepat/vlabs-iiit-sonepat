@@ -42,32 +42,80 @@ export const components: ComponentInstance[] = [
       { board: "bb", rail: "gnd_top", col: 2 },
     ],
   },
-  { id: "w_vcc_link", type: "wire", color: "red", from: { board: "bb", rail: "vcc_top", col: 4 }, to: { board: "bb", rail: "vcc_bot", col: 4 } },
-  { id: "w_gnd_link", type: "wire", color: "black", from: { board: "bb", rail: "gnd_top", col: 5 }, to: { board: "bb", rail: "gnd_bot", col: 5 } },
+  {
+    id: "w_vcc_link",
+    type: "wire",
+    color: "red",
+    from: { board: "bb", rail: "vcc_top", col: 4 },
+    to: { board: "bb", rail: "vcc_bot", col: 4 },
+  },
+  {
+    id: "w_gnd_link",
+    type: "wire",
+    color: "black",
+    from: { board: "bb", rail: "gnd_top", col: 5 },
+    to: { board: "bb", rail: "gnd_bot", col: 5 },
+  },
 
-  { id: "enc", type: "encoder-8to3", mountedAt: { board: "bb", col: 20, row: "e" } },
-  { id: "w_enc_vcc", type: "wire", color: "red", from: { ic: "enc", pin: "vcc" }, to: { board: "bb", rail: "vcc_bot", col: 19 } },
-  { id: "w_enc_gnd", type: "wire", color: "black", from: { ic: "enc", pin: "gnd" }, to: { board: "bb", rail: "gnd_top", col: 28 } },
+  {
+    id: "enc",
+    type: "encoder-8to3",
+    mountedAt: { board: "bb", col: 20, row: "e" },
+  },
+  {
+    id: "w_enc_vcc",
+    type: "wire",
+    color: "red",
+    from: { ic: "enc", pin: "vcc" },
+    to: { board: "bb", rail: "vcc_bot", col: 19 },
+  },
+  {
+    id: "w_enc_gnd",
+    type: "wire",
+    color: "black",
+    from: { ic: "enc", pin: "gnd" },
+    to: { board: "bb", rail: "gnd_top", col: 28 },
+  },
 
   // ---------------- Enable input ----------------
-  { id: "w_ei_gnd", type: "wire", color: "black", from: { ic: "enc", pin: "ei" }, to: { board: "bb", rail: "gnd_top", col: 24 } },
-  { id: "w_ei_vcc", type: "wire", color: "red", from: { ic: "enc", pin: "ei" }, to: { board: "bb", rail: "vcc_top", col: 24 } },
+  {
+    id: "w_ei_gnd",
+    type: "wire",
+    color: "black",
+    from: { ic: "enc", pin: "ei" },
+    to: { board: "bb", rail: "gnd_top", col: 24 },
+  },
+  {
+    id: "w_ei_vcc",
+    type: "wire",
+    color: "red",
+    from: { ic: "enc", pin: "ei" },
+    to: { board: "bb", rail: "vcc_top", col: 24 },
+  },
 
   // ---------------- Data inputs I0–I7 ----------------
-  ...INPUT_TIES.map(
-    (t): ComponentInstance => ({
-      id: `w_i${t.n}_enc`,
-      type: "wire",
-      color: t.n >= 4 ? "orange" : "blue",
-      from: { board: "bb", col: t.col, row: t.row },
-      to: { ic: "enc", pin: `i${t.n}` },
-    }),
-  ),
+  ...INPUT_TIES.map((t): ComponentInstance => ({
+    id: `w_i${t.n}_enc`,
+    type: "wire",
+    color: t.n >= 4 ? "orange" : "blue",
+    from: { board: "bb", col: t.col, row: t.row },
+    to: { ic: "enc", pin: `i${t.n}` },
+  })),
 
   // ---------------- Output LEDs (current sinks) ----------------
   ...OUTPUT_CHAINS.flatMap((c): ComponentInstance[] => [
-    { id: `r_${c.pin}`, type: "resistor", ohms: 330, mountedAt: { board: "bb", col: c.col, row: c.top ? "c" : "h" } },
-    { id: `led_${c.pin}`, type: "led", color: c.color, mountedAt: { board: "bb", col: c.col + 3, row: c.top ? "b" : "i" } },
+    {
+      id: `r_${c.pin}`,
+      type: "resistor",
+      ohms: 330,
+      mountedAt: { board: "bb", col: c.col, row: c.top ? "c" : "h" },
+    },
+    {
+      id: `led_${c.pin}`,
+      type: "led",
+      color: c.color,
+      mountedAt: { board: "bb", col: c.col + 3, row: c.top ? "b" : "i" },
+    },
     {
       id: `w_${c.pin}_vcc`,
       type: "wire",

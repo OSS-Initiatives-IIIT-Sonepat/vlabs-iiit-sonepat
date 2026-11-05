@@ -11,6 +11,13 @@ import { step as s08 } from "./08-above-resonance-and-q";
 
 import { seriesRlcStepSchematics } from "@/labs/schematics/semester-01/01-analog-electronics/16-series-rlc-resonance";
 
-export const procedureSteps: SceneProcedureStep[] = [s01, s02, s03, s04, s05, s06, s07, s08].map(
-  (s, i) => ({ ...s, schematic: seriesRlcStepSchematics[i] }),
-);
+export const procedureSteps: SceneProcedureStep[] = [
+  s01,
+  s02,
+  s03,
+  s04,
+  s05,
+  s06,
+  s07,
+  s08,
+].map((s, i) => ({ ...s, schematic: seriesRlcStepSchematics[i] }));

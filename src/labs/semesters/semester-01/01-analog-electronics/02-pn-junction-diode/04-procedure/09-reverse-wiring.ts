@@ -8,6 +8,15 @@ export const step: SceneProcedureStep = {
     "**Wire**: diode anode (col 15) → GND rail.\n" +
     "**Voltmeter probes**: (+) on the cathode (col 18), (−) on the anode (col 15).\n" +
     "DMM readings will show the reverse voltage $-V_D$ across the diode.",
-  show: ["bb", "psu", "am1", "r1", "d1_rev", "w_r_d1rev", "w_d1rev_gnd", "vm1_rev"],
+  show: [
+    "bb",
+    "psu",
+    "am1",
+    "r1",
+    "d1_rev",
+    "w_r_d1rev",
+    "w_d1rev_gnd",
+    "vm1_rev",
+  ],
   schematic,
 };

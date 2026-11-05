@@ -50,8 +50,18 @@ export const components: ComponentInstance[] = [
   },
 
   // ---------------- Collector load ----------------
-  { id: "rc", type: "resistor", ohms: 330, mountedAt: { board: "bb", col: 5, row: "c" } },
-  { id: "led", type: "led", color: "red", mountedAt: { board: "bb", col: 13, row: "d" } },
+  {
+    id: "rc",
+    type: "resistor",
+    ohms: 330,
+    mountedAt: { board: "bb", col: 5, row: "c" },
+  },
+  {
+    id: "led",
+    type: "led",
+    color: "red",
+    mountedAt: { board: "bb", col: 13, row: "d" },
+  },
   {
     id: "w_vcc_rc",
     type: "wire",
@@ -68,8 +78,18 @@ export const components: ComponentInstance[] = [
   },
 
   // ---------------- Base drive ----------------
-  { id: "rb_10k", type: "resistor", ohms: 10000, mountedAt: { board: "bb", col: 12, row: "a" } },
-  { id: "rb_1m", type: "resistor", ohms: 1000000, mountedAt: { board: "bb", col: 12, row: "a" } },
+  {
+    id: "rb_10k",
+    type: "resistor",
+    ohms: 10000,
+    mountedAt: { board: "bb", col: 12, row: "a" },
+  },
+  {
+    id: "rb_1m",
+    type: "resistor",
+    ohms: 1000000,
+    mountedAt: { board: "bb", col: 12, row: "a" },
+  },
   {
     id: "w_vin_low",
     type: "wire",

@@ -170,11 +170,7 @@ export function buildDcPowerSupplyStandalone(
   for (const sx of [-1, 1]) {
     for (const sz of [-1, 1]) {
       const foot = new THREE.Mesh(footGeo, M.dark());
-      foot.position.set(
-        sx * (BW * 0.4),
-        FOOT_H / 2,
-        sz * (BD * 0.36),
-      );
+      foot.position.set(sx * (BW * 0.4), FOOT_H / 2, sz * (BD * 0.36));
       root.add(foot);
     }
   }
@@ -231,7 +227,8 @@ export function buildDcPowerSupplyStandalone(
   winGlass.position.set(winX, winY, FRONT_Z + 0.018);
   root.add(winGlass);
 
-  const powerOn = voltageStr !== "--" && voltageStr !== "0" && voltageStr !== "0.0";
+  const powerOn =
+    voltageStr !== "--" && voltageStr !== "0" && voltageStr !== "0.0";
   const vDisplay = powerOn
     ? `${voltageStr.replace(/V$/i, "")}V`
     : voltageStr === "--"
@@ -263,7 +260,9 @@ export function buildDcPowerSupplyStandalone(
   const knobY1 = CASE_Y + BH * 0.18;
   const knobY2 = CASE_Y - BH * 0.08;
   root.add(buildRotaryKnob(BW * 0.2, knobY1, FRONT_Z, P * 0.36, 25, "VOLTAGE"));
-  root.add(buildRotaryKnob(BW * 0.38, knobY1, FRONT_Z, P * 0.32, -15, "CURRENT"));
+  root.add(
+    buildRotaryKnob(BW * 0.38, knobY1, FRONT_Z, P * 0.32, -15, "CURRENT"),
+  );
   root.add(buildRotaryKnob(BW * 0.2, knobY2, FRONT_Z, P * 0.26, 0, "FINE V"));
 
   // Power switch & indicator LED

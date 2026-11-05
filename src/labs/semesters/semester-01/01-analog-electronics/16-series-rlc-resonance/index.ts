@@ -19,5 +19,9 @@ export const seriesRlcResonanceExperiment: ExperimentDefinition = {
   procedureSteps,
 };
 
-export const SeriesRlcResonanceCircuit = buildCircuit(seriesRlcResonanceExperiment);
-export const SeriesRlcResonanceContent = buildLabContent(seriesRlcResonanceExperiment);
+export const SeriesRlcResonanceCircuit = buildCircuit(
+  seriesRlcResonanceExperiment,
+);
+export const SeriesRlcResonanceContent = buildLabContent(
+  seriesRlcResonanceExperiment,
+);

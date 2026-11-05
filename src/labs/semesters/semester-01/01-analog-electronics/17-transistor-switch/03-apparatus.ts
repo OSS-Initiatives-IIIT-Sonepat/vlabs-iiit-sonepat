@@ -17,7 +17,8 @@ export const apparatus: Section = {
     },
     {
       name: "Resistors",
-      specification: "1/4 W, ±5%: 330 Ω, 10 kΩ and 1 MΩ, one of each. Quantity: 3",
+      specification:
+        "1/4 W, ±5%: 330 Ω, 10 kΩ and 1 MΩ, one of each. Quantity: 3",
     },
     {
       name: "DC regulated power supply",

@@ -11,6 +11,13 @@ import { step as s08 } from "./08-disable-encoder";
 
 import { priorityEncoder8to3IcStepSchematics } from "@/labs/schematics/semester-02/03-combinational-logic/02-priority-encoder-8to3-ic";
 
-export const procedureSteps: SceneProcedureStep[] = [s01, s02, s03, s04, s05, s06, s07, s08].map(
-  (s, i) => ({ ...s, schematic: priorityEncoder8to3IcStepSchematics[i] }),
-);
+export const procedureSteps: SceneProcedureStep[] = [
+  s01,
+  s02,
+  s03,
+  s04,
+  s05,
+  s06,
+  s07,
+  s08,
+].map((s, i) => ({ ...s, schematic: priorityEncoder8to3IcStepSchematics[i] }));

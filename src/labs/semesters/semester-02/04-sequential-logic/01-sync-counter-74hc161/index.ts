@@ -19,5 +19,9 @@ export const syncCounter74hc161Experiment: ExperimentDefinition = {
   procedureSteps,
 };
 
-export const SyncCounter74hc161Circuit = buildCircuit(syncCounter74hc161Experiment);
-export const SyncCounter74hc161Content = buildLabContent(syncCounter74hc161Experiment);
+export const SyncCounter74hc161Circuit = buildCircuit(
+  syncCounter74hc161Experiment,
+);
+export const SyncCounter74hc161Content = buildLabContent(
+  syncCounter74hc161Experiment,
+);

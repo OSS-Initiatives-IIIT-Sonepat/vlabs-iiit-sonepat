@@ -1,6 +1,13 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
 
-import { BASE, CLOCK_READING, LINK, OUTPUTS, RESETS_DECADE, countLeds } from "./parts";
+import {
+  BASE,
+  CLOCK_READING,
+  LINK,
+  OUTPUTS,
+  RESETS_DECADE,
+  countLeds,
+} from "./parts";
 
 export const step: SceneProcedureStep = {
   label: "Convert to a decade counter: R0(1) = QB, R0(2) = QD.",

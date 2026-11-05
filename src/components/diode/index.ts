@@ -63,12 +63,7 @@ function buildDiodePackageMesh(spec: DiodeSpec): THREE.Group {
 
   // Cathode polarity band on the right (+X) end
   const bandW = bodyLength * 0.2;
-  const bandGeo = new THREE.CylinderGeometry(
-    r + 0.006,
-    r + 0.006,
-    bandW,
-    20,
-  );
+  const bandGeo = new THREE.CylinderGeometry(r + 0.006, r + 0.006, bandW, 20);
   bandGeo.rotateZ(Math.PI / 2);
   const bandMat = new THREE.MeshBasicMaterial({ color: bandColor });
   const band = new THREE.Mesh(bandGeo, bandMat);

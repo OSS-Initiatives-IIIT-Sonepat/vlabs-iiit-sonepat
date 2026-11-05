@@ -1,6 +1,13 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
 
-import { BASE, CLOCK_READING, CONTROLS, MOD10, OUTPUTS, countLeds } from "./parts";
+import {
+  BASE,
+  CLOCK_READING,
+  CONTROLS,
+  MOD10,
+  OUTPUTS,
+  countLeds,
+} from "./parts";
 
 export const step: SceneProcedureStep = {
   label: "Verify the MOD-10 sequence 0 to 9.",

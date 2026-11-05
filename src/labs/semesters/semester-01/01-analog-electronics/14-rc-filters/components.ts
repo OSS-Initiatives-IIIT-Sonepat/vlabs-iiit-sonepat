@@ -50,8 +50,18 @@ export const components: ComponentInstance[] = [
   },
 
   // ---------------- Low-pass filter ----------------
-  { id: "r_lp", type: "resistor", ohms: 1000, mountedAt: { board: "bb", col: 5, row: "c" } },
-  { id: "c_lp", type: "capacitor", capacitance: 0.1, mountedAt: { board: "bb", col: 8, row: "a" } },
+  {
+    id: "r_lp",
+    type: "resistor",
+    ohms: 1000,
+    mountedAt: { board: "bb", col: 5, row: "c" },
+  },
+  {
+    id: "c_lp",
+    type: "capacitor",
+    capacitance: 0.1,
+    mountedAt: { board: "bb", col: 8, row: "a" },
+  },
   {
     id: "w_clp_gnd",
     type: "wire",
@@ -61,8 +71,18 @@ export const components: ComponentInstance[] = [
   },
 
   // ---------------- High-pass filter ----------------
-  { id: "c_hp", type: "capacitor", capacitance: 0.1, mountedAt: { board: "bb", col: 16, row: "c" } },
-  { id: "r_hp", type: "resistor", ohms: 1000, mountedAt: { board: "bb", col: 17, row: "b" } },
+  {
+    id: "c_hp",
+    type: "capacitor",
+    capacitance: 0.1,
+    mountedAt: { board: "bb", col: 16, row: "c" },
+  },
+  {
+    id: "r_hp",
+    type: "resistor",
+    ohms: 1000,
+    mountedAt: { board: "bb", col: 17, row: "b" },
+  },
   {
     id: "w_rhp_gnd",
     type: "wire",

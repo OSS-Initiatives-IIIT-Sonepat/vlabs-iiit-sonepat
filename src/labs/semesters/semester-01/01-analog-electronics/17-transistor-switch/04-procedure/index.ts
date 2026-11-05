@@ -9,6 +9,11 @@ import { step as s06 } from "./06-toggle-and-shut-down";
 
 import { transistorSwitchStepSchematics } from "@/labs/schematics/semester-01/01-analog-electronics/17-transistor-switch";
 
-export const procedureSteps: SceneProcedureStep[] = [s01, s02, s03, s04, s05, s06].map(
-  (s, i) => ({ ...s, schematic: transistorSwitchStepSchematics[i] }),
-);
+export const procedureSteps: SceneProcedureStep[] = [
+  s01,
+  s02,
+  s03,
+  s04,
+  s05,
+  s06,
+].map((s, i) => ({ ...s, schematic: transistorSwitchStepSchematics[i] }));

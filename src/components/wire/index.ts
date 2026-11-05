@@ -7,12 +7,7 @@ import { M, WIRE_HEX } from "@/components/shared/materials";
 // ═══════════════════════════════════════════════════════════════════════════════
 
 export type ConnectorType =
-  | "dupont"
-  | "banana"
-  | "bnc"
-  | "probe"
-  | "alligator"
-  | "bare";
+  "dupont" | "banana" | "bnc" | "probe" | "alligator" | "bare";
 
 function buildJumperPinTip(pos: THREE.Vector3, colorHex: number): THREE.Group {
   const grp = new THREE.Group();

@@ -1,4 +1,7 @@
-import { type SchematicData, type SchematicElement } from "@/labs/CircuitSchematic";
+import {
+  type SchematicData,
+  type SchematicElement,
+} from "@/labs/CircuitSchematic";
 
 /*
  * 8:3 Priority Encoder using the 74HC148 — progressive 2D schematics.
@@ -12,13 +15,30 @@ import { type SchematicData, type SchematicElement } from "@/labs/CircuitSchemat
 const W = 460;
 const H = 380;
 
-const wire = (id: string, ...pts: [number, number][]): Extract<SchematicElement, { type: "wire" }> =>
-  ({ type: "wire", id, points: pts.map(([x, y]) => ({ x, y })) });
-const label = (id: string, x: number, y: number, text: string): SchematicElement =>
-  ({ type: "label", id, x, y, text });
-const junction = (id: string, x: number, y: number): SchematicElement => ({ type: "junction", id, x, y });
-const hl = <T extends SchematicElement>(el: T, highlight?: boolean): T => (highlight ? { ...el, highlight } : el);
-const labelBefore = (id: string, x: number, y: number, text: string) => label(id, x - 4 - text.length * 2.52, y, text);
+const wire = (
+  id: string,
+  ...pts: [number, number][]
+): Extract<SchematicElement, { type: "wire" }> => ({
+  type: "wire",
+  id,
+  points: pts.map(([x, y]) => ({ x, y })),
+});
+const label = (
+  id: string,
+  x: number,
+  y: number,
+  text: string,
+): SchematicElement => ({ type: "label", id, x, y, text });
+const junction = (id: string, x: number, y: number): SchematicElement => ({
+  type: "junction",
+  id,
+  x,
+  y,
+});
+const hl = <T extends SchematicElement>(el: T, highlight?: boolean): T =>
+  highlight ? { ...el, highlight } : el;
+const labelBefore = (id: string, x: number, y: number, text: string) =>
+  label(id, x - 4 - text.length * 2.52, y, text);
 
 const BOX = { x0: 170, x1: 260, y0: 50, y1: 345 };
 const IN_Y = Array.from({ length: 8 }, (_, i) => 70 + 30 * i);
@@ -50,7 +70,13 @@ function levels(active: number[], disabled: boolean): Record<string, number> {
   if (disabled) return { a0: 1, a1: 1, a2: 1, gs: 1, eo: 1 };
   if (active.length === 0) return { a0: 1, a1: 1, a2: 1, gs: 1, eo: 0 };
   const n = Math.max(...active);
-  return { a0: 1 - (n & 1), a1: 1 - ((n >> 1) & 1), a2: 1 - ((n >> 2) & 1), gs: 0, eo: 1 };
+  return {
+    a0: 1 - (n & 1),
+    a1: 1 - ((n >> 1) & 1),
+    a2: 1 - ((n >> 2) & 1),
+    gs: 0,
+    eo: 1,
+  };
 }
 
 const encoder = (o: Opts = {}): SchematicElement[] => {
@@ -72,8 +98,14 @@ const encoder = (o: Opts = {}): SchematicElement[] => {
   }
   if (o.inputs) {
     IN_Y.forEach((y, i) => {
-      const t = o.active === undefined ? `I${i}` : `I${i}=${active.includes(i) ? 0 : 1}`;
-      els.push(labelBefore(`lbl_i${i}`, 130, y, t), hl(wire(`w_i${i}`, [130, y], [x0, y]), o.hlInputs));
+      const t =
+        o.active === undefined
+          ? `I${i}`
+          : `I${i}=${active.includes(i) ? 0 : 1}`;
+      els.push(
+        labelBefore(`lbl_i${i}`, 130, y, t),
+        hl(wire(`w_i${i}`, [130, y], [x0, y]), o.hlInputs),
+      );
     });
   }
   if (o.outs) {
@@ -87,7 +119,15 @@ const encoder = (o: Opts = {}): SchematicElement[] => {
       const lit = o.active !== undefined && lv[p.id] === 0;
       els.push(
         hl(wire(`w_${p.id}`, [x1, p.y], [290, p.y]), o.hlOuts),
-        { type: "led", id: `led_${p.id}`, x: 310, y: p.y, rotation: 180, color: i < 3 ? "red" : "yellow", highlight: o.hlOuts || lit },
+        {
+          type: "led",
+          id: `led_${p.id}`,
+          x: 310,
+          y: p.y,
+          rotation: 180,
+          color: i < 3 ? "red" : "yellow",
+          highlight: o.hlOuts || lit,
+        },
         wire(`w_led_r_${p.id}`, [330, p.y], [340, p.y]),
         { type: "resistor", id: `r_${p.id}`, x: 370, y: p.y },
         wire(`w_r_bus_${p.id}`, [400, p.y], [BUS_X, p.y]),
@@ -101,20 +141,70 @@ const encoder = (o: Opts = {}): SchematicElement[] => {
 const complete = (extra: Opts = {}): SchematicElement[] =>
   encoder({ ei: true, inputs: true, outs: true, ...extra });
 
-const sheet = (t: string, els: SchematicElement[], c: string): SchematicData =>
-  ({ width: W, height: H, elements: [label("title", W / 2, 20, t), ...els, label("caption", W / 2, 367, c)] });
+const sheet = (
+  t: string,
+  els: SchematicElement[],
+  c: string,
+): SchematicData => ({
+  width: W,
+  height: H,
+  elements: [
+    label("title", W / 2, 20, t),
+    ...els,
+    label("caption", W / 2, 367, c),
+  ],
+});
 
-export const step01 = sheet("Place the 74HC148", encoder(), "VCC = pin 16, GND = pin 8 · all inputs and outputs active LOW");
-export const step02 = sheet("Enable Input EI' = 0", encoder({ ei: true, hlEi: true }), "EI' LOW enables the encoder");
-export const step03 = sheet("Inputs I0–I7 (HIGH = idle)", encoder({ ei: true, inputs: true, hlInputs: true, active: [] }), "Pull an input LOW to make it active");
-export const step04 = sheet("Output LEDs (Sink Wiring)", complete({ hlOuts: true, active: [] }), "No input active: EO' = 0, GS' = 1, A = 111");
-export const step05 = sheet("Test: I3 Active", complete({ active: [3] }), "A2' A1' A0' = 100 → LEDs read 011 = 3 · GS' = 0");
-export const step06 = sheet("Priority: I3 and I5 Active", complete({ active: [3, 5] }), "Higher input wins: code 101 = 5");
-export const step07 = sheet("Priority: I7 Overrides All", complete({ active: [0, 3, 5, 7] }), "I7 has the highest priority: code 111 = 7");
-export const step08 = sheet("Disable: EI' = 1", complete({ active: [0, 3, 5, 7], hlEi: true, disabled: true }), "Disabled: every output HIGH, every LED off");
+export const step01 = sheet(
+  "Place the 74HC148",
+  encoder(),
+  "VCC = pin 16, GND = pin 8 · all inputs and outputs active LOW",
+);
+export const step02 = sheet(
+  "Enable Input EI' = 0",
+  encoder({ ei: true, hlEi: true }),
+  "EI' LOW enables the encoder",
+);
+export const step03 = sheet(
+  "Inputs I0–I7 (HIGH = idle)",
+  encoder({ ei: true, inputs: true, hlInputs: true, active: [] }),
+  "Pull an input LOW to make it active",
+);
+export const step04 = sheet(
+  "Output LEDs (Sink Wiring)",
+  complete({ hlOuts: true, active: [] }),
+  "No input active: EO' = 0, GS' = 1, A = 111",
+);
+export const step05 = sheet(
+  "Test: I3 Active",
+  complete({ active: [3] }),
+  "A2' A1' A0' = 100 → LEDs read 011 = 3 · GS' = 0",
+);
+export const step06 = sheet(
+  "Priority: I3 and I5 Active",
+  complete({ active: [3, 5] }),
+  "Higher input wins: code 101 = 5",
+);
+export const step07 = sheet(
+  "Priority: I7 Overrides All",
+  complete({ active: [0, 3, 5, 7] }),
+  "I7 has the highest priority: code 111 = 7",
+);
+export const step08 = sheet(
+  "Disable: EI' = 1",
+  complete({ active: [0, 3, 5, 7], hlEi: true, disabled: true }),
+  "Disabled: every output HIGH, every LED off",
+);
 
 export const priorityEncoder8to3IcStepSchematics: SchematicData[] = [
-  step01, step02, step03, step04, step05, step06, step07, step08,
+  step01,
+  step02,
+  step03,
+  step04,
+  step05,
+  step06,
+  step07,
+  step08,
 ];
 
 export const priorityEncoder8to3IcTheoryDiagram: SchematicData = sheet(

@@ -1,6 +1,13 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
 
-import { BASE, CLOCK_READING, CONTROLS, MOD10, OUTPUTS, countLeds } from "./parts";
+import {
+  BASE,
+  CLOCK_READING,
+  CONTROLS,
+  MOD10,
+  OUTPUTS,
+  countLeds,
+} from "./parts";
 
 export const step: SceneProcedureStep = {
   label: "Convert to MOD-10 with a synchronous load.",
