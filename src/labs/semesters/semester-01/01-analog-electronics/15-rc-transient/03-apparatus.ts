@@ -9,11 +9,13 @@ export const apparatus: Section = {
   items: [
     {
       name: "Function generator",
-      specification: "Square-wave output with DC offset, set to 0–5 V (5 V peak-to-peak, +2.5 V offset) at 100 Hz. Quantity: 1",
+      specification:
+        "Square-wave output with DC offset, set to 0–5 V (5 V peak-to-peak, +2.5 V offset) at 100 Hz. Quantity: 1",
     },
     {
       name: "Cathode ray oscilloscope (CRO)",
-      specification: "Dual-trace, 20 MHz, DC coupling, 1 V/div and 1 ms/div. Quantity: 1",
+      specification:
+        "Dual-trace, 20 MHz, DC coupling, 1 V/div and 1 ms/div. Quantity: 1",
     },
     {
       name: "Resistors",

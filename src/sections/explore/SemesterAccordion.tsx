@@ -97,15 +97,16 @@ function SemesterItem({
         <div className="min-h-0 overflow-hidden">
           <div
             className={[
-              "grid gap-[calc(var(--spacing-base)*6)] grid-cols-1",
+              "grid gap-[calc(var(--spacing-base)*6)] grid-cols-1 items-stretch justify-start",
               "pb-[calc(var(--spacing-base)*2)]",
-              "min-[921px]:grid-cols-3",
+              "min-[921px]:[grid-template-columns:repeat(auto-fill,420px)]",
             ].join(" ")}
           >
             {semester.subjects.map((subject) => (
               <SubjectCard
                 key={subject.id}
                 subject={subject}
+                showPreview={open}
                 onClick={onSubjectClick}
               />
             ))}

@@ -18,7 +18,11 @@ export const ZD_COL = 10;
 export const ZD_ROW = "c";
 export const HOVER = 0.55;
 
-const hover = ([x, , z]: [number, number, number]): [number, number, number] => [x, TOP_Y + HOVER, z];
+const hover = ([x, , z]: [number, number, number]): [
+  number,
+  number,
+  number,
+] => [x, TOP_Y + HOVER, z];
 
 export const M = {
   r1_p1: hover(resistorP1(R1_COL, R1_ROW)),

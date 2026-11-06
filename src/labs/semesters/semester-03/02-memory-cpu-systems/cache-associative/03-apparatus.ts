@@ -3,27 +3,42 @@ import { type ApparatusSection } from "@/labs/lab-content.types";
 export const apparatus: ApparatusSection = {
   id: "apparatus",
   type: "apparatus",
-  title: "Apparatus",
+  title: "Apparatus Required",
   items: [
     {
-      name: "Fully-Associative Cache",
-      specification: "4 lines × 4 bytes per block, LRU replacement",
+      name: "Breadboard",
+      specification: "Long solderless breadboard, 60 columns",
+      quantity: "1",
     },
     {
-      name: "Tag Comparator Array",
-      specification: "Parallel comparison of all 4 tags on each access",
+      name: "DC Power Supply",
+      specification: "5 V regulated",
+      quantity: "1",
     },
     {
-      name: "LRU State Machine",
-      specification: "Tracks recency order for all 4 lines",
+      name: "74HC86 quad XOR gate IC",
+      specification: "DIP-14, tag compare",
+      quantity: "2",
     },
     {
-      name: "Main Memory Model",
-      specification: "256 bytes — mem[addr] = addr XOR 0x42",
+      name: "74HC02 quad NOR gate IC",
+      specification: "DIP-14, match when both bits agree",
+      quantity: "1",
     },
     {
-      name: "Hit/Miss/Eviction Counter",
-      specification: "Running statistics with hit rate",
+      name: "LED",
+      specification: "5 mm, hit",
+      quantity: "1",
+    },
+    {
+      name: "330 ohm resistor",
+      specification: "0.25 W, LED current limit",
+      quantity: "1",
+    },
+    {
+      name: "Jumper wire",
+      specification: "22 AWG solid-core",
+      quantity: "1 set",
     },
   ],
 };

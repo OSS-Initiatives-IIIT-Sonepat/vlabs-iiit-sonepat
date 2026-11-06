@@ -88,14 +88,16 @@ const GATE_NAMES: Record<string, string> = {
   "nand-gate": "NAND Gate IC",
   "nor-gate": "NOR Gate IC",
   "xor-gate": "XOR Gate IC",
+  "xor-quad": "Quad XOR (74HC86)",
   "xnor-gate": "XNOR Gate IC",
-  "buffer-gate": "Buffer IC",
+  "buffer-gate": "Tri-state buffer",
 };
 
 export function componentDisplayName(inst: ComponentInstance): string {
   switch (inst.type) {
     case "breadboard":
     case "long-breadboard":
+    case "wide-breadboard":
       return "Breadboard";
     case "dc-jack":
       return "DC Power Supply";
@@ -149,6 +151,20 @@ export function componentDisplayName(inst: ComponentInstance): string {
       return "Logic Analyser";
     case "mcu-trainer":
       return "Microcontroller Trainer";
+    case "ram":
+      return "RAM chip";
+    case "rom":
+      return "ROM chip";
+    case "cpu":
+      return "CPU chip";
+    case "demux-1to4":
+      return "2×4 decoder";
+    case "adder-4bit":
+      return "4-bit adder";
+    case "io-port":
+      return inst.name ? `Register ${inst.name}` : "I/O port chip";
+    case "block-module":
+      return inst.name;
     default:
       return (
         GATE_NAMES[inst.type] ??

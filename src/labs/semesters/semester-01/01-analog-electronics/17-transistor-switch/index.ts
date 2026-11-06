@@ -20,4 +20,6 @@ export const transistorSwitchExperiment: ExperimentDefinition = {
 };
 
 export const TransistorSwitchCircuit = buildCircuit(transistorSwitchExperiment);
-export const TransistorSwitchContent = buildLabContent(transistorSwitchExperiment);
+export const TransistorSwitchContent = buildLabContent(
+  transistorSwitchExperiment,
+);

@@ -1,6 +1,13 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
 
-import { BASE, CLOCK_READING, LINK, OUTPUTS, RESETS_DECADE, countLeds } from "./parts";
+import {
+  BASE,
+  CLOCK_READING,
+  LINK,
+  OUTPUTS,
+  RESETS_DECADE,
+  countLeds,
+} from "./parts";
 
 export const step: SceneProcedureStep = {
   label: "Verify the decade sequence 0 to 9.",

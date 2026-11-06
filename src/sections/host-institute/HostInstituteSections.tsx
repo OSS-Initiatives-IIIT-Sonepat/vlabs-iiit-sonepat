@@ -99,7 +99,11 @@ export function HostInstituteSections() {
               label="Participating institutions"
               variant="filled"
             />
-            <Button href={links.community} label="Community" variant="outlined" />
+            <Button
+              href={links.community}
+              label="Community"
+              variant="outlined"
+            />
             <Button href={links.github} label="GitHub" variant="outlined" />
           </div>
         </SectionStack>

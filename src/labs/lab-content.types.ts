@@ -132,6 +132,11 @@ export type ProcedureStep = {
   ledBrightness?: Record<string, number>;
   /** Optional 2D circuit schematic to display for this step in FloatingCircuitCard */
   schematic?: SchematicData;
+  /**
+   * Rows revealed so far. Later steps pass a longer table, so the
+   * observation card above the schematic grows as the procedure advances.
+   */
+  table?: ObservationTable;
 };
 
 export type ObservationTable = {

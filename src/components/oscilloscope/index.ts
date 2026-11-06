@@ -88,10 +88,7 @@ function buildCrtScreen(readingText = "4.2 Vpp, 1 kHz"): THREE.Group {
       : new THREE.CatmullRomCurve3(wavePts, false, "centripetal", 0);
   const waveTube = new THREE.TubeGeometry(waveCurve, N, P * 0.022, 6, false);
   grp.add(
-    new THREE.Mesh(
-      waveTube,
-      new THREE.MeshBasicMaterial({ color: 0x48ff88 }),
-    ),
+    new THREE.Mesh(waveTube, new THREE.MeshBasicMaterial({ color: 0x48ff88 })),
   );
 
   // Digital on-screen readout banner
@@ -105,11 +102,16 @@ function buildCrtScreen(readingText = "4.2 Vpp, 1 kHz"): THREE.Group {
     grp.add(rLabel);
   }
 
-  const chLabel = textLabel("CH1: 1V/div   0.2ms/div", SCREEN_W * 0.9, P * 0.22, {
-    textColor: "#ffd84d",
-    fontSize: 26,
-    bold: true,
-  });
+  const chLabel = textLabel(
+    "CH1: 1V/div   0.2ms/div",
+    SCREEN_W * 0.9,
+    P * 0.22,
+    {
+      textColor: "#ffd84d",
+      fontSize: 26,
+      bold: true,
+    },
+  );
   if (chLabel) {
     chLabel.position.set(0, SCREEN_H * 0.4, gridZ + 0.012);
     grp.add(chLabel);
@@ -277,11 +279,7 @@ export function buildOscilloscope(
   for (const sx of [-1, 1]) {
     for (const sz of [-1, 1]) {
       const foot = new THREE.Mesh(footGeo, M.dark());
-      foot.position.set(
-        sx * (BODY_W * 0.4),
-        FOOT_H / 2,
-        sz * (BODY_D * 0.36),
-      );
+      foot.position.set(sx * (BODY_W * 0.4), FOOT_H / 2, sz * (BODY_D * 0.36));
       root.add(foot);
     }
   }

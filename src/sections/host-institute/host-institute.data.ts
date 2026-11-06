@@ -1,8 +1,7 @@
 export const HOST_INSTITUTE = {
   eyebrow: "Host institute.",
   heading: "IIIT Sonepat — where VLabs began",
-  lead:
-    "VLabs is an open-source initiative of the Technical Society of the Indian Institute of Information Technology (IIIT) Sonepat.",
+  lead: "VLabs is an open-source initiative of the Technical Society of the Indian Institute of Information Technology (IIIT) Sonepat.",
   image: {
     src: "/host-institute.png",
     alt: "Stylised blueprint of the IIIT Sonepat campus",
@@ -31,7 +30,8 @@ export const HOST_INSTITUTE = {
   ],
   links: {
     community: "/community",
-    github: "https://github.com/OSS-Initiatives-IIIT-Sonepat/vlabs-iiit-sonepat",
+    github:
+      "https://github.com/OSS-Initiatives-IIIT-Sonepat/vlabs-iiit-sonepat",
     participating: "/participating-institutions",
   },
 };

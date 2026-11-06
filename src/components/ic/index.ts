@@ -226,8 +226,10 @@ export function resolveIcPin(
   // ── BJT transistors (TO-92: C at col-1, B at col, E at col+1) ──
   if (icType === "npn-bjt" || icType === "pnp-bjt") {
     const p = pin.trim().toUpperCase();
-    const wireRow = mr === "e" ? "d" : mr === "c" ? "b" : mr === "h" ? "g" : "b";
-    if (p === "C" || p === "COLLECTOR") return hole(startCol - 1, wireRow, cols);
+    const wireRow =
+      mr === "e" ? "d" : mr === "c" ? "b" : mr === "h" ? "g" : "b";
+    if (p === "C" || p === "COLLECTOR")
+      return hole(startCol - 1, wireRow, cols);
     if (p === "B" || p === "BASE") return hole(startCol, wireRow, cols);
     if (p === "E" || p === "EMITTER") return hole(startCol + 1, wireRow, cols);
   }
@@ -235,7 +237,8 @@ export function resolveIcPin(
   // ── MOSFETs (TO-220 / TO-92: G at col-1, D at col, S at col+1) ──
   if (icType === "n-mosfet" || icType === "p-mosfet") {
     const p = pin.trim().toUpperCase();
-    const wireRow = mr === "e" ? "d" : mr === "c" ? "b" : mr === "h" ? "g" : "b";
+    const wireRow =
+      mr === "e" ? "d" : mr === "c" ? "b" : mr === "h" ? "g" : "b";
     if (p === "G" || p === "GATE") return hole(startCol - 1, wireRow, cols);
     if (p === "D" || p === "DRAIN") return hole(startCol, wireRow, cols);
     if (p === "S" || p === "SOURCE") return hole(startCol + 1, wireRow, cols);
@@ -243,9 +246,25 @@ export function resolveIcPin(
 
   // Use adjacent hole rows (d for top bank e, g for bottom bank f) so wires plug cleanly next to IC legs
   const sideA =
-    mr === "e" ? "d" : mr === "h" ? "g" : mr === "d" ? "c" : mr === "c" ? "b" : "d";
+    mr === "e"
+      ? "d"
+      : mr === "h"
+        ? "g"
+        : mr === "d"
+          ? "c"
+          : mr === "c"
+            ? "b"
+            : "d";
   const sideB =
-    mr === "e" ? "g" : mr === "h" ? "i" : mr === "d" ? "h" : mr === "c" ? "i" : "g";
+    mr === "e"
+      ? "g"
+      : mr === "h"
+        ? "i"
+        : mr === "d"
+          ? "h"
+          : mr === "c"
+            ? "i"
+            : "g";
 
   const rawPin = pin.trim();
   const pUpper = rawPin.toUpperCase();
@@ -616,7 +635,13 @@ export function resolveIcPin(
   const pinsPerSide = is16Pin ? 8 : 7;
 
   const p =
-    pUpper === "A" ? "1A" : pUpper === "B" ? "1B" : pUpper === "Y" ? "1Y" : pUpper;
+    pUpper === "A"
+      ? "1A"
+      : pUpper === "B"
+        ? "1B"
+        : pUpper === "Y"
+          ? "1Y"
+          : pUpper;
 
   if (p === "GND") {
     return hole(startCol + (pinsPerSide - 1), sideA, cols);

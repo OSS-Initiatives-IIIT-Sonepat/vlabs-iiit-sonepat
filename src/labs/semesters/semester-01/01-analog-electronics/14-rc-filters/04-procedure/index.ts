@@ -12,6 +12,14 @@ import { step as s09 } from "./09-high-pass-and-plot";
 
 import { rcFiltersStepSchematics } from "@/labs/schematics/semester-01/01-analog-electronics/14-rc-filters";
 
-export const procedureSteps: SceneProcedureStep[] = [s01, s02, s03, s04, s05, s06, s07, s08, s09].map(
-  (s, i) => ({ ...s, schematic: rcFiltersStepSchematics[i] }),
-);
+export const procedureSteps: SceneProcedureStep[] = [
+  s01,
+  s02,
+  s03,
+  s04,
+  s05,
+  s06,
+  s07,
+  s08,
+  s09,
+].map((s, i) => ({ ...s, schematic: rcFiltersStepSchematics[i] }));

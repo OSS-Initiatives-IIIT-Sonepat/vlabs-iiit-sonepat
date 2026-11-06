@@ -30,9 +30,24 @@ export const components: ComponentInstance[] = [
     ],
   },
 
-  { id: "r_10k", type: "resistor", ohms: 10000, mountedAt: { board: "bb", col: 5, row: "c" } },
-  { id: "r_4k7", type: "resistor", ohms: 4700, mountedAt: { board: "bb", col: 5, row: "c" } },
-  { id: "c1", type: "capacitor", capacitance: 0.1, mountedAt: { board: "bb", col: 8, row: "a" } },
+  {
+    id: "r_10k",
+    type: "resistor",
+    ohms: 10000,
+    mountedAt: { board: "bb", col: 5, row: "c" },
+  },
+  {
+    id: "r_4k7",
+    type: "resistor",
+    ohms: 4700,
+    mountedAt: { board: "bb", col: 5, row: "c" },
+  },
+  {
+    id: "c1",
+    type: "capacitor",
+    capacitance: 0.1,
+    mountedAt: { board: "bb", col: 8, row: "a" },
+  },
   {
     id: "w_c_gnd",
     type: "wire",

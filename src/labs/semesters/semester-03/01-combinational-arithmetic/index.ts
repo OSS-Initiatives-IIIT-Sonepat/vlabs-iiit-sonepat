@@ -2,5 +2,5 @@ export const combinationalArithmeticSubject = {
   id: "01-combinational-arithmetic",
   title: "Combinational Arithmetic",
   description:
-    "Advance from basic gates to multi-bit adders, carry-lookahead logic, and high-speed multiplier architectures.",
+    "Review gates and Boolean algebra before the Computer Organisation labs. The adders and multipliers from this track are listed under C.O.A.",
 };

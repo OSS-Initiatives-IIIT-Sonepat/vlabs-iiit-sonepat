@@ -4,7 +4,7 @@ import { type ExperimentDefinition } from "@/labs/experiments/types";
 import { aim } from "./01-aim";
 import { theory } from "./02-theory";
 import { apparatus } from "./03-apparatus";
-import { simulation } from "./03-simulation";
+import { components } from "./components";
 import { observations } from "./05-observations";
 import { conclusion } from "./06-conclusion";
 import { procedureSteps } from "./04-procedure";
@@ -13,10 +13,9 @@ export const memoryDesignExperiment: ExperimentDefinition = {
   id: "memory-design",
   title: "Memory Design: ROM & RAM",
   description:
-    "Computer memory is organised into a flat array of byte-addressable locations. Each location holds 8 bits (1 byte) and is uniquely identified by a binary address. This simulator models a 256-byte memor",
-  labType: "simulation",
-  components: [],
-  sections: [aim, theory, apparatus, simulation, observations, conclusion],
+    "Read and write a 256-byte memory and see which location a binary address selects.",
+  components,
+  sections: [aim, theory, apparatus, observations, conclusion],
   procedureSteps,
 };
 

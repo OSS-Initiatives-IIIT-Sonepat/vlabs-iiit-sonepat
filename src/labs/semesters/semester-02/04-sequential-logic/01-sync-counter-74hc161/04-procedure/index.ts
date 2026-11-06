@@ -11,6 +11,13 @@ import { step as s08 } from "./08-mod10-reload";
 
 import { syncCounter74hc161StepSchematics } from "@/labs/schematics/semester-02/04-sequential-logic/01-sync-counter-74hc161";
 
-export const procedureSteps: SceneProcedureStep[] = [s01, s02, s03, s04, s05, s06, s07, s08].map(
-  (s, i) => ({ ...s, schematic: syncCounter74hc161StepSchematics[i] }),
-);
+export const procedureSteps: SceneProcedureStep[] = [
+  s01,
+  s02,
+  s03,
+  s04,
+  s05,
+  s06,
+  s07,
+  s08,
+].map((s, i) => ({ ...s, schematic: syncCounter74hc161StepSchematics[i] }));

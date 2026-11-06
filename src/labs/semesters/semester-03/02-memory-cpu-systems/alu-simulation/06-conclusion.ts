@@ -5,7 +5,7 @@ export const conclusion: ConclusionSection = {
   type: "conclusion",
   title: "Conclusion",
   paragraphs: [
-    "Through this simulation we observed the operation of a 4-bit ALU performing all eight fundamental operations. The flag register accurately captures the arithmetic state after each operation.",
+    "The breadboard selects AND, OR, or XOR with S1 and S0. A full ALU repeats that slice for every bit and adds an adder, so the same select lines also cover addition and two's-complement subtraction. The flags below are read from that wider result, not from the single LED.",
     "Key findings: (1) Unsigned carry and signed overflow are distinct conditions and require separate flags. (2) Subtraction is implemented via two's complement addition, unifying the adder hardware. (3) Bitwise operations generate flags just like arithmetic operations, enabling conditional branching in real CPUs.",
     "The 4-bit ALU forms the computational core of every processor. Modern CPUs extend this to 64 bits and add many more operations, but the fundamental flag logic remains the same.",
   ],

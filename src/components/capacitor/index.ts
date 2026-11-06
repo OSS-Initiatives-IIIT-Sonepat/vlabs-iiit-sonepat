@@ -13,10 +13,7 @@ export const CAPACITOR_PIN_P2 = "capacitor-p2";
 /**
  * Builds a dipped ceramic disc capacitor (used for values < 1 µF such as 0.1 µF / 104).
  */
-function buildCeramicDiscBody(
-  discR: number,
-  capacitance: number,
-): THREE.Group {
+function buildCeramicDiscBody(discR: number, capacitance: number): THREE.Group {
   const grp = new THREE.Group();
 
   const ochreMat = new THREE.MeshBasicMaterial({
@@ -282,11 +279,7 @@ export function buildCapacitor(
       const leadH = PITCH * 0.3 + BOARD_H * 0.45;
       const leadGeo = new THREE.CylinderGeometry(leadR, leadR, leadH, 10);
       const lm = new THREE.Mesh(leadGeo, M.gold());
-      lm.position.set(
-        holePt.x,
-        TOP_Y + PITCH * 0.22 - leadH / 2,
-        holePt.z,
-      );
+      lm.position.set(holePt.x, TOP_Y + PITCH * 0.22 - leadH / 2, holePt.z);
       root.add(lm);
     }
   }
@@ -318,7 +311,12 @@ export function buildCapacitorStandalone(capacitance = 100): THREE.Group {
     root.add(disc);
 
     const leadLen = P * 1.8;
-    const leadGeo = new THREE.CylinderGeometry(P * 0.055, P * 0.055, leadLen, 10);
+    const leadGeo = new THREE.CylinderGeometry(
+      P * 0.055,
+      P * 0.055,
+      leadLen,
+      10,
+    );
     for (const sx of [-1, 1]) {
       const lead = new THREE.Mesh(leadGeo, M.gold());
       lead.position.set(
@@ -335,12 +333,22 @@ export function buildCapacitorStandalone(capacitance = 100): THREE.Group {
     can.position.y = P * 0.3;
     root.add(can);
 
-    const aLeadGeo = new THREE.CylinderGeometry(P * 0.06, P * 0.06, P * 1.7, 10);
+    const aLeadGeo = new THREE.CylinderGeometry(
+      P * 0.06,
+      P * 0.06,
+      P * 1.7,
+      10,
+    );
     const aLead = new THREE.Mesh(aLeadGeo, M.gold());
     aLead.position.set(-P * 0.32, P * 0.3 - H / 2 - P * 0.8, 0);
     root.add(aLead);
 
-    const cLeadGeo = new THREE.CylinderGeometry(P * 0.06, P * 0.06, P * 1.4, 10);
+    const cLeadGeo = new THREE.CylinderGeometry(
+      P * 0.06,
+      P * 0.06,
+      P * 1.4,
+      10,
+    );
     const cLead = new THREE.Mesh(cLeadGeo, M.gold());
     cLead.position.set(P * 0.32, P * 0.3 - H / 2 - P * 0.65, 0);
     root.add(cLead);

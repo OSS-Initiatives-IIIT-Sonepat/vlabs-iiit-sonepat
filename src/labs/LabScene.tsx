@@ -30,6 +30,7 @@ import {
 import {
   buildBreadboard,
   buildLongBreadboard,
+  buildWideBreadboard,
   buildDip,
   buildDip14,
   buildDip16,
@@ -383,6 +384,9 @@ function buildInstance(
     case "long-breadboard":
       return buildLongBreadboard();
 
+    case "wide-breadboard":
+      return buildWideBreadboard();
+
     case "xor-gate":
     case "and-gate":
     case "or-gate":
@@ -391,6 +395,11 @@ function buildInstance(
     case "nor-gate":
     case "xnor-gate":
     case "buffer-gate":
+    case "not-hex":
+    case "and-quad":
+    case "or-quad":
+    case "nand-quad":
+    case "xor-quad":
     case "dff":
     case "sr-latch":
     case "counter-4bit-async": {
@@ -404,7 +413,12 @@ function buildInstance(
         "nand-gate": "NAND",
         "nor-gate": "NOR",
         "xnor-gate": "XNOR",
-        "buffer-gate": "BUF",
+        "buffer-gate": "74HC125",
+        "not-hex": "74HC04",
+        "and-quad": "74HC08",
+        "or-quad": "74HC32",
+        "nand-quad": "74HC00",
+        "xor-quad": "74HC86",
         dff: "74HC74",
         "sr-latch": "74HC279",
         "counter-4bit-async": "74HC93",
@@ -420,7 +434,10 @@ function buildInstance(
     case "adder-4bit":
     case "jk-ff":
     case "counter-4bit-sync":
-    case "register-4bit": {
+    case "register-4bit":
+    case "ram":
+    case "rom":
+    case "cpu": {
       const { col, board } = inst.mountedAt;
       const cols = colsForBoardId(board, all);
       const labels16: Record<string, string> = {
@@ -433,6 +450,9 @@ function buildInstance(
         "jk-ff": "74HC73",
         "counter-4bit-sync": "74HC161",
         "register-4bit": "74HC194",
+        ram: "RAM",
+        rom: "ROM",
+        cpu: "CPU",
       };
       return buildDip16(col, labels16[inst.type] ?? "74HC153", cols);
     }
@@ -459,7 +479,11 @@ function buildInstance(
     case "diode": {
       const { col, row, board } = inst.mountedAt;
       const cols = colsForBoardId(board, all);
-      return buildDiode(hole(col, row, cols), hole(col + 3, row, cols), inst.model ?? "1N4148");
+      return buildDiode(
+        hole(col, row, cols),
+        hole(col + 3, row, cols),
+        inst.model ?? "1N4148",
+      );
     }
 
     case "zener": {
@@ -646,6 +670,18 @@ function buildInstance(
 
     case "mcu-trainer": {
       return buildMcuTrainerStandalone();
+    }
+
+    case "io-port": {
+      const { col, board } = inst.mountedAt;
+      const cols = colsForBoardId(board, all);
+      return buildDip14(col, inst.name ?? "I/O", cols);
+    }
+
+    case "block-module": {
+      const { col, board } = inst.mountedAt;
+      const cols = colsForBoardId(board, all);
+      return buildDip14(col, inst.name, cols);
     }
 
     default:
@@ -923,7 +959,11 @@ function inspectComponent(
 // ── Camera framing & screen projection ────────────────────────────────────
 const HOME_POS = new THREE.Vector3(0, 6.5, 7.0);
 const HOME_TARGET = new THREE.Vector3(0, 0.1, 0);
-const NON_FOCUSABLE = new Set(["breadboard", "long-breadboard"]);
+const NON_FOCUSABLE = new Set([
+  "breadboard",
+  "long-breadboard",
+  "wide-breadboard",
+]);
 const WORLD_UP = new THREE.Vector3(0, 1, 0);
 
 /** Bench instruments frame their chassis, not the long probe cables. */
@@ -1078,6 +1118,7 @@ export function LabSceneCanvas({
   const clockRef = useRef(0);
   const controlsRef = useRef<OrbitControls | null>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
+  const homePosRef = useRef(HOME_POS);
   const zoomAnimRef = useRef<ZoomTween | null>(null);
   const meshMapRef = useRef<Map<string, THREE.Group>>(new Map());
 
@@ -1199,10 +1240,13 @@ export function LabSceneCanvas({
       0.05,
       previewMode ? 100 : 200,
     );
+    const wide = circuit.components.some((c) => c.type === "wide-breadboard");
+    const home = wide ? new THREE.Vector3(0, 28, 30) : HOME_POS;
+    homePosRef.current = home;
     if (previewMode) {
       camera.position.set(0.6, 5.2, 6.0);
     } else {
-      camera.position.copy(HOME_POS);
+      camera.position.copy(home);
     }
     camera.lookAt(0, 0, 0);
     cameraRef.current = camera;
@@ -1219,7 +1263,7 @@ export function LabSceneCanvas({
       controls.enableDamping = true;
       controls.dampingFactor = 0.08;
       controls.minDistance = 0.35;
-      controls.maxDistance = 20;
+      controls.maxDistance = wide ? 70 : 20;
       controls.maxPolarAngle = Math.PI * 0.48;
       controls.minPolarAngle = Math.PI * 0.05;
       controls.enablePan = true;
@@ -1549,7 +1593,8 @@ export function LabSceneCanvas({
       wasSelectedRef.current = true;
     } else {
       focusBoxRef.current = null;
-      if (wasSelectedRef.current) animateCameraTo(HOME_POS, HOME_TARGET, 560);
+      if (wasSelectedRef.current)
+        animateCameraTo(homePosRef.current, HOME_TARGET, 560);
       wasSelectedRef.current = false;
     }
   }, [selectedId, focusCamera, animateCameraTo, previewMode, setSelectedId]);

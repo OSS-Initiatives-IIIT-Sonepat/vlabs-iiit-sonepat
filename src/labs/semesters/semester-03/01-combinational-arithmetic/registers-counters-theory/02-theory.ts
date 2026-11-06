@@ -1,9 +1,11 @@
 import { type TheorySection } from "@/labs/lab-content.types";
+import { registersCountersTheoryDiagram } from "@/labs/schematics/semester-03/01-combinational-arithmetic/registers-counters-theory";
 
 export const theory: TheorySection = {
   id: "theory",
   type: "text",
   title: "Theory",
+  circuitDiagram: registersCountersTheoryDiagram,
   paragraphs: [
     "Registers and counters are sequential logic circuits built from flip-flops. Unlike combinational circuits whose output depends only on current inputs, sequential circuits have memory — their output depends on both current inputs and past history (stored state).",
     "Flip-flop types: SR flip-flop: Set-Reset latch — S=1 sets Q=1, R=1 resets Q=0, S=R=1 is forbidden. D flip-flop: Data/Delay — Q captures D on the clock edge. Simple and most commonly used. JK flip-flop: J (set), K (reset); J=K=1 causes toggle. Universal flip-flop — any other type can be derived from it. T flip-flop: Toggle — T=1 toggles Q, T=0 holds. Used directly in counters.",

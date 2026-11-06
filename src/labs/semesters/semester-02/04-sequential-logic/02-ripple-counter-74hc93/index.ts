@@ -19,5 +19,9 @@ export const rippleCounter74hc93Experiment: ExperimentDefinition = {
   procedureSteps,
 };
 
-export const RippleCounter74hc93Circuit = buildCircuit(rippleCounter74hc93Experiment);
-export const RippleCounter74hc93Content = buildLabContent(rippleCounter74hc93Experiment);
+export const RippleCounter74hc93Circuit = buildCircuit(
+  rippleCounter74hc93Experiment,
+);
+export const RippleCounter74hc93Content = buildLabContent(
+  rippleCounter74hc93Experiment,
+);

@@ -259,5 +259,6 @@ export const MUX_TYPES = new Set([
   "mux-2to1-ic",
   "demux-1to4",
   "demux-1to8",
+  "decoder-3to8",
   "encoder-8to3",
 ]);

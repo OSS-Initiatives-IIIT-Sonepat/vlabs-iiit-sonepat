@@ -15,8 +15,11 @@ import { lintSchematic } from "../src/labs/schematics/lint";
 
 const args = process.argv.slice(2);
 const outIdx = args.indexOf("--out");
-const outDir = outIdx >= 0 ? args[outIdx + 1] : join(process.cwd(), ".schematic-review");
-const filter = args.find((a, i) => !a.startsWith("--") && (outIdx < 0 || i !== outIdx + 1));
+const outDir =
+  outIdx >= 0 ? args[outIdx + 1] : join(process.cwd(), ".schematic-review");
+const filter = args.find(
+  (a, i) => !a.startsWith("--") && (outIdx < 0 || i !== outIdx + 1),
+);
 
 const CELL_W = 520;
 const CELL_H = 400;
@@ -25,7 +28,10 @@ const COLS = 3;
 const SCALE = 1.5;
 
 function escapeXml(s: string) {
-  return s.replace(/[<>&"]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" })[c]!);
+  return s.replace(
+    /[<>&"]/g,
+    (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" })[c]!,
+  );
 }
 
 function cell(entry: SchematicEntry, x: number, y: number): string {
@@ -35,7 +41,9 @@ function cell(entry: SchematicEntry, x: number, y: number): string {
   const issues = lintSchematic(schematic).filter((i) => i.severity !== "info");
   const errors = issues.filter((i) => i.severity === "error").length;
 
-  let svg = renderToStaticMarkup(createElement(CircuitSchematic, { schematic }));
+  let svg = renderToStaticMarkup(
+    createElement(CircuitSchematic, { schematic }),
+  );
   svg = svg.replace(
     /^<svg([^>]*)>/,
     (_m, attrs: string) =>
@@ -70,7 +78,9 @@ async function main() {
     const rows = Math.ceil(entries.length / COLS);
     const W = COLS * CELL_W;
     const H = rows * CELL_H + 36;
-    const cells = entries.map((e, i) => cell(e, (i % COLS) * CELL_W, 36 + Math.floor(i / COLS) * CELL_H));
+    const cells = entries.map((e, i) =>
+      cell(e, (i % COLS) * CELL_W, 36 + Math.floor(i / COLS) * CELL_H),
+    );
     const sheet =
       `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">` +
       `<rect width="${W}" height="${H}" fill="#fff"/>` +
@@ -78,7 +88,9 @@ async function main() {
       cells.join("") +
       `</svg>`;
     const file = join(outDir, `${lab.replace(/\//g, "__")}.png`);
-    await sharp(Buffer.from(sheet), { density: 72 * SCALE }).png().toFile(file);
+    await sharp(Buffer.from(sheet), { density: 72 * SCALE })
+      .png()
+      .toFile(file);
     console.log(file);
   }
 }

@@ -1,30 +1,46 @@
 "use client";
 
+import dynamic from "next/dynamic";
+
 import { Body } from "@/ui";
 
 import { CardShape } from "../three-cards/CardShape";
 import { CircuitModel } from "./CircuitModel";
 import { type ExploreSubject } from "./explore.data";
 
+const DiagramPreview = dynamic(
+  () => import("./DiagramPreview").then((m) => m.DiagramPreview),
+  { ssr: false },
+);
+
 /** Subject IDs that are fully available — all others show "Coming Soon". */
 const ENABLED_SUBJECTS = new Set([
   "01-analog-electronics",
   "01-digital-electronics",
+  "01-combinational-arithmetic",
+  "03-programming-fundamentals",
+  "04-computer-organisation-architecture",
+  "05-computer-arithmetic",
+  "06-processor-design",
+  "07-memory-and-io",
+  "08-assembly-systems",
 ]);
 
 type Props = {
   subject: ExploreSubject;
   onClick: (subject: ExploreSubject) => void;
+  /** WebGL previews mount only while this semester is open. */
+  showPreview: boolean;
 };
 
-export function SubjectCard({ subject, onClick }: Props) {
+export function SubjectCard({ subject, onClick, showPreview }: Props) {
   const comingSoon = !ENABLED_SUBJECTS.has(subject.id);
 
   return (
     <button
       className={[
         "native-button-reset box-border",
-        "flex flex-col h-full isolate min-h-0 min-w-0 overflow-hidden",
+        "flex h-full flex-col isolate min-w-0 overflow-hidden",
         "p-[calc(var(--spacing-base)*4)] pb-0 pt-[calc(var(--spacing-base)*4)]",
         "relative text-left w-full",
         comingSoon
@@ -89,12 +105,12 @@ export function SubjectCard({ subject, onClick }: Props) {
 
       <div
         className={[
-          "flex flex-col gap-[calc(var(--spacing-base)*3)] pb-[calc(var(--spacing-base)*4)]",
+          "flex flex-col gap-[calc(var(--spacing-base)*3)] pb-[calc(var(--spacing-base)*3)]",
           comingSoon ? "grayscale opacity-50" : "",
         ].join(" ")}
       >
         <h3
-          className="font-[family-name:var(--font-sans),sans-serif] font-medium text-[var(--ink)]"
+          className="line-clamp-1 font-[family-name:var(--font-sans),sans-serif] font-medium text-[var(--ink)]"
           style={{
             fontSize: "clamp(1.125rem, 0.9372rem + 0.7519vw, 1.375rem)",
             lineHeight: "clamp(1.5rem, 1.3122rem + 0.7519vw, 1.75rem)",
@@ -106,23 +122,33 @@ export function SubjectCard({ subject, onClick }: Props) {
           className="border-t border-dotted border-[var(--divider)] h-0 w-full"
           aria-hidden
         />
-        <Body size="sm" muted>
-          {subject.description}
-        </Body>
+        <div title={subject.description}>
+          <Body size="sm" muted className="line-clamp-2 min-h-[3.1em]">
+            {subject.description}
+          </Body>
+        </div>
       </div>
 
-      {/* 3D canvas bleeds to card bottom + sides */}
-      <div
-        className={[
-          "relative flex-1 h-[220px] min-h-0 -mx-[calc(var(--spacing-base)*4)] overflow-hidden",
-          "transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
-          "motion-reduce:transition-none",
-          comingSoon ? "grayscale opacity-40" : "",
-        ].join(" ")}
-        data-slot="card-image"
-      >
-        <CircuitModel circuitId={subject.circuitId} />
-      </div>
+      {/* Same slot on every open card. Breadboard labs draw the board.
+          Diagram and program labs draw their figure in that same frame. */}
+      {showPreview && !comingSoon && (
+        <div
+          className={[
+            "relative mt-auto h-[260px] shrink-0 -mx-[calc(var(--spacing-base)*4)] overflow-hidden",
+            "transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
+            "motion-reduce:transition-none",
+          ].join(" ")}
+          data-slot="card-image"
+        >
+          <div className="absolute inset-0">
+            {subject.hasPreview ? (
+              <CircuitModel circuitId={subject.circuitId} />
+            ) : (
+              <DiagramPreview circuitId={subject.circuitId} />
+            )}
+          </div>
+        </div>
+      )}
     </button>
   );
 }

@@ -1,9 +1,11 @@
 import { type TheorySection } from "@/labs/lab-content.types";
+import { claAdderTheoryDiagram } from "@/labs/schematics/semester-03/01-combinational-arithmetic/cla-adder";
 
 export const theory: TheorySection = {
   id: "theory",
   type: "text",
   title: "Theory",
+  circuitDiagram: claAdderTheoryDiagram,
   paragraphs: [
     "A Ripple Carry Adder (RCA) chains n full adders in series: each stage must wait for the carry from the previous stage before it can compute its sum and carry. The total propagation delay is $n \\times t_{FA}$ where $t_{FA}$ is the delay through one full adder. For a 64-bit adder, this means 64 gate delays — unacceptably slow for modern processors.",
     "The Carry-Look-Ahead Adder (CLA) solves this by pre-computing all carry signals in parallel before the actual addition. Two auxiliary signals are defined for each bit position $i$: the Generate signal $G_i = A_i \\cdot B_i$ (this stage will definitely produce a carry regardless of carry-in) and the Propagate signal $P_i = A_i \\oplus B_i$ (this stage will propagate an incoming carry).",

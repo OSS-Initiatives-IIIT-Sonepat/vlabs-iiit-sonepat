@@ -12,6 +12,8 @@ export type ExploreSubject = {
   title: string;
   description: string;
   circuitId: string;
+  /** Default circuit is a breadboard scene the card can preview. */
+  hasPreview: boolean;
   experiments: ExploreExperiment[];
 };
 

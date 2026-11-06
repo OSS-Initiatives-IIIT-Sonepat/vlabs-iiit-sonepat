@@ -11,6 +11,13 @@ import { step as s08 } from "./08-disable-with-e1";
 
 import { decoder3to8IcStepSchematics } from "@/labs/schematics/semester-02/03-combinational-logic/01-decoder-3to8-ic";
 
-export const procedureSteps: SceneProcedureStep[] = [s01, s02, s03, s04, s05, s06, s07, s08].map(
-  (s, i) => ({ ...s, schematic: decoder3to8IcStepSchematics[i] }),
-);
+export const procedureSteps: SceneProcedureStep[] = [
+  s01,
+  s02,
+  s03,
+  s04,
+  s05,
+  s06,
+  s07,
+  s08,
+].map((s, i) => ({ ...s, schematic: decoder3to8IcStepSchematics[i] }));

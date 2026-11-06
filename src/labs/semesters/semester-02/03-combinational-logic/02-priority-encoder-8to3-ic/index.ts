@@ -13,11 +13,20 @@ const INPUTS = ["I7", "I6", "I5", "I4", "I3", "I2", "I1", "I0"];
 
 /** Truth-table row with input `n` LOW (active) and every other input HIGH. */
 function singleActive(n: number | null) {
-  const inputs = Object.fromEntries(INPUTS.map((name, i) => [name, 7 - i === n ? 0 : 1]));
-  if (n === null) return { inputs, outputs: { A2: 1, A1: 1, A0: 1, GS: 1, EO: 0 } };
+  const inputs = Object.fromEntries(
+    INPUTS.map((name, i) => [name, 7 - i === n ? 0 : 1]),
+  );
+  if (n === null)
+    return { inputs, outputs: { A2: 1, A1: 1, A0: 1, GS: 1, EO: 0 } };
   return {
     inputs,
-    outputs: { A2: 1 - ((n >> 2) & 1), A1: 1 - ((n >> 1) & 1), A0: 1 - (n & 1), GS: 0, EO: 1 },
+    outputs: {
+      A2: 1 - ((n >> 2) & 1),
+      A1: 1 - ((n >> 1) & 1),
+      A0: 1 - (n & 1),
+      GS: 0,
+      EO: 1,
+    },
   };
 }
 
@@ -36,5 +45,9 @@ export const priorityEncoder8to3IcExperiment: ExperimentDefinition = {
   procedureSteps,
 };
 
-export const PriorityEncoder8to3IcCircuit = buildCircuit(priorityEncoder8to3IcExperiment);
-export const PriorityEncoder8to3IcContent = buildLabContent(priorityEncoder8to3IcExperiment);
+export const PriorityEncoder8to3IcCircuit = buildCircuit(
+  priorityEncoder8to3IcExperiment,
+);
+export const PriorityEncoder8to3IcContent = buildLabContent(
+  priorityEncoder8to3IcExperiment,
+);
