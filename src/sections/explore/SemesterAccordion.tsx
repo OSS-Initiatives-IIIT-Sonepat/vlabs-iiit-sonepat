@@ -97,9 +97,9 @@ function SemesterItem({
         <div className="min-h-0 overflow-hidden">
           <div
             className={[
-              "grid gap-[calc(var(--spacing-base)*6)] grid-cols-1 items-start",
+              "grid gap-[calc(var(--spacing-base)*6)] grid-cols-1 items-stretch justify-start",
               "pb-[calc(var(--spacing-base)*2)]",
-              "min-[921px]:grid-cols-3",
+              "min-[921px]:[grid-template-columns:repeat(auto-fill,420px)]",
             ].join(" ")}
           >
             {semester.subjects.map((subject) => (

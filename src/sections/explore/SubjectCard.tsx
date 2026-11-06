@@ -1,10 +1,17 @@
 "use client";
 
+import dynamic from "next/dynamic";
+
 import { Body } from "@/ui";
 
 import { CardShape } from "../three-cards/CardShape";
 import { CircuitModel } from "./CircuitModel";
 import { type ExploreSubject } from "./explore.data";
+
+const DiagramPreview = dynamic(
+  () => import("./DiagramPreview").then((m) => m.DiagramPreview),
+  { ssr: false },
+);
 
 /** Subject IDs that are fully available — all others show "Coming Soon". */
 const ENABLED_SUBJECTS = new Set([
@@ -33,7 +40,7 @@ export function SubjectCard({ subject, onClick, showPreview }: Props) {
     <button
       className={[
         "native-button-reset box-border",
-        "flex flex-col isolate min-h-0 min-w-0 overflow-hidden",
+        "flex h-full flex-col isolate min-w-0 overflow-hidden",
         "p-[calc(var(--spacing-base)*4)] pb-0 pt-[calc(var(--spacing-base)*4)]",
         "relative text-left w-full",
         comingSoon
@@ -98,12 +105,12 @@ export function SubjectCard({ subject, onClick, showPreview }: Props) {
 
       <div
         className={[
-          "flex flex-col gap-[calc(var(--spacing-base)*3)] pb-[calc(var(--spacing-base)*4)]",
+          "flex flex-col gap-[calc(var(--spacing-base)*3)] pb-[calc(var(--spacing-base)*3)]",
           comingSoon ? "grayscale opacity-50" : "",
         ].join(" ")}
       >
         <h3
-          className="font-[family-name:var(--font-sans),sans-serif] font-medium text-[var(--ink)]"
+          className="line-clamp-1 font-[family-name:var(--font-sans),sans-serif] font-medium text-[var(--ink)]"
           style={{
             fontSize: "clamp(1.125rem, 0.9372rem + 0.7519vw, 1.375rem)",
             lineHeight: "clamp(1.5rem, 1.3122rem + 0.7519vw, 1.75rem)",
@@ -115,25 +122,30 @@ export function SubjectCard({ subject, onClick, showPreview }: Props) {
           className="border-t border-dotted border-[var(--divider)] h-0 w-full"
           aria-hidden
         />
-        <Body size="sm" muted>
-          {subject.description}
-        </Body>
+        <div title={subject.description}>
+          <Body size="sm" muted className="line-clamp-2 min-h-[3.1em]">
+            {subject.description}
+          </Body>
+        </div>
       </div>
 
-      {/* Fixed slot. A flex-grow canvas was stretching the card into a tall
-          white panel and squeezing the breadboard into a thin strip. */}
-      {showPreview && subject.hasPreview && (
+      {/* Same slot on every open card. Breadboard labs draw the board.
+          Diagram and program labs draw their figure in that same frame. */}
+      {showPreview && !comingSoon && (
         <div
           className={[
-            "relative mt-auto h-[220px] shrink-0 -mx-[calc(var(--spacing-base)*4)] overflow-hidden",
+            "relative mt-auto h-[260px] shrink-0 -mx-[calc(var(--spacing-base)*4)] overflow-hidden",
             "transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
             "motion-reduce:transition-none",
-            comingSoon ? "grayscale opacity-40" : "",
           ].join(" ")}
           data-slot="card-image"
         >
           <div className="absolute inset-0">
-            <CircuitModel circuitId={subject.circuitId} />
+            {subject.hasPreview ? (
+              <CircuitModel circuitId={subject.circuitId} />
+            ) : (
+              <DiagramPreview circuitId={subject.circuitId} />
+            )}
           </div>
         </div>
       )}

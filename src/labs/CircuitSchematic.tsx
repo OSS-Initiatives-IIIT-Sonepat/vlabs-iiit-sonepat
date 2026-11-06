@@ -2358,12 +2358,15 @@ export function CircuitSchematic({
   schematic,
   linkElement,
   animate = false,
+  cover = false,
 }: {
   schematic: SchematicData;
   /** Maps a symbol to its 3D component; enables hover/select linking. */
   linkElement?: (el: SchematicElement) => SchematicLink | null;
   /** Draw new flowchart nodes in when a procedure step reveals them. */
   animate?: boolean;
+  /** Fill the frame and crop, the way a card preview fills its slot. */
+  cover?: boolean;
 }) {
   const w = schematic.width ?? 340;
   const h = schematic.height ?? 260;
@@ -2418,7 +2421,8 @@ export function CircuitSchematic({
         viewBox={`-10 -10 ${w + 20} ${h + 20}`}
         width="100%"
         height="100%"
-        overflow="visible"
+        overflow={cover ? "hidden" : "visible"}
+        preserveAspectRatio={cover ? "xMidYMid slice" : undefined}
         style={{ background: CANVAS_BG, display: "block" }}
       >
         <defs>
