@@ -1,4 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
+import { sqrtTheoryDiagram } from "@/labs/schematics/semester-04/01-8085-assembly-programming/assembly-diagrams";
 
 export const theory: TheorySection = {
   id: "theory",
@@ -11,4 +12,5 @@ export const theory: TheorySection = {
     "The Carry flag after SUB indicates a borrow (A < B before subtraction). This is the termination condition: when A - ODD is negative, we have subtracted one too many odd numbers, so the final COUNT is the integer square root.",
     "For N=0, 1, 4, 9, 16, 25, 36, 49 the exact integer square roots are 0, 1, 2, 3, 4, 5, 6, 7. For non-perfect-square N, the floor of the square root is returned.",
   ],
+  circuitDiagram: sqrtTheoryDiagram,
 };
