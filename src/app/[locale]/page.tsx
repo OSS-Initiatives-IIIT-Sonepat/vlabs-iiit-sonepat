@@ -10,15 +10,17 @@ import { Footer } from "@/sections/footer";
 export default function HomePage() {
   return (
     <MenuStyleProvider>
-      <Menu scheme="muted" />
-      <main>
-        <HomeHero />
-        <ThreeCards />
-        <FeatureCards />
-        <Helped />
-        <Testimonials />
-      </main>
-      <Footer />
+      <div className="landing-fonts">
+        <Menu scheme="muted" />
+        <main>
+          <HomeHero />
+          <ThreeCards />
+          <FeatureCards />
+          <Helped />
+          <Testimonials />
+        </main>
+        <Footer />
+      </div>
     </MenuStyleProvider>
   );
 }

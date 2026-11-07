@@ -47,6 +47,17 @@
   --font-mono: var(--font-mono-var), monospace;
 }
 
+/* Aleo is the interface type. The landing page puts Host Grotesk back. */
+body {
+  --font-sans: var(--font-aleo), serif;
+  --font-inria: var(--font-aleo), serif;
+  --font-product: var(--font-aleo), serif;
+}
+
+.landing-fonts {
+  --font-sans: var(--font-host), sans-serif;
+}
+
 /* ─── Design token CSS custom properties ───────────────────────────── */
 /* These are consumed by the JS token helpers: color(), spacing(), radius(), etc. */
 :root {
@@ -112,8 +123,8 @@
   --divider: var(--color-black-40);
 
   /* ── Font variable aliases (bound by next/font in layout.tsx) ── */
-  /* --font-sans, --font-serif, --font-mono, --font-retro, --font-product, --font-inria
-     are set by next/font CSS variable injection on <body> */
+  /* --font-aleo, --font-serif, --font-host, --font-mono, and --font-retro
+     are set by next/font on <body>. --font-sans is Aleo except on .landing-fonts. */
 }
 
 /* ─── Scheme overrides ─────────────────────────────────────────────── */

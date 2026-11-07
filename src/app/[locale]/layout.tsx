@@ -1,5 +1,4 @@
 import localFont from "next/font/local";
-import { Inria_Serif } from "next/font/google";
 import { type ReactNode } from "react";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
@@ -12,15 +11,49 @@ const hostGrotesk = localFont({
   src: "../../../public/fonts/host-grotesk-latin-variable.woff2",
   weight: "300 800",
   style: "normal",
-  variable: "--font-sans",
+  variable: "--font-host",
   display: "swap",
 });
 
+/** Landing headings. Weight 300 only, so that page does not pick up the text weights. */
 const aleo = localFont({
   src: "../../../public/fonts/aleo-latin-300.woff2",
   weight: "300",
   style: "normal",
   variable: "--font-serif",
+  display: "swap",
+});
+
+/** Interface type for every page except the landing page. */
+const aleoText = localFont({
+  src: [
+    {
+      path: "../../../public/fonts/aleo-latin-300.woff2",
+      weight: "300",
+      style: "normal",
+    },
+    {
+      path: "../../../public/fonts/aleo-latin-400.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../../../public/fonts/aleo-latin-500.woff2",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../../../public/fonts/aleo-latin-600.woff2",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "../../../public/fonts/aleo-latin-700.woff2",
+      weight: "700",
+      style: "normal",
+    },
+  ],
+  variable: "--font-aleo",
   display: "swap",
 });
 
@@ -37,36 +70,6 @@ const vt323 = localFont({
   weight: "400",
   style: "normal",
   variable: "--font-retro",
-  display: "swap",
-});
-
-const inter = localFont({
-  src: [
-    {
-      path: "../../../public/fonts/inter-latin-400.woff2",
-      weight: "400",
-      style: "normal",
-    },
-    {
-      path: "../../../public/fonts/inter-latin-500.woff2",
-      weight: "500",
-      style: "normal",
-    },
-    {
-      path: "../../../public/fonts/inter-latin-600.woff2",
-      weight: "600",
-      style: "normal",
-    },
-  ],
-  variable: "--font-product",
-  display: "swap",
-});
-
-const inriaSerif = Inria_Serif({
-  weight: ["300", "400"],
-  style: ["normal", "italic"],
-  subsets: ["latin"],
-  variable: "--font-inria",
   display: "swap",
 });
 
@@ -95,7 +98,7 @@ export default async function LocaleLayout({
   return (
     <html lang={locale}>
       <body
-        className={`${hostGrotesk.variable} ${aleo.variable} ${azeretMono.variable} ${vt323.variable} ${inter.variable} ${inriaSerif.variable}`}
+        className={`${hostGrotesk.variable} ${aleo.variable} ${aleoText.variable} ${azeretMono.variable} ${vt323.variable}`}
       >
         <NextIntlClientProvider messages={messages}>
           {children}

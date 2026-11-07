@@ -3,7 +3,9 @@
 import { Drawer } from "@base-ui/react/drawer";
 import { IconChevronDown } from "@tabler/icons-react";
 import { Fragment, useState } from "react";
+import { usePathname } from "next/navigation";
 
+import { locales } from "@/i18n/config";
 import { type Scheme } from "@/tokens";
 import { Button, ExternalArrow, ExternalLink, VerticalDivider } from "@/ui";
 
@@ -38,13 +40,18 @@ export type MenuDrawerProps = {
 };
 
 export function MenuDrawer({ navItems, scheme, socialLinks }: MenuDrawerProps) {
+  const pathname = usePathname();
   const [isGroupExpanded, setIsGroupExpanded] = useState(false);
+  const landingFonts =
+    pathname === "/" || locales.some((locale) => pathname === `/${locale}`)
+      ? "landing-fonts"
+      : "";
 
   return (
     <Drawer.Portal>
       <Drawer.Popup
         aria-label="Navigation menu"
-        className="fixed inset-x-0 top-0 grid grid-rows-[1fr_auto_auto] h-dvh w-screen overflow-y-auto bg-[var(--surface)] px-[28px] pt-[88px] pb-[16px] z-[90] opacity-100 transition-[opacity,transform] duration-[200ms] ease-[cubic-bezier(0.22,1,0.36,1)] data-[starting-style]:opacity-0 data-[starting-style]:-translate-y-2 data-[ending-style]:opacity-0 data-[ending-style]:-translate-y-2"
+        className={`fixed inset-x-0 top-0 grid grid-rows-[1fr_auto_auto] h-dvh w-screen overflow-y-auto bg-[var(--surface)] px-[28px] pt-[88px] pb-[16px] z-[90] opacity-100 transition-[opacity,transform] duration-[200ms] ease-[cubic-bezier(0.22,1,0.36,1)] data-[starting-style]:opacity-0 data-[starting-style]:-translate-y-2 data-[ending-style]:opacity-0 data-[ending-style]:-translate-y-2 ${landingFonts}`}
         data-scheme={scheme}
       >
         {/* DrawerNav */}
