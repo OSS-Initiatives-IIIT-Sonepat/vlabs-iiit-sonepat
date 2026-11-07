@@ -1,8 +1,8 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
 
 export const step: SceneProcedureStep = {
-  label: "Test blanking and latch functions",
-  body: "Pull BL' (pin 4) to GND momentarily — all segments should extinguish (blank display), confirming the blanking function. Restore BL' to +5 V. Now set LE (pin 5) HIGH (latch enable): the display should hold the currently displayed digit even if the input switches are changed. Change the BCD input to a different digit — the display should remain unchanged. Pull LE LOW again to return to transparent (real-time) mode. Document the latch behaviour.",
+  label: "Ground the common cathode",
+  body: "Connect every LED cathode to ground. All seven segments light, which is the shape of the digit 8. A 74HC4511 would light only the segments of the BCD code on its inputs. Pulling blanking low turns every segment off. Raising latch enable freezes the digit while the switches change. Those two controls are pins on the decoder in the figure.",
   show: [
     "bb",
     "led_a",
@@ -33,5 +33,12 @@ export const step: SceneProcedureStep = {
     "w_re_lede",
     "w_rf_ledf",
     "w_rg_ledg",
+    "w_leda_gnd",
+    "w_ledb_gnd",
+    "w_ledc_gnd",
+    "w_ledd_gnd",
+    "w_lede_gnd",
+    "w_ledf_gnd",
+    "w_ledg_gnd",
   ],
 };

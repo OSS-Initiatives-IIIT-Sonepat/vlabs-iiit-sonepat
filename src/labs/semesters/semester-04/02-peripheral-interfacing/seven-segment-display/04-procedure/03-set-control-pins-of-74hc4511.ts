@@ -1,8 +1,8 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
 
 export const step: SceneProcedureStep = {
-  label: "Set control pins of 74HC4511",
-  body: "The 74HC4511 has three control inputs: LT' (Lamp Test, pin 3), BL' (Blanking, pin 4), and LE (Latch Enable, pin 5). For normal operation, tie LT' and BL' to +5 V (active-low, so HIGH = disabled, meaning lamp test and blanking are both off). Tie LE to GND (latch enable LOW = transparent latch, output follows input). Connect the four BCD inputs A (pin 7), B (pin 1), C (pin 2), D (pin 6) to their respective switches.",
+  label: "Place a resistor on every segment",
+  body: "Place a 330 Ω resistor in front of every segment. Each one limits that segment to about (5 − 2) / 330 ≈ 9 mA. The 74HC4511 in the figure drives these resistors. For normal use its lamp-test and blanking pins (both active low) are held high, and its latch-enable pin is held low so the outputs follow the BCD inputs.",
   show: [
     "bb",
     "led_a",
