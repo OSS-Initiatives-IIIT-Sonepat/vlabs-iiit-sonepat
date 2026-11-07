@@ -12,7 +12,7 @@ export const exp8085AddSub8bitExperiment: ExperimentDefinition = {
   id: "8085-add-sub-8bit",
   title: "Addition & Subtraction of Two 8-bit Numbers",
   description:
-    "The Intel 8085 microprocessor is an 8-bit processor that performs arithmetic operations through its Arithmetic and Logic Unit (ALU). The accumulator register A is the central register in all arithmeti",
+    "Add and subtract two 8-bit numbers in the accumulator, and store the sum and the difference.",
   labType: "code",
   components: [],
   sections: [aim, theory, codeLab, observations, conclusion],
