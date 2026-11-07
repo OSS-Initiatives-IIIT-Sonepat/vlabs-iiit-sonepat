@@ -12,7 +12,7 @@ export const exp8085BcdBinaryConvExperiment: ExperimentDefinition = {
   id: "8085-bcd-binary-conv",
   title: "BCD to Binary and Binary to BCD Conversion",
   description:
-    "BCD (Binary Coded Decimal) represents each decimal digit as a 4-bit nibble. Packed BCD stores two digits per byte: the upper nibble is the tens digit and the lower nibble is the units digit. For examp",
+    "Convert a packed BCD byte to binary, and a binary byte back to packed BCD.",
   labType: "code",
   components: [],
   sections: [aim, theory, codeLab, observations, conclusion],
