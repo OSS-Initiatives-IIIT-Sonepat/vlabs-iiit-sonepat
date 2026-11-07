@@ -1,4 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
+import { multiply8bitTheoryDiagram } from "@/labs/schematics/semester-04/01-8085-assembly-programming/assembly-diagrams";
 
 export const theory: TheorySection = {
   id: "theory",
@@ -11,4 +12,5 @@ export const theory: TheorySection = {
     "Key instructions: MVI loads immediate data. DAD H doubles HL (shift-left), which is an alternative for powers-of-two multiplication. MOV copies between registers. SHLD stores HL to memory so the 16-bit product can be written out.",
     "The time complexity is O(B) additions, so this method is slow for large multipliers. A faster approach uses shift-and-add (binary multiplication), but the repeated-addition approach is simpler to understand for introductory labs.",
   ],
+  circuitDiagram: multiply8bitTheoryDiagram,
 };
