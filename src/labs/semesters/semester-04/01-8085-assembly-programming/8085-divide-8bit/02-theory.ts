@@ -1,4 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
+import { divide8bitTheoryDiagram } from "@/labs/schematics/semester-04/01-8085-assembly-programming/assembly-diagrams";
 
 export const theory: TheorySection = {
   id: "theory",
@@ -11,4 +12,5 @@ export const theory: TheorySection = {
     "Key instructions used: CMP B (compare B with A), JC (jump if carry, i.e., A < B), SUB B (subtract B from A), INR C (increment quotient count). The quotient is stored in C and the remainder stays in A at the end of the loop.",
     "Division by zero must be handled specially; if the divisor is 0, the program should output 0FFH as an error indicator. The ORA instruction (OR A with itself) sets the Zero flag without changing A, allowing a JZ check for the zero-divisor case.",
   ],
+  circuitDiagram: divide8bitTheoryDiagram,
 };
