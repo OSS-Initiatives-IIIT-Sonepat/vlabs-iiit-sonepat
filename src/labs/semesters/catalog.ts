@@ -845,6 +845,12 @@ import {
   adcDacExperiment,
 } from "./semester-04/02-peripheral-interfacing/adc-dac";
 
+import {
+  PinLabelling8085Circuit,
+  PinLabelling8085Content,
+  pinLabelling8085Experiment,
+} from "./semester-04/03-microprocessors-and-microcontrollers/8085-pin-labelling";
+
 export type SemesterExperimentEntry = {
   experiment: ExperimentDefinition;
 
@@ -2284,6 +2290,30 @@ export const SEMESTER_SUBJECTS: readonly SemesterSubjectCatalog[] = [
         "r-2r",
         "potentiometer",
       ]),
+    ],
+  },
+  {
+    semesterId: "semester-4",
+    semesterLabel: "Semester 4",
+    subjectId: "03-microprocessors-and-microcontrollers",
+    subjectLabel: "Microprocessors and Microcontrollers",
+    subjectDescription:
+      "What a microprocessor is, why the 8085 was built, and what each of its 40 pins does in a machine cycle.",
+    defaultCircuitId: "8085-pin-labelling",
+    experiments: [
+      fromBuilt(
+        pinLabelling8085Experiment,
+        PinLabelling8085Circuit,
+        PinLabelling8085Content,
+        [
+          "8085",
+          "microprocessor",
+          "microcontroller",
+          "pin diagram",
+          "ALE",
+          "multiplexed bus",
+        ],
+      ),
     ],
   },
 ];

@@ -66,6 +66,10 @@ const SimLabPage = dynamic(
   () => import("@/labs/SimLabPage").then((m) => m.SimLabPage),
   { ssr: false },
 );
+const Mpu8085Scene = dynamic(
+  () => import("@/labs/Mpu8085Scene").then((m) => m.Mpu8085Scene),
+  { ssr: false },
+);
 
 // ── Fallback circuit ───────────────────────────────────────────────────────
 const BREADBOARD_ONLY: Circuit = {
@@ -314,7 +318,8 @@ function FloatingCardContent({
     return (
       <>
         <p className="text-[var(--ink)] font-sans text-[13.5px] leading-[1.7] m-0">
-          Use the arrows or dots below to inspect each component in 3D.
+          {section.lead ??
+            "Use the arrows or dots below to inspect each component in 3D."}
         </p>
         <div className="flex flex-col gap-[calc(var(--spacing-base)*1.5)] mt-[calc(var(--spacing-base)*3)]">
           {section.items.map((item, i) => (
@@ -432,12 +437,26 @@ const SceneRenderer = React.memo(function SceneRenderer({
   circuit,
   sceneStepIndex,
   activeMarkers,
+  chipScene,
 }: {
   section: LabSection;
   circuit: Circuit;
   sceneStepIndex: number;
   activeMarkers: StepMarker[];
+  chipScene: boolean;
 }) {
+  if (chipScene) {
+    const pins =
+      section.type === "procedure"
+        ? section.steps[sceneStepIndex]?.chipPins
+        : { revealed: [] as string[], focus: [] as string[] };
+    return (
+      <Mpu8085Scene
+        focus={pins?.focus ?? []}
+        landmarks={pins?.landmarks ?? []}
+      />
+    );
+  }
   if (section.type === "code-lab" || section.type === "simulation") {
     return null; // These sections are handled by CodeLabPage/SimLabPage directly
   }
@@ -717,6 +736,7 @@ function LabPageStandard({ content }: Props) {
               circuit={circuit}
               sceneStepIndex={sceneStepIndex}
               activeMarkers={activeMarkers}
+              chipScene={content.scene === "8085"}
             />
           )}
         </div>

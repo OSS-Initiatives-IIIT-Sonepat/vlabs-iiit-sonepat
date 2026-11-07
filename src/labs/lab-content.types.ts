@@ -55,6 +55,8 @@ export type ApparatusSection = {
   type: "apparatus";
   title: string;
   audioPath?: string;
+  /** Replaces the default "inspect each component" line when the scene is not a component slider. */
+  lead?: string;
   items: ApparatusItem[];
 };
 
@@ -133,6 +135,20 @@ export type ProcedureStep = {
   /** Optional 2D circuit schematic to display for this step in FloatingCircuitCard */
   schematic?: SchematicData;
   /**
+   * 8085 pin scene. `revealed` names are labelled. `focus` pins are drawn blue.
+   * Ignored unless the lab's `scene` is "8085".
+   */
+  chipPins?: {
+    revealed: string[];
+    focus: string[];
+    landmarks?: {
+      id: string;
+      pins: string[];
+      title: string;
+      text: string;
+    }[];
+  };
+  /**
    * Rows revealed so far. Later steps pass a longer table, so the
    * observation card above the schematic grows as the procedure advances.
    */
@@ -157,5 +173,10 @@ export type LabContent = {
    * - 'simulation': circuit simulation without physical breadboard
    */
   labType?: "breadboard" | "text" | "code" | "simulation";
+  /**
+   * Replaces the breadboard (and a diagram lab's full-bleed figure) with a
+   * dedicated scene. "8085" is the labelled 40-pin package.
+   */
+  scene?: "8085";
   sections: LabSection[];
 };
