@@ -12,7 +12,7 @@ export const exp8085BubbleSortExperiment: ExperimentDefinition = {
   id: "8085-bubble-sort",
   title: "Bubble Sort of an Array",
   description:
-    "Bubble sort is an O(n²) comparison-based sorting algorithm that repeatedly steps through the array, compares adjacent elements, and swaps them if they are in the wrong order. After each full pass, the",
+    "Sort an array in place by comparing neighbours and swapping them when they are out of order.",
   labType: "code",
   components: [],
   sections: [aim, theory, codeLab, observations, conclusion],

@@ -1,4 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
+import { bubbleSortTheoryDiagram } from "@/labs/schematics/semester-04/01-8085-assembly-programming/assembly-diagrams";
 
 export const theory: TheorySection = {
   id: "theory",
@@ -11,4 +12,5 @@ export const theory: TheorySection = {
     "CMP M compares A with the memory byte at (HL). JC skips the swap when A < (HL), i.e., the pair is already in order. Otherwise, the bytes are exchanged: save A in B, load next element, store at current position, store B at next position.",
     "The outer loop count is kept in a memory location (since all registers are used in the inner loop). Alternatively, the count is decremented in a register saved and restored around inner loop iterations.",
   ],
+  circuitDiagram: bubbleSortTheoryDiagram,
 };
