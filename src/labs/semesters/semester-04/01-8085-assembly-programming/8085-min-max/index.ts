@@ -12,7 +12,7 @@ export const exp8085MinMaxExperiment: ExperimentDefinition = {
   id: "8085-min-max",
   title: "Find Minimum and Maximum of an Array",
   description:
-    "Finding the minimum and maximum values in an array requires comparing each element to the current best candidate and updating when a more extreme value is found. The 8085 CMP instruction is the workho",
+    "Scan an array with CMP and keep the smallest value and the largest value.",
   labType: "code",
   components: [],
   sections: [aim, theory, codeLab, observations, conclusion],
