@@ -1,4 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
+import { arraySquareTheoryDiagram } from "@/labs/schematics/semester-04/01-8085-assembly-programming/assembly-diagrams";
 
 export const theory: TheorySection = {
   id: "theory",
@@ -11,4 +12,5 @@ export const theory: TheorySection = {
     "The HL register pair serves dual purpose: as the array pointer before and after each CALL, and as the 16-bit result register inside the multiply subroutine. Care must be taken to save/restore HL around the call using PUSH H and POP H, or to use DE as the array pointer instead.",
     "For elements 0-15, the squares fit in 8 bits (max 225=E1H). For elements up to 255, the maximum square is 65025=FE01H, requiring two bytes. We use DE as the input pointer and store results at a separate output area.",
   ],
+  circuitDiagram: arraySquareTheoryDiagram,
 };

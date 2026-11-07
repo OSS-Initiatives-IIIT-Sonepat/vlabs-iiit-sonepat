@@ -1,8 +1,8 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
 
 export const step: SceneProcedureStep = {
-  label: "Display digits 0–9 and verify segments",
-  body: "Set the input switches to each BCD code from 0000 (digit 0) to 1001 (digit 9). For each setting, verify that the correct digit is illuminated on the 7-segment display. For digit 0: segments a, b, c, d, e, f should be ON, g OFF. For digit 1: only b, c ON. For digit 8: all segments ON. Record which segments are lit for each digit and compare with the standard 7-segment encoding table.",
+  label: "Connect the supply side of each segment",
+  body: "Connect the supply to every resistor and every resistor to its LED anode. The cathodes are still open, so nothing lights. This is the path a decoder output takes: decoder pin, 330 Ω, segment anode.",
   show: [
     "bb",
     "led_a",
@@ -26,5 +26,12 @@ export const step: SceneProcedureStep = {
     "w_vcc_re",
     "w_vcc_rf",
     "w_vcc_rg",
+    "w_ra_leda",
+    "w_rb_ledb",
+    "w_rc_ledc",
+    "w_rd_ledd",
+    "w_re_lede",
+    "w_rf_ledf",
+    "w_rg_ledg",
   ],
 };

@@ -1,4 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
+import { arraySumTheoryDiagram } from "@/labs/schematics/semester-04/01-8085-assembly-programming/assembly-diagrams";
 
 export const theory: TheorySection = {
   id: "theory",
@@ -11,4 +12,5 @@ export const theory: TheorySection = {
     "The DCR B / JNZ LOOP construct decrements B and loops back as long as B ≠ 0. B is initialised with the array count. This is the standard 8085 counting loop pattern.",
     "Algorithm: (1) Load count N from first memory byte into B. (2) Set HL to first data element. (3) Initialise A=0, C=0 (carry). (4) Loop: ADD M, collect carry in C with ADC 00H, INX H, DCR B, JNZ. (5) Store 16-bit result (C:A).",
   ],
+  circuitDiagram: arraySumTheoryDiagram,
 };

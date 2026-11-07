@@ -1,16 +1,12 @@
 "use client";
 
-import React, { useState, useRef, useCallback, useEffect } from "react";
-import Link from "next/link";
-import { type LabContent } from "@/labs/lab-content.types";
-import { CPU8085, assemble } from "@/labs/emulator";
+import { useCallback, useRef, useState } from "react";
+
+import { type CodeLabSection } from "@/labs/lab-content.types";
+import { CPU8085, assemble, entryAddress } from "@/labs/emulator";
 import type { CPU8085State, AssemblerResult } from "@/labs/emulator";
 
-// ── Types ─────────────────────────────────────────────────────────────────────
-
-type Props = { content: LabContent };
-
-// ── Helpers ───────────────────────────────────────────────────────────────────
+type Props = { section: CodeLabSection };
 
 function hex2(n: number): string {
   return n.toString(16).toUpperCase().padStart(2, "0");
@@ -19,225 +15,22 @@ function hex4(n: number): string {
   return n.toString(16).toUpperCase().padStart(4, "0");
 }
 
-function getStarterCode(content: LabContent): string {
-  for (const sec of content.sections) {
-    if ((sec as any).type === "code-lab") {
-      return (sec as any).starterCode ?? "";
-    }
+function loadMemory(cpu: CPU8085, memoryInit: CodeLabSection["memoryInit"]) {
+  if (!memoryInit) return;
+  for (const [addrStr, val] of Object.entries(memoryInit)) {
+    cpu.writeMem(parseInt(addrStr, 16), val);
   }
-  return "; Write your 8085 assembly here\n        ORG 8000H\nSTART:\n        HLT\n";
 }
 
-// ── Styles (inline) ───────────────────────────────────────────────────────────
+const PANEL =
+  "bg-white rounded-[20px] border border-black/[0.08] shadow-[0_4px_24px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)]";
 
-const styles = {
-  root: {
-    display: "flex",
-    height: "100vh",
-    background: "#0d1117",
-    color: "#e6edf3",
-    fontFamily: '"Segoe UI", system-ui, sans-serif',
-    overflow: "hidden",
-  } as React.CSSProperties,
-
-  sidebar: {
-    width: "200px",
-    minWidth: "200px",
-    background: "#161b22",
-    borderRight: "1px solid #30363d",
-    overflowY: "auto" as const,
-    padding: "16px 0",
-  } as React.CSSProperties,
-
-  sidebarTitle: {
-    fontSize: "11px",
-    fontWeight: 600,
-    color: "#7d8590",
-    letterSpacing: "0.08em",
-    textTransform: "uppercase" as const,
-    padding: "0 16px 8px",
-  } as React.CSSProperties,
-
-  sidebarItem: (active: boolean): React.CSSProperties => ({
-    padding: "6px 16px",
-    fontSize: "13px",
-    cursor: "pointer",
-    borderLeft: active ? "2px solid #58a6ff" : "2px solid transparent",
-    background: active ? "#21262d" : "transparent",
-    color: active ? "#e6edf3" : "#7d8590",
-    userSelect: "none",
-  }),
-
-  center: {
-    flex: 1,
-    display: "flex",
-    flexDirection: "column" as const,
-    overflow: "hidden",
-  } as React.CSSProperties,
-
-  editorHeader: {
-    padding: "8px 12px",
-    background: "#161b22",
-    borderBottom: "1px solid #30363d",
-    fontSize: "12px",
-    color: "#7d8590",
-  } as React.CSSProperties,
-
-  editorArea: {
-    flex: 1,
-    position: "relative" as const,
-    display: "flex",
-    overflow: "hidden",
-    background: "#1e1e1e",
-  } as React.CSSProperties,
-
-  lineNumbers: {
-    width: "48px",
-    minWidth: "48px",
-    background: "#1e1e1e",
-    borderRight: "1px solid #30363d",
-    padding: "12px 0",
-    overflowY: "hidden" as const,
-    color: "#4a5568",
-    fontSize: "13px",
-    lineHeight: "20px",
-    fontFamily: '"Cascadia Code", "Fira Code", Consolas, monospace',
-    textAlign: "right" as const,
-    userSelect: "none" as const,
-    paddingRight: "8px",
-  } as React.CSSProperties,
-
-  textarea: {
-    flex: 1,
-    background: "transparent",
-    color: "#d4d4d4",
-    fontSize: "13px",
-    lineHeight: "20px",
-    fontFamily: '"Cascadia Code", "Fira Code", Consolas, monospace',
-    padding: "12px",
-    border: "none",
-    outline: "none",
-    resize: "none" as const,
-    overflowY: "auto" as const,
-    tabSize: 8,
-    spellCheck: false,
-    whiteSpace: "pre" as const,
-  } as React.CSSProperties,
-
-  toolbar: {
-    padding: "8px 12px",
-    background: "#161b22",
-    borderTop: "1px solid #30363d",
-    display: "flex",
-    gap: "8px",
-    alignItems: "center",
-  } as React.CSSProperties,
-
-  btn: (color: string): React.CSSProperties => ({
-    padding: "5px 14px",
-    fontSize: "12px",
-    fontWeight: 600,
-    borderRadius: "6px",
-    border: "none",
-    cursor: "pointer",
-    background: color,
-    color: "#fff",
-    letterSpacing: "0.02em",
-  }),
-
-  output: {
-    height: "160px",
-    background: "#0d1117",
-    borderTop: "1px solid #30363d",
-    overflowY: "auto" as const,
-    padding: "8px 12px",
-    fontFamily: '"Cascadia Code", "Fira Code", Consolas, monospace',
-    fontSize: "12px",
-    color: "#a8b5c4",
-    lineHeight: "18px",
-  } as React.CSSProperties,
-
-  errorBanner: {
-    background: "#3d1519",
-    borderTop: "1px solid #f85149",
-    padding: "8px 12px",
-    color: "#f85149",
-    fontSize: "12px",
-    fontFamily: '"Cascadia Code", "Fira Code", Consolas, monospace',
-  } as React.CSSProperties,
-
-  rightPanel: {
-    width: "220px",
-    minWidth: "220px",
-    background: "#161b22",
-    borderLeft: "1px solid #30363d",
-    overflowY: "auto" as const,
-    padding: "12px",
-    display: "flex",
-    flexDirection: "column" as const,
-    gap: "12px",
-  } as React.CSSProperties,
-
-  panelTitle: {
-    fontSize: "11px",
-    fontWeight: 600,
-    color: "#7d8590",
-    letterSpacing: "0.08em",
-    textTransform: "uppercase" as const,
-    marginBottom: "6px",
-  } as React.CSSProperties,
-
-  regRow: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: "4px",
-  } as React.CSSProperties,
-
-  regLabel: {
-    fontSize: "11px",
-    color: "#7d8590",
-    fontFamily: "monospace",
-    minWidth: "24px",
-  } as React.CSSProperties,
-
-  regValue: {
-    fontSize: "13px",
-    fontWeight: 700,
-    color: "#4ec9b0",
-    fontFamily: '"Cascadia Code", "Fira Code", Consolas, monospace',
-    background: "#21262d",
-    padding: "2px 6px",
-    borderRadius: "4px",
-    minWidth: "38px",
-    textAlign: "center" as const,
-  } as React.CSSProperties,
-
-  flagPill: (active: boolean): React.CSSProperties => ({
-    display: "inline-block",
-    padding: "1px 6px",
-    borderRadius: "10px",
-    fontSize: "11px",
-    fontWeight: 700,
-    fontFamily: "monospace",
-    background: active ? "#1a4731" : "#21262d",
-    color: active ? "#3fb950" : "#484f58",
-    border: active ? "1px solid #238636" : "1px solid #30363d",
-  }),
-
-  memRow: {
-    fontSize: "11px",
-    fontFamily: '"Cascadia Code", "Fira Code", Consolas, monospace',
-    color: "#a8b5c4",
-    lineHeight: "18px",
-  } as React.CSSProperties,
-};
-
-// ── Component ─────────────────────────────────────────────────────────────────
-
-export function CodeLabPage({ content }: Props) {
-  const [code, setCode] = useState(() => getStarterCode(content));
-  const [activeSection, setActiveSection] = useState("theory");
+/**
+ * The 8085 editor sits in the same lab page as every other experiment.
+ * Registers and the listing use the white panels, not a separate dark shell.
+ */
+export function CodeWorkbench({ section }: Props) {
+  const [code, setCode] = useState(section.starterCode);
   const [cpuState, setCpuState] = useState<CPU8085State | null>(null);
   const [outputLines, setOutputLines] = useState<string[]>([
     "Ready. Press Run or Step.",
@@ -249,17 +42,13 @@ export function CodeLabPage({ content }: Props) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const lineNumRef = useRef<HTMLDivElement>(null);
 
-  // Sync scroll between textarea and line numbers
   const handleScroll = useCallback(() => {
     if (textareaRef.current && lineNumRef.current) {
       lineNumRef.current.scrollTop = textareaRef.current.scrollTop;
     }
   }, []);
 
-  // Count lines for gutter
   const lineCount = code.split("\n").length;
-
-  // ── Run handler ─────────────────────────────────────────────────────────────
 
   const handleRun = useCallback(() => {
     const result = assemble(code);
@@ -274,32 +63,22 @@ export function CodeLabPage({ content }: Props) {
     const cpu = new CPU8085();
     cpuRef.current = cpu;
     cpu.loadProgram(result.bytes, result.origin);
-
-    // Load memory init from content
-    for (const sec of content.sections) {
-      const s = sec as any;
-      if (s.type === "code-lab" && s.memoryInit) {
-        for (const [addrStr, val] of Object.entries(s.memoryInit)) {
-          const addr = parseInt(addrStr, 16);
-          cpu.writeMem(addr, val as number);
-        }
-      }
-    }
+    loadMemory(cpu, section.memoryInit);
+    const entry = entryAddress(result);
+    cpu.setState({ PC: entry });
 
     const steps = cpu.run(200000);
     const state = cpu.getState();
     setCpuState(state);
 
-    const log: string[] = [
-      `Assembled OK — ${result.bytes.length} byte(s) at ${hex4(result.origin)}H`,
+    const log = [
+      `Assembled OK — ${result.bytes.length} byte(s), entry ${hex4(entry)}H`,
       `Executed ${steps.length} step(s)`,
     ];
-
     if (steps.length > 0) {
       const last = steps[steps.length - 1];
       log.push(`Last: ${last.instruction} @ ${hex4(last.address)}H`);
     }
-
     log.push(
       `A=${hex2(state.A)}H  B=${hex2(state.B)}H  C=${hex2(state.C)}H  D=${hex2(state.D)}H`,
     );
@@ -309,16 +88,12 @@ export function CodeLabPage({ content }: Props) {
     log.push(
       `Flags: S=${state.flags.S ? 1 : 0} Z=${state.flags.Z ? 1 : 0} AC=${state.flags.AC ? 1 : 0} P=${state.flags.P ? 1 : 0} CY=${state.flags.CY ? 1 : 0}`,
     );
-
     setOutputLines(log);
-  }, [code, content.sections]);
-
-  // ── Step handler ─────────────────────────────────────────────────────────────
+  }, [code, section.memoryInit]);
 
   const handleStep = useCallback(() => {
     let cpu = cpuRef.current;
 
-    // Assemble if first step or no assembled result
     if (!assembled) {
       const result = assemble(code);
       setAssembled(result);
@@ -330,16 +105,8 @@ export function CodeLabPage({ content }: Props) {
       cpu = new CPU8085();
       cpuRef.current = cpu;
       cpu.loadProgram(result.bytes, result.origin);
-
-      for (const sec of content.sections) {
-        const s = sec as any;
-        if (s.type === "code-lab" && s.memoryInit) {
-          for (const [addrStr, val] of Object.entries(s.memoryInit)) {
-            const addr = parseInt(addrStr, 16);
-            cpu.writeMem(addr, val as number);
-          }
-        }
-      }
+      loadMemory(cpu, section.memoryInit);
+      cpu.setState({ PC: entryAddress(result) });
     }
 
     if (cpu.getState().halted) {
@@ -353,355 +120,242 @@ export function CodeLabPage({ content }: Props) {
     const result = cpu.step();
     const state = cpu.getState();
     setCpuState(state);
-
     if (result) {
       setOutputLines((prev) => [
         ...prev.slice(-50),
-        `${hex4(result.address)}H: ${result.instruction}  [${result.changed.join(",")}]`,
+        `${hex4(result.address)}H: ${result.instruction}  [${result.changed.join(", ")}]`,
       ]);
     }
-  }, [assembled, code, content.sections]);
-
-  // ── Reset handler ────────────────────────────────────────────────────────────
+  }, [assembled, code, section.memoryInit]);
 
   const handleReset = useCallback(() => {
-    setCode(getStarterCode(content));
+    setCode(section.starterCode);
     setAssembled(null);
     setCpuState(null);
     setOutputLines(["Reset. Press Run or Step."]);
     setErrorLines([]);
     cpuRef.current = new CPU8085();
-  }, [content]);
+  }, [section.starterCode]);
 
-  // ── Sidebar sections ──────────────────────────────────────────────────────────
-
-  const sidebarSections = content.sections.filter(
-    (s) => (s as any).type !== "code-lab",
-  );
-
-  const activeTheory = content.sections.find((s) => s.id === activeSection);
-
-  // Memory view around PC
   const memView: string[] = [];
+  const dataView: string[] = [];
   if (cpuState) {
-    const pc = cpuState.PC;
-    const base = Math.max(0, pc - 4) & 0xfff8; // align to 8
+    const base = Math.max(0, cpuState.PC - 4) & 0xfff8;
     for (let row = 0; row < 3; row++) {
       const rowAddr = base + row * 8;
-      const hexBytes = Array.from({ length: 8 }, (_, i) => {
-        const a = rowAddr + i;
-        return hex2(cpuState.memory[a] ?? 0);
-      }).join(" ");
+      const hexBytes = Array.from({ length: 8 }, (_, i) =>
+        hex2(cpuState.memory[rowAddr + i] ?? 0),
+      ).join(" ");
       memView.push(`${hex4(rowAddr)}: ${hexBytes}`);
+    }
+    for (let row = 0; row < 5; row++) {
+      const rowAddr = 0x8000 + row * 8;
+      const hexBytes = Array.from({ length: 8 }, (_, i) =>
+        hex2(cpuState.memory[rowAddr + i] ?? 0),
+      ).join(" ");
+      dataView.push(`${hex4(rowAddr)}: ${hexBytes}`);
     }
   }
 
   return (
-    <div style={styles.root}>
-      {/* ── Sidebar ─────────────────────────────────────────────────────────── */}
-      <div style={styles.sidebar}>
-        <div style={{ padding: "0 16px 12px" }}>
-          <Link
-            href="/explore"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "6px",
-              fontSize: "11px",
-              color: "#8b949e",
-              textDecoration: "none",
-              padding: "4px 8px",
-              borderRadius: "6px",
-              background: "#21262d",
-              border: "1px solid #30363d",
-              marginBottom: "10px",
-            }}
-          >
-            ← Back to Labs
-          </Link>
-        </div>
-        <div style={styles.sidebarTitle}>{content.title}</div>
-        {sidebarSections.map((sec) => (
-          <div
-            key={sec.id}
-            style={styles.sidebarItem(activeSection === sec.id)}
-            onClick={() => setActiveSection(sec.id)}
-          >
-            {sec.title}
-          </div>
-        ))}
-        <div
-          key="__program"
-          style={styles.sidebarItem(activeSection === "__program")}
-          onClick={() => setActiveSection("__program")}
-        >
-          Program
-        </div>
-      </div>
-
-      {/* ── Center pane ──────────────────────────────────────────────────────── */}
-      <div style={styles.center}>
-        {activeSection !== "__program" && activeTheory ? (
-          <SectionView section={activeTheory as any} />
-        ) : (
-          <>
-            {/* Editor header */}
-            <div style={styles.editorHeader}>8085 Assembly Editor</div>
-
-            {/* Editor */}
-            <div style={styles.editorArea}>
-              {/* Line numbers */}
-              <div ref={lineNumRef} style={styles.lineNumbers}>
-                {Array.from({ length: lineCount }, (_, i) => (
-                  <div key={i} style={{ paddingRight: "8px", height: "20px" }}>
-                    {i + 1}
-                  </div>
-                ))}
-              </div>
-
-              {/* Textarea */}
-              <textarea
-                ref={textareaRef}
-                style={styles.textarea}
-                value={code}
-                onChange={(e) => {
-                  setCode(e.target.value);
-                  setAssembled(null);
-                }}
-                onScroll={handleScroll}
-                spellCheck={false}
-                autoCapitalize="off"
-                autoCorrect="off"
-              />
-            </div>
-
-            {/* Toolbar */}
-            <div style={styles.toolbar}>
-              <button style={styles.btn("#238636")} onClick={handleRun}>
-                ▶ Run
-              </button>
-              <button style={styles.btn("#1f6feb")} onClick={handleStep}>
-                ⏭ Step
-              </button>
-              <button style={styles.btn("#6e7681")} onClick={handleReset}>
-                ↺ Reset
-              </button>
-              {cpuState?.halted && (
-                <span
-                  style={{
-                    fontSize: "12px",
-                    color: "#f85149",
-                    marginLeft: "8px",
-                  }}
-                >
-                  HALTED
-                </span>
-              )}
-              {cpuState && !cpuState.halted && (
-                <span
-                  style={{
-                    fontSize: "12px",
-                    color: "#3fb950",
-                    marginLeft: "8px",
-                  }}
-                >
-                  PC: {hex4(cpuState.PC)}H
-                </span>
-              )}
-            </div>
-
-            {/* Error banner */}
-            {errorLines.length > 0 && (
-              <div style={styles.errorBanner}>
-                {errorLines.map((e, i) => (
-                  <div key={i}>{e}</div>
-                ))}
-              </div>
-            )}
-
-            {/* Output */}
-            <div style={styles.output}>
-              {outputLines.map((line, i) => (
-                <div
-                  key={i}
-                  style={{
-                    color: line.startsWith("Line") ? "#f85149" : "#a8b5c4",
-                  }}
-                >
-                  {"> "}
-                  {line}
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-      </div>
-
-      {/* ── Right panel ───────────────────────────────────────────────────────── */}
-      <div style={styles.rightPanel}>
-        {/* Registers */}
-        <div>
-          <div style={styles.panelTitle}>Registers</div>
-          {(["A", "B", "C", "D", "E", "H", "L"] as const).map((r) => (
-            <div key={r} style={styles.regRow}>
-              <span style={styles.regLabel}>{r}:</span>
-              <span style={styles.regValue}>
-                {cpuState ? hex2(cpuState[r]) : "--"}
-              </span>
-              <span style={{ ...styles.regLabel, marginLeft: "8px" }} />
-            </div>
-          ))}
-          <div style={{ marginTop: "6px" }}>
-            <div style={styles.regRow}>
-              <span style={styles.regLabel}>PC:</span>
-              <span style={{ ...styles.regValue, minWidth: "52px" }}>
-                {cpuState ? hex4(cpuState.PC) : "----"}
-              </span>
-            </div>
-            <div style={styles.regRow}>
-              <span style={styles.regLabel}>SP:</span>
-              <span style={{ ...styles.regValue, minWidth: "52px" }}>
-                {cpuState ? hex4(cpuState.SP) : "----"}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Flags */}
-        <div>
-          <div style={styles.panelTitle}>Flags</div>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "4px" }}>
-            {(["S", "Z", "AC", "P", "CY"] as const).map((f) => (
-              <span
-                key={f}
-                style={styles.flagPill(cpuState ? cpuState.flags[f] : false)}
-              >
-                {f}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* Memory view */}
-        <div>
-          <div style={styles.panelTitle}>Memory (hex)</div>
-          {cpuState ? (
-            memView.map((row, i) => (
-              <div key={i} style={styles.memRow}>
-                {row}
-              </div>
-            ))
-          ) : (
-            <div style={{ ...styles.memRow, color: "#484f58" }}>
-              Run to see memory
-            </div>
+    <div className="flex h-full min-h-0 gap-3">
+      <div className={`${PANEL} flex min-w-0 flex-1 flex-col overflow-hidden`}>
+        <div className="shrink-0 px-5 pt-4 pb-3">
+          <p className="m-0 font-sans text-[13.5px] leading-[1.7] text-[var(--ink)]">
+            {section.description}
+          </p>
+          {section.expectedOutputs && (
+            <p className="m-0 mt-1 font-sans text-[12.5px] leading-[1.6] text-[var(--ink-muted)]">
+              {section.expectedOutputs}
+            </p>
           )}
         </div>
 
-        {/* Cycles */}
-        {cpuState && (
-          <div>
-            <div style={styles.panelTitle}>Cycles</div>
-            <div style={{ ...styles.regValue, display: "inline-block" }}>
-              {cpuState.cycles}
-            </div>
+        <div className="flex min-h-0 flex-1 border-t border-black/[0.06] bg-[#fafafa]">
+          <div
+            ref={lineNumRef}
+            className="w-12 shrink-0 overflow-hidden border-r border-black/[0.06] py-3 pr-2 text-right font-mono text-[13px] leading-5 text-[var(--ink-subtle)] select-none"
+          >
+            {Array.from({ length: lineCount }, (_, i) => (
+              <div key={i} className="h-5">
+                {i + 1}
+              </div>
+            ))}
+          </div>
+          <textarea
+            ref={textareaRef}
+            className="min-w-0 flex-1 resize-none border-none bg-transparent py-3 pr-3 pl-3 font-mono text-[13px] leading-5 text-[var(--ink)] outline-none"
+            value={code}
+            onChange={(e) => {
+              setCode(e.target.value);
+              setAssembled(null);
+            }}
+            onScroll={handleScroll}
+            spellCheck={false}
+            autoCapitalize="off"
+            autoCorrect="off"
+          />
+        </div>
+
+        <div className="flex shrink-0 items-center gap-2 border-t border-black/[0.06] px-3 py-2">
+          <button
+            type="button"
+            onClick={handleRun}
+            className="h-8 cursor-pointer rounded-full border-none bg-[var(--color-blue)] px-4 font-sans text-[13px] font-medium text-white"
+          >
+            Run
+          </button>
+          <button
+            type="button"
+            onClick={handleStep}
+            className="h-8 cursor-pointer rounded-full border border-black/[0.1] bg-white px-4 font-sans text-[13px] font-medium text-[var(--ink)]"
+          >
+            Step
+          </button>
+          <button
+            type="button"
+            onClick={handleReset}
+            className="h-8 cursor-pointer rounded-full border border-black/[0.1] bg-white px-4 font-sans text-[13px] font-medium text-[var(--ink)]"
+          >
+            Reset
+          </button>
+          {cpuState?.halted && (
+            <span className="ml-1 font-sans text-[12px] font-medium text-[#b42318]">
+              Halted
+            </span>
+          )}
+          {cpuState && !cpuState.halted && (
+            <span className="ml-1 font-mono text-[12px] text-[var(--ink-muted)]">
+              PC {hex4(cpuState.PC)}H
+            </span>
+          )}
+        </div>
+
+        {errorLines.length > 0 && (
+          <div className="shrink-0 border-t border-[#f3c3bd] bg-[#fff5f5] px-4 py-2 font-mono text-[12px] leading-5 text-[#b42318]">
+            {errorLines.map((line) => (
+              <div key={line}>{line}</div>
+            ))}
           </div>
         )}
+
+        <div className="h-[132px] shrink-0 overflow-y-auto border-t border-black/[0.06] bg-[#f7f7f8] px-4 py-2 font-mono text-[12px] leading-5 text-[var(--ink-muted)]">
+          {outputLines.map((line, i) => (
+            <div key={i}>{line}</div>
+          ))}
+        </div>
+      </div>
+
+      <aside
+        className={`${PANEL} flex w-[232px] shrink-0 flex-col gap-4 overflow-y-auto p-4`}
+      >
+        <RegisterBlock state={cpuState} />
+        <div>
+          <p className="m-0 mb-2 font-sans text-[11px] font-medium tracking-[0.04em] text-[var(--ink-muted)] uppercase">
+            Flags
+          </p>
+          <div className="flex flex-wrap gap-1.5">
+            {(["S", "Z", "AC", "P", "CY"] as const).map((flag) => {
+              const on = cpuState ? cpuState.flags[flag] : false;
+              return (
+                <span
+                  key={flag}
+                  className={`rounded-full px-2 py-0.5 font-mono text-[11px] font-medium ${
+                    on
+                      ? "bg-[var(--color-blue-10)] text-[var(--color-blue)]"
+                      : "bg-black/[0.04] text-[var(--ink-subtle)]"
+                  }`}
+                >
+                  {flag}
+                </span>
+              );
+            })}
+          </div>
+        </div>
+        <MemoryBlock
+          title="Around PC"
+          rows={memView}
+          empty="Run to see memory"
+        />
+        <MemoryBlock
+          title="Data at 8000H"
+          rows={dataView}
+          empty="Results land here"
+        />
+        {cpuState && (
+          <div>
+            <p className="m-0 mb-2 font-sans text-[11px] font-medium tracking-[0.04em] text-[var(--ink-muted)] uppercase">
+              Cycles
+            </p>
+            <span className="inline-block rounded-md bg-[#f7f7f8] px-2 py-0.5 font-mono text-[13px] font-medium text-[var(--ink)]">
+              {cpuState.cycles}
+            </span>
+          </div>
+        )}
+      </aside>
+    </div>
+  );
+}
+
+function RegisterBlock({ state }: { state: CPU8085State | null }) {
+  return (
+    <div>
+      <p className="m-0 mb-2 font-sans text-[11px] font-medium tracking-[0.04em] text-[var(--ink-muted)] uppercase">
+        Registers
+      </p>
+      {(["A", "B", "C", "D", "E", "H", "L"] as const).map((name) => (
+        <div key={name} className="mb-1 flex items-center justify-between">
+          <span className="font-sans text-[12px] text-[var(--ink-muted)]">
+            {name}
+          </span>
+          <span className="min-w-10 rounded-md bg-[#f7f7f8] px-1.5 py-0.5 text-center font-mono text-[13px] font-medium text-[var(--ink)]">
+            {state ? hex2(state[name]) : "--"}
+          </span>
+        </div>
+      ))}
+      <div className="mt-2">
+        {(["PC", "SP"] as const).map((name) => (
+          <div key={name} className="mb-1 flex items-center justify-between">
+            <span className="font-sans text-[12px] text-[var(--ink-muted)]">
+              {name}
+            </span>
+            <span className="min-w-14 rounded-md bg-[#f7f7f8] px-1.5 py-0.5 text-center font-mono text-[13px] font-medium text-[var(--ink)]">
+              {state ? hex4(state[name]) : "----"}
+            </span>
+          </div>
+        ))}
       </div>
     </div>
   );
 }
 
-// ── Section view ───────────────────────────────────────────────────────────────
-
-function SectionView({ section }: { section: any }) {
-  const s = section;
+function MemoryBlock({
+  title,
+  rows,
+  empty,
+}: {
+  title: string;
+  rows: string[];
+  empty: string;
+}) {
   return (
-    <div
-      style={{ flex: 1, overflowY: "auto", padding: "24px", maxWidth: "800px" }}
-    >
-      <h2 style={{ color: "#e6edf3", fontSize: "18px", marginBottom: "16px" }}>
-        {s.title}
-      </h2>
-
-      {s.paragraphs?.map((p: string, i: number) => (
-        <p
-          key={i}
-          style={{
-            color: "#a8b5c4",
-            lineHeight: "1.7",
-            marginBottom: "12px",
-            fontSize: "14px",
-          }}
-        >
-          {p}
-        </p>
-      ))}
-
-      {s.table && (
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            marginTop: "16px",
-            fontSize: "13px",
-          }}
-        >
-          <thead>
-            <tr>
-              {s.table.headers.map((h: string, i: number) => (
-                <th
-                  key={i}
-                  style={{
-                    padding: "8px 12px",
-                    background: "#21262d",
-                    color: "#e6edf3",
-                    textAlign: "left",
-                    border: "1px solid #30363d",
-                  }}
-                >
-                  {h}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {s.table.rows.map((row: any[], ri: number) => (
-              <tr key={ri}>
-                {row.map((cell, ci) => (
-                  <td
-                    key={ci}
-                    style={{
-                      padding: "6px 12px",
-                      color: "#a8b5c4",
-                      border: "1px solid #30363d",
-                    }}
-                  >
-                    {cell}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-
-      {s.items && (
-        <ul
-          style={{
-            paddingLeft: "20px",
-            color: "#a8b5c4",
-            fontSize: "14px",
-            lineHeight: "1.8",
-          }}
-        >
-          {s.items.map((item: any, i: number) => (
-            <li key={i}>
-              {item.name}
-              {item.specification ? ` — ${item.specification}` : ""}
-            </li>
-          ))}
-        </ul>
+    <div>
+      <p className="m-0 mb-2 font-sans text-[11px] font-medium tracking-[0.04em] text-[var(--ink-muted)] uppercase">
+        {title}
+      </p>
+      {rows.length > 0 ? (
+        rows.map((row) => (
+          <div
+            key={row}
+            className="font-mono text-[11px] leading-5 text-[var(--ink)]"
+          >
+            {row}
+          </div>
+        ))
+      ) : (
+        <div className="font-sans text-[12px] text-[var(--ink-subtle)]">
+          {empty}
+        </div>
       )}
     </div>
   );

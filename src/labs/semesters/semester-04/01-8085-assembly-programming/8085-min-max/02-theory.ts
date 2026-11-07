@@ -1,4 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
+import { minMaxTheoryDiagram } from "@/labs/schematics/semester-04/01-8085-assembly-programming/assembly-diagrams";
 
 export const theory: TheorySection = {
   id: "theory",
@@ -11,4 +12,5 @@ export const theory: TheorySection = {
     "The program traverses the array using the HL pointer (INX H to advance) and a B counter (DCR B / JNZ loop). The initial element is loaded as both the tentative MIN and MAX before the comparison loop begins.",
     "After the loop, MIN is stored at one address and MAX at another. This pattern appears in real-world firmware for sensor range checking, threshold detection, and normalisation.",
   ],
+  circuitDiagram: minMaxTheoryDiagram,
 };

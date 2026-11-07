@@ -12,7 +12,7 @@ export const exp8085Multiply8bitExperiment: ExperimentDefinition = {
   id: "8085-multiply-8bit",
   title: "Multiplication of Two 8-bit Numbers",
   description:
-    "The 8085 microprocessor does not have a dedicated hardware multiply instruction. Multiplication is implemented in software using repeated addition: A × B = A added B times. The result is stored as a 1",
+    "Multiply two 8-bit numbers by repeated addition and store the 16-bit product.",
   labType: "code",
   components: [],
   sections: [aim, theory, codeLab, observations, conclusion],

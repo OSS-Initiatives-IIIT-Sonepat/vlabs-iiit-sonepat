@@ -1,4 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
+import { bcdAdditionTheoryDiagram } from "@/labs/schematics/semester-04/01-8085-assembly-programming/assembly-diagrams";
 
 export const theory: TheorySection = {
   id: "theory",
@@ -11,4 +12,5 @@ export const theory: TheorySection = {
     "The process: perform binary ADD of two packed BCD bytes, then execute DAA. The accumulator will then contain the correct packed BCD result. If the decimal sum exceeds 99, the Carry flag is set after DAA indicating a carry into the hundreds digit.",
     "DAA examines four conditions: (1) lower nibble > 9, (2) AC=1, (3) upper nibble > 9, (4) CY=1. For each condition the appropriate 06H or 60H correction is applied.",
   ],
+  circuitDiagram: bcdAdditionTheoryDiagram,
 };

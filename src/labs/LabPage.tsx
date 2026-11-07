@@ -14,6 +14,7 @@ import { StreamingTheoryParagraphs } from "@/ui/StreamingMathText";
 import { ALL_CIRCUITS } from "@/labs/circuits";
 import {
   type LabContent,
+  type CodeLabSection,
   type LabSection,
   type ProcedureStep,
   type TheorySection,
@@ -58,12 +59,16 @@ const ApparatusScene = dynamic(
   () => import("@/labs/ApparatusScene").then((m) => m.ApparatusScene),
   { ssr: false },
 );
-const CodeLabPage = dynamic(
-  () => import("@/labs/CodeLabPage").then((m) => m.CodeLabPage),
+const CodeWorkbench = dynamic(
+  () => import("@/labs/CodeLabPage").then((m) => m.CodeWorkbench),
   { ssr: false },
 );
 const SimLabPage = dynamic(
   () => import("@/labs/SimLabPage").then((m) => m.SimLabPage),
+  { ssr: false },
+);
+const Mpu8085Scene = dynamic(
+  () => import("@/labs/Mpu8085Scene").then((m) => m.Mpu8085Scene),
   { ssr: false },
 );
 
@@ -314,7 +319,8 @@ function FloatingCardContent({
     return (
       <>
         <p className="text-[var(--ink)] font-sans text-[13.5px] leading-[1.7] m-0">
-          Use the arrows or dots below to inspect each component in 3D.
+          {section.lead ??
+            "Use the arrows or dots below to inspect each component in 3D."}
         </p>
         <div className="flex flex-col gap-[calc(var(--spacing-base)*1.5)] mt-[calc(var(--spacing-base)*3)]">
           {section.items.map((item, i) => (
@@ -432,14 +438,28 @@ const SceneRenderer = React.memo(function SceneRenderer({
   circuit,
   sceneStepIndex,
   activeMarkers,
+  chipScene,
 }: {
   section: LabSection;
   circuit: Circuit;
   sceneStepIndex: number;
   activeMarkers: StepMarker[];
+  chipScene: boolean;
 }) {
+  if (chipScene) {
+    const pins =
+      section.type === "procedure"
+        ? section.steps[sceneStepIndex]?.chipPins
+        : { revealed: [] as string[], focus: [] as string[] };
+    return (
+      <Mpu8085Scene
+        focus={pins?.focus ?? []}
+        landmarks={pins?.landmarks ?? []}
+      />
+    );
+  }
   if (section.type === "code-lab" || section.type === "simulation") {
-    return null; // These sections are handled by CodeLabPage/SimLabPage directly
+    return null;
   }
   if (section.type === "text" && section.schematic) {
     return <TheoryScene spec={section.schematic} />;
@@ -553,6 +573,15 @@ function LabPageStandard({ content }: Props) {
     const handleKeyDown = (e: KeyboardEvent) => {
       // The 3D component view uses the arrow keys to cycle components.
       if (inComponentView) return;
+      const target = e.target;
+      if (
+        target instanceof HTMLElement &&
+        (target.tagName === "TEXTAREA" ||
+          target.tagName === "INPUT" ||
+          target.isContentEditable)
+      ) {
+        return;
+      }
       if (e.key === "ArrowRight") {
         handleNav(currentIndex + 1);
       } else if (e.key === "ArrowLeft") {
@@ -686,6 +715,10 @@ function LabPageStandard({ content }: Props) {
     [activeSectionId],
   );
 
+  const codeSection = content.sections.find(
+    (section): section is CodeLabSection => section.type === "code-lab",
+  );
+
   const sceneVisibleIds = useMemo(
     () => new Set(circuit.steps[sceneStepIndex]?.show ?? []),
     [circuit, sceneStepIndex],
@@ -717,6 +750,7 @@ function LabPageStandard({ content }: Props) {
               circuit={circuit}
               sceneStepIndex={sceneStepIndex}
               activeMarkers={activeMarkers}
+              chipScene={content.scene === "8085"}
             />
           )}
         </div>
@@ -742,8 +776,19 @@ function LabPageStandard({ content }: Props) {
 
         {/* ── Overlay controls & floating cards ── */}
         <div className="flex-1 min-w-0 overflow-hidden relative pointer-events-none z-10">
+          {/* Program editor. Kept mounted so a run survives a trip to Observations. */}
+          {codeSection && (
+            <div
+              className={`pointer-events-auto absolute inset-0 z-[5] px-4 pt-[5.5rem] pb-4 ${
+                activeSection?.type === "code-lab" ? "" : "hidden"
+              }`}
+            >
+              <CodeWorkbench section={codeSection} />
+            </div>
+          )}
+
           {/* Floating text card over scene */}
-          {activeSection && (
+          {activeSection && activeSection.type !== "code-lab" && (
             <div className="pointer-events-auto">
               <FloatingLabCard>
                 <FloatingCardContent
@@ -871,7 +916,6 @@ function LabPageStandard({ content }: Props) {
 }
 
 export function LabPage({ content }: Props) {
-  if (content.labType === "code") return <CodeLabPage content={content} />;
   if (content.labType === "simulation") return <SimLabPage content={content} />;
   return <LabPageStandard content={content} />;
 }

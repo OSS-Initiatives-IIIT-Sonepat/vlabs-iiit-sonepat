@@ -12,7 +12,7 @@ export const exp8085Divide8bitExperiment: ExperimentDefinition = {
   id: "8085-divide-8bit",
   title: "Division of Two 8-bit Numbers",
   description:
-    "Like multiplication, the 8085 has no hardware division instruction. Division is implemented as repeated subtraction: the dividend is repeatedly reduced by the divisor until the remainder is less than ",
+    "Divide two 8-bit numbers by repeated subtraction, and store the quotient and the remainder.",
   labType: "code",
   components: [],
   sections: [aim, theory, codeLab, observations, conclusion],

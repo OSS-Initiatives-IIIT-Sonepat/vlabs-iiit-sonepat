@@ -134,6 +134,9 @@ import * as s3_Assembler from "./semester-03/08-assembly-systems/assembler-secon
 import * as s3_MachineAndAssembly from "./semester-03/08-assembly-systems/machine-and-assembly";
 import * as s3_ProgramLoop from "./semester-03/08-assembly-systems/program-loop";
 import * as s3_SubroutineAndIo from "./semester-03/08-assembly-systems/subroutine-and-io";
+import * as s4_Assembly from "./semester-04/01-8085-assembly-programming/assembly-diagrams";
+import * as s4_Interface from "./semester-04/02-peripheral-interfacing/interface-diagrams";
+import * as s4_PinLabelling from "./semester-04/03-microprocessors-and-microcontrollers/8085-pin-labelling";
 
 /**
  * Every lab's 2D schematics, keyed by the lab's path under
@@ -305,6 +308,10 @@ export const schematicModules = {
   "semester-03/08-assembly-systems/machine-and-assembly": s3_MachineAndAssembly,
   "semester-03/08-assembly-systems/program-loop": s3_ProgramLoop,
   "semester-03/08-assembly-systems/subroutine-and-io": s3_SubroutineAndIo,
+  "semester-04/01-8085-assembly-programming/8085-add-sub-8bit": s4_Assembly,
+  "semester-04/02-peripheral-interfacing/gpio-interfacing": s4_Interface,
+  "semester-04/03-microprocessors-and-microcontrollers/8085-pin-labelling":
+    s4_PinLabelling,
 } as const;
 
 export type SchematicLabPath = keyof typeof schematicModules;

@@ -12,7 +12,7 @@ export const exp8085ArraySumExperiment: ExperimentDefinition = {
   id: "8085-array-sum",
   title: "Sum of an Array of 8-bit Numbers",
   description:
-    "Summing an array in 8085 assembly demonstrates both indirect addressing (using HL as a memory pointer) and loop control. The array is stored in consecutive memory locations, with the count of elements",
+    "Walk an array with the HL pointer and add every element into one total.",
   labType: "code",
   components: [],
   sections: [aim, theory, codeLab, observations, conclusion],

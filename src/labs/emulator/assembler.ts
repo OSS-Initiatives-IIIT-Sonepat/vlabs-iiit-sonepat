@@ -624,3 +624,8 @@ export function assemble(source: string): AssemblerResult {
 
   return { bytes, origin: baseOrigin, symbols, listing, errors };
 }
+
+/** Where Run should begin. Programs keep data at the first ORG and code at START. */
+export function entryAddress(result: AssemblerResult): number {
+  return result.symbols.get("START") ?? result.origin;
+}

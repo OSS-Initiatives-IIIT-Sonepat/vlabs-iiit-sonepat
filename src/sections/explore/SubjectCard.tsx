@@ -13,6 +13,11 @@ const DiagramPreview = dynamic(
   { ssr: false },
 );
 
+const ChipPreview = dynamic(
+  () => import("@/labs/Mpu8085Scene").then((m) => m.Mpu8085Scene),
+  { ssr: false },
+);
+
 /** Subject IDs that are fully available — all others show "Coming Soon". */
 const ENABLED_SUBJECTS = new Set([
   "01-analog-electronics",
@@ -24,6 +29,9 @@ const ENABLED_SUBJECTS = new Set([
   "06-processor-design",
   "07-memory-and-io",
   "08-assembly-systems",
+  "01-8085-assembly-programming",
+  "02-peripheral-interfacing",
+  "03-microprocessors-and-microcontrollers",
 ]);
 
 type Props = {
@@ -141,7 +149,9 @@ export function SubjectCard({ subject, onClick, showPreview }: Props) {
           data-slot="card-image"
         >
           <div className="absolute inset-0">
-            {subject.hasPreview ? (
+            {subject.circuitId === "8085-pin-labelling" ? (
+              <ChipPreview preview focus={[]} />
+            ) : subject.hasPreview ? (
               <CircuitModel circuitId={subject.circuitId} />
             ) : (
               <DiagramPreview circuitId={subject.circuitId} />

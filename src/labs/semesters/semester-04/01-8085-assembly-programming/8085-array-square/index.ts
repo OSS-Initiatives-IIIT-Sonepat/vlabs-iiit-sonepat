@@ -11,8 +11,7 @@ import { procedureSteps } from "./04-procedure";
 export const exp8085ArraySquareExperiment: ExperimentDefinition = {
   id: "8085-array-square",
   title: "Square Each Element of an Array",
-  description:
-    "Squaring each element of an array requires reading each byte, computing its square (using the repeated-addition multiplication subroutine), and writing the 16-bit result back to a result array. This e",
+  description: "Square each element of an array and store every 16-bit result.",
   labType: "code",
   components: [],
   sections: [aim, theory, codeLab, observations, conclusion],

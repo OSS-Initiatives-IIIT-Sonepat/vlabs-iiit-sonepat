@@ -12,7 +12,7 @@ export const exp8085AddSubCarryExperiment: ExperimentDefinition = {
   id: "8085-add-sub-carry",
   title: "Addition & Subtraction with Carry (16-bit Result)",
   description:
-    "When two 8-bit numbers are added, the result can exceed 8 bits (exceed 255). In such cases the Carry flag (CY) is set and the 9th bit is lost unless we explicitly handle it. The 8085 provides ADC (Add",
+    "Add and subtract 16-bit numbers with ADC and SBB so the carry is kept.",
   labType: "code",
   components: [],
   sections: [aim, theory, codeLab, observations, conclusion],
