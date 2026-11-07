@@ -36,7 +36,12 @@ const SEGMENTS: Record<string, string> = {
   " ": "",
 };
 
-const HEX_ROWS = ["CDEF", "89AB", "4567", "0123"];
+const HEX_ROWS = [
+  ["C", "D", "E", "F"],
+  ["8", "9", "A", "B"],
+  ["4", "5", "6", "7"],
+  ["0", "1", "2", "3"],
+];
 const FN_ROWS = [
   ["BRK", "STP", "INS", "DEL"],
   ["REG", "INP", "SHIFT", "MOV"],
