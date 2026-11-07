@@ -1,8 +1,8 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
 
 export const step: SceneProcedureStep = {
-  label: "Link switch inputs to LED outputs (interactive response)",
-  body: "Write logic so that Switch 1 controls LED1 (LED1 ON when Switch 1 pressed, OFF otherwise) and Switch 2 controls LED2. Additionally, configure LED3 to toggle state every time either switch is pressed (edge-triggered). This demonstrates read-then-write GPIO interaction. Verify debouncing behaviour: rapid toggling of a switch should trigger only one clean transition if software debouncing (10–20 ms delay) is implemented.",
+  label: "Close each LED path to ground",
+  body: "Connect each LED cathode to the ground rail. All three lamps come on, because this board ties them straight to the supply. On a microcontroller, software would drive those three wires high and low. The input half of the same program reads a switch: pressed is +5 V, released is the pull-down, so the pin reads 0 instead of floating.",
   show: [
     "bb",
     "r1",
@@ -12,10 +12,13 @@ export const step: SceneProcedureStep = {
     "led2",
     "led3",
     "w_vcc_r1",
-    "w_vcc_r2",
-    "w_vcc_r3",
     "w_r1_led1",
+    "w_led1_gnd",
+    "w_vcc_r2",
     "w_r2_led2",
+    "w_led2_gnd",
+    "w_vcc_r3",
     "w_r3_led3",
+    "w_led3_gnd",
   ],
 };
