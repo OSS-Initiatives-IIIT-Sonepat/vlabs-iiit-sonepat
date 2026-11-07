@@ -1,8 +1,8 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
 
 export const step: SceneProcedureStep = {
-  label: "Build the 4-bit R-2R ladder DAC",
-  body: "Construct a 4-bit R-2R ladder DAC on the remaining breadboard space. Use four 10 kΩ (R) and five 20 kΩ (2R) resistors in the standard R-2R ladder topology. The ladder has four input nodes connected to four switches (D3=MSB to D0=LSB); each switch connects the node to either +5 V (logic 1) or GND (logic 0). The output node (rightmost) is the analog output V_out. Connect V_out to the voltmeter positive probe.",
+  label: "Join the ladder",
+  body: "Wire the resistors into one chain, from the least significant bit toward the output. Each bit tap still needs its drive wire. Those come in on the last step, together with the grounds and the lead into the LED.",
   show: [
     "bb",
     "r1",
