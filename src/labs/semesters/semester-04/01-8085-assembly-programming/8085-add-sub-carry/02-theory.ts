@@ -1,4 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
+import { addSubCarryTheoryDiagram } from "@/labs/schematics/semester-04/01-8085-assembly-programming/assembly-diagrams";
 
 export const theory: TheorySection = {
   id: "theory",
@@ -11,4 +12,5 @@ export const theory: TheorySection = {
     "A common technique is to use the HL register pair to store a 16-bit result. H holds the upper byte (carry) and L holds the lower byte (sum). The DAD instruction can add two 16-bit register pairs together.",
     "Algorithm: Load NUM1 → ADD NUM2 → store low byte (SUM_L). Load 00H → ADC 00H (adds carry) → store high byte (SUM_H). For subtraction: Load NUM1 → SUB NUM2. If CY set, complement and add 1 for absolute value.",
   ],
+  circuitDiagram: addSubCarryTheoryDiagram,
 };
