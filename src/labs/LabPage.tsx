@@ -43,6 +43,7 @@ import {
 } from "@/labs/resolve-circuit-step-index";
 import { type Circuit } from "@/labs/types";
 import { type StepMarker } from "@/labs/LabScene";
+import { OSI_OVERVIEW, type OsiFrame } from "@/labs/networks/osi";
 
 const EMPTY_MARKERS: StepMarker[] = [];
 
@@ -69,6 +70,10 @@ const SimLabPage = dynamic(
 );
 const Mpu8085Scene = dynamic(
   () => import("@/labs/Mpu8085Scene").then((m) => m.Mpu8085Scene),
+  { ssr: false },
+);
+const OsiJourneyScene = dynamic(
+  () => import("@/labs/OsiJourneyScene").then((m) => m.OsiJourneyScene),
   { ssr: false },
 );
 
@@ -439,13 +444,19 @@ const SceneRenderer = React.memo(function SceneRenderer({
   sceneStepIndex,
   activeMarkers,
   chipScene,
+  osiFrame,
 }: {
   section: LabSection;
   circuit: Circuit;
   sceneStepIndex: number;
   activeMarkers: StepMarker[];
   chipScene: boolean;
+  /** Set when the lab's scene is the OSI bench. */
+  osiFrame: OsiFrame | null;
 }) {
+  if (osiFrame) {
+    return <OsiJourneyScene frame={osiFrame} />;
+  }
   if (chipScene) {
     const pins =
       section.type === "procedure"
@@ -715,6 +726,24 @@ function LabPageStandard({ content }: Props) {
     [activeSectionId],
   );
 
+  // The OSI bench shows the overview before the procedure and the delivered
+  // request after it.
+  const osiFrame = useMemo<OsiFrame | null>(() => {
+    if (content.scene !== "osi") return null;
+    const procedure = content.sections.find((s) => s.type === "procedure");
+    const steps = procedure?.type === "procedure" ? procedure.steps : [];
+    if (activeSection?.type === "procedure") {
+      return activeSection.steps[procedureStepIndex]?.osi ?? OSI_OVERVIEW;
+    }
+    if (
+      activeSection?.type === "observation" ||
+      activeSection?.type === "conclusion"
+    ) {
+      return steps[steps.length - 1]?.osi ?? OSI_OVERVIEW;
+    }
+    return OSI_OVERVIEW;
+  }, [content.scene, content.sections, activeSection, procedureStepIndex]);
+
   const codeSection = content.sections.find(
     (section): section is CodeLabSection => section.type === "code-lab",
   );
@@ -751,6 +780,7 @@ function LabPageStandard({ content }: Props) {
               sceneStepIndex={sceneStepIndex}
               activeMarkers={activeMarkers}
               chipScene={content.scene === "8085"}
+              osiFrame={osiFrame}
             />
           )}
         </div>
