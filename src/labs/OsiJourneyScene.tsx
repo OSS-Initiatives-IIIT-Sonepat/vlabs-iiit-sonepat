@@ -311,7 +311,7 @@ export function OsiJourneyScene({ frame, preview = false }: Props) {
       controls.minDistance = 3;
       controls.maxDistance = 120;
       controls.maxPolarAngle = Math.PI * 0.47;
-      releaseCtrlPan = bindCtrlPan(controls, canvas);
+      releaseCtrlPan = bindCtrlPan(controls);
     }
 
     scene.add(new THREE.AmbientLight(0xffffff, 2.1));
@@ -853,7 +853,9 @@ export function OsiJourneyScene({ frame, preview = false }: Props) {
       const h = canvas!.clientHeight;
       if (w < 2 || h < 2) return;
       camera.aspect = w / h;
-      if (inset > 0) camera.setViewOffset(w, h, -inset / 2, 0, w, h);
+      // The left card covers the bench. A full half-card shift parks the
+      // stacks too far right, so only a quarter of that cover is used.
+      if (inset > 0) camera.setViewOffset(w, h, -inset / 4, 0, w, h);
       else camera.clearViewOffset();
       camera.updateProjectionMatrix();
     }

@@ -1,38 +1,17 @@
-import * as THREE from "three";
 import type { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 /**
- * A plain drag still orbits. Holding Ctrl and dragging slides the model
- * across the view instead of turning it.
+ * A plain drag still orbits. Ctrl+drag slides the model.
+ *
+ * OrbitControls already pans when Ctrl is held and the left button means
+ * rotate. Switching that button to pan while Ctrl is down makes it rotate
+ * instead, so this only turns panning on.
  */
-export function bindCtrlPan(
-  controls: OrbitControls,
-  canvas: HTMLElement,
-): () => void {
+export function bindCtrlPan(controls: OrbitControls): () => void {
   controls.enablePan = true;
   controls.screenSpacePanning = true;
-  const usePan = (pan: boolean) => {
-    controls.mouseButtons.LEFT = pan ? THREE.MOUSE.PAN : THREE.MOUSE.ROTATE;
-  };
-  const onPointerDown = (event: PointerEvent) => {
-    if (event.button === 0) usePan(event.ctrlKey);
-  };
-  const onPointerUp = (event: PointerEvent) => {
-    usePan(event.ctrlKey);
-  };
-  const onKey = (event: KeyboardEvent) => {
-    if (event.key !== "Control") return;
-    usePan(event.type === "keydown");
-  };
-  canvas.addEventListener("pointerdown", onPointerDown, true);
-  window.addEventListener("pointerup", onPointerUp);
-  window.addEventListener("keydown", onKey);
-  window.addEventListener("keyup", onKey);
+  if (!controls.panSpeed || controls.panSpeed < 1) controls.panSpeed = 1.4;
   return () => {
-    canvas.removeEventListener("pointerdown", onPointerDown, true);
-    window.removeEventListener("pointerup", onPointerUp);
-    window.removeEventListener("keydown", onKey);
-    window.removeEventListener("keyup", onKey);
-    usePan(false);
+    controls.enablePan = false;
   };
 }

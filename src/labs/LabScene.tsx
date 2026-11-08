@@ -1277,7 +1277,7 @@ export function LabSceneCanvas({
         MIDDLE: THREE.MOUSE.DOLLY,
         RIGHT: THREE.MOUSE.PAN,
       };
-      releaseCtrlPan = bindCtrlPan(controls, canvas);
+      releaseCtrlPan = bindCtrlPan(controls);
       controls.touches = {
         ONE: THREE.TOUCH.ROTATE,
         TWO: THREE.TOUCH.DOLLY_PAN,
