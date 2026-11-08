@@ -1,6 +1,7 @@
 import { type StepMarker } from "@/labs/LabScene";
 import { type SchematicSpec } from "@/labs/TheoryScene";
 import { type SchematicData } from "@/labs/CircuitSchematic";
+import { type OsiFrame } from "@/labs/networks/osi";
 
 // ── Lab content types ──────────────────────────────────────────────────────
 // Sections are displayed in the sidebar in order.
@@ -149,6 +150,11 @@ export type ProcedureStep = {
     }[];
   };
   /**
+   * OSI journey scene: where the data is and which headers it carries.
+   * Ignored unless the lab's `scene` is "osi".
+   */
+  osi?: OsiFrame;
+  /**
    * Rows revealed so far. Later steps pass a longer table, so the
    * observation card above the schematic grows as the procedure advances.
    */
@@ -175,8 +181,9 @@ export type LabContent = {
   labType?: "breadboard" | "text" | "code" | "simulation";
   /**
    * Replaces the breadboard (and a diagram lab's full-bleed figure) with a
-   * dedicated scene. "8085" is the labelled 40-pin package.
+   * dedicated scene. "8085" is the labelled 40-pin package. "osi" is the
+   * laptop-to-server bench with a seven-floor stack at each end.
    */
-  scene?: "8085";
+  scene?: "8085" | "osi";
   sections: LabSection[];
 };
