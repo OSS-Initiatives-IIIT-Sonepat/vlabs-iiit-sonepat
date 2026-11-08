@@ -186,12 +186,67 @@ function hops(): SchematicElement[] {
   return els;
 }
 
-/** Hosts, the two intermediate nodes, and the 3rd / 2nd / 1st hops. */
-export function osiLinked(hot?: OsiLayerKey): SchematicData {
+function peers(): SchematicElement[] {
+  const a = COLS[0];
+  const b = COLS[COLS.length - 1];
+  const els: SchematicElement[] = [];
+  for (const row of ROWS) {
+    if (!row.peer) continue;
+    const x1 = a.x + BW / 2;
+    const x2 = b.x - BW / 2;
+    els.push({
+      type: "arrow",
+      id: `peer-${row.key}`,
+      points: [
+        { x: x1, y: row.y },
+        { x: x2, y: row.y },
+      ],
+      double: true,
+      dashed: true,
+      size: 8,
+    });
+    els.push({
+      type: "label",
+      id: `peer-${row.key}-name`,
+      x: (x1 + x2) / 2,
+      y: row.y - 18,
+      text: `Peer-to-peer protocol (${row.peer} layer)`,
+    });
+  }
+  return els;
+}
+
+/** The whole textbook figure. `hot` marks the layer a procedure step is about. */
+export function osiFigure(hot?: OsiLayerKey): SchematicData {
   return {
     width: WIDTH,
     height: HEIGHT,
     gallery: true,
-    elements: [...hosts(hot), ...nodes(hot), ...hops()],
+    elements: [
+      ...hosts(hot),
+      ...nodes(hot),
+      ...hops(),
+      ...peers(),
+      {
+        type: "label",
+        id: "physical-communication",
+        x: WIDTH / 2,
+        y: 548,
+        text: "Physical communication",
+      },
+    ],
   };
 }
+
+export const theoryDiagram = osiFigure();
+
+export const osiStepSchematics: SchematicData[] = [
+  theoryDiagram,
+  osiFigure("application"),
+  osiFigure("presentation"),
+  osiFigure("session"),
+  osiFigure("transport"),
+  osiFigure("network"),
+  osiFigure("data-link"),
+  osiFigure("physical"),
+];
