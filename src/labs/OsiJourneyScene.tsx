@@ -903,6 +903,10 @@ export function OsiJourneyScene({ frame, preview = false }: Props) {
       toTarget: THREE.Vector3;
     } | null = null;
     const target = new THREE.Vector3();
+    // Shift-drag offset. Each step still focuses, then this shift is added
+    // back so the bench stays where the user left it.
+    const pan = new THREE.Vector3();
+    const authoredTarget = new THREE.Vector3();
     const stopGlide = () => {
       glide = null;
     };
@@ -917,8 +921,9 @@ export function OsiJourneyScene({ frame, preview = false }: Props) {
       applyView();
       if (!glide) {
         const pose = poseFor(frameRef.current);
-        camera.position.copy(pose.pos);
-        target.copy(pose.target);
+        authoredTarget.copy(pose.target);
+        camera.position.copy(pose.pos).add(pan);
+        target.copy(pose.target).add(pan);
         camera.lookAt(target);
         if (controls) {
           controls.target.copy(target);
@@ -1002,12 +1007,13 @@ export function OsiJourneyScene({ frame, preview = false }: Props) {
         inset = measureInset();
         applyView();
         const pose = poseFor(f);
+        authoredTarget.copy(pose.target);
         glide = {
           t: 0,
           fromPos: camera.position.clone(),
-          toPos: pose.pos,
+          toPos: pose.pos.clone().add(pan),
           fromTarget: controls.target.clone(),
-          toTarget: pose.target,
+          toTarget: pose.target.clone().add(pan),
         };
       }
     }
@@ -1152,6 +1158,7 @@ export function OsiJourneyScene({ frame, preview = false }: Props) {
           if (glide.t >= 1) glide = null;
         }
         controls.update();
+        if (!glide) pan.copy(controls.target).sub(authoredTarget);
         placeLabels();
       }
       renderer.render(scene, camera);
