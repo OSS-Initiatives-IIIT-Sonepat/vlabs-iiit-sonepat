@@ -49,6 +49,7 @@ import {
   type NetBench,
   type NetFrame,
 } from "@/labs/networks/bench";
+import { type KitFrame, type KitProgram } from "@/labs/mpu8085/trainer";
 
 const EMPTY_MARKERS: StepMarker[] = [];
 
@@ -83,6 +84,10 @@ const OsiJourneyScene = dynamic(
 );
 const NetLabScene = dynamic(
   () => import("@/labs/NetLabScene").then((m) => m.NetLabScene),
+  { ssr: false },
+);
+const Mpu8085TrainerScene = dynamic(
+  () => import("@/labs/Mpu8085TrainerScene").then((m) => m.Mpu8085TrainerScene),
   { ssr: false },
 );
 
@@ -455,6 +460,7 @@ const SceneRenderer = React.memo(function SceneRenderer({
   chipScene,
   osiFrame,
   net,
+  kit,
 }: {
   section: LabSection;
   circuit: Circuit;
@@ -465,6 +471,8 @@ const SceneRenderer = React.memo(function SceneRenderer({
   osiFrame: OsiFrame | null;
   /** Set when the lab's scene is a network bench. */
   net: { bench: NetBench; frame: NetFrame } | null;
+  /** Set when the lab's scene is the 8085 trainer kit. */
+  kit: { program: KitProgram; frame: KitFrame } | null;
 }) {
   if (osiFrame) {
     return <OsiJourneyScene frame={osiFrame} />;
@@ -486,6 +494,9 @@ const SceneRenderer = React.memo(function SceneRenderer({
   }
   if (section.type === "code-lab" || section.type === "simulation") {
     return null;
+  }
+  if (kit) {
+    return <Mpu8085TrainerScene program={kit.program} frame={kit.frame} />;
   }
   if (section.type === "text" && section.schematic) {
     return <TheoryScene spec={section.schematic} />;
@@ -783,6 +794,26 @@ function LabPageStandard({ content }: Props) {
     procedureStepIndex,
   ]);
 
+  // The trainer shows the kit signed on before the procedure and the
+  // finished program after it.
+  const kitScene = useMemo<{
+    program: KitProgram;
+    frame: KitFrame;
+  } | null>(() => {
+    if (content.scene !== "kit" || !content.trainer) return null;
+    const { program, overview, final } = content.trainer;
+    let frame = overview;
+    if (activeSection?.type === "procedure") {
+      frame = activeSection.steps[procedureStepIndex]?.kit ?? overview;
+    } else if (
+      activeSection?.type === "observation" ||
+      activeSection?.type === "conclusion"
+    ) {
+      frame = final;
+    }
+    return { program, frame };
+  }, [content.scene, content.trainer, activeSection, procedureStepIndex]);
+
   const codeSection = content.sections.find(
     (section): section is CodeLabSection => section.type === "code-lab",
   );
@@ -821,6 +852,7 @@ function LabPageStandard({ content }: Props) {
               chipScene={content.scene === "8085"}
               osiFrame={osiFrame}
               net={netScene}
+              kit={kitScene}
             />
           )}
         </div>
