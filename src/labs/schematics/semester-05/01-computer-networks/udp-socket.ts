@@ -19,11 +19,15 @@ const UDP: SeqMessage[] = [
   { from: 1, to: 0, label: "PING 2", color: "#22a55a" },
 ];
 
-export const sendOne = sequenceFigure(ACTORS, UDP, 1);
-export const replyOne = sequenceFigure(ACTORS, UDP, 2);
-export const lostOne = sequenceFigure(ACTORS, UDP, 5, [
-  { at: 2, side: 0, text: "timeout 2 s" },
-]);
+export const sendOne = sequenceFigure(ACTORS, UDP, 1, [], "UDP");
+export const replyOne = sequenceFigure(ACTORS, UDP, 2, [], "UDP");
+export const lostOne = sequenceFigure(
+  ACTORS,
+  UDP,
+  5,
+  [{ at: 2, side: 0, text: "no reply, timeout after 2 s" }],
+  "UDP",
+);
 
 /** The UDP header beside the TCP header, 32 bits to a row. */
 function headersFigure(): SchematicData {

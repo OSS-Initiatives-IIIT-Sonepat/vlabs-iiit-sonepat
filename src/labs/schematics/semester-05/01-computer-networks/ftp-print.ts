@@ -10,7 +10,7 @@ export const figure = (frame: NetFrame, title?: string): SchematicData =>
 export const theoryDiagram = figure({}, "FTP server and print server");
 
 const FTP: SeqMessage[] = [
-  { from: 0, to: 1, label: "SYN → :21" },
+  { from: 0, to: 1, label: "SYN → :21", type: "TCP" },
   { from: 1, to: 0, label: "220 (vsFTPd 3.0.5)" },
   { from: 0, to: 1, label: "USER student" },
   { from: 1, to: 0, label: "331 Please specify the password" },
@@ -24,5 +24,17 @@ const FTP: SeqMessage[] = [
 ];
 
 /** The FTP control conversation, up to message `upto`. */
-export const ftpLogin = sequenceFigure(["Client", "FTP server"], FTP, 6);
-export const ftpGet = sequenceFigure(["Client", "FTP server"], FTP, 11);
+export const ftpLogin = sequenceFigure(
+  ["Client", "FTP server"],
+  FTP,
+  6,
+  [],
+  "FTP",
+);
+export const ftpGet = sequenceFigure(
+  ["Client", "FTP server"],
+  FTP,
+  11,
+  [],
+  "FTP",
+);

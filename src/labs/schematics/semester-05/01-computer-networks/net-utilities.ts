@@ -16,7 +16,13 @@ const DORA: SeqMessage[] = [
   { from: 1, to: 0, label: "DHCPACK, lease 24 h" },
 ];
 
-export const doraFigure = sequenceFigure(["Client", "Router (DHCP)"], DORA);
+export const doraFigure = sequenceFigure(
+  ["Client", "Router (DHCP)"],
+  DORA,
+  DORA.length,
+  [],
+  "DHCP",
+);
 
 const TRACE: SeqMessage[] = [
   { from: 0, to: 1, label: "TTL 1" },
@@ -32,4 +38,7 @@ const TRACE: SeqMessage[] = [
 export const traceFigure = sequenceFigure(
   ["Client", "Router", "ISP", "Core", "Web"],
   TRACE,
+  TRACE.length,
+  [],
+  "ICMP",
 );
