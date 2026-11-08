@@ -15,6 +15,10 @@ const NetLabScene = dynamic(
   () => import("@/labs/NetLabScene").then((m) => m.NetLabScene),
   { ssr: false },
 );
+const TrainerScene = dynamic(
+  () => import("@/labs/Mpu8085TrainerScene").then((m) => m.Mpu8085TrainerScene),
+  { ssr: false },
+);
 
 type Props = { circuitId: string };
 
@@ -27,6 +31,18 @@ export function CircuitPreview({ circuitId }: Props) {
       return (
         <div className="h-full w-full">
           <NetLabScene bench={content.bench} frame={NET_OVERVIEW} preview />
+        </div>
+      );
+    }
+    // An 8085 program lab shows the trainer kit with the program run.
+    if (content?.scene === "kit" && content.trainer) {
+      return (
+        <div className="h-full w-full">
+          <TrainerScene
+            program={content.trainer.program}
+            frame={content.trainer.final}
+            preview
+          />
         </div>
       );
     }

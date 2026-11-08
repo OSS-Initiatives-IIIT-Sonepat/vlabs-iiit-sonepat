@@ -163,7 +163,8 @@ export function SubjectCard({ subject, onClick, showPreview }: Props) {
               <ChipPreview preview focus={[]} />
             ) : subject.circuitId === "osi-model-journey" ? (
               <NetworkPreview preview frame={NETWORK_COVER} />
-            ) : subject.hasPreview ? (
+            ) : subject.hasPreview ||
+              subject.id === "01-8085-assembly-programming" ? (
               <CircuitModel circuitId={subject.circuitId} />
             ) : (
               <DiagramPreview circuitId={subject.circuitId} />
