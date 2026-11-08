@@ -29,6 +29,7 @@ const NETWORK_COVER = { device: null, blocks: [], arrived: true } as const;
 /** Subject IDs that are fully available — all others show "Coming Soon". */
 const ENABLED_SUBJECTS = new Set([
   "01-analog-electronics",
+  "03-FEE",
   "01-digital-electronics",
   "01-combinational-arithmetic",
   "03-programming-fundamentals",

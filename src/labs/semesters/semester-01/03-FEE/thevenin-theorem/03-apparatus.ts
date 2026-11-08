@@ -31,7 +31,12 @@ export const apparatus: ApparatusSection = {
     },
     {
       name: "Digital Multimeter",
-      specification: "Voltage & resistance measurement",
+      specification: "Voltage and resistance",
+      quantity: "1",
+    },
+    {
+      name: "DC Milliammeter",
+      specification: "0–20 mA",
       quantity: "2",
     },
     {

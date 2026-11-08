@@ -4,26 +4,20 @@ import {
 } from "@/labs/CircuitSchematic";
 
 /*
- * Thevenin's Theorem — progressive 2D schematics.
- *
- * Original network: R1–R2 divider across Vs, output at A-B.
- *
- *        ┌── R1 ──┬──────── A
- *        Vs       R2
- *        └─ GND ──┴──────── B
+ * Thevenin, one circuit at a time.
+ * Steps 1–8 grow the original divider. Steps 9–10 are only the equivalent.
  */
 
-const W = 350;
-const H = 258;
+const W = 360;
+const H = 270;
 
-// ── Symbols ───────────────────────────────────────────────────
-const vs = (highlight?: boolean): SchematicElement => ({
+const vs = (value = "9 V", highlight?: boolean): SchematicElement => ({
   type: "vsource",
   id: "VS",
   x: 50,
   y: 130,
   label: "Vs",
-  value: "9 V",
+  value,
   highlight,
 });
 const r1 = (highlight?: boolean): SchematicElement => ({
@@ -56,18 +50,16 @@ const rl = (value: string, highlight?: boolean): SchematicElement => ({
   highlight,
 });
 const gnd: SchematicElement = { type: "ground", id: "GND", x: 120, y: 210 };
+const vm = (label: string): SchematicElement => ({
+  type: "voltmeter",
+  id: "VM",
+  x: 250,
+  y: 130,
+  label,
+  highlight: true,
+});
 
-// ── Wires ─────────────────────────────────────────────────────
-const wireVsR1: SchematicElement = {
-  type: "wire",
-  id: "w_vs_r1",
-  points: [
-    { x: 50, y: 100 },
-    { x: 50, y: 50 },
-    { x: 90, y: 50 },
-  ],
-};
-const wireVsGnd: SchematicElement = {
+const wVsGnd: SchematicElement = {
   type: "wire",
   id: "w_vs_gnd",
   points: [
@@ -76,15 +68,25 @@ const wireVsGnd: SchematicElement = {
     { x: 120, y: 210 },
   ],
 };
-const wireVsShort: SchematicElement = {
+const wShort: SchematicElement = {
   type: "wire",
-  id: "w_vs_short",
+  id: "w_short",
   points: [
     { x: 50, y: 100 },
     { x: 50, y: 160 },
   ],
+  highlight: true,
 };
-const wireR1A: SchematicElement = {
+const wVsR1: SchematicElement = {
+  type: "wire",
+  id: "w_vs_r1",
+  points: [
+    { x: 50, y: 100 },
+    { x: 50, y: 50 },
+    { x: 90, y: 50 },
+  ],
+};
+const wR1A: SchematicElement = {
   type: "wire",
   id: "w_r1_a",
   points: [
@@ -92,7 +94,7 @@ const wireR1A: SchematicElement = {
     { x: 250, y: 50 },
   ],
 };
-const wireNodeR2: SchematicElement = {
+const wNodeR2: SchematicElement = {
   type: "wire",
   id: "w_node_r2",
   points: [
@@ -100,7 +102,7 @@ const wireNodeR2: SchematicElement = {
     { x: 190, y: 100 },
   ],
 };
-const wireR2Gnd: SchematicElement = {
+const wR2Gnd: SchematicElement = {
   type: "wire",
   id: "w_r2_gnd",
   points: [
@@ -109,15 +111,7 @@ const wireR2Gnd: SchematicElement = {
     { x: 120, y: 210 },
   ],
 };
-const wireB: SchematicElement = {
-  type: "wire",
-  id: "w_b",
-  points: [
-    { x: 190, y: 210 },
-    { x: 250, y: 210 },
-  ],
-};
-const wireVmTop: SchematicElement = {
+const wVmTop: SchematicElement = {
   type: "wire",
   id: "w_vm_top",
   points: [
@@ -125,7 +119,7 @@ const wireVmTop: SchematicElement = {
     { x: 250, y: 106 },
   ],
 };
-const wireVmBot: SchematicElement = {
+const wVmBot: SchematicElement = {
   type: "wire",
   id: "w_vm_bot",
   points: [
@@ -133,7 +127,15 @@ const wireVmBot: SchematicElement = {
     { x: 250, y: 210 },
   ],
 };
-const wireRlTop: SchematicElement = {
+const wB: SchematicElement = {
+  type: "wire",
+  id: "w_b",
+  points: [
+    { x: 190, y: 210 },
+    { x: 250, y: 210 },
+  ],
+};
+const wRlTop: SchematicElement = {
   type: "wire",
   id: "w_rl_top",
   points: [
@@ -142,7 +144,7 @@ const wireRlTop: SchematicElement = {
     { x: 310, y: 100 },
   ],
 };
-const wireRlBot: SchematicElement = {
+const wRlBot: SchematicElement = {
   type: "wire",
   id: "w_rl_bot",
   points: [
@@ -151,129 +153,192 @@ const wireRlBot: SchematicElement = {
     { x: 250, y: 210 },
   ],
 };
-const juncNode: SchematicElement = {
-  type: "junction",
-  id: "j_node",
-  x: 190,
-  y: 50,
-};
-const juncGnd: SchematicElement = {
-  type: "junction",
-  id: "j_gnd",
-  x: 120,
-  y: 210,
-};
-const juncB: SchematicElement = { type: "junction", id: "j_b", x: 190, y: 210 };
-const termA: SchematicElement = { type: "junction", id: "t_a", x: 250, y: 50 };
-const termB: SchematicElement = { type: "junction", id: "t_b", x: 250, y: 210 };
 
-const labelsAB: SchematicElement[] = [
-  { type: "label", id: "lbl_a", x: 250, y: 38, text: "A" },
-  { type: "label", id: "lbl_b", x: 250, y: 230, text: "B" },
-];
-const caption = (id: string, text: string): SchematicElement => ({
+const jNode: SchematicElement = { type: "junction", id: "j_node", x: 190, y: 50 };
+const jGnd: SchematicElement = { type: "junction", id: "j_gnd", x: 120, y: 210 };
+const jB: SchematicElement = { type: "junction", id: "j_b", x: 190, y: 210 };
+const jA: SchematicElement = { type: "junction", id: "j_a", x: 250, y: 50 };
+const jLoad: SchematicElement = { type: "junction", id: "j_load", x: 250, y: 210 };
+
+const lblA: SchematicElement = { type: "label", id: "lbl_a", x: 228, y: 38, text: "A" };
+const lblB: SchematicElement = { type: "label", id: "lbl_b", x: 228, y: 198, text: "B" };
+const cap = (text: string): SchematicElement => ({
   type: "label",
-  id,
-  x: 175,
-  y: 250,
+  id: "lbl",
+  x: 180,
+  y: 258,
   text,
 });
 
-/** Divider network up to terminals A-B. */
-const network = (
-  opts: { killed?: boolean; highlight?: boolean } = {},
-): SchematicElement[] => [
-  ...(opts.killed
-    ? [
-        { ...wireVsShort, highlight: true },
-        {
-          type: "label",
-          id: "lbl_kill",
-          x: 95,
-          y: 134,
-          text: "Vs = 0",
-        } as SchematicElement,
-      ]
-    : [vs(opts.highlight)]),
-  wireVsR1,
-  wireVsGnd,
-  gnd,
-  juncGnd,
-  r1(opts.highlight),
-  wireR1A,
-  juncNode,
-  wireNodeR2,
-  r2(opts.highlight),
-  wireR2Gnd,
-  wireB,
-  juncB,
-  ...labelsAB,
+const divider: SchematicElement[] = [
+  wVsR1,
+  r1(),
+  wR1A,
+  jNode,
+  wNodeR2,
+  r2(),
+  wR2Gnd,
+  jGnd,
 ];
 
-// ── Step 1: Build original R1-R2 divider ─────────────────────
+function original(
+  source: "live" | "short",
+  extra: SchematicElement[] = [],
+  caption?: string,
+): SchematicData {
+  return {
+    width: W,
+    height: H,
+    elements: [
+      source === "live" ? vs() : wShort,
+      wVsGnd,
+      gnd,
+      ...divider,
+      ...extra,
+      ...(caption ? [cap(caption)] : []),
+    ],
+  };
+}
+
+const meter: SchematicElement[] = [wVmTop, wVmBot, wB, jB, lblA, lblB];
+
 export const step01: SchematicData = {
   width: W,
   height: H,
-  elements: [...network({ highlight: true }), termA, termB],
+  elements: [
+    { type: "label", id: "lbl", x: 180, y: 135, text: "Place the breadboard" },
+  ],
 };
-
-// ── Step 2: Measure Vth (open-circuit, voltmeter at A-B) ────
 export const step02: SchematicData = {
   width: W,
   height: H,
-  elements: [
-    ...network(),
-    { ...wireVmTop, highlight: true },
-    {
-      type: "voltmeter",
-      id: "VM",
-      x: 250,
-      y: 130,
-      label: "Vth",
-      highlight: true,
-    },
-    { ...wireVmBot, highlight: true },
-    caption("lbl_vth", "Vth = Vs × R₂/(R₁+R₂) ≈ 6.19 V"),
-  ],
+  elements: [vs("9 V", true), wVsGnd, gnd],
 };
-
-// ── Step 3: Measure Rth (kill supply, measure resistance) ───
 export const step03: SchematicData = {
   width: W,
   height: H,
-  elements: [
-    ...network({ killed: true }),
-    termA,
-    termB,
-    caption("lbl_rth", "Rth = R₁ ∥ R₂ ≈ 688 Ω (seen from A-B)"),
-  ],
+  elements: [vs(), wVsGnd, gnd, wVsR1, r1(true)],
 };
-
-// ── Step 4: Build Thevenin equivalent + load R3 ─────────────
 export const step04: SchematicData = {
   width: W,
   height: H,
   elements: [
-    ...network(),
-    { ...wireRlTop, highlight: true },
-    rl("3.3 kΩ", true),
-    { ...wireRlBot, highlight: true },
-    caption("lbl_load", "Load connected — measure V_L"),
+    vs(),
+    wVsGnd,
+    gnd,
+    wVsR1,
+    r1(),
+    wR1A,
+    jNode,
+    wNodeR2,
+    r2(true),
+    wR2Gnd,
+    jGnd,
+    jA,
+    lblA,
+    lblB,
   ],
 };
+export const step05: SchematicData = original("live", [vm("Vth"), ...meter], "Vth = 6.19 V");
+export const step06: SchematicData = original(
+  "short",
+  [vm("Rth"), ...meter],
+  "Rth = 688 Ω",
+);
+export const step07: SchematicData = original(
+  "live",
+  [vm(""), ...meter, jA, wRlTop, rl("3.3 kΩ", true), wRlBot, jLoad],
+  "VL = 5.12 V, IL = 1.55 mA",
+);
+export const step08: SchematicData = original(
+  "live",
+  [vm(""), ...meter, jA, wRlTop, rl("4.7 kΩ", true), wRlBot, jLoad],
+  "VL = 5.40 V, IL = 1.15 mA",
+);
 
-// ── Step 5: Repeat with second load (4.7 kΩ) ────────────────
-export const step05: SchematicData = {
-  width: W,
-  height: H,
-  elements: [
-    ...network(),
-    wireRlTop,
-    rl("4.7 kΩ", true),
-    wireRlBot,
-    caption("lbl_load2", "R_L = 4.7 kΩ — verify V_L matches"),
-  ],
-};
+function equivalent(load: string, caption: string): SchematicData {
+  const vth: SchematicElement = {
+    type: "vsource",
+    id: "VTH",
+    x: 70,
+    y: 120,
+    label: "Vth",
+    value: "6.19 V",
+    highlight: true,
+  };
+  const rth: SchematicElement = {
+    type: "resistor",
+    id: "RTH",
+    x: 160,
+    y: 60,
+    label: "Rth",
+    value: "688 Ω",
+    highlight: true,
+  };
+  const loadR: SchematicElement = {
+    type: "resistor",
+    id: "RL",
+    x: 260,
+    y: 120,
+    rotation: 90,
+    label: "R_L",
+    value: load,
+  };
+  const egnd: SchematicElement = { type: "ground", id: "GND", x: 160, y: 200 };
+  return {
+    width: W,
+    height: H,
+    elements: [
+      vth,
+      rth,
+      loadR,
+      egnd,
+      {
+        type: "wire",
+        id: "w1",
+        points: [
+          { x: 70, y: 90 },
+          { x: 70, y: 60 },
+          { x: 130, y: 60 },
+        ],
+      },
+      {
+        type: "wire",
+        id: "w2",
+        points: [
+          { x: 190, y: 60 },
+          { x: 260, y: 60 },
+          { x: 260, y: 90 },
+        ],
+      },
+      {
+        type: "wire",
+        id: "w3",
+        points: [
+          { x: 260, y: 150 },
+          { x: 260, y: 200 },
+          { x: 160, y: 200 },
+        ],
+      },
+      {
+        type: "wire",
+        id: "w4",
+        points: [
+          { x: 70, y: 150 },
+          { x: 70, y: 200 },
+          { x: 160, y: 200 },
+        ],
+      },
+      { type: "junction", id: "j", x: 160, y: 200 },
+      { type: "label", id: "lbl", x: 180, y: 258, text: caption },
+    ],
+  };
+}
+
+export const step09: SchematicData = equivalent("3.3 kΩ", "Same load: 5.12 V, 1.55 mA");
+export const step10: SchematicData = equivalent("4.7 kΩ", "Same load: 5.40 V, 1.15 mA");
+
+export const theoryDiagram = step09;
 
 export const theveninStepSchematics: SchematicData[] = [
   step01,
@@ -281,4 +346,9 @@ export const theveninStepSchematics: SchematicData[] = [
   step03,
   step04,
   step05,
+  step06,
+  step07,
+  step08,
+  step09,
+  step10,
 ];

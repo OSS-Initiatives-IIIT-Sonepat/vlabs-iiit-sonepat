@@ -31,21 +31,18 @@ const LabSceneCanvas = dynamic(
   { ssr: false },
 );
 
-// ── CSS-only breadboard thumbnail ─────────────────────────────────────────
-const HOLES = Array.from({ length: 40 });
-function BreadboardThumb({ active }: { active: boolean }) {
+// ── Sidebar still of the 3D breadboard ─────────────────────────────────
+function BreadboardThumb({ id }: { id: string }) {
   return (
-    <div
-      className={`relative h-[38px] w-full overflow-hidden rounded-[3px] before:absolute before:left-1 before:right-1 before:top-1.5 before:h-1 before:bg-[#c84040] before:content-[''] after:absolute after:bottom-1.5 after:left-1 after:right-1 after:h-1 after:bg-[#2060a0] after:content-[''] ${
-        active ? "bg-[#f0ead8]" : "bg-[#f7f5f2]"
-      }`}
-    >
-      <div className="absolute left-1/2 top-[14px] bottom-[14px] grid -translate-x-1/2 grid-cols-[repeat(10,4px)] grid-rows-[repeat(4,4px)] gap-0.5">
-        {HOLES.map((_, i) => (
-          <span key={i} className="block h-1 w-1 rounded-[1px] bg-[#c8bfae]" />
-        ))}
-      </div>
-    </div>
+    // Static photograph of the 3D board, cropped so the board fills the
+    // row. A live canvas here would mean one WebGL context per row.
+    <span className="block h-[48px] w-full overflow-hidden rounded-[3px] bg-[#eceae6]">
+      <img
+        alt=""
+        className="h-full w-full origin-center scale-150 object-cover"
+        src={`/hero-thumbs/${id}.jpg`}
+      />
+    </span>
   );
 }
 
@@ -91,7 +88,7 @@ export function HeroPreview() {
               }
               title={circuit.title}
             >
-              <BreadboardThumb active={isActive} />
+              <BreadboardThumb id={circuit.id} />
               <span
                 className={`truncate font-[-apple-system,BlinkMacSystemFont,sans-serif] text-[9.5px] font-medium leading-none transition-colors duration-[120ms] ${
                   isActive ? "text-[#1a1816]" : "text-[#9a9694]"

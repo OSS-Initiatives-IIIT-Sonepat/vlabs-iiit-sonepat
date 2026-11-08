@@ -100,15 +100,15 @@ export function componentDisplayName(inst: ComponentInstance): string {
     case "wide-breadboard":
       return "Breadboard";
     case "dc-jack":
-      return "DC Power Supply";
+      return inst.label ? `DC Power Supply · ${inst.label}` : "DC Power Supply";
     case "battery":
       return "Battery";
     case "potentiometer":
       return "Multimeter";
     case "ammeter":
-      return "Ammeter";
+      return inst.label ? `Ammeter · ${inst.label}` : "Ammeter";
     case "voltmeter":
-      return "Voltmeter";
+      return inst.label ? `Voltmeter · ${inst.label}` : "Voltmeter";
     case "oscilloscope":
       return "Oscilloscope";
     case "function-generator":

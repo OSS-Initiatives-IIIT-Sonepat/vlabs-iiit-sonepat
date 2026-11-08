@@ -314,6 +314,8 @@ export type ComponentInstance =
       id: string;
       type: "dc-jack";
       mountedAt: MountPoint;
+      /** Shown on the inspection card when several supplies are on the bench. */
+      label?: string;
       /** Terminal wire targets [+, −] — resolved to Vector3 by LabScene */
       terminals?: [PinRef, PinRef];
     }
@@ -326,6 +328,8 @@ export type ComponentInstance =
       id: string;
       type: "ammeter";
       mountedAt: MountPoint;
+      /** Shown on the inspection card when several ammeters are on the bench. */
+      label?: string;
       /** Probe wire targets [+, −] — resolved to Vector3 by LabScene */
       probes?: [PinRef, PinRef];
     }
@@ -333,6 +337,8 @@ export type ComponentInstance =
       id: string;
       type: "voltmeter";
       mountedAt: MountPoint;
+      /** Shown on the inspection card when several voltmeters are on the bench. */
+      label?: string;
       /** Probe wire targets [+, −] — resolved to Vector3 by LabScene */
       probes?: [PinRef, PinRef];
     }
