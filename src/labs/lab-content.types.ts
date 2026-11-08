@@ -2,6 +2,7 @@ import { type StepMarker } from "@/labs/LabScene";
 import { type SchematicSpec } from "@/labs/TheoryScene";
 import { type SchematicData } from "@/labs/CircuitSchematic";
 import { type OsiFrame } from "@/labs/networks/osi";
+import { type KitFrame, type KitProgram } from "@/labs/mpu8085/trainer";
 import { type NetBench, type NetFrame } from "@/labs/networks/bench";
 
 // ── Lab content types ──────────────────────────────────────────────────────
@@ -161,6 +162,11 @@ export type ProcedureStep = {
    */
   net?: NetFrame;
   /**
+   * 8085 trainer kit: the keys pressed, what the displays show, and the
+   * bytes that move. Ignored unless the lab's `scene` is "kit".
+   */
+  kit?: KitFrame;
+  /**
    * Rows revealed so far. Later steps pass a longer table, so the
    * observation card above the schematic grows as the procedure advances.
    */
@@ -189,10 +195,13 @@ export type LabContent = {
    * Replaces the breadboard (and a diagram lab's full-bleed figure) with a
    * dedicated scene. "8085" is the labelled 40-pin package. "osi" is the
    * laptop-to-server bench with a seven-floor stack at each end. "net" is a
-   * room of network devices, described by `bench`.
+   * room of network devices, described by `bench`. "kit" is the 8085
+   * trainer kit, running `trainer`.
    */
-  scene?: "8085" | "osi" | "net";
+  scene?: "8085" | "osi" | "net" | "kit";
   /** The devices and cables of a "net" scene. */
   bench?: NetBench;
+  /** The program, and the kit before and after it, of a "kit" scene. */
+  trainer?: { program: KitProgram; overview: KitFrame; final: KitFrame };
   sections: LabSection[];
 };
