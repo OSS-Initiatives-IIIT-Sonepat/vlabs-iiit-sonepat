@@ -4,6 +4,7 @@ import type {
   SchematicElement,
 } from "@/labs/CircuitSchematic";
 import {
+  ptLinkPoints,
   symbolGeometry,
   textBox,
   type Box,
@@ -29,6 +30,9 @@ const EPS = 1.5;
 const PROBE_RADIUS = 7;
 
 type WireSeg = { wireId: string; outline: boolean; a: Pt; b: Pt };
+
+/** Packet Tracer cables run straight between devices, at any angle. */
+type Cable = { id: string; points: Pt[] };
 
 const dist = (p: Pt, q: Pt) => Math.hypot(p.x - q.x, p.y - q.y);
 const near = (p: Pt, q: Pt, eps = EPS) => dist(p, q) <= eps;
@@ -141,6 +145,7 @@ export function lintSchematic(schematic: SchematicData): LintIssue[] {
   const wires: Extract<SchematicElement, { type: "wire" }>[] = [];
   const junctions: Pt[] = [];
   const labels: { id: string; box: Box; text: string }[] = [];
+  const cables: Cable[] = [];
   const seen = new Set<string>();
 
   for (const el of schematic.elements) {
@@ -156,6 +161,8 @@ export function lintSchematic(schematic: SchematicData): LintIssue[] {
         highlight: el.highlight,
       });
     else if (el.type === "junction") junctions.push({ x: el.x, y: el.y });
+    else if (el.type === "pt-link")
+      cables.push({ id: el.id, points: ptLinkPoints(el.a, el.b, el.cable) });
     else if (el.type === "label")
       labels.push({
         id: el.id,
@@ -164,8 +171,8 @@ export function lintSchematic(schematic: SchematicData): LintIssue[] {
           x: el.x,
           y: el.y,
           text: el.text,
-          fontSize: 9,
-          anchor: "middle",
+          fontSize: el.size ?? 9,
+          anchor: el.anchor ?? "middle",
         }),
       });
     else {
@@ -198,6 +205,14 @@ export function lintSchematic(schematic: SchematicData): LintIssue[] {
       segs.push({ wireId: w.id, outline, a, b });
     }
   }
+  for (const c of cables)
+    for (let i = 0; i + 1 < c.points.length; i++)
+      segs.push({
+        wireId: c.id,
+        outline: false,
+        a: c.points[i],
+        b: c.points[i + 1],
+      });
   const outlineIds = new Set(
     segs.filter((s) => s.outline).map((s) => s.wireId),
   );
