@@ -856,6 +856,81 @@ import {
   OsiModelJourneyContent,
   osiModelJourneyExperiment,
 } from "./semester-05/01-computer-networks/osi-model-journey";
+import {
+  NetworkCablesCrimpingCircuit,
+  NetworkCablesCrimpingContent,
+  networkCablesCrimpingExperiment,
+} from "./semester-05/01-computer-networks/network-cables-crimping";
+import {
+  NicFileTransferCircuit,
+  NicFileTransferContent,
+  nicFileTransferExperiment,
+} from "./semester-05/01-computer-networks/nic-file-transfer";
+import {
+  HubSwitchRouterCircuit,
+  HubSwitchRouterContent,
+  hubSwitchRouterExperiment,
+} from "./semester-05/01-computer-networks/hub-switch-router";
+import {
+  LanConnectComputersCircuit,
+  LanConnectComputersContent,
+  lanConnectComputersExperiment,
+} from "./semester-05/01-computer-networks/lan-connect-computers";
+import {
+  TcpipConfigurationCircuit,
+  TcpipConfigurationContent,
+  tcpipConfigurationExperiment,
+} from "./semester-05/01-computer-networks/tcpip-configuration";
+import {
+  PeerToPeerNetworkCircuit,
+  PeerToPeerNetworkContent,
+  peerToPeerNetworkExperiment,
+} from "./semester-05/01-computer-networks/peer-to-peer-network";
+import {
+  NetworkUtilitiesCircuit,
+  NetworkUtilitiesContent,
+  networkUtilitiesExperiment,
+} from "./semester-05/01-computer-networks/network-utilities";
+import {
+  FtpPrintServerCircuit,
+  FtpPrintServerContent,
+  ftpPrintServerExperiment,
+} from "./semester-05/01-computer-networks/ftp-print-server";
+import {
+  RouterConfigurationCircuit,
+  RouterConfigurationContent,
+  routerConfigurationExperiment,
+} from "./semester-05/01-computer-networks/router-configuration";
+import {
+  TcpClientServerCircuit,
+  TcpClientServerContent,
+  tcpClientServerExperiment,
+} from "./semester-05/01-computer-networks/tcp-client-server";
+import {
+  UdpClientServerCircuit,
+  UdpClientServerContent,
+  udpClientServerExperiment,
+} from "./semester-05/01-computer-networks/udp-client-server";
+import {
+  RemoteProcedureCallCircuit,
+  RemoteProcedureCallContent,
+  remoteProcedureCallExperiment,
+} from "./semester-05/01-computer-networks/remote-procedure-call";
+import {
+  NetworkTopologiesCircuit,
+  NetworkTopologiesContent,
+  networkTopologiesExperiment,
+} from "./semester-05/01-computer-networks/network-topologies";
+import {
+  RoutingProtocolsCircuit,
+  RoutingProtocolsContent,
+  routingProtocolsExperiment,
+} from "./semester-05/01-computer-networks/routing-protocols";
+import {
+  ArpMacAddressCircuit,
+  ArpMacAddressContent,
+  arpMacAddressExperiment,
+} from "./semester-05/01-computer-networks/arp-mac-address";
 
 export type SemesterExperimentEntry = {
   experiment: ExperimentDefinition;
@@ -2344,6 +2419,223 @@ export const SEMESTER_SUBJECTS: readonly SemesterSubjectCatalog[] = [
           "router",
           "packet",
           "frame",
+        ],
+      ),
+      fromBuilt(
+        networkCablesCrimpingExperiment,
+        NetworkCablesCrimpingCircuit,
+        NetworkCablesCrimpingContent,
+        [
+          "cable",
+          "UTP",
+          "RJ45",
+          "crimping",
+          "T568B",
+          "T568A",
+          "straight-through",
+          "crossover",
+        ],
+      ),
+      fromBuilt(
+        nicFileTransferExperiment,
+        NicFileTransferCircuit,
+        NicFileTransferContent,
+        [
+          "NIC",
+          "network adapter",
+          "driver",
+          "Wi-Fi",
+          "WLAN",
+          "file sharing",
+          "SMB",
+          "SSID",
+        ],
+      ),
+      fromBuilt(
+        hubSwitchRouterExperiment,
+        HubSwitchRouterCircuit,
+        HubSwitchRouterContent,
+        [
+          "hub",
+          "switch",
+          "router",
+          "MAC table",
+          "collision domain",
+          "broadcast domain",
+          "CSMA/CD",
+        ],
+      ),
+      fromBuilt(
+        lanConnectComputersExperiment,
+        LanConnectComputersCircuit,
+        LanConnectComputersContent,
+        [
+          "LAN",
+          "star topology",
+          "switch",
+          "patch cable",
+          "workgroup",
+          "ping",
+          "broadcast",
+        ],
+      ),
+      fromBuilt(
+        tcpipConfigurationExperiment,
+        TcpipConfigurationCircuit,
+        TcpipConfigurationContent,
+        [
+          "IP address",
+          "subnet mask",
+          "default gateway",
+          "TCP/IP",
+          "IPv4",
+          "DNS",
+          "APIPA",
+        ],
+      ),
+      fromBuilt(
+        peerToPeerNetworkExperiment,
+        PeerToPeerNetworkCircuit,
+        PeerToPeerNetworkContent,
+        [
+          "peer-to-peer",
+          "crossover",
+          "switch",
+          "router",
+          "TTL",
+          "file sharing",
+          "workgroup",
+        ],
+      ),
+      fromBuilt(
+        networkUtilitiesExperiment,
+        NetworkUtilitiesCircuit,
+        NetworkUtilitiesContent,
+        [
+          "ipconfig",
+          "ping",
+          "tracert",
+          "traceroute",
+          "netstat",
+          "nslookup",
+          "DHCP",
+          "troubleshooting",
+        ],
+      ),
+      fromBuilt(
+        ftpPrintServerExperiment,
+        FtpPrintServerCircuit,
+        FtpPrintServerContent,
+        [
+          "FTP",
+          "vsftpd",
+          "port 21",
+          "passive mode",
+          "print server",
+          "shared printer",
+          "SMB",
+        ],
+      ),
+      fromBuilt(
+        routerConfigurationExperiment,
+        RouterConfigurationCircuit,
+        RouterConfigurationContent,
+        [
+          "router",
+          "Cisco IOS",
+          "CLI",
+          "Packet Tracer",
+          "console",
+          "no shutdown",
+          "show ip route",
+        ],
+      ),
+      fromBuilt(
+        tcpClientServerExperiment,
+        TcpClientServerCircuit,
+        TcpClientServerContent,
+        [
+          "TCP",
+          "socket",
+          "client-server",
+          "three-way handshake",
+          "bind",
+          "listen",
+          "accept",
+          "connect",
+        ],
+      ),
+      fromBuilt(
+        udpClientServerExperiment,
+        UdpClientServerCircuit,
+        UdpClientServerContent,
+        [
+          "UDP",
+          "socket",
+          "datagram",
+          "connectionless",
+          "sendto",
+          "recvfrom",
+          "broadcast",
+        ],
+      ),
+      fromBuilt(
+        remoteProcedureCallExperiment,
+        RemoteProcedureCallCircuit,
+        RemoteProcedureCallContent,
+        [
+          "RPC",
+          "remote procedure call",
+          "rpcgen",
+          "XDR",
+          "rpcbind",
+          "portmapper",
+          "stub",
+          "ONC RPC",
+        ],
+      ),
+      fromBuilt(
+        networkTopologiesExperiment,
+        NetworkTopologiesCircuit,
+        NetworkTopologiesContent,
+        [
+          "topology",
+          "bus",
+          "star",
+          "ring",
+          "mesh",
+          "tree",
+          "Packet Tracer",
+          "fault tolerance",
+        ],
+      ),
+      fromBuilt(
+        routingProtocolsExperiment,
+        RoutingProtocolsCircuit,
+        RoutingProtocolsContent,
+        [
+          "routing",
+          "static route",
+          "RIP",
+          "OSPF",
+          "routing table",
+          "metric",
+          "convergence",
+          "Packet Tracer",
+        ],
+      ),
+      fromBuilt(
+        arpMacAddressExperiment,
+        ArpMacAddressCircuit,
+        ArpMacAddressContent,
+        [
+          "ARP",
+          "MAC address",
+          "arp -a",
+          "getmac",
+          "ARP cache",
+          "broadcast",
+          "gateway",
         ],
       ),
     ],
