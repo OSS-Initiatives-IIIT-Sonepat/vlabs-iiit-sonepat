@@ -1,4 +1,10 @@
-import type { Pt, SchematicElement } from "@/labs/CircuitSchematic";
+import type {
+  Pt,
+  PtCable,
+  PtIcon,
+  PtWindow,
+  SchematicElement,
+} from "@/labs/CircuitSchematic";
 
 /*
  * Geometry of every schematic symbol, in the symbol's local frame (before
@@ -16,6 +22,56 @@ export type TextSpec = {
   fontSize: number;
   anchor: "start" | "middle" | "end";
 };
+
+/** Half width and half height of each Packet Tracer device icon. */
+export const PT_ICON_SIZE: Record<PtIcon, readonly [number, number]> = {
+  pc: [15, 14],
+  laptop: [17, 12],
+  server: [12, 18],
+  switch: [20, 9],
+  hub: [20, 9],
+  router: [18, 12],
+  ap: [16, 12],
+  printer: [15, 13],
+  cloud: [25, 17],
+  terminator: [4, 7],
+  tap: [4, 4],
+};
+
+/** The cable's points: a straight run, with a lightning kink for serial. */
+export function ptLinkPoints(a: Pt, b: Pt, cable: PtCable): Pt[] {
+  if (cable !== "serial") return [a, b];
+  const len = Math.hypot(b.x - a.x, b.y - a.y) || 1;
+  const ux = (b.x - a.x) / len;
+  const uy = (b.y - a.y) / len;
+  const at = (t: number, off: number): Pt => ({
+    x: a.x + ux * len * t - uy * off,
+    y: a.y + uy * len * t + ux * off,
+  });
+  return [a, at(0.44, 0), at(0.49, -5), at(0.51, 5), at(0.56, 0), b];
+}
+
+/** Heights of the parts of a Packet Tracer window. */
+export const PT_WINDOW = {
+  title: 20,
+  tabs: 22,
+  heading: 20,
+  row: 16,
+  line: 12,
+  footer: 18,
+} as const;
+
+/** The height a Packet Tracer window needs for what it holds. */
+export function ptWindowHeight(el: PtWindow): number {
+  const L = PT_WINDOW;
+  let h = L.title;
+  if (el.tabs?.length) h += L.tabs;
+  if (el.heading) h += L.heading;
+  if (el.columns?.length) h += L.row * (1 + (el.rows?.length ?? 0)) + 4;
+  if (el.console) h += el.console.length * L.line + 16;
+  if (el.footer) h += L.footer;
+  return h + 6;
+}
 
 type LocalGeometry = {
   pins: Pt[];
@@ -247,6 +303,17 @@ function localGeometry(el: SchematicElement): LocalGeometry | null {
         leads: [],
         texts: [],
       };
+    }
+    case "pt-window":
+      return {
+        pins: [],
+        body: box(0, 0, el.w, ptWindowHeight(el)),
+        leads: [],
+        texts: [],
+      };
+    case "pt-device": {
+      const [hw, hh] = PT_ICON_SIZE[el.kind];
+      return { pins: [], body: box(-hw, -hh, hw, hh), leads: [], texts: [] };
     }
     default:
       return null;

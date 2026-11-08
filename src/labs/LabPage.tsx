@@ -44,6 +44,11 @@ import {
 import { type Circuit } from "@/labs/types";
 import { type StepMarker } from "@/labs/LabScene";
 import { OSI_OVERVIEW, type OsiFrame } from "@/labs/networks/osi";
+import {
+  NET_OVERVIEW,
+  type NetBench,
+  type NetFrame,
+} from "@/labs/networks/bench";
 
 const EMPTY_MARKERS: StepMarker[] = [];
 
@@ -74,6 +79,10 @@ const Mpu8085Scene = dynamic(
 );
 const OsiJourneyScene = dynamic(
   () => import("@/labs/OsiJourneyScene").then((m) => m.OsiJourneyScene),
+  { ssr: false },
+);
+const NetLabScene = dynamic(
+  () => import("@/labs/NetLabScene").then((m) => m.NetLabScene),
   { ssr: false },
 );
 
@@ -445,6 +454,7 @@ const SceneRenderer = React.memo(function SceneRenderer({
   activeMarkers,
   chipScene,
   osiFrame,
+  net,
 }: {
   section: LabSection;
   circuit: Circuit;
@@ -453,9 +463,14 @@ const SceneRenderer = React.memo(function SceneRenderer({
   chipScene: boolean;
   /** Set when the lab's scene is the OSI bench. */
   osiFrame: OsiFrame | null;
+  /** Set when the lab's scene is a network bench. */
+  net: { bench: NetBench; frame: NetFrame } | null;
 }) {
   if (osiFrame) {
     return <OsiJourneyScene frame={osiFrame} />;
+  }
+  if (net) {
+    return <NetLabScene bench={net.bench} frame={net.frame} />;
   }
   if (chipScene) {
     const pins =
@@ -744,6 +759,30 @@ function LabPageStandard({ content }: Props) {
     return OSI_OVERVIEW;
   }, [content.scene, content.sections, activeSection, procedureStepIndex]);
 
+  // A network bench shows the whole room before the procedure and the last
+  // step's room after it.
+  const netScene = useMemo<{ bench: NetBench; frame: NetFrame } | null>(() => {
+    if (content.scene !== "net" || !content.bench) return null;
+    const procedure = content.sections.find((s) => s.type === "procedure");
+    const steps = procedure?.type === "procedure" ? procedure.steps : [];
+    let frame = NET_OVERVIEW;
+    if (activeSection?.type === "procedure") {
+      frame = activeSection.steps[procedureStepIndex]?.net ?? NET_OVERVIEW;
+    } else if (
+      activeSection?.type === "observation" ||
+      activeSection?.type === "conclusion"
+    ) {
+      frame = steps[steps.length - 1]?.net ?? NET_OVERVIEW;
+    }
+    return { bench: content.bench, frame };
+  }, [
+    content.scene,
+    content.bench,
+    content.sections,
+    activeSection,
+    procedureStepIndex,
+  ]);
+
   const codeSection = content.sections.find(
     (section): section is CodeLabSection => section.type === "code-lab",
   );
@@ -781,6 +820,7 @@ function LabPageStandard({ content }: Props) {
               activeMarkers={activeMarkers}
               chipScene={content.scene === "8085"}
               osiFrame={osiFrame}
+              net={netScene}
             />
           )}
         </div>

@@ -138,6 +138,21 @@ import * as s4_Assembly from "./semester-04/01-8085-assembly-programming/assembl
 import * as s4_Interface from "./semester-04/02-peripheral-interfacing/interface-diagrams";
 import * as s4_PinLabelling from "./semester-04/03-microprocessors-and-microcontrollers/8085-pin-labelling";
 import * as s5_OsiModelJourney from "./semester-05/01-computer-networks/osi-model-journey";
+import * as s5_NetworkCables from "./semester-05/01-computer-networks/network-cables";
+import * as s5_NicFileTransfer from "./semester-05/01-computer-networks/nic-lan-wlan";
+import * as s5_HubSwitchRouter from "./semester-05/01-computer-networks/hub-switch-router";
+import * as s5_LanConnectComputers from "./semester-05/01-computer-networks/lan-setup";
+import * as s5_TcpipConfiguration from "./semester-05/01-computer-networks/tcpip-config";
+import * as s5_PeerToPeerNetwork from "./semester-05/01-computer-networks/peer-to-peer";
+import * as s5_NetworkUtilities from "./semester-05/01-computer-networks/net-utilities";
+import * as s5_FtpPrintServer from "./semester-05/01-computer-networks/ftp-print";
+import * as s5_RouterConfiguration from "./semester-05/01-computer-networks/router-cli";
+import * as s5_TcpClientServer from "./semester-05/01-computer-networks/tcp-socket";
+import * as s5_UdpClientServer from "./semester-05/01-computer-networks/udp-socket";
+import * as s5_RemoteProcedureCall from "./semester-05/01-computer-networks/rpc";
+import * as s5_NetworkTopologies from "./semester-05/01-computer-networks/topologies";
+import * as s5_RoutingProtocols from "./semester-05/01-computer-networks/routing";
+import * as s5_ArpMacAddress from "./semester-05/01-computer-networks/arp";
 
 /**
  * Every lab's 2D schematics, keyed by the lab's path under
@@ -314,6 +329,24 @@ export const schematicModules = {
   "semester-04/03-microprocessors-and-microcontrollers/8085-pin-labelling":
     s4_PinLabelling,
   "semester-05/01-computer-networks/osi-model-journey": s5_OsiModelJourney,
+  "semester-05/01-computer-networks/network-cables-crimping": s5_NetworkCables,
+  "semester-05/01-computer-networks/nic-file-transfer": s5_NicFileTransfer,
+  "semester-05/01-computer-networks/hub-switch-router": s5_HubSwitchRouter,
+  "semester-05/01-computer-networks/lan-connect-computers":
+    s5_LanConnectComputers,
+  "semester-05/01-computer-networks/tcpip-configuration": s5_TcpipConfiguration,
+  "semester-05/01-computer-networks/peer-to-peer-network": s5_PeerToPeerNetwork,
+  "semester-05/01-computer-networks/network-utilities": s5_NetworkUtilities,
+  "semester-05/01-computer-networks/ftp-print-server": s5_FtpPrintServer,
+  "semester-05/01-computer-networks/router-configuration":
+    s5_RouterConfiguration,
+  "semester-05/01-computer-networks/tcp-client-server": s5_TcpClientServer,
+  "semester-05/01-computer-networks/udp-client-server": s5_UdpClientServer,
+  "semester-05/01-computer-networks/remote-procedure-call":
+    s5_RemoteProcedureCall,
+  "semester-05/01-computer-networks/network-topologies": s5_NetworkTopologies,
+  "semester-05/01-computer-networks/routing-protocols": s5_RoutingProtocols,
+  "semester-05/01-computer-networks/arp-mac-address": s5_ArpMacAddress,
 } as const;
 
 export type SchematicLabPath = keyof typeof schematicModules;

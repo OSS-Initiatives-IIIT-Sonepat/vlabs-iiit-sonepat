@@ -4,6 +4,10 @@ import React, { useContext, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useLabInteraction } from "./lab-interaction";
 import {
+  PT_ICON_SIZE,
+  PT_WINDOW,
+  ptLinkPoints,
+  ptWindowHeight,
   textBaselineOffset,
   uprightTextCenter,
   wideOrInputs,
@@ -128,6 +132,9 @@ export type SchematicElement = (
       text: string;
       color?: string;
       size?: number;
+      /** Which end of the text sits at `x`. The middle by default. */
+      anchor?: "start" | "middle" | "end";
+      weight?: number;
     }
   // Transistors
   | {
@@ -369,15 +376,125 @@ export type SchematicElement = (
       split?: boolean;
       highlight?: boolean;
     }
+  /** A device icon of a Packet Tracer logical view. `x` and `y` are the centre. */
+  | {
+      type: "pt-device";
+      id: string;
+      x: number;
+      y: number;
+      kind: PtIcon;
+      highlight?: boolean;
+    }
+  /**
+   * A Packet Tracer cable from `a` to `b`, drawn straight in the style of
+   * its kind, with a link light near each end.
+   */
+  | {
+      type: "pt-link";
+      id: string;
+      a: Pt;
+      b: Pt;
+      cable: PtCable;
+      lights?: readonly [PtLight, PtLight];
+      highlight?: boolean;
+    }
+  /**
+   * A PDU envelope that runs along `path` in simulation mode. It moves from
+   * `begin` to `end` seconds of a `cycle` that repeats, and hides otherwise.
+   */
+  | {
+      type: "pt-pdu";
+      id: string;
+      path: Pt[];
+      color: string;
+      begin: number;
+      end: number;
+      cycle: number;
+      /** Lost at the end of its path: a red cross shows where. */
+      drop?: boolean;
+    }
+  /** A filled rectangle drawn on the workspace to mark an area. Top left at `x`, `y`. */
+  | {
+      type: "pt-area";
+      id: string;
+      x: number;
+      y: number;
+      w: number;
+      h: number;
+      color: string;
+    }
+  /**
+   * A Packet Tracer window: the Simulation Panel's event list, a PDU
+   * information table, or a device's CLI tab. Top left at `x`, `y`; its
+   * height comes from `ptWindowHeight`.
+   */
+  | ({
+      type: "pt-window";
+      id: string;
+      x: number;
+      y: number;
+    } & PtWindow)
+  /** The Logical / Physical tab bar across the top of the workspace. */
+  | {
+      type: "pt-bar";
+      id: string;
+      w: number;
+      mode: "realtime" | "simulation";
+    }
 ) & {
   /** Id of the 3D component this symbol stands for, when it can't be inferred. */
   ref?: string;
 };
 
+export type PtIcon =
+  | "pc"
+  | "laptop"
+  | "server"
+  | "switch"
+  | "hub"
+  | "router"
+  | "ap"
+  | "printer"
+  | "cloud"
+  | "terminator"
+  | "tap";
+
+export type PtCable =
+  "straight" | "cross" | "console" | "serial" | "fiber" | "coax" | "wifi";
+
+export type PtRow = {
+  cells: readonly string[];
+  /** Colour of the PDU square drawn in the window's swatch column. */
+  swatch?: string;
+  /** The event being looked at: highlighted, with the eye in the first column. */
+  current?: boolean;
+  /** "lost" is drawn red; "note" is one grey line across the table. */
+  tone?: "lost" | "note";
+};
+
+export type PtWindow = {
+  w: number;
+  title: string;
+  tabs?: readonly string[];
+  tab?: number;
+  heading?: string;
+  columns?: readonly { label: string; w: number }[];
+  rows?: readonly PtRow[];
+  swatchCol?: number;
+  /** Lines of a command line. The last "input" line gets the cursor. */
+  console?: readonly { text: string; tone?: "input" | "output" }[];
+  footer?: string;
+};
+
+/** Link light: green when up, red when down, amber while a port waits. */
+export type PtLight = "up" | "down" | "amber" | "none";
+
 export type SchematicData = {
   elements: SchematicElement[];
   width?: number;
   height?: number;
+  /** A plain white workspace with no dot grid, as in Packet Tracer. */
+  plain?: boolean;
   /** Symbols shown on their own (a legend or pictorial), not a wired circuit. */
   gallery?: boolean;
 };
@@ -1322,21 +1439,25 @@ function Label({
   text,
   color,
   size,
+  anchor = "middle",
+  weight,
 }: {
   x: number;
   y: number;
   text: string;
   color?: string;
   size?: number;
+  anchor?: "start" | "middle" | "end";
+  weight?: number;
 }) {
   return (
     <text
       x={x}
       y={y}
-      textAnchor="middle"
+      textAnchor={anchor}
       fontSize={size ?? 9}
       fill={color ?? PIN_COLOR}
-      fontWeight={size && size > 11 ? 650 : 500}
+      fontWeight={weight ?? (size && size > 11 ? 650 : 500)}
     >
       {text}
     </text>
@@ -2326,6 +2447,953 @@ function XnorGate({
   );
 }
 
+/* ── Packet Tracer logical view ────────────────────────────────── */
+const PT_SKY = "#8cc8ee";
+const PT_BLUE = "#2f86c5";
+const PT_NAVY = "#1c5d91";
+const PT_EDGE = "#164a73";
+const PT_CASE = "#e3e7ec";
+const PT_CASE_DARK = "#b7c0ca";
+const PT_INK = "#4b5563";
+const PT_SCREEN = "#3f97db";
+const PT_GLARE = "#b4dcf6";
+
+const ptFace = {
+  stroke: PT_EDGE,
+  strokeWidth: 0.8,
+  strokeLinejoin: "round" as const,
+};
+const ptCase = {
+  stroke: PT_INK,
+  strokeWidth: 0.9,
+  strokeLinejoin: "round" as const,
+};
+
+/** A small white arrow on the top of a switch or router. */
+function PtArrow({ from, to }: { from: Pt; to: Pt }) {
+  const len = Math.hypot(to.x - from.x, to.y - from.y) || 1;
+  const ux = (to.x - from.x) / len;
+  const uy = (to.y - from.y) / len;
+  const bx = to.x - ux * 3;
+  const by = to.y - uy * 3;
+  return (
+    <g>
+      <line
+        x1={from.x}
+        y1={from.y}
+        x2={bx}
+        y2={by}
+        stroke="#ffffff"
+        strokeWidth={1.2}
+        strokeLinecap="round"
+      />
+      <polygon
+        points={`${to.x},${to.y} ${bx - uy * 1.9},${by + ux * 1.9} ${bx + uy * 1.9},${by - ux * 1.9}`}
+        fill="#ffffff"
+      />
+    </g>
+  );
+}
+
+/** Flat box seen from above and in front: a switch, a hub or an access point. */
+function PtSlab({
+  top,
+  front,
+  side,
+  y0,
+  y1,
+  y2,
+  x0,
+  x1,
+  skew,
+}: {
+  top: string;
+  front: string;
+  side: string;
+  y0: number;
+  y1: number;
+  y2: number;
+  x0: number;
+  x1: number;
+  skew: number;
+}) {
+  return (
+    <g>
+      <polygon
+        points={`${x0 + skew},${y0} ${x1 + skew},${y0} ${x1},${y1} ${x0},${y1}`}
+        fill={top}
+        {...ptFace}
+      />
+      <polygon
+        points={`${x0},${y1} ${x1},${y1} ${x1},${y2} ${x0},${y2}`}
+        fill={front}
+        {...ptFace}
+      />
+      <polygon
+        points={`${x1},${y1} ${x1 + skew},${y0} ${x1 + skew},${y2 - (y1 - y0)} ${x1},${y2}`}
+        fill={side}
+        {...ptFace}
+      />
+    </g>
+  );
+}
+
+function PtIconShape({ kind }: { kind: PtIcon }) {
+  switch (kind) {
+    case "pc":
+      return (
+        <g>
+          <rect
+            x={-14}
+            y={-14}
+            width={28}
+            height={20}
+            rx={2}
+            fill={PT_CASE}
+            {...ptCase}
+          />
+          <rect
+            x={-11}
+            y={-11.5}
+            width={22}
+            height={14.5}
+            rx={1}
+            fill={PT_SCREEN}
+          />
+          <polygon
+            points="-11,-11.5 3,-11.5 -11,0"
+            fill={PT_GLARE}
+            opacity={0.55}
+          />
+          <rect x={-2.5} y={6} width={5} height={4} fill="#9aa3ad" />
+          <rect
+            x={-9}
+            y={9.5}
+            width={18}
+            height={3.5}
+            rx={1.5}
+            fill="#cfd5dc"
+            {...ptCase}
+          />
+        </g>
+      );
+    case "laptop":
+      return (
+        <g>
+          <rect
+            x={-12}
+            y={-12}
+            width={24}
+            height={16}
+            rx={1.5}
+            fill={PT_CASE}
+            {...ptCase}
+          />
+          <rect
+            x={-10}
+            y={-10}
+            width={20}
+            height={12}
+            rx={0.8}
+            fill={PT_SCREEN}
+          />
+          <polygon
+            points="-10,-10 2,-10 -10,-1"
+            fill={PT_GLARE}
+            opacity={0.55}
+          />
+          <polygon
+            points="-13,4 13,4 17,11 -17,11"
+            fill="#cfd5dc"
+            {...ptCase}
+          />
+          <line
+            x1={-9}
+            y1={7.5}
+            x2={9}
+            y2={7.5}
+            stroke="#8a939e"
+            strokeWidth={1.4}
+          />
+        </g>
+      );
+    case "server":
+      return (
+        <g>
+          <polygon
+            points="-9,-15.5 -6,-18 12,-18 9,-15.5"
+            fill="#eef1f4"
+            {...ptCase}
+          />
+          <polygon
+            points="9,-15.5 12,-18 12,14.5 9,17"
+            fill={PT_CASE_DARK}
+            {...ptCase}
+          />
+          <rect
+            x={-9}
+            y={-15.5}
+            width={18}
+            height={32.5}
+            rx={1}
+            fill={PT_CASE}
+            {...ptCase}
+          />
+          <rect
+            x={-6}
+            y={-12.5}
+            width={12}
+            height={3}
+            rx={0.6}
+            fill="#6b7a8c"
+          />
+          <rect x={-6} y={-8} width={12} height={3} rx={0.6} fill="#6b7a8c" />
+          {[2, 4.5, 7, 9.5].map((y) => (
+            <line
+              key={y}
+              x1={-6}
+              y1={y}
+              x2={6}
+              y2={y}
+              stroke="#9aa3ad"
+              strokeWidth={0.9}
+            />
+          ))}
+          <circle cx={-4.5} cy={13} r={1.3} fill="#22c55e" />
+        </g>
+      );
+    case "switch":
+      return (
+        <g>
+          <PtSlab
+            top={PT_SKY}
+            front={PT_BLUE}
+            side={PT_NAVY}
+            x0={-20}
+            x1={15}
+            y0={-9}
+            y1={-2}
+            y2={8}
+            skew={5}
+          />
+          <PtArrow from={{ x: -9, y: -6.9 }} to={{ x: 1, y: -6.9 }} />
+          <PtArrow from={{ x: 4, y: -6.9 }} to={{ x: 14, y: -6.9 }} />
+          <PtArrow from={{ x: 9, y: -4 }} to={{ x: -1, y: -4 }} />
+          <PtArrow from={{ x: -4, y: -4 }} to={{ x: -14, y: -4 }} />
+        </g>
+      );
+    case "hub":
+      return (
+        <g>
+          <PtSlab
+            top="#b9d4e8"
+            front="#5b88a8"
+            side="#3e6680"
+            x0={-20}
+            x1={15}
+            y0={-9}
+            y1={-2}
+            y2={8}
+            skew={5}
+          />
+          <PtArrow from={{ x: 2, y: -5.5 }} to={{ x: 14, y: -5.5 }} />
+          <PtArrow from={{ x: -2, y: -5.5 }} to={{ x: -14, y: -5.5 }} />
+        </g>
+      );
+    case "router":
+      return (
+        <g>
+          <path
+            d="M-18,-4 L-18,6 A18,6 0 0 0 18,6 L18,-4 Z"
+            fill={PT_BLUE}
+            {...ptFace}
+          />
+          <ellipse cx={0} cy={-4} rx={18} ry={6} fill={PT_SKY} {...ptFace} />
+          <PtArrow from={{ x: 2, y: -5.3 }} to={{ x: 12, y: -8.4 }} />
+          <PtArrow from={{ x: -2, y: -2.7 }} to={{ x: -12, y: 0.4 }} />
+          <PtArrow from={{ x: -13, y: -8.4 }} to={{ x: -3.5, y: -5.4 }} />
+          <PtArrow from={{ x: 13, y: 0.4 }} to={{ x: 3.5, y: -2.6 }} />
+        </g>
+      );
+    case "ap":
+      return (
+        <g>
+          {[3.5, 7, 10.5].map((r) => (
+            <path
+              key={r}
+              d={`M${-1 - r},-1 A${r},${r} 0 0 1 ${-1 + r},-1`}
+              fill="none"
+              stroke={PT_BLUE}
+              strokeWidth={1.4}
+              strokeLinecap="round"
+            />
+          ))}
+          <PtSlab
+            top={PT_SKY}
+            front={PT_BLUE}
+            side={PT_NAVY}
+            x0={-16}
+            x1={11}
+            y0={1}
+            y1={5}
+            y2={10}
+            skew={4}
+          />
+        </g>
+      );
+    case "printer":
+      return (
+        <g>
+          <polygon
+            points="-8,-13 8,-13 10,-5 -10,-5"
+            fill="#ffffff"
+            {...ptCase}
+          />
+          <rect
+            x={-15}
+            y={-5}
+            width={30}
+            height={12}
+            rx={2}
+            fill={PT_CASE}
+            {...ptCase}
+          />
+          <rect x={6} y={-2.5} width={6} height={3} rx={0.6} fill={PT_SCREEN} />
+          <rect x={-9} y={3} width={18} height={2} fill="#6b7a8c" />
+          <rect x={-8} y={5} width={16} height={7} fill="#ffffff" {...ptCase} />
+        </g>
+      );
+    case "cloud":
+      return (
+        <path
+          d="M-17,12 A7,7 0 0 1 -19,-1 A9,9 0 0 1 -3,-11 A10,10 0 0 1 15,-7 A9,9 0 0 1 18,12 Z"
+          fill="#f3f4f6"
+          stroke="#6b7280"
+          strokeWidth={1.2}
+          strokeLinejoin="round"
+        />
+      );
+    case "terminator":
+      return (
+        <rect x={-3.5} y={-7} width={7} height={14} rx={1.5} fill="#374151" />
+      );
+    case "tap":
+      return <circle cx={0} cy={0} r={3.5} fill="#1f2937" />;
+  }
+}
+
+function PtDevice({
+  x,
+  y,
+  kind,
+  highlight,
+}: {
+  x: number;
+  y: number;
+  kind: PtIcon;
+  highlight?: boolean;
+}) {
+  const [hw, hh] = PT_ICON_SIZE[kind];
+  return (
+    <g transform={`translate(${x},${y})`}>
+      {highlight && (
+        <rect
+          x={-hw - 5}
+          y={-hh - 5}
+          width={hw * 2 + 10}
+          height={hh * 2 + 10}
+          rx={4}
+          fill="rgba(37,99,235,0.08)"
+          stroke={WIRE_HIGHLIGHT}
+          strokeWidth={1}
+          strokeDasharray="3 2"
+        />
+      )}
+      <PtIconShape kind={kind} />
+    </g>
+  );
+}
+
+const PT_CABLE: Record<
+  PtCable,
+  { color: string; width: number; dash?: string }
+> = {
+  straight: { color: "#1f1f1f", width: 1.6 },
+  cross: { color: "#1f1f1f", width: 1.6, dash: "5 3" },
+  console: { color: "#4fb3e8", width: 1.8 },
+  serial: { color: "#d62828", width: 1.8 },
+  fiber: { color: "#f08a24", width: 1.8 },
+  coax: { color: "#1f8fb4", width: 2.2 },
+  wifi: { color: "#8a94a3", width: 1.2, dash: "2 3" },
+};
+
+const PT_LIGHT: Record<Exclude<PtLight, "none">, [string, string]> = {
+  up: ["#22c55e", "#15803d"],
+  down: ["#ef4444", "#991b1b"],
+  amber: ["#f59e0b", "#b45309"],
+};
+
+function PtLink({
+  a,
+  b,
+  cable,
+  lights = ["up", "up"],
+  highlight,
+}: {
+  a: Pt;
+  b: Pt;
+  cable: PtCable;
+  lights?: readonly [PtLight, PtLight];
+  highlight?: boolean;
+}) {
+  const draw = useContext(SchematicMotion);
+  const style = PT_CABLE[cable];
+  const pts = ptLinkPoints(a, b, cable);
+  const d = pts.map((p, i) => `${i ? "L" : "M"}${p.x},${p.y}`).join(" ");
+  const len = Math.hypot(b.x - a.x, b.y - a.y) || 1;
+  const ux = (b.x - a.x) / len;
+  const uy = (b.y - a.y) / len;
+  const inset = Math.min(12, len * 0.3);
+  const light = (end: Pt, toward: 1 | -1, state: PtLight) => {
+    if (state === "none") return null;
+    // Toward the device: the tip points at the end it belongs to.
+    const dx = -ux * toward;
+    const dy = -uy * toward;
+    const cx = end.x - dx * inset;
+    const cy = end.y - dy * inset;
+    const [fill, edge] = PT_LIGHT[state];
+    return (
+      <polygon
+        points={`${cx + dx * 3.4},${cy + dy * 3.4} ${cx - dx * 2.4 - dy * 3.2},${cy - dy * 2.4 + dx * 3.2} ${cx - dx * 2.4 + dy * 3.2},${cy - dy * 2.4 - dx * 3.2}`}
+        fill={fill}
+        stroke={edge}
+        strokeWidth={0.6}
+        strokeLinejoin="round"
+      />
+    );
+  };
+  return (
+    <g>
+      {highlight && (
+        <path
+          d={d}
+          stroke="#60a5fa"
+          strokeOpacity={0.45}
+          strokeWidth={6.5}
+          fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      )}
+      <path
+        d={d}
+        stroke={style.color}
+        strokeWidth={style.width}
+        fill="none"
+        strokeLinejoin="round"
+        pathLength={draw && !style.dash ? 1 : undefined}
+        style={
+          style.dash
+            ? { strokeDasharray: style.dash }
+            : draw
+              ? {
+                  strokeDasharray: 1,
+                  animation: "schematic-draw 520ms ease both",
+                }
+              : undefined
+        }
+      />
+      {light(a, -1, lights[0])}
+      {light(b, 1, lights[1])}
+    </g>
+  );
+}
+
+function PtPdu({
+  path,
+  color,
+  begin,
+  end,
+  cycle,
+  drop,
+}: {
+  path: Pt[];
+  color: string;
+  begin: number;
+  end: number;
+  cycle: number;
+  drop?: boolean;
+}) {
+  if (path.length < 2) return null;
+  const d = path.map((p, i) => `${i ? "L" : "M"}${p.x},${p.y}`).join(" ");
+  const s = Math.max(0, Math.min(1, begin / cycle));
+  const e = Math.max(s, Math.min(1, end / cycle));
+  const motion = [
+    { t: 0, p: 0 },
+    { t: s, p: 0 },
+    { t: e, p: 1 },
+    { t: 1, p: 1 },
+  ].filter((v, i, all) => i === 0 || v.t > all[i - 1].t);
+  const shown =
+    s === 0
+      ? [
+          { t: 0, v: 1 },
+          { t: e, v: 0 },
+        ]
+      : [
+          { t: 0, v: 0 },
+          { t: s, v: 1 },
+          { t: e, v: 0 },
+        ];
+  const vis = shown.filter((v) => v.t < 1);
+  const last = path[path.length - 1];
+  const prev = path[path.length - 2];
+  const len = Math.hypot(last.x - prev.x, last.y - prev.y) || 1;
+  // Out on the cable, clear of the icon it was lost at.
+  const back = Math.min(32, len * 0.45);
+  const cross = {
+    x: last.x - ((last.x - prev.x) / len) * back,
+    y: last.y - ((last.y - prev.y) / len) * back,
+  };
+  const dur = `${cycle}s`;
+  return (
+    <g>
+      <g opacity={vis.length > 1 ? 0 : 1}>
+        {vis.length > 1 && (
+          <animate
+            attributeName="opacity"
+            values={vis.map((v) => v.v).join(";")}
+            keyTimes={vis.map((v) => +v.t.toFixed(4)).join(";")}
+            calcMode="discrete"
+            dur={dur}
+            repeatCount="indefinite"
+          />
+        )}
+        <animateMotion
+          path={d}
+          keyPoints={motion.map((v) => v.p).join(";")}
+          keyTimes={motion.map((v) => +v.t.toFixed(4)).join(";")}
+          calcMode="linear"
+          dur={dur}
+          repeatCount="indefinite"
+        />
+        <rect
+          x={-6.5}
+          y={-4.5}
+          width={13}
+          height={9}
+          rx={1}
+          fill={color}
+          stroke="rgba(0,0,0,0.45)"
+          strokeWidth={0.7}
+        />
+        <polyline
+          points="-6.5,-4.5 0,0.8 6.5,-4.5"
+          fill="none"
+          stroke="#ffffff"
+          strokeWidth={0.9}
+        />
+      </g>
+      {drop && (
+        <g transform={`translate(${cross.x},${cross.y})`}>
+          <circle r={5.5} fill="#ffffff" stroke="#dc2626" strokeWidth={1.2} />
+          <path
+            d="M-2.6,-2.6 L2.6,2.6 M2.6,-2.6 L-2.6,2.6"
+            stroke="#dc2626"
+            strokeWidth={1.6}
+            strokeLinecap="round"
+          />
+        </g>
+      )}
+    </g>
+  );
+}
+
+/** An eye, for the event the Simulation Panel is showing. */
+function PtEye({ x, y }: { x: number; y: number }) {
+  return (
+    <g transform={`translate(${x},${y})`}>
+      <path
+        d="M-5.5,0 Q0,-5 5.5,0 Q0,5 -5.5,0 Z"
+        fill="#ffffff"
+        stroke="#1f2937"
+        strokeWidth={0.9}
+      />
+      <circle r={1.9} fill="#1f2937" />
+    </g>
+  );
+}
+
+const PT_MONO = "ui-monospace, Consolas, 'Courier New', monospace";
+
+function PtWindowShape(el: PtWindow & { x: number; y: number }) {
+  const { x, y, w } = el;
+  const h = ptWindowHeight(el);
+  const L = PT_WINDOW;
+  let cy = y + L.title;
+  const parts: React.ReactNode[] = [];
+  if (el.tabs?.length) {
+    let tx = x + 8;
+    el.tabs.forEach((t, i) => {
+      const tw = t.length * 5.2 + 16;
+      const on = i === (el.tab ?? 0);
+      parts.push(
+        <g key={`tab-${i}`}>
+          <rect
+            x={tx}
+            y={cy + 5}
+            width={tw}
+            height={L.tabs - 5}
+            fill={on ? "#ffffff" : "#dde3ea"}
+            stroke="#9aa7b5"
+            strokeWidth={0.8}
+          />
+          <text
+            x={tx + tw / 2}
+            y={cy + 16}
+            textAnchor="middle"
+            fontSize={8.5}
+            fontWeight={on ? 700 : 500}
+            fill={on ? "#111827" : "#4b5563"}
+          >
+            {t}
+          </text>
+        </g>,
+      );
+      tx += tw + 2;
+    });
+    cy += L.tabs;
+  }
+  if (el.heading) {
+    parts.push(
+      <text
+        key="heading"
+        x={el.console ? x + w / 2 : x + 8}
+        y={cy + 14}
+        textAnchor={el.console ? "middle" : "start"}
+        fontSize={10}
+        fontWeight={700}
+        fill="#1f2937"
+      >
+        {el.heading}
+      </text>,
+    );
+    cy += L.heading;
+  }
+  if (el.columns?.length) {
+    const cols = el.columns;
+    const rows = el.rows ?? [];
+    const x0 = x + 6;
+    const xs = cols.reduce<number[]>(
+      (acc, c) => [...acc, acc[acc.length - 1] + c.w],
+      [x0],
+    );
+    const tw = xs[xs.length - 1] - x0;
+    const top = cy;
+    parts.push(
+      <g key="thead">
+        <rect
+          x={x0}
+          y={cy}
+          width={tw}
+          height={L.row}
+          fill="#d9e1ea"
+          stroke="#9aa7b5"
+          strokeWidth={0.7}
+        />
+        {cols.map((c, i) => (
+          <text
+            key={i}
+            x={xs[i] + 4}
+            y={cy + 11.5}
+            fontSize={8.5}
+            fontWeight={700}
+            fill="#374151"
+          >
+            {c.label}
+          </text>
+        ))}
+      </g>,
+    );
+    cy += L.row;
+    rows.forEach((r, ri) => {
+      const ry = cy + ri * L.row;
+      const ink = r.tone === "lost" ? "#dc2626" : "#1f2937";
+      parts.push(
+        <g key={`row-${ri}`}>
+          <rect
+            x={x0}
+            y={ry}
+            width={tw}
+            height={L.row}
+            fill={r.current ? "#cfe3fb" : ri % 2 ? "#ffffff" : "#f5f7fa"}
+            stroke={r.current ? "#5b9be0" : "#dfe5ec"}
+            strokeWidth={r.current ? 1 : 0.6}
+          />
+          {r.tone === "note" ? (
+            <text
+              x={x0 + tw / 2}
+              y={ry + 11.5}
+              textAnchor="middle"
+              fontSize={8.5}
+              fontStyle="italic"
+              fill="#6b7280"
+            >
+              {r.cells[0]}
+            </text>
+          ) : (
+            r.cells.map((c, ci) => {
+              const sw = ci === el.swatchCol && r.swatch;
+              return (
+                <g key={ci}>
+                  {ci === 0 && r.current && (
+                    <PtEye x={xs[0] + 10} y={ry + L.row / 2} />
+                  )}
+                  {sw && (
+                    <rect
+                      x={xs[ci] + 4}
+                      y={ry + 3.5}
+                      width={9}
+                      height={9}
+                      rx={1.2}
+                      fill={r.swatch}
+                      stroke="rgba(0,0,0,0.35)"
+                      strokeWidth={0.6}
+                    />
+                  )}
+                  <text
+                    x={xs[ci] + (sw ? 17 : 4)}
+                    y={ry + 11.5}
+                    fontSize={8.5}
+                    fontWeight={r.current ? 600 : 400}
+                    fill={ink}
+                  >
+                    {c}
+                  </text>
+                </g>
+              );
+            })
+          )}
+        </g>,
+      );
+    });
+    cy += rows.length * L.row;
+    for (let i = 1; i < cols.length; i++)
+      parts.push(
+        <line
+          key={`col-${i}`}
+          x1={xs[i]}
+          y1={top}
+          x2={xs[i]}
+          y2={cy}
+          stroke="#c3ccd6"
+          strokeWidth={0.6}
+        />,
+      );
+    cy += 4;
+  }
+  if (el.console) {
+    const lines = el.console;
+    const boxH = lines.length * L.line + 12;
+    const last = lines.length - 1;
+    const cursor = last >= 0 && lines[last].tone !== "output";
+    parts.push(
+      <g key="console">
+        <rect
+          x={x + 6}
+          y={cy}
+          width={w - 12}
+          height={boxH}
+          fill="#ffffff"
+          stroke="#9aa7b5"
+          strokeWidth={0.8}
+        />
+        {lines.map((l, i) => (
+          <text
+            key={i}
+            x={x + 12}
+            y={cy + 15 + i * L.line}
+            fontSize={8.5}
+            fontFamily={PT_MONO}
+            fontWeight={l.tone === "output" ? 400 : 600}
+            fill={l.tone === "output" ? "#4b5563" : "#111827"}
+          >
+            {l.text}
+          </text>
+        ))}
+        {cursor && (
+          <rect
+            x={x + 12 + lines[last].text.length * 5.1 + 1}
+            y={cy + 7 + last * L.line}
+            width={4.5}
+            height={9.5}
+            fill="#111827"
+          >
+            <animate
+              attributeName="opacity"
+              values="1;0"
+              dur="1s"
+              calcMode="discrete"
+              repeatCount="indefinite"
+            />
+          </rect>
+        )}
+      </g>,
+    );
+  }
+  return (
+    <g>
+      <defs>
+        <linearGradient id="pt-window-fill" x1={0} y1={0} x2={0} y2={1}>
+          <stop offset="0" stopColor="#2d6aa6" />
+          <stop offset="1" stopColor="#123f6e" />
+        </linearGradient>
+      </defs>
+      <rect
+        x={x}
+        y={y}
+        width={w}
+        height={h}
+        rx={4}
+        fill="#eef1f5"
+        stroke="#7b8a9c"
+        strokeWidth={1}
+      />
+      <path
+        d={`M${x},${y + L.title} L${x},${y + 4} Q${x},${y} ${x + 4},${y} L${x + w - 4},${y} Q${x + w},${y} ${x + w},${y + 4} L${x + w},${y + L.title} Z`}
+        fill="url(#pt-window-fill)"
+      />
+      <text
+        x={x + 8}
+        y={y + 13.5}
+        fontSize={9.5}
+        fontWeight={700}
+        fill="#ffffff"
+      >
+        {el.title}
+      </text>
+      <g stroke="#ffffff" strokeWidth={1} fill="none">
+        <line x1={x + w - 44} y1={y + 13} x2={x + w - 37} y2={y + 13} />
+        <rect x={x + w - 30} y={y + 6.5} width={7} height={7} />
+        <path
+          d={`M${x + w - 16},${y + 6.5} l7,7 M${x + w - 9},${y + 6.5} l-7,7`}
+        />
+      </g>
+      {parts}
+      {el.footer && (
+        <text x={x + 8} y={y + h - 9} fontSize={8.5} fill="#4b5563">
+          {el.footer}
+        </text>
+      )}
+    </g>
+  );
+}
+
+/** The workspace bar: Logical and Physical tabs, and the time mode. */
+function PtBar({ w, mode }: { w: number; mode: "realtime" | "simulation" }) {
+  const sim = mode === "simulation";
+  return (
+    <g>
+      <defs>
+        <linearGradient id="pt-bar-fill" x1={0} y1={0} x2={0} y2={1}>
+          <stop offset="0" stopColor="#2d6aa6" />
+          <stop offset="1" stopColor="#123f6e" />
+        </linearGradient>
+      </defs>
+      <rect
+        x={-10}
+        y={-10}
+        width={w + 20}
+        height={24}
+        fill="url(#pt-bar-fill)"
+      />
+      <rect
+        x={-5}
+        y={-7}
+        width={60}
+        height={18}
+        rx={9}
+        fill="#3d86d1"
+        stroke="#d6e8fa"
+        strokeWidth={0.9}
+      />
+      {[
+        [3, -1],
+        [8, 4],
+        [3, 4],
+      ].map(([cx, cy]) => (
+        <circle key={`${cx}${cy}`} cx={cx} cy={cy} r={1.4} fill="#ffffff" />
+      ))}
+      <path
+        d="M3,-1 L8,4 L3,4"
+        fill="none"
+        stroke="#ffffff"
+        strokeWidth={0.7}
+      />
+      <text x={13} y={5.5} fontSize={9.5} fontWeight={700} fill="#ffffff">
+        Logical
+      </text>
+      <rect
+        x={60}
+        y={-7}
+        width={62}
+        height={18}
+        rx={9}
+        fill="none"
+        stroke="#8fb2d6"
+        strokeWidth={0.9}
+      />
+      <rect
+        x={67}
+        y={-2.5}
+        width={8}
+        height={9}
+        rx={1}
+        fill="none"
+        stroke="#cfe0f2"
+        strokeWidth={0.8}
+      />
+      <line
+        x1={69}
+        y1={0.5}
+        x2={73}
+        y2={0.5}
+        stroke="#cfe0f2"
+        strokeWidth={0.7}
+      />
+      <line x1={69} y1={3} x2={73} y2={3} stroke="#cfe0f2" strokeWidth={0.7} />
+      <text x={79} y={5.5} fontSize={9.5} fontWeight={600} fill="#cfe0f2">
+        Physical
+      </text>
+      <g transform={`translate(${w - (sim ? 58 : 50)},2)`}>
+        <circle
+          r={5}
+          fill="none"
+          stroke={sim ? "#fcd34d" : "#ffffff"}
+          strokeWidth={1.1}
+        />
+        {sim && <rect x={-1.2} y={-8} width={2.4} height={2} fill="#fcd34d" />}
+        <path
+          d="M0,-3 L0,0 L2.4,1.4"
+          fill="none"
+          stroke={sim ? "#fcd34d" : "#ffffff"}
+          strokeWidth={1}
+          strokeLinecap="round"
+        />
+        <text
+          x={8}
+          y={3.4}
+          fontSize={9}
+          fontWeight={600}
+          fill={sim ? "#fde68a" : "#ffffff"}
+        >
+          {sim ? "Simulation" : "Realtime"}
+        </text>
+      </g>
+    </g>
+  );
+}
+
 /* ── Dot-grid pattern (infinite via SVG <pattern>) ─────────────── */
 const GRID_PAT_ID = "schematic-dot-grid";
 
@@ -2431,7 +3499,10 @@ export function CircuitSchematic({
         height="100%"
         overflow={cover ? "hidden" : "visible"}
         preserveAspectRatio={cover ? "xMidYMid slice" : undefined}
-        style={{ background: CANVAS_BG, display: "block" }}
+        style={{
+          background: schematic.plain ? "#ffffff" : CANVAS_BG,
+          display: "block",
+        }}
       >
         <defs>
           <pattern
@@ -2452,7 +3523,7 @@ export function CircuitSchematic({
           y={-DOT_PAD}
           width={w + DOT_PAD * 2}
           height={h + DOT_PAD * 2}
-          fill={`url(#${GRID_PAT_ID})`}
+          fill={schematic.plain ? "#ffffff" : `url(#${GRID_PAT_ID})`}
         />
 
         {schematic.elements.map((el) => {
@@ -2670,6 +3741,8 @@ function renderSymbol(el: SchematicElement): React.ReactNode {
           text={el.text}
           color={el.color}
           size={el.size}
+          anchor={el.anchor}
+          weight={el.weight}
         />
       );
     // Transistors
@@ -2836,6 +3909,51 @@ function renderSymbol(el: SchematicElement): React.ReactNode {
           fill={el.fill}
         />
       );
+    // Packet Tracer logical view
+    case "pt-device":
+      return (
+        <PtDevice x={el.x} y={el.y} kind={el.kind} highlight={el.highlight} />
+      );
+    case "pt-link":
+      return (
+        <PtLink
+          a={el.a}
+          b={el.b}
+          cable={el.cable}
+          lights={el.lights}
+          highlight={el.highlight}
+        />
+      );
+    case "pt-pdu":
+      return (
+        <PtPdu
+          path={el.path}
+          color={el.color}
+          begin={el.begin}
+          end={el.end}
+          cycle={el.cycle}
+          drop={el.drop}
+        />
+      );
+    case "pt-area":
+      return (
+        <rect
+          x={el.x}
+          y={el.y}
+          width={el.w}
+          height={el.h}
+          rx={3}
+          fill={el.color}
+          fillOpacity={0.09}
+          stroke={el.color}
+          strokeOpacity={0.45}
+          strokeWidth={1}
+        />
+      );
+    case "pt-bar":
+      return <PtBar w={el.w} mode={el.mode} />;
+    case "pt-window":
+      return <PtWindowShape {...el} />;
     // Logic gates
     case "and-gate":
       return (
