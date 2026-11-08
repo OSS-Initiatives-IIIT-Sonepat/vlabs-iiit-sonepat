@@ -113,12 +113,85 @@ function hosts(hot?: OsiLayerKey): SchematicElement[] {
   return els;
 }
 
-/** Device A and Device B, seven layers each, with the interface between them. */
-export function osiHosts(hot?: OsiLayerKey): SchematicData {
+function nodes(hot?: OsiLayerKey): SchematicElement[] {
+  const els: SchematicElement[] = [];
+  for (const col of COLS) {
+    if (col.host) continue;
+    els.push({
+      type: "label",
+      id: `title-${col.id}`,
+      x: col.x,
+      y: 36,
+      text: col.title,
+    });
+    els.push({
+      type: "label",
+      id: `mark-${col.id}`,
+      x: col.x,
+      y: 58,
+      text: "\u00d7",
+    });
+    for (const row of ROWS) {
+      if (!row.hop) continue;
+      els.push(
+        box(`${col.id}-${row.key}`, col.x, row.y, row.name, hot === row.key),
+      );
+    }
+  }
+  return els;
+}
+
+/** Double arrow from the right side of one column to the left side of the next. */
+function hop(
+  id: string,
+  x1: number,
+  x2: number,
+  y: number,
+  name: string,
+): SchematicElement[] {
+  const mid = (x1 + x2) / 2;
+  return [
+    {
+      type: "arrow",
+      id,
+      points: [
+        { x: x1 + BW / 2, y },
+        { x: x2 - BW / 2, y },
+      ],
+      double: true,
+      size: 8,
+    },
+    { type: "label", id: `${id}-name`, x: mid, y: y - 16, text: name },
+  ];
+}
+
+function hops(): SchematicElement[] {
+  const els: SchematicElement[] = [];
+  for (let i = 0; i < COLS.length - 1; i++) {
+    const left = COLS[i];
+    const right = COLS[i + 1];
+    for (const row of ROWS) {
+      if (!row.hop) continue;
+      els.push(
+        ...hop(
+          `hop-${left.id}-${right.id}-${row.key}`,
+          left.x,
+          right.x,
+          row.y,
+          row.hop,
+        ),
+      );
+    }
+  }
+  return els;
+}
+
+/** Hosts, the two intermediate nodes, and the 3rd / 2nd / 1st hops. */
+export function osiLinked(hot?: OsiLayerKey): SchematicData {
   return {
     width: WIDTH,
     height: HEIGHT,
     gallery: true,
-    elements: hosts(hot),
+    elements: [...hosts(hot), ...nodes(hot), ...hops()],
   };
 }
