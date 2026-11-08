@@ -304,6 +304,8 @@ export type SchematicElement = (
       h: number;
       label?: string;
       highlight?: boolean;
+      fill?: string;
+      ink?: string;
     }
   /** Diamond. `x` and `y` are the centre. Pins sit on the four points. */
   | {
@@ -2773,6 +2775,8 @@ function renderSymbol(el: SchematicElement): React.ReactNode {
           h={el.h}
           label={el.label}
           highlight={el.highlight}
+          fill={el.fill}
+          ink={el.ink}
           rounded
         />
       );

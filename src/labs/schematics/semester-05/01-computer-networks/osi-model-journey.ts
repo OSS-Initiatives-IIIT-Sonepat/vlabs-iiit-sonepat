@@ -51,18 +51,30 @@ const IFACES: { y: number; text: string }[] = [
   { y: 477, text: "2-1 interface" },
 ];
 
-const COLS: { id: string; title: string; x: number; host: boolean }[] = [
-  { id: "a", title: "Device A", x: 118, host: true },
-  { id: "n1", title: "Intermediate node", x: 372, host: false },
-  { id: "n2", title: "Intermediate node", x: 568, host: false },
-  { id: "b", title: "Device B", x: 822, host: true },
+const COLS: { id: string; letter: string; x: number; host: boolean }[] = [
+  { id: "a", letter: "A", x: 118, host: true },
+  { id: "n1", letter: "", x: 372, host: false },
+  { id: "n2", letter: "", x: 568, host: false },
+  { id: "b", letter: "B", x: 822, host: true },
 ];
+
+/** Same teal stack as the textbook figure, darker at the top. */
+const TINT: Record<OsiLayerKey, string> = {
+  application: "#2f8fa3",
+  presentation: "#45a3b5",
+  session: "#5bb4c4",
+  transport: "#74c3d0",
+  network: "#8fd0db",
+  "data-link": "#a6dbe4",
+  physical: "#bfe6ed",
+};
 
 function box(
   id: string,
   x: number,
   y: number,
   name: string,
+  key: OsiLayerKey,
   hot: boolean,
 ): SchematicElement {
   return {
@@ -73,24 +85,61 @@ function box(
     w: BW,
     h: BH,
     label: name,
+    fill: TINT[key],
+    ink: "#10262c",
     highlight: hot,
   };
+}
+
+function computer(id: string, x: number, letter: string): SchematicElement[] {
+  return [
+    { type: "label", id: `${id}-device`, x, y: 16, text: "Device" },
+    { type: "label", id: `${id}-letter`, x, y: 30, text: letter },
+    {
+      type: "block",
+      id: `${id}-screen`,
+      x,
+      y: 52,
+      w: 34,
+      h: 22,
+      fill: "#f4f4f5",
+    },
+    {
+      type: "block",
+      id: `${id}-stand`,
+      x,
+      y: 68,
+      w: 6,
+      h: 8,
+      fill: "#171717",
+    },
+    {
+      type: "block",
+      id: `${id}-base`,
+      x,
+      y: 77,
+      w: 24,
+      h: 4,
+      fill: "#171717",
+    },
+  ];
 }
 
 function hosts(hot?: OsiLayerKey): SchematicElement[] {
   const els: SchematicElement[] = [];
   for (const col of COLS) {
     if (!col.host) continue;
-    els.push({
-      type: "label",
-      id: `title-${col.id}`,
-      x: col.x,
-      y: 36,
-      text: col.title,
-    });
+    els.push(...computer(col.id, col.x, col.letter));
     for (const row of ROWS) {
       els.push(
-        box(`${col.id}-${row.key}`, col.x, row.y, row.name, hot === row.key),
+        box(
+          `${col.id}-${row.key}`,
+          col.x,
+          row.y,
+          row.name,
+          row.key,
+          hot === row.key,
+        ),
       );
       els.push({
         type: "label",
@@ -117,24 +166,32 @@ function nodes(hot?: OsiLayerKey): SchematicElement[] {
   const els: SchematicElement[] = [];
   for (const col of COLS) {
     if (col.host) continue;
-    els.push({
-      type: "label",
-      id: `title-${col.id}`,
-      x: col.x,
-      y: 36,
-      text: col.title,
-    });
-    els.push({
-      type: "label",
-      id: `mark-${col.id}`,
-      x: col.x,
-      y: 58,
-      text: "\u00d7",
-    });
+    els.push(
+      { type: "label", id: `title-${col.id}`, x: col.x, y: 16, text: "Intermediate" },
+      { type: "label", id: `title2-${col.id}`, x: col.x, y: 30, text: "node" },
+      {
+        type: "terminal",
+        id: `mark-${col.id}`,
+        x: col.x,
+        y: 54,
+        w: 26,
+        h: 26,
+        label: "\u00d7",
+        fill: "#1a3348",
+        ink: "#ffffff",
+      },
+    );
     for (const row of ROWS) {
       if (!row.hop) continue;
       els.push(
-        box(`${col.id}-${row.key}`, col.x, row.y, row.name, hot === row.key),
+        box(
+          `${col.id}-${row.key}`,
+          col.x,
+          row.y,
+          row.name,
+          row.key,
+          hot === row.key,
+        ),
       );
     }
   }

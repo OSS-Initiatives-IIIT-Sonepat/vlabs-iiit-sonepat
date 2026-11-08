@@ -1,5 +1,4 @@
 import { type TheorySection } from "@/labs/lab-content.types";
-import { theoryDiagram as circuitDiagram } from "@/labs/schematics/semester-05/01-computer-networks/osi-model-journey";
 
 export const theory: TheorySection = {
   id: "theory",
@@ -15,7 +14,5 @@ export const theory: TheorySection = {
     "The protocols of the Internet follow the TCP/IP model, which has four layers: link, internet, transport, and application. Its application layer covers OSI layers 5, 6, and 7. In this request, TLS does the work of the presentation and session layers. The OSI model is still the common way to name a job, which is why people say a switch is a layer 2 device.",
     "Every header costs bytes. A short request like the one in this lab carries 60 bytes of HTTP inside 148 bytes on the cable. A large download fills each frame with up to 1500 bytes of IP packet, so the share taken by headers is much smaller.",
     "The bench in the scene has a laptop at 192.168.1.10 on the network 192.168.1.0/24, an Ethernet switch, and a router with one port on each network: 192.168.1.1 on the laptop's side and 203.0.113.1 on the server's side. The web server is 203.0.113.10. Addresses in 192.168.0.0/16 are private. The block 203.0.113.0/24 is reserved for examples and is never used on the real Internet.",
-    "The figure is the same model drawn as two devices and two intermediate nodes. Layers 7 to 4 speak only to the matching layer on the other device: that conversation is the peer-to-peer protocol, drawn dashed. An intermediate node never looks above layer 3. The bottom row, Physical, is the only place the bits actually move, which is why it is labelled physical communication.",
   ],
-  circuitDiagram,
 };
