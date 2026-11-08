@@ -20,13 +20,15 @@ function toExploreExperiment(
   entry: (typeof SEMESTER_SUBJECTS)[number]["experiments"][number],
   defaultCircuitId: string,
 ): ExploreExperiment {
-  const { experiment, tags } = entry;
+  const { experiment, tags, content } = entry;
   const labType = experiment.labType ?? "breadboard";
+  // A network lab has a room of its own to preview and to index.
+  const ownScene = labType === "breadboard" || content.scene === "net";
   return {
     id: experiment.id,
     title: experiment.title,
     description: experiment.description,
-    circuitId: labType === "breadboard" ? experiment.id : defaultCircuitId,
+    circuitId: ownScene ? experiment.id : defaultCircuitId,
     labRoute: `/labs/${experiment.id}`,
     tags,
   };
