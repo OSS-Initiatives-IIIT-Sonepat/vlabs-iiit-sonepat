@@ -18,6 +18,14 @@ const ChipPreview = dynamic(
   { ssr: false },
 );
 
+const NetworkPreview = dynamic(
+  () => import("@/labs/OsiJourneyScene").then((m) => m.OsiJourneyScene),
+  { ssr: false },
+);
+
+/** The bench with the whole path drawn and nothing in flight. */
+const NETWORK_COVER = { device: null, blocks: [], arrived: true } as const;
+
 /** Subject IDs that are fully available — all others show "Coming Soon". */
 const ENABLED_SUBJECTS = new Set([
   "01-analog-electronics",
@@ -32,6 +40,7 @@ const ENABLED_SUBJECTS = new Set([
   "01-8085-assembly-programming",
   "02-peripheral-interfacing",
   "03-microprocessors-and-microcontrollers",
+  "01-computer-networks",
 ]);
 
 type Props = {
@@ -151,6 +160,8 @@ export function SubjectCard({ subject, onClick, showPreview }: Props) {
           <div className="absolute inset-0">
             {subject.circuitId === "8085-pin-labelling" ? (
               <ChipPreview preview focus={[]} />
+            ) : subject.circuitId === "osi-model-journey" ? (
+              <NetworkPreview preview frame={NETWORK_COVER} />
             ) : subject.hasPreview ? (
               <CircuitModel circuitId={subject.circuitId} />
             ) : (

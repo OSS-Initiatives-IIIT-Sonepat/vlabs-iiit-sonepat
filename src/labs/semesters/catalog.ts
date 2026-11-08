@@ -851,6 +851,12 @@ import {
   pinLabelling8085Experiment,
 } from "./semester-04/03-microprocessors-and-microcontrollers/8085-pin-labelling";
 
+import {
+  OsiModelJourneyCircuit,
+  OsiModelJourneyContent,
+  osiModelJourneyExperiment,
+} from "./semester-05/01-computer-networks/osi-model-journey";
+
 export type SemesterExperimentEntry = {
   experiment: ExperimentDefinition;
 
@@ -2312,6 +2318,32 @@ export const SEMESTER_SUBJECTS: readonly SemesterSubjectCatalog[] = [
           "pin diagram",
           "ALE",
           "multiplexed bus",
+        ],
+      ),
+    ],
+  },
+  {
+    semesterId: "semester-5",
+    semesterLabel: "Semester 5",
+    subjectId: "01-computer-networks",
+    subjectLabel: "Computer Networks",
+    subjectDescription:
+      "How data crosses a network: the OSI layers, addressing, switching, and routing.",
+    defaultCircuitId: "osi-model-journey",
+    experiments: [
+      fromBuilt(
+        osiModelJourneyExperiment,
+        OsiModelJourneyCircuit,
+        OsiModelJourneyContent,
+        [
+          "OSI model",
+          "encapsulation",
+          "TCP/IP",
+          "Ethernet",
+          "switch",
+          "router",
+          "packet",
+          "frame",
         ],
       ),
     ],
