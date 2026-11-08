@@ -304,6 +304,8 @@ export type SchematicElement = (
       h: number;
       label?: string;
       highlight?: boolean;
+      fill?: string;
+      ink?: string;
     }
   /** Diamond. `x` and `y` are the centre. Pins sit on the four points. */
   | {
@@ -336,6 +338,8 @@ export type SchematicElement = (
       color?: string;
       size?: number;
       double?: boolean;
+      /** Broken shaft, for a peer protocol rather than a wire. */
+      dashed?: boolean;
     }
   /**
    * Hollow frame: left bar, right bar, and a bar across the bottom.
@@ -995,12 +999,14 @@ function Arrow({
   color,
   size,
   double: both,
+  dashed,
 }: {
   points: Pt[];
   highlight?: boolean;
   color?: string;
   size?: number;
   double?: boolean;
+  dashed?: boolean;
 }) {
   const draw = useContext(SchematicMotion);
   if (points.length < 2) return null;
@@ -1033,15 +1039,17 @@ function Arrow({
         fill="none"
         strokeLinecap="butt"
         strokeLinejoin="miter"
-        pathLength={draw ? 1 : undefined}
+        pathLength={draw && !dashed ? 1 : undefined}
         style={
-          draw
-            ? {
-                ...glide,
-                strokeDasharray: 1,
-                animation: "schematic-draw 520ms ease both",
-              }
-            : glide
+          dashed
+            ? { ...glide, strokeDasharray: "6 4" }
+            : draw
+              ? {
+                  ...glide,
+                  strokeDasharray: 1,
+                  animation: "schematic-draw 520ms ease both",
+                }
+              : glide
         }
       />
       <polygon
@@ -2767,6 +2775,8 @@ function renderSymbol(el: SchematicElement): React.ReactNode {
           h={el.h}
           label={el.label}
           highlight={el.highlight}
+          fill={el.fill}
+          ink={el.ink}
           rounded
         />
       );
@@ -2812,6 +2822,7 @@ function renderSymbol(el: SchematicElement): React.ReactNode {
           color={el.color}
           size={el.size}
           double={el.double}
+          dashed={el.dashed}
         />
       );
     case "panel":

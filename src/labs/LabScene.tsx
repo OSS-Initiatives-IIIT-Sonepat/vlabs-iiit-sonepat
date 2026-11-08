@@ -10,6 +10,7 @@ import {
 import { createPortal } from "react-dom";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { bindCtrlPan } from "./ctrl-pan";
 import { benchPlacement } from "@/components/shared";
 import {
   componentDisplayName,
@@ -1253,6 +1254,7 @@ export function LabSceneCanvas({
 
     // ── Controls — orbit for labs, drag-spin for card previews ────────
     let controls: OrbitControls | null = null;
+    let releaseCtrlPan = () => {};
     const spin = { dragging: false, lx: 0, ly: 0, ry: -0.3, rx: 0.3 };
 
     if (previewMode) {
@@ -1275,6 +1277,7 @@ export function LabSceneCanvas({
         MIDDLE: THREE.MOUSE.DOLLY,
         RIGHT: THREE.MOUSE.PAN,
       };
+      releaseCtrlPan = bindCtrlPan(controls);
       controls.touches = {
         ONE: THREE.TOUCH.ROTATE,
         TWO: THREE.TOUCH.DOLLY_PAN,
@@ -1572,6 +1575,7 @@ export function LabSceneCanvas({
         canvas.removeEventListener("pointermove", onLabPointerMove);
         canvas.removeEventListener("pointerleave", onLabPointerLeave);
         window.removeEventListener("keydown", onKeyDown);
+        releaseCtrlPan();
         controls?.dispose();
       }
       meshMapRef.current.forEach((g) => disposeGroup(g));
@@ -1830,8 +1834,8 @@ export function LabSceneCanvas({
             fontFamily: "var(--font-sans, sans-serif)",
           }}
         >
-          click a component: inspect · left drag: orbit · right drag: pan ·
-          scroll: zoom
+          click a component: inspect · left drag: orbit · hold Shift and drag:
+          slide · scroll: zoom
         </div>
       )}
 
