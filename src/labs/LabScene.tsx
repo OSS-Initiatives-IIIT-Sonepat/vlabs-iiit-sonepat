@@ -1834,7 +1834,7 @@ export function LabSceneCanvas({
             fontFamily: "var(--font-sans, sans-serif)",
           }}
         >
-          click a component: inspect · left drag: orbit · hold Ctrl and drag:
+          click a component: inspect · left drag: orbit · hold Shift and drag:
           slide · scroll: zoom
         </div>
       )}

@@ -1,10 +1,10 @@
 import type { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 /**
- * A plain drag still orbits. Ctrl+drag slides the model.
+ * A plain drag still orbits. Shift+drag slides the model.
  *
- * OrbitControls already pans when Ctrl is held and the left button means
- * rotate. Switching that button to pan while Ctrl is down makes it rotate
+ * OrbitControls pans when Shift is held and the left button means rotate.
+ * Switching that button to pan while the key is down makes it rotate
  * instead, so this only turns panning on.
  */
 export function bindCtrlPan(controls: OrbitControls): () => void {

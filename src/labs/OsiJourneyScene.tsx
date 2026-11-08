@@ -1321,7 +1321,7 @@ export function OsiJourneyScene({ frame, preview = false }: Props) {
             data-osi-hint
             className="pointer-events-none absolute bottom-3 z-[1] m-0 font-sans text-[12px] text-[#525252]"
           >
-            Orange is the path so far. Drag to turn the bench. Hold Ctrl and
+            Orange is the path so far. Drag to turn the bench. Hold Shift and
             drag to slide it.
           </p>
         </>
