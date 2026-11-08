@@ -4,6 +4,8 @@ import { useEffect, useRef, type CSSProperties } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
+import { bindCtrlPan } from "./ctrl-pan";
+
 import {
   ENCRYPTED_DATA_BYTES,
   OSI_HOSTS,
@@ -301,6 +303,7 @@ export function OsiJourneyScene({ frame, preview = false }: Props) {
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 200);
     let controls: OrbitControls | null = null;
+    let releaseCtrlPan = () => {};
     if (!preview) {
       controls = new OrbitControls(camera, canvas);
       controls.enableDamping = true;
@@ -308,7 +311,7 @@ export function OsiJourneyScene({ frame, preview = false }: Props) {
       controls.minDistance = 3;
       controls.maxDistance = 120;
       controls.maxPolarAngle = Math.PI * 0.47;
-      controls.enablePan = false;
+      releaseCtrlPan = bindCtrlPan(controls, canvas);
     }
 
     scene.add(new THREE.AmbientLight(0xffffff, 2.1));
@@ -1156,6 +1159,7 @@ export function OsiJourneyScene({ frame, preview = false }: Props) {
     return () => {
       cancelAnimationFrame(raf);
       observer.disconnect();
+      releaseCtrlPan();
       controls?.removeEventListener("start", stopGlide);
       controls?.dispose();
       const seen = new Set<object>();
@@ -1315,7 +1319,8 @@ export function OsiJourneyScene({ frame, preview = false }: Props) {
             data-osi-hint
             className="pointer-events-none absolute bottom-3 z-[1] m-0 font-sans text-[12px] text-[#525252]"
           >
-            Orange is the path so far. Drag to turn the bench.
+            Orange is the path so far. Drag to turn the bench. Hold Ctrl and
+            drag to slide it.
           </p>
         </>
       )}
