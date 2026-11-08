@@ -2,6 +2,7 @@ import { type StepMarker } from "@/labs/LabScene";
 import { type SchematicSpec } from "@/labs/TheoryScene";
 import { type SchematicData } from "@/labs/CircuitSchematic";
 import { type OsiFrame } from "@/labs/networks/osi";
+import { type NetBench, type NetFrame } from "@/labs/networks/bench";
 
 // ── Lab content types ──────────────────────────────────────────────────────
 // Sections are displayed in the sidebar in order.
@@ -155,6 +156,11 @@ export type ProcedureStep = {
    */
   osi?: OsiFrame;
   /**
+   * Network bench: the devices, cables and traffic this step shows.
+   * Ignored unless the lab's `scene` is "net".
+   */
+  net?: NetFrame;
+  /**
    * Rows revealed so far. Later steps pass a longer table, so the
    * observation card above the schematic grows as the procedure advances.
    */
@@ -182,8 +188,11 @@ export type LabContent = {
   /**
    * Replaces the breadboard (and a diagram lab's full-bleed figure) with a
    * dedicated scene. "8085" is the labelled 40-pin package. "osi" is the
-   * laptop-to-server bench with a seven-floor stack at each end.
+   * laptop-to-server bench with a seven-floor stack at each end. "net" is a
+   * room of network devices, described by `bench`.
    */
-  scene?: "8085" | "osi";
+  scene?: "8085" | "osi" | "net";
+  /** The devices and cables of a "net" scene. */
+  bench?: NetBench;
   sections: LabSection[];
 };
