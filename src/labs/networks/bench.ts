@@ -47,6 +47,8 @@ export type NetDevice = {
   ry?: number;
   /** Lines printed under the name, such as the IP address. */
   addresses?: readonly string[];
+  /** The model the 2D workspace prints, such as "2911". By kind when left out. */
+  model?: string;
   /** Width and depth, for a table. */
   size?: readonly [number, number];
   /** For a cable end: the id of the other end of the same cable. */

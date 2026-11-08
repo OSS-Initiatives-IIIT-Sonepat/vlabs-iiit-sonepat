@@ -1,5 +1,9 @@
 import type {
   Pt,
+  PtIcon,
+  PtLight,
+  PtRow,
+  PtWindow,
   SchematicData,
   SchematicElement,
 } from "@/labs/CircuitSchematic";
@@ -8,93 +12,268 @@ import {
   TESTER_MAP,
   WIRE,
   WIRING,
+  type LinkState,
   type NetBench,
   type NetDevice,
   type NetDeviceKind,
   type NetFrame,
   type WiringStandard,
 } from "@/labs/networks/bench";
+import {
+  PT_ICON_SIZE,
+  ptLinkPoints,
+  ptWindowHeight,
+  type Box,
+} from "@/labs/schematics/geometry";
 
 /*
  * 2D figures for the network labs, drawn in the corner card beside the
- * room. A topology figure is drawn from the same bench and step as the 3D
- * room, so the two always agree.
+ * room. A topology figure is the Logical workspace of Cisco Packet Tracer:
+ * device icons with their model and name, cables drawn straight in the
+ * colour and dash of their kind, link lights at both ends, and PDU
+ * envelopes running along the cables in simulation mode. It is drawn from
+ * the same bench and step as the 3D room, so the two always agree.
  */
 
-const NETWORK_KINDS = new Set<NetDeviceKind>([
-  "pc",
-  "laptop",
-  "server",
-  "switch",
-  "hub",
-  "router",
-  "ap",
-  "printer",
-  "cloud",
-  "terminator",
-  "tap",
-]);
-
-const FILL: Partial<Record<NetDeviceKind, string>> = {
-  switch: "#dbe5ff",
-  hub: "#fdecc0",
-  router: "#d3f0e0",
-  ap: "#e4daf7",
-  cloud: "#f4f4f5",
+const PT_KIND: Partial<Record<NetDeviceKind, PtIcon>> = {
+  pc: "pc",
+  laptop: "laptop",
+  server: "server",
+  switch: "switch",
+  hub: "hub",
+  router: "router",
+  ap: "ap",
+  printer: "printer",
+  cloud: "cloud",
+  terminator: "terminator",
+  tap: "tap",
 };
 
-const BW = 66;
-const BH = 22;
-
-type Placed = { dev: NetDevice; x: number; y: number; w: number; h: number };
-
-function sizeIn2d(dev: NetDevice): { w: number; h: number } {
-  if (dev.kind === "tap") return { w: 10, h: 10 };
-  if (dev.kind === "terminator") return { w: 8, h: 16 };
-  if (dev.kind === "cloud") return { w: 78, h: 26 };
-  // Wide enough for the name at 11 px.
-  return {
-    w: Math.max(BW, Math.round((dev.name ?? "").length * 6.4 + 14)),
-    h: BH,
-  };
-}
-
-/** Leaves box `b` from its centre toward `to`, on an edge. */
-function edgePoint(b: Placed, to: Pt, horizontal: boolean): Pt {
-  if (horizontal) {
-    const s = to.x >= b.x ? 1 : -1;
-    return { x: b.x + s * (b.w / 2), y: b.y };
-  }
-  const s = to.y >= b.y ? 1 : -1;
-  return { x: b.x, y: b.y + s * (b.h / 2) };
-}
-
-/** The middle of the longest segment, and whether that segment is upright. */
-function midOf(points: Pt[]): Pt & { upright: boolean } {
-  let best = { a: points[0], b: points[1], len: -1 };
-  for (let i = 0; i + 1 < points.length; i++) {
-    const len = Math.hypot(
-      points[i + 1].x - points[i].x,
-      points[i + 1].y - points[i].y,
-    );
-    if (len > best.len) best = { a: points[i], b: points[i + 1], len };
-  }
-  return {
-    x: (best.a.x + best.b.x) / 2,
-    y: (best.a.y + best.b.y) / 2,
-    upright: Math.abs(best.a.x - best.b.x) < 1,
-  };
-}
-
-const CABLE_NAME: Partial<Record<string, string>> = {
-  cross: "crossover",
-  console: "console",
-  serial: "serial",
+/** The model Packet Tracer prints above a device's name. */
+const PT_MODEL: Partial<Record<NetDeviceKind, string>> = {
+  pc: "PC-PT",
+  laptop: "Laptop-PT",
+  server: "Server-PT",
+  switch: "2960-24TT",
+  hub: "Hub-PT",
+  router: "2911",
+  ap: "AccessPoint-PT",
+  printer: "Printer-PT",
+  cloud: "Cloud-PT",
 };
+
+/** The drawing colour of an area, one per room. */
+const AREA_COLORS = ["#2563eb", "#16a34a", "#d97706", "#9333ea", "#0891b2"];
+
+const FS = 9;
+const PITCH = 11;
+/** Height of the tab bar, in figure units, below the top of the canvas. */
+const BAR = 14;
+/** Seconds an envelope takes to cross one cable. */
+const HOP = 0.8;
+
+const INK = "#1f2937";
+const SOFT = "#4b5563";
+
+type Line = { text: string; color?: string; weight?: number };
+type Anchor = "start" | "middle" | "end";
+type Placed = { key: string; lines: Line[]; box: Box; anchor: Anchor };
+
+const textWidth = (t: string, size = FS) => [...t].length * size * 0.56;
+
+function grow(b: Box, d: number): Box {
+  return { x0: b.x0 - d, y0: b.y0 - d, x1: b.x1 + d, y1: b.y1 + d };
+}
+
+function overlaps(a: Box, b: Box): boolean {
+  return a.x0 < b.x1 && b.x0 < a.x1 && a.y0 < b.y1 && b.y0 < a.y1;
+}
+
+/** Does segment ab pass through box `b`? */
+function hits(a: Pt, b: Pt, bx: Box): boolean {
+  let t0 = 0;
+  let t1 = 1;
+  const dx = b.x - a.x;
+  const dy = b.y - a.y;
+  const checks: [number, number][] = [
+    [-dx, a.x - bx.x0],
+    [dx, bx.x1 - a.x],
+    [-dy, a.y - bx.y0],
+    [dy, bx.y1 - a.y],
+  ];
+  for (const [p, q] of checks) {
+    if (p === 0) {
+      if (q < 0) return false;
+    } else {
+      const r = q / p;
+      if (p < 0) t0 = Math.max(t0, r);
+      else t1 = Math.min(t1, r);
+      if (t0 > t1) return false;
+    }
+  }
+  return true;
+}
+
+/** The size of a block of lines, as the linter measures text. */
+function blockSize(lines: Line[]): { w: number; h: number } {
+  return {
+    w: Math.max(...lines.map((l) => textWidth(l.text))),
+    h: (lines.length - 1) * PITCH + FS * 0.95,
+  };
+}
 
 /**
- * The room as a network diagram: a box per device, a line per cable, and
- * arrows for the traffic of the step. `title` is printed at the top left.
+ * Places blocks of text one at a time where they cross no cable, icon or
+ * text placed before them. Each block tries its spots in order and takes
+ * the first clear one, or the least crowded.
+ */
+class TextPlacer {
+  readonly placed: Placed[] = [];
+  constructor(
+    private readonly icons: Box[],
+    private readonly segs: [Pt, Pt][],
+  ) {}
+
+  private score(b: Box): number {
+    const pad = grow(b, 2);
+    let n = 0;
+    for (const s of this.segs) if (hits(s[0], s[1], pad)) n += 3;
+    for (const i of this.icons) if (overlaps(pad, i)) n += 4;
+    for (const t of this.placed) if (overlaps(pad, t.box)) n += 5;
+    return n;
+  }
+
+  /** Each spot is a box for the block and the side its text hangs from. */
+  place(
+    key: string,
+    lines: Line[],
+    spots: { box: Box; anchor: Anchor }[],
+  ): Placed {
+    let best = spots[0];
+    let bestScore = Infinity;
+    for (const s of spots) {
+      const sc = this.score(s.box);
+      if (sc < bestScore) {
+        best = s;
+        bestScore = sc;
+        if (sc === 0) break;
+      }
+    }
+    const p = { key, lines, box: best.box, anchor: best.anchor };
+    this.placed.push(p);
+    return p;
+  }
+}
+
+/** Spots around `icon` for a block of size w × h, nearest first. */
+function spotsAround(
+  icon: Box,
+  w: number,
+  h: number,
+  order: readonly (
+    | "below"
+    | "right"
+    | "left"
+    | "above"
+    | "rightUp"
+    | "rightDown"
+    | "leftUp"
+    | "leftDown"
+  )[],
+): { box: Box; anchor: Anchor }[] {
+  const cx = (icon.x0 + icon.x1) / 2;
+  const cy = (icon.y0 + icon.y1) / 2;
+  const g = 5;
+  const at = {
+    below: {
+      box: {
+        x0: cx - w / 2,
+        y0: icon.y1 + 3,
+        x1: cx + w / 2,
+        y1: icon.y1 + 3 + h,
+      },
+      anchor: "middle" as Anchor,
+    },
+    above: {
+      box: {
+        x0: cx - w / 2,
+        y0: icon.y0 - 3 - h,
+        x1: cx + w / 2,
+        y1: icon.y0 - 3,
+      },
+      anchor: "middle" as Anchor,
+    },
+    right: {
+      box: {
+        x0: icon.x1 + g,
+        y0: cy - h / 2,
+        x1: icon.x1 + g + w,
+        y1: cy + h / 2,
+      },
+      anchor: "start" as Anchor,
+    },
+    left: {
+      box: {
+        x0: icon.x0 - g - w,
+        y0: cy - h / 2,
+        x1: icon.x0 - g,
+        y1: cy + h / 2,
+      },
+      anchor: "end" as Anchor,
+    },
+    rightUp: {
+      box: {
+        x0: icon.x1 + g,
+        y0: icon.y0 - h + 2,
+        x1: icon.x1 + g + w,
+        y1: icon.y0 + 2,
+      },
+      anchor: "start" as Anchor,
+    },
+    rightDown: {
+      box: {
+        x0: icon.x1 + g,
+        y0: icon.y1 - 2,
+        x1: icon.x1 + g + w,
+        y1: icon.y1 - 2 + h,
+      },
+      anchor: "start" as Anchor,
+    },
+    leftUp: {
+      box: {
+        x0: icon.x0 - g - w,
+        y0: icon.y0 - h + 2,
+        x1: icon.x0 - g,
+        y1: icon.y0 + 2,
+      },
+      anchor: "end" as Anchor,
+    },
+    leftDown: {
+      box: {
+        x0: icon.x0 - g - w,
+        y0: icon.y1 - 2,
+        x1: icon.x0 - g,
+        y1: icon.y1 - 2 + h,
+      },
+      anchor: "end" as Anchor,
+    },
+  };
+  return order.map((k) => at[k]);
+}
+
+const LIGHT: Record<LinkState, PtLight> = {
+  up: "up",
+  down: "down",
+  amber: "amber",
+  off: "none",
+};
+
+/** Ends that carry no port, and so no link light. */
+const PORTLESS = new Set<NetDeviceKind>(["tap", "terminator"]);
+
+/**
+ * The room as a Packet Tracer logical workspace. Devices keep the places
+ * they have in the room; `title` is printed as a note at the top left.
  */
 export function netFigure(
   bench: NetBench,
@@ -105,22 +284,20 @@ export function netFigure(
 ): SchematicData {
   const all = bench.devices.filter(
     (d) =>
-      NETWORK_KINDS.has(d.kind) &&
-      (!fit || !frame.show || frame.show.includes(d.id)),
+      PT_KIND[d.kind] && (!fit || !frame.show || frame.show.includes(d.id)),
   );
+  const show = frame.show ? new Set(frame.show) : null;
+  const hot = new Set(frame.hot ?? []);
+  const visible = (id: string) =>
+    all.some((d) => d.id === id) && (!show || show.has(id));
+
+  // ── Scale: fit a card, but spread a crowded room so nothing touches ──
   const xs = all.map((d) => d.x);
   const zs = all.map((d) => d.z);
   const minX = Math.min(...xs);
-  const maxX = Math.max(...xs);
   const minZ = Math.min(...zs);
-  const maxZ = Math.max(...zs);
-  const MX = 56;
-  const MTOP = title ? 44 : 30;
-  const MBOT = 34;
-  const spanX = Math.max(1, maxX - minX);
-  const spanZ = Math.max(1, maxZ - minZ);
-  // Fit 430 × 270, but spread a crowded room so no two boxes or
-  // addresses touch. The corner card can be expanded to read it.
+  const spanX = Math.max(1, Math.max(...xs) - minX);
+  const spanZ = Math.max(1, Math.max(...zs) - minZ);
   let minDx = Infinity;
   let minDz = Infinity;
   for (const p of all)
@@ -132,461 +309,578 @@ export function netFigure(
       if (dx < 1.5 && dz > 0.01) minDz = Math.min(minDz, dz);
     }
   const scale = Math.min(
-    Math.max(
-      Math.min((430 - 2 * MX) / spanX, (270 - MTOP - MBOT) / spanZ),
-      84 / minDx,
-      58 / minDz,
-    ),
-    (840 - 2 * MX) / spanX,
-    (540 - MTOP - MBOT) / spanZ,
+    Math.max(Math.min(300 / spanX, 170 / spanZ), 88 / minDx, 70 / minDz),
+    720 / spanX,
+    460 / spanZ,
   );
-  const width = Math.max(340, Math.round(spanX * scale + 2 * MX));
-  const height = Math.max(190, Math.round(spanZ * scale + MTOP + MBOT));
-  const ox = (width - spanX * scale) / 2;
-  const oy = MTOP + (height - MTOP - MBOT - spanZ * scale) / 2;
-
-  const show = frame.show ? new Set(frame.show) : null;
-  const hot = new Set(frame.hot ?? []);
-  const placed = new Map<string, Placed>();
-  for (const dev of all) {
-    const { w, h } = sizeIn2d(dev);
-    placed.set(dev.id, {
-      dev,
-      x: Math.round(ox + (dev.x - minX) * scale),
-      y: Math.round(oy + (dev.z - minZ) * scale),
-      w,
-      h,
+  // Empty floor between rooms closes up: no gap between two columns (or
+  // rows) of devices is wider than a cable needs.
+  const squeeze = (values: number[], most: number) => {
+    const sorted = [...new Set(values)].sort((p, q) => p - q);
+    const to = new Map<number, number>();
+    let at = 0;
+    sorted.forEach((v, i) => {
+      if (i) at += Math.min(v - sorted[i - 1], most);
+      to.set(v, at);
     });
-  }
-  const visible = (id: string) => placed.has(id) && (!show || show.has(id));
+    return (v: number) => to.get(v)!;
+  };
+  const sx = squeeze(
+    all.map((d) => (d.x - minX) * scale),
+    130,
+  );
+  const sy = squeeze(
+    all.map((d) => (d.z - minZ) * scale),
+    120,
+  );
+  const at = (d: NetDevice): Pt => ({
+    x: Math.round(sx((d.x - minX) * scale)),
+    y: Math.round(sy((d.z - minZ) * scale)),
+  });
+
+  const devices = all.filter((d) => visible(d.id));
+  const centre = new Map(devices.map((d) => [d.id, at(d)]));
+  const kindOf = new Map(devices.map((d) => [d.id, d.kind]));
+  /** The icon, and the dashed selection box round it when it is hot. */
+  const iconBox = (id: string): Box => {
+    const c = centre.get(id)!;
+    const [hw, hh] = PT_ICON_SIZE[PT_KIND[kindOf.get(id)!]!];
+    const box = { x0: c.x - hw, y0: c.y - hh, x1: c.x + hw, y1: c.y + hh };
+    return hot.has(id) ? grow(box, 6) : box;
+  };
+  /** Where a straight cable from `id` toward `to` leaves the icon. */
+  const port = (id: string, to: Pt): Pt => {
+    const c = centre.get(id)!;
+    const [hw, hh] = PT_ICON_SIZE[PT_KIND[kindOf.get(id)!]!];
+    const dx = to.x - c.x;
+    const dy = to.y - c.y;
+    const len = Math.hypot(dx, dy) || 1;
+    const t = Math.min(
+      dx ? hw / Math.abs(dx) : Infinity,
+      dy ? hh / Math.abs(dy) : Infinity,
+    );
+    const gap = PORTLESS.has(kindOf.get(id)!) ? 0.5 : 2;
+    return {
+      x: +(c.x + dx * t + (dx / len) * gap).toFixed(1),
+      y: +(c.y + dy * t + (dy / len) * gap).toFixed(1),
+    };
+  };
 
   const els: SchematicElement[] = [];
-  if (title)
-    els.push({ type: "label", id: "title", x: width / 2, y: 18, text: title });
+  const front: SchematicElement[] = [];
 
-  // Each cable leaves the upper box from its bottom edge and enters the
-  // lower box from its top, at its own port, so cables never share a line.
-  const shownLinks = bench.links.filter(
+  // ── Cables ──────────────────────────────────────────────────────────
+  const links = bench.links.filter(
     (l) => visible(l.a) && visible(l.b) && (!show || show.has(l.id)),
   );
-  const ports = new Map<string, number>();
-  const sameRow = (a: Placed, b: Placed) => Math.abs(a.y - b.y) < 2;
-  for (const pl of placed.values()) {
-    for (const side of [1, -1]) {
-      const here = shownLinks
-        .map((l) => {
-          const other = placed.get(l.a === pl.dev.id ? l.b : l.a)!;
-          if (l.a !== pl.dev.id && l.b !== pl.dev.id) return null;
-          if (sameRow(pl, other) || Math.sign(other.y - pl.y) !== side)
-            return null;
-          return { id: l.id, x: other.x };
-        })
-        .filter((v): v is { id: string; x: number } => v !== null)
-        .sort((p, q) => p.x - q.x);
-      const span = Math.min(pl.w * 0.76, (here.length - 1) * 24);
-      here.forEach((h, i) => {
-        const off =
-          here.length > 1 ? -span / 2 + (span * i) / (here.length - 1) : 0;
-        ports.set(`${h.id}@${pl.dev.id}`, off);
-      });
-    }
-  }
-  const lanes = new Map<string, number>();
-  {
-    const between = shownLinks
-      .map((l) => {
-        const a = placed.get(l.a)!;
-        const b = placed.get(l.b)!;
-        if (sameRow(a, b)) return null;
-        const up = a.y < b.y ? a : b;
-        const lo = up === a ? b : a;
-        const pu = up.x + (ports.get(`${l.id}@${up.dev.id}`) ?? 0);
-        const pl = lo.x + (ports.get(`${l.id}@${lo.dev.id}`) ?? 0);
-        // Cables between the same two rows share the gap, one lane each.
-        return { id: l.id, up: `${up.y}|${lo.y}`, reach: Math.abs(pu - pl) };
-      })
-      .filter((v): v is { id: string; up: string; reach: number } => !!v);
-    const byUpper = new Map<string, typeof between>();
-    for (const b of between)
-      byUpper.set(b.up, [...(byUpper.get(b.up) ?? []), b]);
-    for (const group of byUpper.values()) {
-      group
-        .sort((p, q) => q.reach - p.reach)
-        .forEach((b, i) => lanes.set(b.id, i));
-    }
-  }
-
-  const toPx = (x: number, z: number): Pt => ({
-    x: Math.round(ox + (x - minX) * scale),
-    y: Math.round(oy + (z - minZ) * scale),
-  });
-  /**
-   * A cable that follows the corner points it has in the room. Every
-   * segment is level or upright, and the cable meets each box square on.
-   */
-  const viaRoute = (linkId: string, offset: number): Pt[] | null => {
-    const link = bench.links.find((l) => l.id === linkId);
-    if (!link?.via?.length) return null;
-    const a = placed.get(link.a)!;
-    const b = placed.get(link.b)!;
-    let mid = link.via.map(([x, z]) => toPx(x, z));
-    const inX = (box: Placed, x: number) => Math.abs(x - box.x) < box.w / 2 - 2;
-    const inY = (box: Placed, y: number) => Math.abs(y - box.y) < box.h / 2 - 2;
-    const flatEnd = (box: Placed, x: number, toward: number): Pt => ({
-      x,
-      y: box.y + Math.sign(toward - box.y || 1) * (box.h / 2),
-    });
-    const sideEnd = (box: Placed, y: number, toward: number): Pt => ({
-      x: box.x + Math.sign(toward - box.x || 1) * (box.w / 2),
-      y,
-    });
-    if (mid.length === 1) {
-      // One corner: along one axis out of `a`, then the other into `b`.
-      const c = mid[0];
-      if (Math.abs(c.y - a.y) <= Math.abs(c.x - a.x)) {
-        const x = inX(b, c.x) ? c.x : b.x;
-        mid = [{ x, y: a.y }];
-      } else {
-        const y = inY(b, c.y) ? c.y : b.y;
-        mid = [{ x: inX(a, c.x) ? c.x : a.x, y }];
-      }
-    }
-    let start: Pt;
-    let startFlat: boolean;
-    const firstUp = mid.length > 1 && Math.abs(mid[1].x - mid[0].x) < 1;
-    if (mid.length === 1) {
-      startFlat = inX(a, mid[0].x) && Math.abs(mid[0].y - a.y) > 1;
-      start = startFlat
-        ? flatEnd(a, mid[0].x, mid[0].y)
-        : sideEnd(a, a.y, mid[0].x);
-    } else if (firstUp && inX(a, mid[0].x)) {
-      startFlat = true;
-      start = flatEnd(a, mid[0].x, mid[1].y);
-      mid = mid.slice(1);
-      mid[0] = { x: start.x, y: mid[0].y };
-    } else if (firstUp) {
-      startFlat = false;
-      mid[0] = { x: mid[0].x, y: a.y };
-      start = sideEnd(a, a.y, mid[0].x);
-    } else if (inY(a, mid[0].y)) {
-      startFlat = false;
-      start = sideEnd(a, mid[0].y, mid[1].x);
-      mid = mid.slice(1);
-      mid[0] = { x: mid[0].x, y: start.y };
-    } else {
-      startFlat = true;
-      if (!inX(a, mid[0].x)) mid[0] = { x: a.x, y: mid[0].y };
-      start = flatEnd(a, mid[0].x, mid[0].y);
-    }
-    let end: Pt;
-    let endFlat: boolean;
-    const n = mid.length - 1;
-    const lastUp = n > 0 ? Math.abs(mid[n].x - mid[n - 1].x) < 1 : !startFlat;
-    if (n === 0) {
-      endFlat = startFlat ? false : true;
-      end = endFlat
-        ? flatEnd(b, mid[0].x, mid[0].y)
-        : sideEnd(b, mid[0].y, mid[0].x);
-    } else if (lastUp && inX(b, mid[n].x)) {
-      endFlat = true;
-      end = flatEnd(b, mid[n].x, mid[n - 1].y);
-      mid = mid.slice(0, n);
-    } else if (lastUp) {
-      endFlat = false;
-      mid[n] = { x: mid[n].x, y: b.y };
-      end = sideEnd(b, b.y, mid[n].x);
-    } else if (inY(b, mid[n].y)) {
-      endFlat = false;
-      end = sideEnd(b, mid[n].y, mid[n - 1].x);
-      mid = mid.slice(0, n);
-    } else {
-      endFlat = true;
-      if (!inX(b, mid[n].x)) mid[n] = { x: b.x, y: mid[n].y };
-      end = flatEnd(b, mid[n].x, mid[n].y);
-    }
-    const pts = [
-      startFlat
-        ? { x: start.x + offset, y: start.y }
-        : { x: start.x, y: start.y + offset },
-      ...mid.map((p) => ({ x: p.x + offset, y: p.y + offset })),
-      endFlat
-        ? { x: end.x + offset, y: end.y }
-        : { x: end.x, y: end.y + offset },
-    ];
-    return pts.filter(
-      (p, i) =>
-        i === 0 || Math.hypot(p.x - pts[i - 1].x, p.y - pts[i - 1].y) > 0.5,
-    );
-  };
-
-  const routeLink = (
-    linkId: string,
-    from: string,
-    to: string,
-    offset = 0,
-  ): Pt[] => {
-    const via = viaRoute(linkId, offset);
-    if (via) {
-      const link = bench.links.find((l) => l.id === linkId)!;
-      return link.a === from ? via : [...via].reverse();
-    }
-    const a = placed.get(from)!;
-    const b = placed.get(to)!;
-    if (sameRow(a, b)) {
-      const y = (a.y + b.y) / 2 + offset;
-      return [
-        { x: edgePoint(a, b, true).x, y },
-        { x: edgePoint(b, a, true).x, y },
-      ];
-    }
-    const up = a.y < b.y ? a : b;
-    const lo = up === a ? b : a;
-    const xu = up.x + (ports.get(`${linkId}@${up.dev.id}`) ?? 0) + offset;
-    const xl = lo.x + (ports.get(`${linkId}@${lo.dev.id}`) ?? 0) + offset;
-    const yu = up.y + up.h / 2;
-    const yl = lo.y - lo.h / 2;
-    let pts: Pt[];
-    if (Math.abs(xu - xl) < 1) {
-      pts = [
-        { x: xu, y: yu },
-        { x: xu, y: yl },
-      ];
-    } else {
-      const lane = lanes.get(linkId) ?? 0;
-      const mid = Math.min(yl - 6, yu + 12 + lane * 8) + offset * 0.5;
-      pts = [
-        { x: xu, y: yu },
-        { x: xu, y: mid },
-        { x: xl, y: mid },
-        { x: xl, y: yl },
-      ];
-    }
-    return up === a ? pts : pts.reverse();
-  };
-
-  for (const link of shownLinks) {
-    const points = routeLink(link.id, link.a, link.b);
-    const state = frame.links?.[link.id];
-    const down = state === "down";
-    if (link.kind === "wifi") {
-      els.push({
-        type: "arrow",
-        id: `link-${link.id}`,
-        points,
-        dashed: true,
-        double: true,
-        size: 6,
-        highlight: hot.has(link.id),
-        color: "#7b93df",
-      });
-    } else {
-      els.push({
-        type: "wire",
-        id: `link-${link.id}`,
-        points,
-        highlight: hot.has(link.id),
-        color: down ? "#dc2626" : undefined,
-      });
-    }
-    const name = down
-      ? "✕ down"
-      : link.kind === "console"
-        ? (link.label ?? "console")
-        : CABLE_NAME[link.kind];
-    if (name) {
-      const m = midOf(points);
-      els.push({
-        type: "label",
-        id: `link-${link.id}-name`,
-        x: m.upright ? m.x + 8 + name.length * 2.6 : m.x,
-        y: m.upright ? m.y + 3 : m.y - 13,
-        text: name,
-        color: down ? "#dc2626" : "#525252",
-        size: 9,
-      });
-    }
-  }
-
-  // Traffic: one arrow per hop, beside the cable.
-  const drawn = new Set<string>();
-  (frame.packets ?? []).forEach((p, pi) => {
-    for (let i = 0; i + 1 < p.path.length; i++) {
-      const from = p.path[i];
-      const to = p.path[i + 1];
-      const key = `${from}>${to}`;
-      if (drawn.has(key) || !visible(from) || !visible(to)) continue;
-      const link = shownLinks.find(
-        (l) => (l.a === from && l.b === to) || (l.a === to && l.b === from),
-      );
-      if (!link) continue;
-      drawn.add(key);
-      const back = drawn.has(`${to}>${from}`);
-      const points = routeLink(link.id, from, to, back ? -5 : 5);
-      const color =
-        PACKET_COLORS[
-          p.drop && i + 2 === p.path.length ? "red" : (p.color ?? "orange")
-        ];
-      els.push({
-        type: "arrow",
-        id: `pkt-${pi}-${i}`,
-        points,
-        size: 7,
-        color,
-      });
-    }
-  });
-
-  for (const pl of placed.values()) {
-    if (!visible(pl.dev.id)) continue;
-    const { dev } = pl;
-    if (dev.kind === "tap") {
-      els.push({ type: "junction", id: `dev-${dev.id}`, x: pl.x, y: pl.y });
-      continue;
-    }
-    if (dev.kind === "terminator") {
-      els.push({
-        type: "block",
-        id: `dev-${dev.id}`,
-        x: pl.x,
-        y: pl.y,
-        w: pl.w,
-        h: pl.h,
-        fill: "#3f4a5f",
-      });
-      continue;
-    }
+  const segs: [Pt, Pt][] = [];
+  const cableAt = new Map<string, [Pt, Pt]>();
+  for (const link of links) {
+    const a = port(link.a, centre.get(link.b)!);
+    const b = port(link.b, centre.get(link.a)!);
+    cableAt.set(link.id, [a, b]);
+    const pts = ptLinkPoints(a, b, link.kind);
+    for (let i = 0; i + 1 < pts.length; i++) segs.push([pts[i], pts[i + 1]]);
+    const state = LIGHT[frame.links?.[link.id] ?? "up"];
+    const light = (id: string): PtLight =>
+      link.kind === "wifi" || PORTLESS.has(kindOf.get(id)!) ? "none" : state;
     els.push({
-      type: dev.kind === "cloud" ? "terminal" : "block",
-      id: `dev-${dev.id}`,
-      x: pl.x,
-      y: pl.y,
-      w: pl.w,
-      h: pl.h,
-      label: dev.name ?? dev.kind,
-      highlight: hot.has(dev.id),
-      fill: FILL[dev.kind],
+      type: "pt-link",
+      id: `link-${link.id}`,
+      a,
+      b,
+      cable: link.kind,
+      lights: [light(link.a), light(link.b)],
+      highlight: hot.has(link.id),
     });
-    const addr = (frame.addr?.[dev.id] ?? dev.addresses ?? [])[0];
-    if (addr) {
-      // Under the box, unless cables leave from there.
-      let below = false;
-      let above = false;
-      for (const l of shownLinks) {
-        if (l.a !== dev.id && l.b !== dev.id) continue;
-        const other = placed.get(l.a === dev.id ? l.b : l.a)!;
-        if (sameRow(pl, other)) continue;
-        if (other.y > pl.y) below = true;
-        else above = true;
-      }
-      const side = below && above;
-      els.push({
-        type: "label",
-        id: `addr-${dev.id}`,
-        x: side ? pl.x + pl.w / 2 + 6 + addr.length * 2.6 : pl.x,
-        y: side ? pl.y + 3 : below ? pl.y - pl.h / 2 - 6 : pl.y + pl.h / 2 + 11,
-        text: addr,
-        size: 9,
-      });
-    }
   }
 
-  return { width, height, gallery: true, elements: els };
+  // ── Devices ─────────────────────────────────────────────────────────
+  const icons = devices.map((d) => iconBox(d.id));
+  const placer = new TextPlacer(icons, segs);
+  for (const d of devices) {
+    const c = centre.get(d.id)!;
+    els.push({
+      type: "pt-device",
+      id: `dev-${d.id}`,
+      x: c.x,
+      y: c.y,
+      kind: PT_KIND[d.kind]!,
+      highlight: hot.has(d.id),
+    });
+  }
+
+  // Envelopes run along their cables; keep the text off their way.
+  const packets = (frame.packets ?? [])
+    .map((p) => ({ ...p, path: p.path.filter((id) => centre.has(id)) }))
+    .filter((p) => p.path.length > 1);
+  let clock = 0;
+  const runs = packets.map((p) => {
+    const begin = p.at ?? clock;
+    const end = begin + HOP * (p.path.length - 1);
+    clock = end + 0.15;
+    return { p, begin, end };
+  });
+  const cycle = Math.max(1, ...runs.map((r) => r.end)) + 0.9;
+  runs.forEach(({ p, begin, end }, i) => {
+    front.push({
+      type: "pt-pdu",
+      id: `pdu-${i}`,
+      path: p.path.map((id) => centre.get(id)!),
+      color: PACKET_COLORS[p.color ?? "orange"],
+      begin,
+      end,
+      cycle,
+      drop: p.drop,
+    });
+  });
+
+  // Name and model under each device, unless a cable leaves from there.
+  const nameOf = new Map<string, Placed>();
+  for (const d of devices) {
+    if (PORTLESS.has(d.kind)) continue;
+    const lines: Line[] = [];
+    const model = d.model ?? PT_MODEL[d.kind];
+    if (model) lines.push({ text: model, color: SOFT });
+    if (d.name) lines.push({ text: d.name, color: INK, weight: 600 });
+    const tag = frame.tags?.[d.id];
+    if (tag)
+      lines.push({
+        text: tag,
+        weight: 700,
+        color: tag.startsWith("✕")
+          ? "#dc2626"
+          : tag.startsWith("✓")
+            ? "#16a34a"
+            : "#b45309",
+      });
+    if (!lines.length) continue;
+    const { w, h } = blockSize(lines);
+    nameOf.set(
+      d.id,
+      placer.place(
+        `name-${d.id}`,
+        lines,
+        spotsAround(iconBox(d.id), w, h, ["below", "right", "left", "above"]),
+      ),
+    );
+  }
+
+  // Addresses beside the device, the way they are typed on the workspace.
+  const addrOf = new Map<string, Placed>();
+  for (const d of devices) {
+    const addr = (frame.addr?.[d.id] ?? d.addresses ?? []).slice(0, 3);
+    if (!addr.length) continue;
+    const lines = addr.map((text) => ({ text, color: INK }));
+    const { w, h } = blockSize(lines);
+    const icon = iconBox(d.id);
+    const name = nameOf.get(d.id);
+    const spots = spotsAround(icon, w, h, [
+      "right",
+      "left",
+      "rightUp",
+      "leftUp",
+      "rightDown",
+      "leftDown",
+      "above",
+    ]);
+    if (name) {
+      // Under the name, when nothing else fits.
+      const cx = (icon.x0 + icon.x1) / 2;
+      spots.push({
+        box: {
+          x0: cx - w / 2,
+          y0: name.box.y1 + 2,
+          x1: cx + w / 2,
+          y1: name.box.y1 + 2 + h,
+        },
+        anchor: "middle",
+      });
+    }
+    addrOf.set(d.id, placer.place(`addr-${d.id}`, lines, spots));
+  }
+
+  // Port names and console cables, by the middle of the cable.
+  for (const link of links) {
+    const text =
+      link.kind === "console" ? (link.label ?? "Console") : link.label;
+    if (!text) continue;
+    const [a, b] = cableAt.get(link.id)!;
+    const len = Math.hypot(b.x - a.x, b.y - a.y) || 1;
+    const color = link.kind === "console" ? "#0369a1" : SOFT;
+    // A name longer than its cable breaks at its dots.
+    const parts = textWidth(text) > len - 16 ? text.split(" · ") : [text];
+    const lines = parts.map((t) => ({ text: t, color }));
+    const { w, h } = blockSize(lines);
+    const nx = -(b.y - a.y) / len;
+    const ny = (b.x - a.x) / len;
+    const spots: { box: Box; anchor: Anchor }[] = [];
+    for (const far of [1, 2.4])
+      for (const t of [0.5, 0.36, 0.64, 0.26, 0.74])
+        for (const side of [1, -1]) {
+          const off =
+            (Math.abs(nx) * (w / 2 + 4) + Math.abs(ny) * (h / 2 + 4)) * far;
+          const cx = a.x + (b.x - a.x) * t + nx * side * off;
+          const cy = a.y + (b.y - a.y) * t + ny * side * off;
+          spots.push({
+            box: {
+              x0: cx - w / 2,
+              y0: cy - h / 2,
+              x1: cx + w / 2,
+              y1: cy + h / 2,
+            },
+            anchor: "middle",
+          });
+        }
+    placer.place(`port-${link.id}`, lines, spots);
+  }
+
+  // ── Areas: one drawn rectangle per room, when the bench has rooms ──
+  const zones = bench.zones ?? [];
+  const areas: {
+    box: Box;
+    label: string;
+    color: string;
+    top: boolean;
+    right: boolean;
+  }[] = [];
+  if (zones.length > 1) {
+    const within = (d: NetDevice, z: (typeof zones)[number]) =>
+      Math.abs(d.x - z.x) <= z.w / 2 && Math.abs(d.z - z.z) <= z.d / 2;
+    zones.forEach((z, zi) => {
+      // A device on the line between two rooms, such as the router that
+      // joins them, belongs to neither.
+      const inside = devices.filter(
+        (d) => within(d, z) && zones.filter((o) => within(d, o)).length === 1,
+      );
+      // A room of one device is just that device.
+      if (inside.length < 2) return;
+      const boxes = inside.flatMap((d) => [
+        iconBox(d.id),
+        ...[nameOf.get(d.id), addrOf.get(d.id)]
+          .filter((p): p is Placed => !!p)
+          .map((p) => p.box),
+      ]);
+      const box = {
+        x0: Math.min(...boxes.map((b) => b.x0)) - 8,
+        y0: Math.min(...boxes.map((b) => b.y0)) - 20,
+        x1: Math.max(...boxes.map((b) => b.x1)) + 8,
+        y1: Math.max(...boxes.map((b) => b.y1)) + 8,
+      };
+      const label = z.label;
+      box.x1 = Math.max(box.x1, box.x0 + textWidth(label) + 14);
+      // Rooms never overlap: one that would is left undrawn.
+      if (areas.some((a) => overlaps(grow(a.box, 4), box))) return;
+      areas.push({
+        box,
+        label,
+        color: AREA_COLORS[zi % AREA_COLORS.length],
+        top: true,
+        right: false,
+      });
+    });
+  }
+
+  // A room's name goes in a corner of it that no other text is in. A name
+  // at the bottom gets a line of its own.
+  const nameBox = (a: (typeof areas)[number]): Box => {
+    const w = textWidth(a.label);
+    const x0 = a.right ? a.box.x1 - 6 - w : a.box.x0 + 6;
+    const y0 = a.top ? a.box.y0 + 5 : a.box.y1 - 12;
+    return { x0, y0, x1: x0 + w, y1: y0 + 9 };
+  };
+  for (const a of areas) {
+    const clash = () =>
+      placer.placed.some((p) => overlaps(grow(nameBox(a), 1), p.box)) ||
+      icons.some((i) => overlaps(nameBox(a), i));
+    if (!clash()) continue;
+    a.right = true;
+    if (!clash()) continue;
+    a.top = false;
+    a.right = false;
+    a.box.y1 += 14;
+    if (!clash()) continue;
+    a.right = true;
+  }
+
+  // ── Fit the canvas round everything, below the tab bar ─────────────
+  const boxes: Box[] = [
+    ...icons.map((b) => grow(b, 6)),
+    ...placer.placed.map((p) => p.box),
+    ...areas.map((a) => a.box),
+  ];
+  for (const r of runs)
+    for (const id of r.p.path) {
+      const c = centre.get(id)!;
+      boxes.push({ x0: c.x - 8, y0: c.y - 6, x1: c.x + 8, y1: c.y + 6 });
+    }
+  const bx0 = Math.min(...boxes.map((b) => b.x0));
+  const by0 = Math.min(...boxes.map((b) => b.y0));
+  const bx1 = Math.max(...boxes.map((b) => b.x1));
+  const by1 = Math.max(...boxes.map((b) => b.y1));
+  const note = !areas.length && zones.length === 1 ? zones[0].label : null;
+  const head = [title, note].filter(Boolean) as string[];
+  const top = BAR + 10 + head.length * 14;
+  const contentW = bx1 - bx0;
+  const width = Math.max(
+    360,
+    Math.ceil(contentW + 24),
+    ...head.map((t) => Math.ceil(textWidth(t, 10) + 24)),
+  );
+  const height = Math.ceil(top + (by1 - by0) + 12);
+  const dx = Math.round((width - contentW) / 2 - bx0);
+  const dy = Math.round(top - by0);
+  const move = (p: Pt): Pt => ({ x: p.x + dx, y: p.y + dy });
+  const moveBox = (b: Box): Box => ({
+    x0: b.x0 + dx,
+    y0: b.y0 + dy,
+    x1: b.x1 + dx,
+    y1: b.y1 + dy,
+  });
+
+  const out: SchematicElement[] = [
+    {
+      type: "pt-bar",
+      id: "pt-bar",
+      w: width,
+      mode: runs.length ? "simulation" : "realtime",
+    },
+  ];
+  head.forEach((text, i) =>
+    out.push({
+      type: "label",
+      id: i === 0 && title ? "title" : "note",
+      x: 2,
+      y: BAR + 16 + i * 14,
+      text,
+      anchor: "start",
+      size: i === 0 && title ? 10 : 9,
+      weight: i === 0 && title ? 700 : 500,
+      color: i === 0 && title ? INK : SOFT,
+    }),
+  );
+  areas.forEach((a, i) => {
+    const b = moveBox(a.box);
+    out.push({
+      type: "pt-area",
+      id: `area-${i}`,
+      x: b.x0,
+      y: b.y0,
+      w: b.x1 - b.x0,
+      h: b.y1 - b.y0,
+      color: a.color,
+    });
+    out.push({
+      type: "label",
+      id: `area-${i}-name`,
+      x: a.right ? b.x1 - 6 : b.x0 + 6,
+      y: a.top ? b.y0 + 12 : b.y1 - 5,
+      text: a.label,
+      anchor: a.right ? "end" : "start",
+      color: a.color,
+      weight: 600,
+    });
+  });
+  for (const el of [...els, ...front]) {
+    if (el.type === "pt-link")
+      out.push({ ...el, a: move(el.a), b: move(el.b) });
+    else if (el.type === "pt-device") {
+      const p = move(el);
+      out.push({ ...el, x: p.x, y: p.y });
+    } else if (el.type === "pt-pdu")
+      out.push({ ...el, path: el.path.map(move) });
+  }
+  for (const p of placer.placed) {
+    const b = moveBox(p.box);
+    p.lines.forEach((l, j) => {
+      out.push({
+        type: "label",
+        id: `${p.key}-${j}`,
+        x:
+          p.anchor === "start"
+            ? b.x0
+            : p.anchor === "end"
+              ? b.x1
+              : (b.x0 + b.x1) / 2,
+        y: b.y0 + FS * 0.75 + j * PITCH,
+        text: l.text,
+        anchor: p.anchor,
+        color: l.color,
+        weight: l.weight,
+      });
+    });
+  }
+  // Envelopes ride above everything else.
+  const pdus = out.filter((e) => e.type === "pt-pdu");
+  const rest = out.filter((e) => e.type !== "pt-pdu");
+  return {
+    width,
+    height,
+    gallery: true,
+    plain: true,
+    elements: [...rest, ...pdus],
+  };
 }
 
 export type SeqMessage = {
   from: number;
   to: number;
   label: string;
-  /** Lost on the way: drawn red, stopping short. */
+  /** Lost on the way: drawn red in the event list. */
   lost?: boolean;
   color?: string;
+  /** The PDU type Packet Tracer lists, such as "ARP" or "TCP". */
+  type?: string;
+};
+
+/** Width of a table cell for `text`, with its padding. */
+const cellWidth = (text: string) => Math.ceil([...text].length * 5 + 10);
+
+/** Packet Tracer's colour for a PDU of each type. */
+const PDU_COLOR: Record<string, string> = {
+  ARP: "#8b5cd6",
+  ICMP: "#f59e0b",
+  TCP: "#3b6fe0",
+  UDP: "#0ea5a4",
+  FTP: "#e11d48",
+  DHCP: "#22a55a",
+  RPC: "#3b6fe0",
 };
 
 /**
- * A message sequence: one lifeline per actor, time running down, one arrow
- * per message. `upto` messages are drawn and the last one is highlighted.
+ * The Simulation Panel's event list: one row per PDU, oldest first, as
+ * Packet Tracer lists them when stepping through a simulation. `upto`
+ * events are listed and the last one is the one being looked at.
  */
 export function sequenceFigure(
   actors: readonly string[],
   messages: readonly SeqMessage[],
   upto = messages.length,
   notes: readonly { at: number; side: number; text: string }[] = [],
+  /** The type of every message that does not name its own. */
+  type = "TCP",
 ): SchematicData {
-  const width = actors.length > 3 ? 520 : actors.length > 2 ? 480 : 420;
-  const gap = (width - 120) / Math.max(1, actors.length - 1);
-  const xOf = (i: number) => 60 + i * gap;
-  const rowH = 26;
-  const top = 46;
-  const height = Math.max(220, top + 22 + messages.length * rowH + 16);
-  const els: SchematicElement[] = [];
-  actors.forEach((name, i) => {
-    els.push({
-      type: "wire",
-      id: `life-${i}`,
-      points: [
-        { x: xOf(i), y: top + 12 },
-        { x: xOf(i), y: height - 10 },
+  const rows: PtRow[] = [];
+  const shown = messages.slice(0, upto);
+  shown.forEach((m, i) => {
+    const t = m.type ?? type;
+    rows.push({
+      cells: [
+        "",
+        (i * 0.001).toFixed(3),
+        actors[m.from],
+        actors[m.to],
+        t,
+        m.lost ? `${m.label}  ✕ lost` : m.label,
       ],
-      color: "#a3a3a3",
+      swatch: m.lost ? "#dc2626" : (m.color ?? PDU_COLOR[t] ?? "#f59e0b"),
+      current: i === shown.length - 1,
+      tone: m.lost ? "lost" : undefined,
     });
-    els.push({
-      type: "block",
-      id: `actor-${i}`,
-      x: xOf(i),
-      y: top,
-      w: Math.min(92, gap - 12),
-      h: 24,
-      label: name,
-      fill: "#dbe5ff",
-    });
+    for (const n of notes)
+      if (n.at === i)
+        rows.push({ cells: [`${actors[n.side]}: ${n.text}`], tone: "note" });
   });
-  messages.slice(0, upto).forEach((m, i) => {
-    const y = top + 36 + i * rowH;
-    const x1 = xOf(m.from);
-    const x2 = xOf(m.to);
-    const dir = Math.sign(x2 - x1);
-    const end = m.lost ? x1 + (x2 - x1) * 0.6 : x2 - dir * 2;
-    const last = i === upto - 1;
-    els.push({
-      type: "arrow",
-      id: `msg-${i}`,
-      points: [
-        { x: x1 + dir * 2, y },
-        { x: end, y },
-      ],
-      size: 7,
-      highlight: last && !m.lost && !m.color,
-      color: m.lost ? "#dc2626" : m.color,
-    });
-    // A message that passes other lifelines is labelled beside its sender.
-    const text = m.lost ? `${m.label} ✕` : m.label;
-    const long = Math.abs(x2 - x1) > gap * 1.2;
-    els.push({
-      type: "label",
-      id: `msg-${i}-text`,
-      x: long
-        ? x1 + dir * (text.length * 2.6 + 8)
-        : (x1 + (m.lost ? end : x2)) / 2,
-      y: y - 6,
-      text,
-      size: 9,
-      color: m.lost ? "#dc2626" : last ? "#2563eb" : undefined,
-    });
-  });
-  for (const [i, n] of notes.entries()) {
-    if (n.at >= upto) continue;
-    const y = top + 36 + n.at * rowH;
-    els.push({
-      type: "label",
-      id: `note-${i}`,
-      x: xOf(n.side) + (n.side === 0 ? 1 : -1) * (8 + n.text.length * 2.4),
-      y: y + 12,
-      text: n.text,
-      size: 8,
-      color: "#737373",
-    });
-  }
-  return { width, height, gallery: true, elements: els };
+  const header = [
+    "Vis.",
+    "Time(sec)",
+    "Last Device",
+    "At Device",
+    "Type",
+    "Info",
+  ];
+  const widths = header.map((h, c) =>
+    Math.max(
+      cellWidth(h),
+      ...rows
+        .filter((r) => r.tone !== "note")
+        .map((r) => cellWidth(r.cells[c] ?? "") + (c === 4 ? 13 : 0)),
+    ),
+  );
+  widths[0] = 30;
+  const types = [...new Set(shown.map((m) => m.type ?? type))];
+  const w = Math.max(380, widths.reduce((a, b) => a + b, 0) + 12);
+  // The Info column takes what is left.
+  widths[5] += w - 12 - widths.reduce((a, b) => a + b, 0);
+  const win: PtWindow = {
+    w,
+    title: "Simulation Panel",
+    heading: "Event List",
+    columns: header.map((label, i) => ({ label, w: widths[i] })),
+    rows,
+    swatchCol: 4,
+    footer: `Event List Filters · Visible Events: ${types.join(", ")}`,
+  };
+  return {
+    width: w,
+    height: ptWindowHeight(win),
+    gallery: true,
+    plain: true,
+    elements: [{ type: "pt-window", id: "events", x: 0, y: 0, ...win }],
+  };
+}
+
+/**
+ * A Packet Tracer window that lists fields: the PDU Information window,
+ * with one column per PDU.
+ */
+export function pduFigure(
+  title: string,
+  tabs: readonly string[],
+  tab: number,
+  heading: string,
+  columns: readonly string[],
+  rows: readonly (readonly string[])[],
+  footer?: string,
+): SchematicData {
+  const widths = columns.map((h, c) =>
+    Math.max(cellWidth(h), ...rows.map((r) => cellWidth(r[c] ?? ""))),
+  );
+  const w = Math.max(360, widths.reduce((a, b) => a + b, 0) + 12);
+  widths[widths.length - 1] += w - 12 - widths.reduce((a, b) => a + b, 0);
+  const win: PtWindow = {
+    w,
+    title,
+    tabs,
+    tab,
+    heading,
+    columns: columns.map((label, i) => ({ label, w: widths[i] })),
+    rows: rows.map((cells) => ({ cells })),
+    footer,
+  };
+  return {
+    width: w,
+    height: ptWindowHeight(win),
+    gallery: true,
+    plain: true,
+    elements: [{ type: "pt-window", id: "pdu", x: 0, y: 0, ...win }],
+  };
+}
+
+/** A device's CLI tab in Packet Tracer, with the session typed so far. */
+export function cliFigure(
+  device: string,
+  lines: readonly { text: string; tone?: "input" | "output" }[],
+  footer?: string,
+): SchematicData {
+  const longest = Math.max(...lines.map((l) => l.text.length));
+  const w = Math.max(380, Math.ceil(longest * 5.1 + 36));
+  const win: PtWindow = {
+    w,
+    title: device,
+    tabs: ["Physical", "Config", "CLI", "Attributes"],
+    tab: 2,
+    heading: "IOS Command Line Interface",
+    console: lines,
+    footer,
+  };
+  return {
+    width: w,
+    height: ptWindowHeight(win),
+    gallery: true,
+    plain: true,
+    elements: [{ type: "pt-window", id: "cli", x: 0, y: 0, ...win }],
+  };
 }
 
 /**
