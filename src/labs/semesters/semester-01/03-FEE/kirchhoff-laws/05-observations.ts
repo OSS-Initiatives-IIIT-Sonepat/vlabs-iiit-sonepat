@@ -5,8 +5,8 @@ export const observations: ObservationSection = {
   type: "observation",
   title: "Observations",
   paragraphs: [
-    "Record branch currents and voltages for both supply configurations. " +
-      "Verify KCL at node A and KVL around each loop by computing the algebraic sums.",
+    "Branch currents are positive when they enter node A. $I_2$ is negative because node A is above V2, so that current leaves the node. " +
+      "The current column $I_1 + I_2 - I_3$ and both loop sums are zero.",
   ],
   table: {
     headers: [
@@ -22,8 +22,19 @@ export const observations: ObservationSection = {
       "KVL L2 (V)",
     ],
     rows: [
-      ["V1=9 V, V2=6 V", 5.14, 1.43, 6.57, 0.0, 5.14, 3.14, 3.86, 0.0, 0.0],
-      ["V1=12 V, V2=6 V", 7.06, 1.17, 8.23, 0.0, 7.06, 2.57, 4.94, 0.0, 0.0],
+      ["V1=9 V, V2=6 V", 2.33, -0.31, 2.02, 0.0, 2.33, -0.67, 6.67, 0.0, 0.0],
+      [
+        "V1=12 V, V2=6 V",
+        3.62,
+        -1.08,
+        2.54,
+        0.0,
+        3.62,
+        -2.38,
+        8.38,
+        0.0,
+        0.0,
+      ],
     ],
   },
 };

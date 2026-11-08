@@ -254,8 +254,11 @@ function benchSlotMap(all: ComponentInstance[]): Map<string, number> {
     if (n === 1) {
       map.set(entry.id, 2);
     } else {
-      // Spread instruments evenly across the bench slots [0.4 .. 6.6]
-      map.set(entry.id, 0.4 + (i / (n - 1)) * 6.2);
+      // The procedure card covers the left of the bench. A short row
+      // starts further right so the supply is not hidden behind it.
+      const start = n <= 3 ? 3.5 : 2.1;
+      const end = 6.2;
+      map.set(entry.id, start + (i / (n - 1)) * (end - start));
     }
   });
 
@@ -1659,7 +1662,9 @@ export function LabSceneCanvas({
     }
 
     // ── Rebuild instruments with dynamic display values ───────────────
-    const slotMap = benchSlotMap(circuit.components);
+    const slotMap = benchSlotMap(
+      circuit.components.filter((c) => visible.has(c.id)),
+    );
     for (const inst of circuit.components) {
       if (
         inst.type !== "dc-jack" &&

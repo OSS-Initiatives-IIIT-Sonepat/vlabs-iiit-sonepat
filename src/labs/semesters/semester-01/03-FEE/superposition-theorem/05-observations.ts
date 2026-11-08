@@ -4,20 +4,20 @@ export const observations: ObservationSection = {
   type: "observation",
   title: "Observations",
   paragraphs: [
-    "The algebraic sum of individual contributions should equal the total response.",
+    "Partial load currents add to the two-source current. The same check on the node voltage is $5.12 + 1.55 = 6.67$ V.",
   ],
   table: {
     headers: [
       "Condition",
-      "$I_{R3}$ Measured (mA)",
-      "$I_{R3}$ Theoretical (mA)",
-      "Error (%)",
+      "$I_{R3}$ (mA)",
+      "$V_{R3}$ (V)",
+      "Sum check",
     ],
     rows: [
-      ["Both sources active ($I_{total}$)", 3.21, 3.24, 0.93],
-      ["V1 alone ($I_{R3,V1}$)", 2.45, 2.47, 0.81],
-      ["V2 alone ($I_{R3,V2}$)", 0.76, 0.77, 1.3],
-      ["Superposition sum", 3.21, 3.24, 0.93],
+      ["Both sources", 2.02, 6.67, "—"],
+      ["V1 alone", 1.55, 5.12, "—"],
+      ["V2 alone", 0.47, 1.55, "—"],
+      ["Superposition sum", 2.02, 6.67, "1.55 + 0.47 = 2.02 mA"],
     ],
   },
 };

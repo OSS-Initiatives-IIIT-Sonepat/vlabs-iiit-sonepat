@@ -4,16 +4,16 @@ export const observations: ObservationSection = {
   type: "observation",
   title: "Observations",
   paragraphs: [
-    "Norton parameters and load voltage comparison between original network and Norton equivalent circuit.",
+    "Short-circuit current, Norton resistance, and the load check. $6.19\\,\\text{V} / 688\\,\\Omega$ is 9.00 mA.",
   ],
   table: {
-    headers: ["Parameter", "Theoretical Value", "Measured Value", "Error (%)"],
+    headers: ["Parameter", "Reading"],
     rows: [
-      ["$I_N$ (mA)", 9.0, 8.93, 0.78],
-      ["$R_N$ (k$\\Omega$)", 0.688, 0.695, 1.02],
-      ["$I_N$ from $V_{th}/R_N$ (mA)", 8.99, 8.85, 1.56],
-      ["$V_L$ (Original, $R_L=3.3\\,\\text{k}\\Omega$) (V)", 5.12, 5.09, 0.59],
-      ["$V_L$ (Norton, $R_L=3.3\\,\\text{k}\\Omega$) (V)", 5.12, 5.1, 0.39],
+      ["$V_{oc} = V_{th}$", "6.19 V"],
+      ["$I_N$", "9.00 mA"],
+      ["$R_N$", "688 Ω"],
+      ["$V_L$ with $R_L = 3.3\\,\\text{k}\\Omega$", "5.12 V"],
+      ["$I_L$ with $R_L = 3.3\\,\\text{k}\\Omega$", "1.55 mA"],
     ],
   },
 };
