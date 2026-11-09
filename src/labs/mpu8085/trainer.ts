@@ -151,6 +151,19 @@ export type KitPress = {
   mem: number[];
 };
 
+/**
+ * One command inside a step: a few keys, then the moves they cause. The
+ * kit plays one command each time the student asks for the next.
+ */
+export type KitBeat = {
+  /** `keys[from, to)` are pressed in this command. */
+  keys: [number, number];
+  /** `stages[from, to)` fly after them. */
+  stages: [number, number];
+  /** What the command does, on the command bar. */
+  say: string;
+};
+
 export type KitFrame = {
   before: KitState;
   after: KitState;
@@ -162,6 +175,8 @@ export type KitFrame = {
   alu?: string;
   /** What changed in this step, outlined in blue. */
   hot: KitSpot[];
+  /** The keys and stages above, cut into commands. Empty for a still frame. */
+  beats: KitBeat[];
   /** Which part of the kit the camera favours. */
   focus: "all" | "keys" | "run";
 };
