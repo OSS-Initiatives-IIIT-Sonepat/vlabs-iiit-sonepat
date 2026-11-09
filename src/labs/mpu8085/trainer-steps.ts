@@ -7,6 +7,7 @@ import {
   cellOf,
   hex2,
   hex4,
+  type KitBeat,
   type KitFrame,
   type KitLcd,
   type KitListingLine,
@@ -31,8 +32,6 @@ export type TrainerLab = {
 
 /** Execution steps shown one instruction at a time before loops are run as passes. */
 const MAX_PASSES = 6;
-/** Most key presses drawn for one step. */
-const MAX_KEYS = 64;
 /** Instructions per "type in" step. */
 const CHUNK = 4;
 
@@ -144,6 +143,8 @@ type Effect = {
   stages: KitMove[][];
   alu?: string;
   lines: string[];
+  /** A short line for the command bar when nothing moves after the fetch. */
+  note?: string;
   /** Memory the instruction reads or writes, for the bus LEDs. */
   bus?: { addr: number; data: number };
 };
@@ -378,9 +379,12 @@ function effectOf(c: Ctx): Effect {
           "HLT stops the 8085. The program is finished, and every register keeps its last value.",
           "Press RESET to get back to the monitor. RAM is not cleared.",
         ],
+        { note: "HLT: the 8085 stops here" },
       );
     case "NOP":
-      return out([], ["NOP does nothing for four clock cycles."]);
+      return out([], ["NOP does nothing for four clock cycles."], {
+        note: "NOP: nothing happens",
+      });
     case "STC":
     case "CMC":
       return out(
@@ -494,6 +498,10 @@ function effectOf(c: Ctx): Effect {
         ? `${cond.say}, so it is taken.`
         : `${cond.flag} = ${flag(b.F, cond.flag)}, not ${cond.when}, so it is not taken: the next instruction runs.`
       : "";
+    const skip =
+      cond && !taken
+        ? `${cond.flag} = ${flag(b.F, cond.flag)}, so no ${kind === "J" ? "jump" : kind === "C" ? "call" : "return"}`
+        : undefined;
     if (kind === "J") {
       return out(
         taken ? [[{ from: "CODE", to: "PC", text: hex4(imm16) }]] : [],
@@ -501,6 +509,7 @@ function effectOf(c: Ctx): Effect {
           `${mn} ${target(imm16)} jumps to ${w(imm16)}${cond ? ` only when ${cond.say}` : ""}. ${why}`.trim(),
           "Jumps read the flags but do not change them.",
         ],
+        { note: skip },
       );
     }
     if (kind === "C") {
@@ -521,7 +530,7 @@ function effectOf(c: Ctx): Effect {
             ? `The return address, ${w(ret)}, goes on the stack (SP ${w(b.SP)} → ${w(a.SP)}), and PC = ${w(imm16)}.`
             : "",
         ].filter(Boolean),
-        taken ? { bus: { addr: b.SP - 2, data: ret & 0xff } } : undefined,
+        taken ? { bus: { addr: b.SP - 2, data: ret & 0xff } } : { note: skip },
       );
     }
     const back = c.rd(b.SP) | (c.rd(b.SP + 1) << 8);
@@ -540,7 +549,7 @@ function effectOf(c: Ctx): Effect {
           ? `The return address ${w(back)} comes off the stack, so PC = ${w(back)} and SP = ${w(a.SP)}.`
           : "",
       ].filter(Boolean),
-      taken ? { bus: { addr: b.SP, data: c.rd(b.SP) } } : undefined,
+      taken ? { bus: { addr: b.SP, data: c.rd(b.SP) } } : { note: skip },
     );
   }
 
@@ -655,6 +664,31 @@ function effectOf(c: Ctx): Effect {
   }
 
   return out([], [`${c.text} runs.`, fl()]);
+}
+
+/** A place, as the command bar names it. */
+function spotName(spot: KitSpot): string {
+  if (spot === "CODE") return "the program";
+  if (spot === "ALU") return "the ALU";
+  if (spot === "F") return "the flags";
+  if (spot === "RAM") return "RAM";
+  if (spot.startsWith("M")) return `${spot.slice(1)}H`;
+  return spot;
+}
+
+/** One stage of moves, as one line for the command bar. */
+function sayStage(stage: KitMove[], alu?: string): string {
+  const hex = (t: string) =>
+    /^[0-9A-F]{2}$|^[0-9A-F]{4}$/.test(t) ? `${t}H` : t;
+  if (stage.every((m) => m.to === "ALU"))
+    return `${stage.map((m) => `${spotName(m.from)} (${hex(m.text)})`).join(" and ")} into the ALU`;
+  if (stage.every((m) => m.from === "ALU"))
+    return `${alu ? `ALU: ${alu}` : "The ALU"} → ${stage.map((m) => spotName(m.to)).join(" and ")}`;
+  if (stage.every((m) => m.to === "PC") && stage[0].from === "CODE")
+    return `Jump: PC = ${hex(stage[0].text)}`;
+  return stage
+    .map((m) => `${hex(m.text)}: ${spotName(m.from)} → ${spotName(m.to)}`)
+    .join(", ");
 }
 
 // ── The lab ────────────────────────────────────────────────────────────────
@@ -834,10 +868,20 @@ export function buildTrainerLab(
 
   const steps: SceneProcedureStep[] = [];
   let keys: KitPress[] = [];
+  let beats: KitBeat[] = [];
+  let beatFrom = 0;
   let before = copy(st);
   const begin = () => {
     before = copy(st);
     keys = [];
+    beats = [];
+    beatFrom = 0;
+  };
+  /** Close the keys pressed since the last command into one command. */
+  const beat = (say: string) => {
+    if (keys.length === beatFrom) return;
+    beats.push({ keys: [beatFrom, keys.length], stages: [0, 0], say });
+    beatFrom = keys.length;
   };
   const press = (key: TrainerKey, digits: string, lcd: KitLcd = st.lcd) => {
     st.digits = digits;
@@ -848,20 +892,20 @@ export function buildTrainerLab(
   const commit = (
     label: string,
     body: string[],
-    rest: Partial<Pick<KitFrame, "stages" | "alu" | "hot" | "focus">> = {},
+    rest: Partial<
+      Pick<KitFrame, "stages" | "alu" | "hot" | "focus" | "beats">
+    > = {},
   ) => {
     st.mem = memNow();
-    const shown =
-      keys.length > MAX_KEYS
-        ? [...keys.slice(0, MAX_KEYS - 1), keys[keys.length - 1]]
-        : keys;
+    beat("Press the keys");
     const kit: KitFrame = {
       before,
       after: copy(st),
-      keys: shown,
+      keys,
       stages: rest.stages ?? [],
       alu: rest.alu,
       hot: rest.hot ?? [],
+      beats: rest.beats ?? beats,
       focus: rest.focus ?? "keys",
     };
     steps.push({ label, body: body.join("\n"), show: [], kit });
@@ -882,6 +926,7 @@ export function buildTrainerLab(
   begin();
   st.power = true;
   press("RESET", " UP 85", { mode: "sign-on" });
+  beat("RESET · the monitor starts and signs on: UP 85");
   const overview = commit(
     "Switch on and press RESET",
     [
@@ -905,6 +950,9 @@ export function buildTrainerLab(
       press("EXMEM", "----  ", edit(first));
       typeAddress(first, edit);
       press("NEXT", `${hex4(first)}${hex2(ram[first])}`, edit(first));
+      beat(
+        `${open >= 0 ? "EXEC, then " : ""}EX MEM, ${hex4(first)}, NEXT · open ${w(first)}`,
+      );
       lines.push(
         `Press EX MEM, type ${hex4(first)}, and press NEXT. The display opens ${w(first)}: four digits of address, two of data.`,
       );
@@ -927,6 +975,9 @@ export function buildTrainerLab(
           upto: addr,
         });
       });
+      beat(
+        `${line.bytes.map((b) => `${hex2(b)} NEXT`).join(", ")} · ${line.text} at ${w(line.address)}`,
+      );
       open = line.address + line.bytes.length;
     }
     const first3 = chunk.find((l) => l.bytes.length === 3);
@@ -971,6 +1022,9 @@ export function buildTrainerLab(
         `${hex4(span.address)}${hex2(ram[span.address])}`,
         edit(span.address),
       );
+      beat(
+        `EXEC, then EX MEM, ${hex4(span.address)}, NEXT · open ${w(span.address)} for the data`,
+      );
       span.bytes.forEach((byte, i) => {
         const addr = span.address + i;
         const hx = hex2(byte);
@@ -978,10 +1032,12 @@ export function buildTrainerLab(
         ram[addr] = byte;
         press(hx[1] as TrainerKey, `${hex4(addr)}${hx}`);
         press("NEXT", `${hex4(addr + 1)}${hex2(ram[addr + 1])}`);
+        beat(`${hx} NEXT · ${v(byte)} into ${w(addr)}`);
       });
       lines.push(`${w(span.address)}: ${span.bytes.map(hex2).join(" ")}`);
     }
     press("EXEC", "      ", { mode: "sign-on" });
+    beat("EXEC · close the memory command");
     commit(
       "Type the data",
       [
@@ -1013,6 +1069,7 @@ export function buildTrainerLab(
   st.lcd = { mode: "run", pc: entry, halted: false };
   keys[keys.length - 1].digits = st.digits;
   st.regs.PC = entry;
+  beat(`SI, ${hex4(entry)} · single-step from START`);
   commit(
     "Start single-step at START",
     [
@@ -1059,6 +1116,14 @@ export function buildTrainerLab(
     };
     const head = g.head;
     const where = labelOf(head) ? `${labelOf(head)} (${w(head)})` : w(head);
+    beats = [
+      {
+        keys: [0, keys.length],
+        stages: [0, 0],
+        say: `NEXT × ${g.count} · ${final ? "the remaining passes" : `one more pass from ${labelOf(head) ?? w(head)}`}`,
+      },
+    ];
+    beatFrom = keys.length;
     commit(
       final
         ? "Run the remaining passes"
@@ -1150,6 +1215,22 @@ export function buildTrainerLab(
     st.abus = eff.bus?.addr ?? at;
     st.dbus = eff.bus?.data ?? line.bytes[0];
     const ch = changes(b, a, rd, (x) => cpu.readMem(x), cells);
+    const fetchSay = `NEXT · fetch ${v(line.bytes[0])} (${line.text}) from ${w(at)} into IR`;
+    const execBeats: KitBeat[] = [
+      {
+        keys: [0, 1],
+        stages: [0, Math.min(1, eff.stages.length)],
+        say:
+          eff.stages.length <= 1 && eff.note
+            ? `${fetchSay} · ${eff.note}`
+            : fetchSay,
+      },
+      ...eff.stages.slice(1).map((stage, i): KitBeat => ({
+        keys: [1, 1],
+        stages: [i + 1, i + 2],
+        say: sayStage(stage, eff.alu),
+      })),
+    ];
     commit(
       line.text,
       [
@@ -1163,6 +1244,7 @@ export function buildTrainerLab(
         stages: eff.stages,
         alu: eff.alu,
         hot: [...ch.hot, "PC", "IR"],
+        beats: execBeats,
         focus: "run",
       },
     );
@@ -1184,6 +1266,7 @@ export function buildTrainerLab(
   if (spans.length) {
     begin();
     press("RESET", " UP 85", { mode: "sign-on" });
+    beat("RESET · leave single step; RAM keeps everything");
     const lines: string[] = [];
     for (const span of spans) {
       press("EXMEM", "----  ", { mode: "read", at: span[0] });
@@ -1192,12 +1275,18 @@ export function buildTrainerLab(
         mode: "read",
         at: span[0],
       });
-      for (const addr of span.slice(1))
+      beat(
+        `EX MEM, ${hex4(span[0])}, NEXT · ${w(span[0])} holds ${v(ram[span[0]])}`,
+      );
+      for (const addr of span.slice(1)) {
         press("NEXT", `${hex4(addr)}${hex2(ram[addr])}`, {
           mode: "read",
           at: addr,
         });
+        beat(`NEXT · ${w(addr)} holds ${v(ram[addr])}`);
+      }
       press("EXEC", " UP 85", { mode: "read", at: span[span.length - 1] });
+      beat("EXEC · close the memory command");
       lines.push(span.map((addr) => `${w(addr)} = ${v(ram[addr])}`).join(", "));
     }
     commit(
@@ -1221,12 +1310,20 @@ export function buildTrainerLab(
     keys: [],
     stages: [],
     hot: lastKit.hot,
+    beats: [],
     focus: "all",
   };
   return {
     program,
     steps,
-    overview: { ...overview, keys: [], before: overview.after, hot: [] },
+    overview: {
+      ...overview,
+      keys: [],
+      stages: [],
+      beats: [],
+      before: overview.after,
+      hot: [],
+    },
     final,
   };
 }
