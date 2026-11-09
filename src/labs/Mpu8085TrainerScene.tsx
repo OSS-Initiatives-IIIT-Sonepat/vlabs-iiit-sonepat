@@ -1660,6 +1660,31 @@ export function Mpu8085TrainerScene({
   }, [preview]);
 
   const done = beat >= count;
+  const next = () => (done ? onNextStep?.() : goTo(beat + 1));
+  const nextRef = useRef(next);
+  useEffect(() => {
+    nextRef.current = next;
+  });
+  // Space or Enter is the Next command button, unless something else that
+  // takes keys has the focus.
+  useEffect(() => {
+    if (preview || !count) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== " " && e.key !== "Enter") return;
+      if (e.repeat || e.altKey || e.ctrlKey || e.metaKey) return;
+      const t = e.target;
+      if (
+        t instanceof HTMLElement &&
+        (t.closest("button, a, input, textarea, select, [role=button]") ||
+          t.isContentEditable)
+      )
+        return;
+      e.preventDefault();
+      nextRef.current();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [preview, count]);
   const last = beat > 0 ? frame.beats[beat - 1].say : null;
   const upNext = !done ? frame.beats[beat].say : null;
 
@@ -1684,7 +1709,7 @@ export function Mpu8085TrainerScene({
           busy={busy}
           onBack={() => goTo(beat - 1)}
           onReplay={() => goTo(0)}
-          onNext={() => (done ? onNextStep?.() : goTo(beat + 1))}
+          onNext={next}
           canGoOn={!done || !!onNextStep}
           auto={auto}
           onAuto={() => setAuto((on) => !on)}
@@ -1812,6 +1837,9 @@ function CommandBar({
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-white" />
           )}
           {done ? "Next step" : "Next command"}
+          <kbd className="rounded-[5px] bg-white/20 px-1.5 py-[1px] font-sans text-[10.5px] font-medium">
+            Space
+          </kbd>
           <svg {...ICON}>
             <path d="M5.5 3l4 4-4 4" />
           </svg>
