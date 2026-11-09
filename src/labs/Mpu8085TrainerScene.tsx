@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
@@ -60,7 +60,6 @@ const KEY_DT = 0.36;
 /** One flight of a byte. */
 const STAGE = 0.85;
 const GAP = 0.2;
-const HOLD = 2.8;
 
 // ── Layout (board units, x right, z towards the student) ──────────────────
 const REG_SPOTS: Record<string, [number, number, number]> = {
@@ -307,10 +306,17 @@ export function Mpu8085TrainerScene({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const frameRef = useRef(frame);
   const programRef = useRef(program);
+  // How many commands of this frame have been asked for. A new frame
+  // starts again from none, so the kit waits on the state before it.
+  const [asked, setAsked] = useState({ frame, beat: 0 });
+  if (asked.frame !== frame) setAsked({ frame, beat: 0 });
+  const beat = asked.frame === frame ? asked.beat : 0;
+  const beatRef = useRef(beat);
 
   useEffect(() => {
     frameRef.current = frame;
     programRef.current = program;
+    beatRef.current = beat;
   });
 
   useEffect(() => {
@@ -1192,7 +1198,6 @@ export function Mpu8085TrainerScene({
     let flights: Flight[] = [];
     let built: KitFrame | null = null;
     let clock = 0;
-    let cycle = 1;
     /** When each key goes down, and when each stage takes off. */
     let keyAt: number[] = [];
     let stageAt: number[] = [];
@@ -1270,7 +1275,6 @@ export function Mpu8085TrainerScene({
           arrive.set(mv.to, Math.max(prev, start + STAGE));
         }
       });
-      cycle = total + HOLD;
       clock = 0;
       setMemLabels(programRef.current.rows);
       built = f;
@@ -1415,7 +1419,9 @@ export function Mpu8085TrainerScene({
           t <= fl.start + STAGE,
       );
       aluMat.emissive.setHex(aluBusy ? 0x2563eb : 0x000000);
-      aluMat.emissiveIntensity = aluBusy ? 0.25 + 0.15 * Math.sin(t * 10) : 0;
+      aluMat.emissiveIntensity = aluBusy
+        ? 0.25 + 0.15 * Math.sin(performance.now() / 100)
+        : 0;
 
       // Buses.
       const busOn = f.stages.length && t >= stageAt[0] ? after : st;
@@ -1469,7 +1475,8 @@ export function Mpu8085TrainerScene({
       // What changed, outlined once it has changed.
       const hot = new Set<string>(done ? f.hot : []);
       for (const [spot, at] of arrive) if (t >= at) hot.add(spot);
-      const pulse = 0.55 + 0.35 * Math.sin(t * 5);
+      const wall = performance.now() / 1000;
+      const pulse = 0.55 + 0.35 * Math.sin(wall * 5);
       for (const [name, mod] of regMods)
         (mod.glow.material as THREE.MeshBasicMaterial).opacity = hot.has(name)
           ? pulse
@@ -1515,8 +1522,11 @@ export function Mpu8085TrainerScene({
           };
         }
       }
-      clock += step;
-      if (clock > cycle) clock = 0;
+      // Play forward to the end of the last command asked for, then wait.
+      // Going back jumps straight to the end of the earlier command.
+      const want = Math.min(beatRef.current, beatEnd.length);
+      const target = !beatEnd.length ? total : want ? beatEnd[want - 1] : 0;
+      clock = clock > target ? target : Math.min(target, clock + step);
       showState(f, clock);
       if (glide) {
         glide.t = Math.min(1, glide.t + step / 0.9);
