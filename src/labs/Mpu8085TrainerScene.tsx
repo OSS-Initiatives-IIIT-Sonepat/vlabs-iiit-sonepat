@@ -8,6 +8,7 @@ import { bindCtrlPan } from "./ctrl-pan";
 
 import {
   FLAG_BITS,
+  type KitBeat,
   FN_KEYS,
   HEX_KEYS,
   KEY_LEGEND,
@@ -54,6 +55,9 @@ const Y0 = 0.42;
 
 // Timing, in seconds.
 const LEAD = 0.35;
+/** One key press. */
+const KEY_DT = 0.36;
+/** One flight of a byte. */
 const STAGE = 0.85;
 const GAP = 0.2;
 const HOLD = 2.8;
@@ -284,6 +288,7 @@ type Flight = {
   tube: THREE.Mesh;
   text: string;
   start: number;
+  from: KitSpot;
   to: KitSpot;
 };
 
@@ -1187,12 +1192,28 @@ export function Mpu8085TrainerScene({
     let flights: Flight[] = [];
     let built: KitFrame | null = null;
     let clock = 0;
-    let keysEnd = 0;
-    let stagesEnd = 0;
     let cycle = 1;
-    let dt = 0.3;
+    /** When each key goes down, and when each stage takes off. */
+    let keyAt: number[] = [];
+    let stageAt: number[] = [];
+    /** When each command has finished. */
+    let beatEnd: number[] = [];
+    /** When the whole step has finished and the kit shows `after`. */
+    let total = 0;
     /** When each spot takes its new value. */
     let arrive = new Map<string, number>();
+
+    /** The commands of a frame. An old frame without any is one command. */
+    const beatsOf = (f: KitFrame): KitBeat[] =>
+      f.beats.length || (!f.keys.length && !f.stages.length)
+        ? f.beats
+        : [
+            {
+              keys: [0, f.keys.length],
+              stages: [0, f.stages.length],
+              say: "",
+            },
+          ];
 
     const buildFrame = (f: KitFrame) => {
       for (const fl of flights) {
@@ -1202,16 +1223,30 @@ export function Mpu8085TrainerScene({
       }
       flights = [];
       arrive = new Map();
-      const n = f.keys.length;
-      dt = n ? Math.min(0.36, Math.max(0.12, 6 / n)) : 0;
-      keysEnd = LEAD + n * dt;
+      keyAt = [];
+      stageAt = [];
+      beatEnd = [];
+      let at = LEAD;
+      for (const b of beatsOf(f)) {
+        for (let k = b.keys[0]; k < b.keys[1]; k++) {
+          keyAt[k] = at;
+          at += KEY_DT;
+        }
+        if (b.stages[1] > b.stages[0]) at += 0.2;
+        for (let si = b.stages[0]; si < b.stages[1]; si++) {
+          stageAt[si] = at;
+          at += STAGE + GAP;
+        }
+        beatEnd.push(at);
+      }
+      total = beatEnd.length ? at : 0;
       const lcdBefore = lcdText(
         programRef.current,
         f.keys.length ? f.keys[f.keys.length - 1].lcd : f.before.lcd,
         f.before.mem,
       );
       f.stages.forEach((stage, si) => {
-        const start = keysEnd + 0.25 + si * (STAGE + GAP);
+        const start = stageAt[si];
         for (const mv of stage) {
           const a = spotAt(mv.from, lcdBefore.pointer);
           const b = spotAt(mv.to, lcdBefore.pointer);
@@ -1223,15 +1258,19 @@ export function Mpu8085TrainerScene({
             trailMat(),
           );
           root.add(tube);
-          flights.push({ curve, tube, text: mv.text, start, to: mv.to });
+          flights.push({
+            curve,
+            tube,
+            text: mv.text,
+            start,
+            from: mv.from,
+            to: mv.to,
+          });
           const prev = arrive.get(mv.to) ?? 0;
           arrive.set(mv.to, Math.max(prev, start + STAGE));
         }
       });
-      stagesEnd = f.stages.length
-        ? keysEnd + 0.25 + f.stages.length * (STAGE + GAP)
-        : keysEnd;
-      cycle = stagesEnd + HOLD;
+      cycle = total + HOLD;
       clock = 0;
       setMemLabels(programRef.current.rows);
       built = f;
@@ -1310,37 +1349,26 @@ export function Mpu8085TrainerScene({
 
     const showState = (f: KitFrame, t: number) => {
       const P = programRef.current;
-      const n = f.keys.length;
-      const idx = n ? Math.min(n - 1, Math.floor((t - LEAD) / dt)) : -1;
-      const press = t >= LEAD && idx >= 0 ? f.keys[idx] : null;
-      const last = n ? f.keys[n - 1] : null;
-      const done = t >= stagesEnd;
+      let idx = -1;
+      while (idx + 1 < keyAt.length && keyAt[idx + 1] <= t) idx++;
+      const press = idx >= 0 ? f.keys[idx] : null;
+      const sinceKey = idx >= 0 ? t - keyAt[idx] : Infinity;
+      const done = t >= total;
       const after = f.after;
       const before = f.before;
       const st: KitState = done ? after : before;
 
       // Displays.
-      const digits = done
-        ? after.digits
-        : t < keysEnd
-          ? (press?.digits ?? before.digits)
-          : (last?.digits ?? before.digits);
-      const lcdMode = done
-        ? after.lcd
-        : t < keysEnd
-          ? (press?.lcd ?? before.lcd)
-          : (last?.lcd ?? before.lcd);
-      const power =
-        t >= LEAD || before.power ? after.power || before.power : before.power;
+      const digits = done ? after.digits : (press?.digits ?? before.digits);
+      const lcdMode = done ? after.lcd : (press?.lcd ?? before.lcd);
+      const power = before.power || ((press !== null || done) && after.power);
       display.redraw(power ? digits : "      ");
       const memNow = (i: number) => {
         const key = `M${hex4(P.rows[Math.floor(i / 8)] + (i % 8))}`;
         const arr = arrive.get(key);
-        if (arr !== undefined)
-          return t >= arr ? after.mem[i] : (last?.mem[i] ?? before.mem[i]);
-        if (done) return after.mem[i];
-        if (t < keysEnd) return press ? press.mem[i] : before.mem[i];
-        return last ? last.mem[i] : before.mem[i];
+        const typed = press ? press.mem[i] : before.mem[i];
+        if (arr !== undefined) return t >= arr ? after.mem[i] : typed;
+        return done ? after.mem[i] : typed;
       };
       const memVals = after.mem.map((_, i) => memNow(i));
       const text = lcdText(P, lcdMode, memVals);
@@ -1372,23 +1400,25 @@ export function Mpu8085TrainerScene({
         setLed(flagLeds.get(name)!, power && !!(fRegs.F & bit));
 
       // ALU text, while it works.
-      const aluOn =
-        !!f.alu && f.stages.length > 1 && t >= keysEnd + 0.25 + STAGE;
+      const aluStage = f.stages.findIndex((s) => s.some((m) => m.to === "ALU"));
+      const aluOn = !!f.alu && aluStage >= 0 && t >= stageAt[aluStage] + STAGE;
       const want = aluOn ? (f.alu ?? "") : "";
       if (want !== aluText) {
         aluText = want;
         aluSum.mesh.visible = !!want;
         if (want) aluSum.redraw();
       }
-      const aluBusy =
-        f.stages.some((s) => s.some((m) => m.to === "ALU")) &&
-        t >= keysEnd &&
-        t < stagesEnd;
+      const aluBusy = flights.some(
+        (fl) =>
+          (fl.to === "ALU" || fl.from === "ALU") &&
+          t >= fl.start &&
+          t <= fl.start + STAGE,
+      );
       aluMat.emissive.setHex(aluBusy ? 0x2563eb : 0x000000);
       aluMat.emissiveIntensity = aluBusy ? 0.25 + 0.15 * Math.sin(t * 10) : 0;
 
       // Buses.
-      const busOn = t >= keysEnd && f.stages.length ? after : st;
+      const busOn = f.stages.length && t >= stageAt[0] ? after : st;
       const a = busOn.abus;
       const d = busOn.dbus;
       abus.forEach((led, i) =>
@@ -1404,8 +1434,7 @@ export function Mpu8085TrainerScene({
 
       // Keys.
       for (const [id, k] of keys) {
-        const down =
-          press?.key === id && t < keysEnd && t - LEAD - idx * dt < dt * 0.65;
+        const down = press?.key === id && sinceKey < KEY_DT * 0.65;
         const target = down ? -0.07 : 0;
         k.group.position.y += (Y0 + target - k.group.position.y) * 0.5;
         k.mat.color.setHex(down ? 0x93c5fd : k.base);
@@ -1438,7 +1467,7 @@ export function Mpu8085TrainerScene({
             false;
 
       // What changed, outlined once it has changed.
-      const hot = new Set<string>(t >= stagesEnd ? f.hot : []);
+      const hot = new Set<string>(done ? f.hot : []);
       for (const [spot, at] of arrive) if (t >= at) hot.add(spot);
       const pulse = 0.55 + 0.35 * Math.sin(t * 5);
       for (const [name, mod] of regMods)
@@ -1458,7 +1487,7 @@ export function Mpu8085TrainerScene({
         ? pulse
         : 0;
       (display.glow.material as THREE.MeshBasicMaterial).opacity =
-        press && t < keysEnd ? 0.5 : 0;
+        sinceKey < KEY_DT ? 0.5 : 0;
       lastHot = hot;
     };
     void lastHot;
