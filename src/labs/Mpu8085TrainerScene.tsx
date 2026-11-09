@@ -48,6 +48,7 @@ const LED_BODY = 0x16171b;
 const SEG_ON = "#ff3b2f";
 const SEG_OFF = "#3a1717";
 const BEAD = 0x2563eb;
+const HINT_COLOR = new THREE.Color(0x93c5fd);
 const HOT = 0x3b82f6;
 const LCD_BG = "#cfe0b8";
 const LCD_INK = "#1f2a17";
@@ -321,11 +322,14 @@ export function Mpu8085TrainerScene({
   const count = frame.beats.length;
   const goTo = (b: number) =>
     setAsked({ frame, beat: Math.max(0, Math.min(count, b)) });
+  // Pressing the glowing key on the kit runs the next command.
+  const pressRef = useRef(() => {});
 
   useEffect(() => {
     frameRef.current = frame;
     programRef.current = program;
     beatRef.current = beat;
+    pressRef.current = () => goTo(beat + 1);
   });
 
   useEffect(() => {
@@ -1216,6 +1220,8 @@ export function Mpu8085TrainerScene({
     let total = 0;
     /** When each spot takes its new value. */
     let arrive = new Map<string, number>();
+    /** The key the next command starts with, while the kit waits for it. */
+    let hint: TrainerKey | null = null;
 
     /** The commands of a frame. An old frame without any is one command. */
     const beatsOf = (f: KitFrame): KitBeat[] =>
@@ -1447,12 +1453,18 @@ export function Mpu8085TrainerScene({
       setLed(haltLed, power && !!runLcd?.halted);
       setLed(stepLed, power && !!runLcd && !runLcd.halted);
 
-      // Keys.
+      // Keys. The one the next command starts with glows until it is pressed.
+      const glow = 0.5 + 0.5 * Math.sin(performance.now() / 160);
       for (const [id, k] of keys) {
         const down = press?.key === id && sinceKey < KEY_DT * 0.65;
         const target = down ? -0.07 : 0;
         k.group.position.y += (Y0 + target - k.group.position.y) * 0.5;
-        k.mat.color.setHex(down ? 0x93c5fd : k.base);
+        if (down) k.mat.color.setHex(0x93c5fd);
+        else if (id === hint)
+          k.mat.color.setHex(k.base).lerp(HINT_COLOR, 0.35 + 0.45 * glow);
+        else k.mat.color.setHex(k.base);
+        k.mat.emissive.setHex(id === hint && !down ? 0x2563eb : 0x000000);
+        k.mat.emissiveIntensity = id === hint && !down ? 0.12 * glow : 0;
       }
 
       // Beads.
@@ -1511,6 +1523,47 @@ export function Mpu8085TrainerScene({
     let raf = 0;
     let prev = performance.now();
     let wasMoving = false;
+
+    // A click (not a drag) on the glowing key runs the next command.
+    const raycaster = new THREE.Raycaster();
+    const ndc = new THREE.Vector2();
+    const keyAtPointer = (e: PointerEvent): TrainerKey | null => {
+      const rect = canvas.getBoundingClientRect();
+      ndc.set(
+        ((e.clientX - rect.left) / rect.width) * 2 - 1,
+        -((e.clientY - rect.top) / rect.height) * 2 + 1,
+      );
+      raycaster.setFromCamera(ndc, camera);
+      const groups = [...keys.values()].map((k) => k.group);
+      const hit = raycaster.intersectObjects(groups, true)[0];
+      if (!hit) return null;
+      for (const [id, k] of keys) {
+        let o: THREE.Object3D | null = hit.object;
+        while (o && o !== k.group) o = o.parent;
+        if (o) return id;
+      }
+      return null;
+    };
+    let downAt: { x: number; y: number } | null = null;
+    const onDown = (e: PointerEvent) => {
+      downAt = { x: e.clientX, y: e.clientY };
+    };
+    const onUp = (e: PointerEvent) => {
+      const start = downAt;
+      downAt = null;
+      if (!start || Math.hypot(e.clientX - start.x, e.clientY - start.y) > 5)
+        return;
+      if (hint && keyAtPointer(e) === hint) pressRef.current();
+    };
+    const onMove = (e: PointerEvent) => {
+      if (e.buttons) return;
+      canvas.style.cursor = hint && keyAtPointer(e) === hint ? "pointer" : "";
+    };
+    if (!preview) {
+      canvas.addEventListener("pointerdown", onDown);
+      canvas.addEventListener("pointerup", onUp);
+      canvas.addEventListener("pointermove", onMove);
+    }
     const tick = () => {
       raf = requestAnimationFrame(tick);
       const now = performance.now();
@@ -1537,6 +1590,12 @@ export function Mpu8085TrainerScene({
       const want = Math.min(beatRef.current, beatEnd.length);
       const target = !beatEnd.length ? total : want ? beatEnd[want - 1] : 0;
       clock = clock > target ? target : Math.min(target, clock + step);
+      // Once the kit is waiting, light the key the next command presses.
+      const nextBeat = f.beats[want];
+      hint =
+        clock >= target && nextBeat && nextBeat.keys[1] > nextBeat.keys[0]
+          ? f.keys[nextBeat.keys[0]].key
+          : null;
       showState(f, clock);
       const moving = clock < target;
       if (moving !== wasMoving) {
@@ -1558,6 +1617,9 @@ export function Mpu8085TrainerScene({
     return () => {
       cancelAnimationFrame(raf);
       observer.disconnect();
+      canvas.removeEventListener("pointerdown", onDown);
+      canvas.removeEventListener("pointerup", onUp);
+      canvas.removeEventListener("pointermove", onMove);
       releasePan();
       controls.dispose();
       const seen = new Set<unknown>();
