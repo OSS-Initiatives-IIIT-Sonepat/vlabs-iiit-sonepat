@@ -54,12 +54,12 @@ const LCD_INK = "#1f2a17";
 const Y0 = 0.42;
 
 // Timing, in seconds.
-const LEAD = 0.35;
+const LEAD = 0.25;
 /** One key press. */
-const KEY_DT = 0.36;
+const KEY_DT = 0.45;
 /** One flight of a byte. */
-const STAGE = 0.85;
-const GAP = 0.2;
+const STAGE = 1.6;
+const GAP = 0.3;
 
 // ── Layout (board units, x right, z towards the student) ──────────────────
 const REG_SPOTS: Record<string, [number, number, number]> = {
@@ -1529,7 +1529,7 @@ export function Mpu8085TrainerScene({
       clock = clock > target ? target : Math.min(target, clock + step);
       showState(f, clock);
       if (glide) {
-        glide.t = Math.min(1, glide.t + step / 0.9);
+        glide.t = Math.min(1, glide.t + step / 1.3);
         const k = 1 - Math.pow(1 - glide.t, 3);
         camera.position.lerpVectors(glide.fp, glide.tp, k);
         controls.target.lerpVectors(glide.ft, glide.tt, k);
