@@ -29,6 +29,8 @@ type Props = {
   frame: KitFrame;
   /** A still card for Explore: no controls, the whole kit in view. */
   preview?: boolean;
+  /** Goes on to the next procedure step once every command has run. */
+  onNextStep?: () => void;
 };
 
 // ── Look: a white trainer on the same warm-white floor as the breadboard ──
@@ -302,6 +304,7 @@ export function Mpu8085TrainerScene({
   program,
   frame,
   preview = false,
+  onNextStep,
 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const frameRef = useRef(frame);
@@ -312,6 +315,12 @@ export function Mpu8085TrainerScene({
   if (asked.frame !== frame) setAsked({ frame, beat: 0 });
   const beat = asked.frame === frame ? asked.beat : 0;
   const beatRef = useRef(beat);
+  // True while the kit is still playing towards the last command asked for.
+  const [busy, setBusy] = useState(false);
+  const busyRef = useRef(setBusy);
+  const count = frame.beats.length;
+  const goTo = (b: number) =>
+    setAsked({ frame, beat: Math.max(0, Math.min(count, b)) });
 
   useEffect(() => {
     frameRef.current = frame;
@@ -1501,6 +1510,7 @@ export function Mpu8085TrainerScene({
 
     let raf = 0;
     let prev = performance.now();
+    let wasMoving = false;
     const tick = () => {
       raf = requestAnimationFrame(tick);
       const now = performance.now();
@@ -1528,6 +1538,11 @@ export function Mpu8085TrainerScene({
       const target = !beatEnd.length ? total : want ? beatEnd[want - 1] : 0;
       clock = clock > target ? target : Math.min(target, clock + step);
       showState(f, clock);
+      const moving = clock < target;
+      if (moving !== wasMoving) {
+        wasMoving = moving;
+        busyRef.current(moving);
+      }
       if (glide) {
         glide.t = Math.min(1, glide.t + step / 1.3);
         const k = 1 - Math.pow(1 - glide.t, 3);
@@ -1566,16 +1581,140 @@ export function Mpu8085TrainerScene({
     };
   }, [preview]);
 
+  const done = beat >= count;
+  const last = beat > 0 ? frame.beats[beat - 1].say : null;
+  const upNext = !done ? frame.beats[beat].say : null;
+
   return (
-    <canvas
-      ref={canvasRef}
-      style={{
-        width: "100%",
-        height: "100%",
-        display: "block",
-        touchAction: "none",
-        pointerEvents: preview ? "none" : undefined,
-      }}
-    />
+    <div className="relative h-full w-full">
+      <canvas
+        ref={canvasRef}
+        style={{
+          width: "100%",
+          height: "100%",
+          display: "block",
+          touchAction: "none",
+          pointerEvents: preview ? "none" : undefined,
+        }}
+      />
+      {!preview && count > 0 && (
+        <CommandBar
+          index={beat}
+          count={count}
+          last={last}
+          upNext={upNext}
+          busy={busy}
+          onBack={() => goTo(beat - 1)}
+          onReplay={() => goTo(0)}
+          onNext={() => (done ? onNextStep?.() : goTo(beat + 1))}
+          canGoOn={!done || !!onNextStep}
+        />
+      )}
+    </div>
+  );
+}
+
+const ICON = {
+  width: 14,
+  height: 14,
+  viewBox: "0 0 14 14",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: 1.4,
+  strokeLinecap: "round" as const,
+  strokeLinejoin: "round" as const,
+};
+
+/**
+ * The bar under the kit: what the last command did, what the next one
+ * will do, and the buttons that step through them.
+ */
+function CommandBar({
+  index,
+  count,
+  last,
+  upNext,
+  busy,
+  onBack,
+  onReplay,
+  onNext,
+  canGoOn,
+}: {
+  index: number;
+  count: number;
+  last: string | null;
+  upNext: string | null;
+  busy: boolean;
+  onBack: () => void;
+  onReplay: () => void;
+  onNext: () => void;
+  canGoOn: boolean;
+}) {
+  const done = index >= count;
+  const round =
+    "appearance-none flex h-9 w-9 items-center justify-center rounded-full border border-[var(--color-black-10)] bg-white text-[var(--ink-muted)] transition-colors hover:bg-[var(--color-black-5)] hover:text-[var(--ink)] disabled:opacity-40 disabled:hover:bg-white cursor-pointer disabled:cursor-default";
+  return (
+    <div className="pointer-events-auto absolute bottom-6 right-6 z-20 w-[min(500px,calc(100%-48px))] rounded-[20px] border border-[var(--color-black-10)] bg-white/95 p-4 font-sans shadow-[0_4px_24px_rgba(0,0,0,0.12),0_1px_3px_rgba(0,0,0,0.04)] backdrop-blur-md">
+      <div className="flex items-center justify-between">
+        <span className="text-[10.5px] font-medium uppercase tracking-[0.08em] text-[var(--ink-muted)]">
+          Command {Math.min(index + (done ? 0 : 1), count)} of {count}
+        </span>
+        <span className="flex gap-1" aria-hidden>
+          {Array.from({ length: count }, (_, i) => (
+            <span
+              key={i}
+              className={`h-1.5 w-1.5 rounded-full ${i < index ? "bg-[var(--color-blue)]" : i === index ? "bg-[var(--color-blue)] opacity-40" : "bg-[var(--color-black-10)]"}`}
+            />
+          ))}
+        </span>
+      </div>
+      <p className="m-0 mt-2 text-[13px] font-medium leading-[1.45] text-[var(--ink)]">
+        {last ?? "Nothing pressed yet. The kit is waiting for you."}
+      </p>
+      <p className="m-0 mt-1 text-[12.5px] leading-[1.45] text-[var(--ink-muted)]">
+        {done ? "This step is done." : `Next: ${upNext}`}
+      </p>
+      <div className="mt-3 flex items-center gap-2">
+        <button
+          type="button"
+          className={round}
+          onClick={onBack}
+          disabled={index === 0}
+          aria-label="Previous command"
+          title="Previous command"
+        >
+          <svg {...ICON}>
+            <path d="M8.5 3L4.5 7l4 4" />
+          </svg>
+        </button>
+        <button
+          type="button"
+          className={round}
+          onClick={onReplay}
+          disabled={index === 0}
+          aria-label="Start this step again"
+          title="Start this step again"
+        >
+          <svg {...ICON}>
+            <path d="M2.5 7a4.5 4.5 0 1 0 1.4-3.3" />
+            <path d="M2.5 2v2.5H5" />
+          </svg>
+        </button>
+        <button
+          type="button"
+          onClick={onNext}
+          disabled={!canGoOn}
+          className="appearance-none ml-auto flex h-9 cursor-pointer items-center gap-2 rounded-full border-none bg-[var(--color-blue)] px-4 text-[13px] font-medium text-white transition-opacity hover:opacity-90 disabled:cursor-default disabled:opacity-40"
+        >
+          {busy && (
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-white" />
+          )}
+          {done ? "Next step" : "Next command"}
+          <svg {...ICON}>
+            <path d="M5.5 3l4 4-4 4" />
+          </svg>
+        </button>
+      </div>
+    </div>
   );
 }
