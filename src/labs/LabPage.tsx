@@ -461,6 +461,7 @@ const SceneRenderer = React.memo(function SceneRenderer({
   osiFrame,
   net,
   kit,
+  onNextStep,
 }: {
   section: LabSection;
   circuit: Circuit;
@@ -473,6 +474,8 @@ const SceneRenderer = React.memo(function SceneRenderer({
   net: { bench: NetBench; frame: NetFrame } | null;
   /** Set when the lab's scene is the 8085 trainer kit. */
   kit: { program: KitProgram; frame: KitFrame } | null;
+  /** The kit's command bar moves on with this once a step is done. */
+  onNextStep: () => void;
 }) {
   if (osiFrame) {
     return <OsiJourneyScene frame={osiFrame} />;
@@ -496,7 +499,13 @@ const SceneRenderer = React.memo(function SceneRenderer({
     return null;
   }
   if (kit) {
-    return <Mpu8085TrainerScene program={kit.program} frame={kit.frame} />;
+    return (
+      <Mpu8085TrainerScene
+        program={kit.program}
+        frame={kit.frame}
+        onNextStep={onNextStep}
+      />
+    );
   }
   if (section.type === "text" && section.schematic) {
     return <TheoryScene spec={section.schematic} />;
@@ -604,6 +613,11 @@ function LabPageStandard({ content }: Props) {
       }
     },
     [navItems],
+  );
+
+  const goToNextStep = useCallback(
+    () => handleNav(currentIndex + 1),
+    [handleNav, currentIndex],
   );
 
   useEffect(() => {
@@ -853,6 +867,7 @@ function LabPageStandard({ content }: Props) {
               osiFrame={osiFrame}
               net={netScene}
               kit={kitScene}
+              onNextStep={goToNextStep}
             />
           )}
         </div>
