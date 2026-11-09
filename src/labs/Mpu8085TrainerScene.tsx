@@ -65,6 +65,8 @@ const KEY_DT = 0.45;
 /** One flight of a byte. */
 const STAGE = 1.6;
 const GAP = 0.3;
+/** Between one command's end and the next one's first key. */
+const BEAT_GAP = 0.15;
 
 // ── Layout (board units, x right, z towards the student) ──────────────────
 const REG_SPOTS: Record<string, [number, number, number]> = {
@@ -1288,8 +1290,11 @@ export function Mpu8085TrainerScene({
           at += STAGE + GAP;
         }
         beatEnd.push(at);
+        // The next command starts after this one has ended, so the kit
+        // waiting at the end of a command shows none of the next.
+        at += BEAT_GAP;
       }
-      total = beatEnd.length ? at : 0;
+      total = beatEnd.length ? beatEnd[beatEnd.length - 1] : 0;
       const lcdBefore = lcdText(
         programRef.current,
         f.keys.length ? f.keys[f.keys.length - 1].lcd : f.before.lcd,
