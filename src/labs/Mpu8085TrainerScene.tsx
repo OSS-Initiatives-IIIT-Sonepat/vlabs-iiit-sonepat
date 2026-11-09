@@ -49,6 +49,8 @@ const SEG_ON = "#ff3b2f";
 const SEG_OFF = "#3a1717";
 const BEAD = 0x2563eb;
 const HINT_COLOR = new THREE.Color(0x93c5fd);
+/** Pause between commands in auto play. */
+const AUTO_PAUSE_MS = 1300;
 const HOT = 0x3b82f6;
 const LCD_BG = "#cfe0b8";
 const LCD_INK = "#1f2a17";
@@ -324,6 +326,20 @@ export function Mpu8085TrainerScene({
     setAsked({ frame, beat: Math.max(0, Math.min(count, b)) });
   // Pressing the glowing key on the kit runs the next command.
   const pressRef = useRef(() => {});
+  // Auto play runs the commands of a step one after another, with a pause
+  // between them, and stops at the end of the step.
+  const [auto, setAuto] = useState(false);
+  useEffect(() => {
+    if (!auto || busy || beat >= count) return;
+    const timer = window.setTimeout(
+      () =>
+        setAsked((a) =>
+          a.frame === frame ? { frame, beat: Math.min(count, a.beat + 1) } : a,
+        ),
+      AUTO_PAUSE_MS,
+    );
+    return () => window.clearTimeout(timer);
+  }, [auto, busy, beat, count, frame]);
 
   useEffect(() => {
     frameRef.current = frame;
@@ -1670,6 +1686,8 @@ export function Mpu8085TrainerScene({
           onReplay={() => goTo(0)}
           onNext={() => (done ? onNextStep?.() : goTo(beat + 1))}
           canGoOn={!done || !!onNextStep}
+          auto={auto}
+          onAuto={() => setAuto((on) => !on)}
         />
       )}
     </div>
@@ -1701,6 +1719,8 @@ function CommandBar({
   onReplay,
   onNext,
   canGoOn,
+  auto,
+  onAuto,
 }: {
   index: number;
   count: number;
@@ -1711,6 +1731,8 @@ function CommandBar({
   onReplay: () => void;
   onNext: () => void;
   canGoOn: boolean;
+  auto: boolean;
+  onAuto: () => void;
 }) {
   const done = index >= count;
   const round =
@@ -1761,6 +1783,24 @@ function CommandBar({
             <path d="M2.5 7a4.5 4.5 0 1 0 1.4-3.3" />
             <path d="M2.5 2v2.5H5" />
           </svg>
+        </button>
+        <button
+          type="button"
+          onClick={onAuto}
+          aria-pressed={auto}
+          title="Play the commands of this step one after another"
+          className={`appearance-none flex h-9 cursor-pointer items-center gap-1.5 rounded-full border px-3 text-[12.5px] font-medium transition-colors ${auto ? "border-[var(--color-blue)] bg-[var(--color-blue)]/10 text-[var(--color-blue)]" : "border-[var(--color-black-10)] bg-white text-[var(--ink-muted)] hover:bg-[var(--color-black-5)] hover:text-[var(--ink)]"}`}
+        >
+          {auto ? (
+            <svg {...ICON}>
+              <path d="M5 3.5v7M9 3.5v7" />
+            </svg>
+          ) : (
+            <svg {...ICON}>
+              <path d="M4.5 3l6 4-6 4z" />
+            </svg>
+          )}
+          Auto
         </button>
         <button
           type="button"
