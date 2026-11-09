@@ -1766,7 +1766,9 @@ function CommandBar({
     <div className="pointer-events-auto absolute bottom-6 right-6 z-20 w-[min(500px,calc(100%-48px))] rounded-[20px] border border-[var(--color-black-10)] bg-white/95 p-4 font-sans shadow-[0_4px_24px_rgba(0,0,0,0.12),0_1px_3px_rgba(0,0,0,0.04)] backdrop-blur-md">
       <div className="flex items-center justify-between">
         <span className="text-[10.5px] font-medium uppercase tracking-[0.08em] text-[var(--ink-muted)]">
-          Command {Math.min(index + (done ? 0 : 1), count)} of {count}
+          {index === 0
+            ? `${count} command${count === 1 ? "" : "s"} in this step`
+            : `Command ${index} of ${count}`}
         </span>
         <span className="flex gap-1" aria-hidden>
           {Array.from({ length: count }, (_, i) => (
