@@ -1126,6 +1126,20 @@ export function Mpu8085TrainerScene({
     placeKeys(FN_KEYS, FN_X0, true);
     placeKeys(HEX_KEYS, HEX_X0, false);
     const keypadCenter = new THREE.Vector3(3.65, Y0 + 0.3, 3.1);
+    // A blue ring round the key the student should press next.
+    const ringMat = new THREE.MeshBasicMaterial({
+      color: 0x2563eb,
+      transparent: true,
+      opacity: 0,
+      depthWrite: false,
+    });
+    const ring = new THREE.Mesh(
+      new THREE.RingGeometry(0.46, 0.53, 40),
+      ringMat,
+    );
+    ring.rotation.x = -Math.PI / 2;
+    ring.visible = false;
+    root.add(ring);
 
     // ── Spots: where a byte leaves from and lands ─────────────────────
     const spotAt = (spot: KitSpot, lcdRow: number): THREE.Vector3 => {
@@ -1471,6 +1485,17 @@ export function Mpu8085TrainerScene({
 
       // Keys. The one the next command starts with glows until it is pressed.
       const glow = 0.5 + 0.5 * Math.sin(performance.now() / 160);
+      const hinted = hint ? keys.get(hint) : undefined;
+      ring.visible = !!hinted;
+      if (hinted) {
+        ring.position.set(
+          hinted.group.position.x,
+          Y0 + 0.02,
+          hinted.group.position.z,
+        );
+        ring.scale.setScalar(1 + 0.12 * glow);
+        ringMat.opacity = 0.35 + 0.5 * glow;
+      }
       for (const [id, k] of keys) {
         const down = press?.key === id && sinceKey < KEY_DT * 0.65;
         const target = down ? -0.07 : 0;
