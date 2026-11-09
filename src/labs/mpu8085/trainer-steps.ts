@@ -931,6 +931,7 @@ export function buildTrainerLab(
     "Switch on and press RESET",
     [
       "Switch the trainer on and press RESET. The monitor program in the EPROM starts and the display signs on: UP 85.",
+      "Nothing on the kit moves until you ask. Press Next command, the Space bar, or the key glowing on the kit to run one command at a time. Back and Replay go over it again.",
       "The kit holds an 8085, the monitor EPROM, 8 KB of RAM from 8000H, and the keyboard and display controller.",
       "The panel under the chips shows every register of the 8085 as it changes: A and the flags, B to L, SP, PC, and IR, the opcode just fetched. The memory panel shows the RAM cells this program uses.",
     ],
