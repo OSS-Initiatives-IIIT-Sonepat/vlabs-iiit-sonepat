@@ -84,6 +84,30 @@ describe("8085 trainer kit steps", () => {
         }
       });
 
+      it("puts every key and every move in exactly one command", () => {
+        for (const f of frames) {
+          expect(f.beats.length).toBeGreaterThan(0);
+          let key = 0;
+          let stage = 0;
+          for (const b of f.beats) {
+            expect(b.keys[0]).toBe(key);
+            expect(b.stages[0]).toBe(stage);
+            expect(b.keys[1]).toBeGreaterThanOrEqual(b.keys[0]);
+            expect(b.stages[1]).toBeGreaterThanOrEqual(b.stages[0]);
+            expect(b.keys[1] > b.keys[0] || b.stages[1] > b.stages[0]).toBe(
+              true,
+            );
+            expect(b.say).not.toMatch(/undefined|NaN|\[object/);
+            key = b.keys[1];
+            stage = b.stages[1];
+          }
+          expect(key).toBe(f.keys.length);
+          expect(stage).toBe(f.stages.length);
+        }
+        expect(built.overview.beats).toEqual([]);
+        expect(built.final.beats).toEqual([]);
+      });
+
       it("moves bytes only between places the kit can draw", () => {
         for (const f of frames)
           for (const move of f.stages.flat()) {
@@ -131,6 +155,11 @@ describe("8085 trainer kit steps", () => {
     const add = built.steps.find((s) => s.label === "ADD B")!;
     expect(add.body).toContain("ADD B adds B (25H) to A (17H). A = 3CH.");
     expect(add.kit!.alu).toBe("17 + 25 = 3C");
+    expect(add.kit!.beats.map((b) => b.say)).toEqual([
+      "NEXT · fetch 80H (ADD B) from 8107H into IR",
+      "A (17H) and B (25H) into the ALU",
+      "ALU: 17 + 25 = 3C → A and the flags",
+    ]);
     expect(
       add.kit!.stages.map((s) => s.map((m) => `${m.from}>${m.to}`)),
     ).toEqual([["CODE>IR"], ["A>ALU", "B>ALU"], ["ALU>A", "ALU>F"]]);
