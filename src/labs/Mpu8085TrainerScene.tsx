@@ -1344,7 +1344,7 @@ export function Mpu8085TrainerScene({
       camera.aspect = w / h;
       const shift = insetL * 0.24;
       if (preview) camera.clearViewOffset();
-      else camera.setViewOffset(w, h, -shift, -h * 0.05, w, h);
+      else camera.setViewOffset(w, h, -shift, h * 0.03, w, h);
       camera.updateProjectionMatrix();
     };
     let glide: {
