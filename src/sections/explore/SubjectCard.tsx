@@ -1,30 +1,35 @@
 "use client";
 
-import dynamic from "next/dynamic";
+import Image from "next/image";
 
 import { Body } from "@/ui";
 
 import { CardShape } from "../three-cards/CardShape";
-import { CircuitModel } from "./CircuitModel";
 import { type ExploreSubject } from "./explore.data";
 
-const DiagramPreview = dynamic(
-  () => import("./DiagramPreview").then((m) => m.DiagramPreview),
-  { ssr: false },
-);
-
-const ChipPreview = dynamic(
-  () => import("@/labs/Mpu8085Scene").then((m) => m.Mpu8085Scene),
-  { ssr: false },
-);
-
-const NetworkPreview = dynamic(
-  () => import("@/labs/OsiJourneyScene").then((m) => m.OsiJourneyScene),
-  { ssr: false },
-);
-
-/** The bench with the whole path drawn and nothing in flight. */
-const NETWORK_COVER = { device: null, blocks: [], arrived: true } as const;
+/**
+ * Line drawings in public/subject-cards, used in place of the WebGL
+ * previews. Subjects that share a discipline share a drawing until a
+ * dedicated file exists.
+ */
+const SUBJECT_CARD_ART: Record<string, string> = {
+  "01-analog-electronics": "/subject-cards/analog-electronics.png",
+  "03-FEE": "/subject-cards/fundamentals-of-electrical-and-electronics.png",
+  "01-combinational-arithmetic": "/subject-cards/coa.png",
+  "02-memory-cpu-systems": "/subject-cards/coa.png",
+  "04-computer-organisation-architecture": "/subject-cards/coa.png",
+  "05-computer-arithmetic": "/subject-cards/coa.png",
+  "06-processor-design": "/subject-cards/coa.png",
+  "07-memory-and-io": "/subject-cards/coa.png",
+  "08-assembly-systems": "/subject-cards/assembly-programming.png",
+  "03-programming-fundamentals": "/subject-cards/assembly-programming.png",
+  "01-8085-assembly-programming": "/subject-cards/assembly-programming.png",
+  "02-peripheral-interfacing":
+    "/subject-cards/microprocessors-and-interpreters.png",
+  "03-microprocessors-and-microcontrollers":
+    "/subject-cards/microprocessors-and-interpreters.png",
+  "01-computer-networks": "/subject-cards/computer-networks.png",
+};
 
 /** Subject IDs that are fully available — all others show "Coming Soon". */
 const ENABLED_SUBJECTS = new Set([
@@ -47,19 +52,20 @@ const ENABLED_SUBJECTS = new Set([
 type Props = {
   subject: ExploreSubject;
   onClick: (subject: ExploreSubject) => void;
-  /** WebGL previews mount only while this semester is open. */
+  /** Drawings mount only while this semester is open. */
   showPreview: boolean;
 };
 
 export function SubjectCard({ subject, onClick, showPreview }: Props) {
   const comingSoon = !ENABLED_SUBJECTS.has(subject.id);
+  const art = SUBJECT_CARD_ART[subject.id];
 
   return (
     <button
       className={[
         "native-button-reset box-border",
         "flex h-full flex-col isolate min-w-0 overflow-hidden",
-        "p-[calc(var(--spacing-base)*4)] pb-0 pt-[calc(var(--spacing-base)*4)]",
+        "p-[calc(var(--spacing-base)*4)] pb-[calc(var(--spacing-base)*3)] pt-[calc(var(--spacing-base)*4)]",
         "relative text-left w-full",
         comingSoon
           ? "cursor-default"
@@ -123,54 +129,50 @@ export function SubjectCard({ subject, onClick, showPreview }: Props) {
 
       <div
         className={[
-          "flex flex-col gap-[calc(var(--spacing-base)*3)] pb-[calc(var(--spacing-base)*3)]",
+          "flex min-h-0 flex-1 flex-col",
           comingSoon ? "grayscale opacity-50" : "",
         ].join(" ")}
       >
-        <h3
-          className="line-clamp-1 font-[family-name:var(--font-sans),sans-serif] font-medium text-[var(--ink)]"
-          style={{
-            fontSize: "clamp(1.125rem, 0.9372rem + 0.7519vw, 1.375rem)",
-            lineHeight: "clamp(1.5rem, 1.3122rem + 0.7519vw, 1.75rem)",
-          }}
-        >
-          {subject.title}
-        </h3>
-        <div
-          className="border-t border-dotted border-[var(--divider)] h-0 w-full"
-          aria-hidden
-        />
-        <div title={subject.description}>
-          <Body size="sm" muted className="line-clamp-2 min-h-[3.1em]">
-            {subject.description}
-          </Body>
-        </div>
-      </div>
-
-      {/* Same slot on every open card. Breadboard labs draw the board.
-          Diagram and program labs draw their figure in that same frame. */}
-      {showPreview && !comingSoon && (
-        <div
-          className={[
-            "relative mt-auto h-[260px] shrink-0 -mx-[calc(var(--spacing-base)*4)] overflow-hidden",
-            "transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
-            "motion-reduce:transition-none",
-          ].join(" ")}
-          data-slot="card-image"
-        >
-          <div className="absolute inset-0">
-            {subject.circuitId === "8085-pin-labelling" ? (
-              <ChipPreview preview focus={[]} />
-            ) : subject.circuitId === "osi-model-journey" ? (
-              <NetworkPreview preview frame={NETWORK_COVER} />
-            ) : subject.hasPreview ? (
-              <CircuitModel circuitId={subject.circuitId} />
-            ) : (
-              <DiagramPreview circuitId={subject.circuitId} />
-            )}
+        <div className="flex flex-col gap-[calc(var(--spacing-base)*3)] pb-[calc(var(--spacing-base)*3)]">
+          <h3
+            className="line-clamp-1 font-[family-name:var(--font-sans),sans-serif] font-medium text-[var(--ink)]"
+            style={{
+              fontSize: "clamp(1.125rem, 0.9372rem + 0.7519vw, 1.375rem)",
+              lineHeight: "clamp(1.5rem, 1.3122rem + 0.7519vw, 1.75rem)",
+            }}
+          >
+            {subject.title}
+          </h3>
+          <div
+            className="border-t border-dotted border-[var(--divider)] h-0 w-full"
+            aria-hidden
+          />
+          <div title={subject.description}>
+            <Body size="sm" muted className="line-clamp-2 min-h-[3.1em]">
+              {subject.description}
+            </Body>
           </div>
         </div>
-      )}
+
+        {showPreview && art && (
+          <div
+            className={[
+              "relative mt-auto h-[240px] shrink-0 overflow-hidden",
+              "transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
+              "motion-reduce:transition-none",
+            ].join(" ")}
+            data-slot="card-image"
+          >
+            <Image
+              src={art}
+              alt=""
+              fill
+              sizes="420px"
+              className="object-contain object-center"
+            />
+          </div>
+        )}
+      </div>
     </button>
   );
 }
