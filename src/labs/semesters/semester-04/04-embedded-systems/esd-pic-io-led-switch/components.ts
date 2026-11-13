@@ -1,80 +1,42 @@
 import { type ComponentInstance } from "@/labs/types";
+import {
+  SUPPLY_PARTS,
+  SYS_PIC_PARTS,
+  ledChannel,
+  pin,
+  tie,
+  rail,
+  wire,
+  resistor,
+} from "@/labs/semesters/semester-04/04-embedded-systems/chip-bench";
 
-// Push-button on RB0 with a 10 kohm pull-down: pressed reads HIGH. RD0 drives
-// an LED, so the LED follows the button.
-export const components: ComponentInstance[] = [
-  { id: "bb", type: "breadboard" },
-  { id: "pic", type: "pic18f4550", side: "right" },
+// PIC18F4550 on the breadboard. A push-button from RB0 to +5 V with a
+// 10 kΩ pull-down (pressed reads HIGH); RD0 drives an LED that follows it.
+
+const INPUT_PARTS: ComponentInstance[] = [
   {
     id: "btn1",
     type: "push-button",
-    mountedAt: { board: "bb", col: 10, row: "c" },
+    mountedAt: { board: "bb", col: 47, row: "c" },
   },
-  {
-    id: "r_pd",
-    type: "resistor",
-    ohms: 10000,
-    mountedAt: { board: "bb", col: 9, row: "e" },
-  },
-  {
-    id: "r1",
-    type: "resistor",
-    ohms: 330,
-    mountedAt: { board: "bb", col: 15, row: "c" },
-  },
-  {
-    id: "led1",
-    type: "led",
-    color: "red",
-    mountedAt: { board: "bb", col: 18, row: "c" },
-  },
-  {
-    id: "w_vdd",
-    type: "wire",
-    color: "red",
-    from: { dev: "pic", pin: "VDD" },
-    to: { board: "bb", rail: "vcc_top", col: 1 },
-  },
-  {
-    id: "w_vss",
-    type: "wire",
-    color: "black",
-    from: { dev: "pic", pin: "VSS" },
-    to: { board: "bb", rail: "gnd_top", col: 2 },
-  },
-  {
-    id: "w_rb0",
-    type: "wire",
-    color: "blue",
-    from: { dev: "pic", pin: "RB0" },
-    to: { board: "bb", col: 9, row: "a" },
-  },
-  {
-    id: "w_btn_vdd",
-    type: "wire",
-    color: "red",
-    from: { board: "bb", col: 11, row: "a" },
-    to: { board: "bb", rail: "vcc_top", col: 11 },
-  },
-  {
-    id: "w_pd_gnd",
-    type: "wire",
-    color: "black",
-    from: { component: "r_pd", end: "p2" },
-    to: { board: "bb", rail: "gnd_top", col: 12 },
-  },
-  {
-    id: "w_rd0",
-    type: "wire",
-    color: "orange",
-    from: { dev: "pic", pin: "RD0" },
-    to: { board: "bb", col: 15, row: "a" },
-  },
-  {
-    id: "w_led_gnd",
-    type: "wire",
-    color: "black",
-    from: { led: "led1", end: "cathode" },
-    to: { board: "bb", rail: "gnd_top", col: 19 },
-  },
+  wire("w_rb0", "blue", pin("u1", "RB0"), tie(46, "a")),
+  wire("w_btn_vdd", "red", tie(48, "a"), rail("vcc_top", 48)),
+  resistor("r_pd", 10000, 43, "c"),
+  wire("w_pd_gnd", "black", tie(43, "a"), rail("gnd_top", 43)),
+];
+const LED_PARTS = ledChannel(0, pin("u1", "RD0"), {
+  wire: "w_led",
+  r: "r1",
+  led: "led1",
+  k: "w_led_gnd",
+});
+/** Button and pull-down on RB0. */
+export const INPUT = INPUT_PARTS.map((p) => p.id);
+export const LED = ["w_led", "r1", "led1", "w_led_gnd"];
+
+export const components: ComponentInstance[] = [
+  ...SUPPLY_PARTS,
+  ...SYS_PIC_PARTS,
+  ...INPUT_PARTS,
+  ...LED_PARTS,
 ];

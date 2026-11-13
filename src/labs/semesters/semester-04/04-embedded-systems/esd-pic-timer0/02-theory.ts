@@ -1,5 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
-import { timerChain } from "@/labs/schematics/semester-04/04-embedded-systems/esd-diagrams";
+import { picRd0Diagrams } from "@/labs/schematics/semester-04/04-embedded-systems/esd-diagrams";
 
 export const theory: TheorySection = {
   id: "theory",
@@ -10,5 +10,5 @@ export const theory: TheorySection = {
     "Timer0 can be 8 or 16 bits wide. In 16-bit mode it counts from its starting value up to 65 536, then overflows back to zero and sets the TMR0IF flag. Starting the count at 49 911 means 65 536 - 49 911 = 15 625 counts, which is 0.5 s at 31 250 counts per second.",
     "An interrupt runs a function as soon as an event happens. When TMR0IF is set and the TMR0 interrupt is enabled, the CPU jumps to the interrupt service routine (ISR). The ISR clears the flag, reloads the timer and toggles the LED. The main loop does nothing, so the timing does not depend on how long the loop takes.",
   ],
-  circuitDiagram: timerChain()[4],
+  circuitDiagram: picRd0Diagrams[3],
 };

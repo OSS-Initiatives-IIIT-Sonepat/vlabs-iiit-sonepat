@@ -1,5 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
-import { buttonOnPin } from "@/labs/schematics/semester-04/04-embedded-systems/esd-diagrams";
+import { ioPicDiagrams } from "@/labs/schematics/semester-04/04-embedded-systems/esd-diagrams";
 
 export const theory: TheorySection = {
   id: "theory",
@@ -11,5 +11,5 @@ export const theory: TheorySection = {
     "The PIC analog pins are shared with the digital inputs. ADCON1 must be set so that RB0 is digital. This experiment writes ADCON1 = 0x0F to make every pin digital.",
     "Two wiring choices are common: a pull-down with a button to VCC (used here), or a pull-up with the button to ground. Both give a steady level when the button is open.",
   ],
-  circuitDiagram: buttonOnPin("PIC18 RB0", "down")[3],
+  circuitDiagram: ioPicDiagrams[4],
 };

@@ -5,12 +5,43 @@ export const apparatus: ApparatusSection = {
   type: "apparatus",
   title: "Apparatus Required",
   items: [
-    { name: "PIC18F4550 trainer", quantity: "1" },
-    { name: "Breadboard", specification: "830 tie-point", quantity: "1" },
-    { name: "Push-button", specification: "Tactile, 4-leg", quantity: "1" },
-    { name: "Resistor", specification: "10 kohm, 1/4 W", quantity: "1" },
-    { name: "Resistor", specification: "330 ohm, 1/4 W", quantity: "1" },
+    {
+      name: "PIC18F4550 microcontroller",
+      specification: "40-pin DIP, 5 V, internal oscillator",
+      quantity: "1",
+    },
+    {
+      name: "Ceramic capacitor",
+      specification: "100 nF (decoupling)",
+      quantity: "2",
+    },
+    {
+      name: "Resistor",
+      specification: "10 kohm (MCLR pull-up), 1/4 W",
+      quantity: "1",
+    },
+    {
+      name: "Breadboard",
+      specification: "Full size, 60 columns",
+      quantity: "1",
+    },
+    {
+      name: "Push-button",
+      specification: "4-pin tactile switch",
+      quantity: "1",
+    },
+    {
+      name: "Resistor",
+      specification: "10 kohm and 330 ohm, 1/4 W",
+      quantity: "1 each",
+    },
     { name: "LED", specification: "Red, 5 mm", quantity: "1" },
-    { name: "Jumper wires", quantity: "6" },
+    { name: "DC power supply", specification: "5 V regulated", quantity: "1" },
+    {
+      name: "Jumper wires",
+      specification: "Assorted colours",
+      quantity: "as needed",
+    },
+    { name: "PICkit programmer and MPLAB XC8", quantity: "1" },
   ],
 };

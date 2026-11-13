@@ -1,48 +1,23 @@
 import { type ComponentInstance } from "@/labs/types";
+import {
+  SUPPLY_PARTS,
+  SYS_PIC_PARTS,
+  ledChannel,
+  pin,
+} from "@/labs/semesters/semester-04/04-embedded-systems/chip-bench";
 
-// The CCP1 output on RC2 drives the LED through 330 ohm. The LED brightness
-// follows the duty cycle set in CCPR1L.
+// PIC18F4550 on the breadboard. CCP1 (RC2) drives an LED through 330 Ω.
+
+const LED_PARTS = ledChannel(0, pin("u1", "RC2"), {
+  wire: "w_led",
+  r: "r1",
+  led: "led1",
+  k: "w_led_gnd",
+});
+export const LED = ["w_led", "r1", "led1", "w_led_gnd"];
+
 export const components: ComponentInstance[] = [
-  { id: "bb", type: "breadboard" },
-  { id: "pic", type: "pic18f4550", side: "right" },
-  {
-    id: "r1",
-    type: "resistor",
-    ohms: 330,
-    mountedAt: { board: "bb", col: 3, row: "c" },
-  },
-  {
-    id: "led1",
-    type: "led",
-    color: "red",
-    mountedAt: { board: "bb", col: 6, row: "c" },
-  },
-  {
-    id: "w_vdd",
-    type: "wire",
-    color: "red",
-    from: { dev: "pic", pin: "VDD" },
-    to: { board: "bb", rail: "vcc_top", col: 1 },
-  },
-  {
-    id: "w_rc2",
-    type: "wire",
-    color: "purple",
-    from: { dev: "pic", pin: "RC2" },
-    to: { board: "bb", col: 3, row: "a" },
-  },
-  {
-    id: "w_vss",
-    type: "wire",
-    color: "black",
-    from: { dev: "pic", pin: "VSS" },
-    to: { board: "bb", rail: "gnd_top", col: 2 },
-  },
-  {
-    id: "w_led_gnd",
-    type: "wire",
-    color: "black",
-    from: { led: "led1", end: "cathode" },
-    to: { board: "bb", rail: "gnd_top", col: 7 },
-  },
+  ...SUPPLY_PARTS,
+  ...SYS_PIC_PARTS,
+  ...LED_PARTS,
 ];

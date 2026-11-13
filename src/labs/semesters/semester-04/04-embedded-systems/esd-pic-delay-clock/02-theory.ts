@@ -1,5 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
-import { ledFromPin } from "@/labs/schematics/semester-04/04-embedded-systems/esd-diagrams";
+import { picRd0Diagrams } from "@/labs/schematics/semester-04/04-embedded-systems/esd-diagrams";
 
 export const theory: TheorySection = {
   id: "theory",
@@ -11,5 +11,5 @@ export const theory: TheorySection = {
     "A software delay is a loop that counts down. It wastes CPU time, but it is simple and it shows the link between clock and time. Later experiments use the hardware timer, which does not block the CPU.",
     "The LED is driven from RD0 through a 330 ohm resistor, the same current-limiting rule as before.",
   ],
-  circuitDiagram: ledFromPin("PIC18 RD0", "330 ohm")[3],
+  circuitDiagram: picRd0Diagrams[3],
 };

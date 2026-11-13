@@ -1,5 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
-import { ledFromPin } from "@/labs/schematics/semester-04/04-embedded-systems/esd-diagrams";
+import { leds8051Diagrams } from "@/labs/schematics/semester-04/04-embedded-systems/esd-diagrams";
 
 export const theory: TheorySection = {
   id: "theory",
@@ -10,5 +10,5 @@ export const theory: TheorySection = {
     "This experiment uses the taps of x^8 + x^6 + x^5 + x^4 + 1, the bits 7, 5, 4 and 3 of the register. Each step computes the feedback bit with XOR, shifts the register left and inserts the feedback at bit 0. Starting from 0x01, the register never becomes 0, which would lock it.",
     "PN sequences are used for scrambling, testing and spreading signals. The four LEDs show the low nibble of the register, and the full byte is shown in the readings.",
   ],
-  circuitDiagram: ledFromPin("8051 P1.0", "330 ohm")[3],
+  circuitDiagram: leds8051Diagrams[4],
 };

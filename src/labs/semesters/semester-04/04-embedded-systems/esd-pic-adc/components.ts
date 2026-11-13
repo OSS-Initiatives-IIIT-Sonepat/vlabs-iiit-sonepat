@@ -1,81 +1,37 @@
 import { type ComponentInstance } from "@/labs/types";
+import {
+  SUPPLY_PARTS,
+  SYS_PIC_PARTS,
+  ledChannel,
+  pin,
+  tie,
+  rail,
+  wire,
+  resistor,
+} from "@/labs/semesters/semester-04/04-embedded-systems/chip-bench";
 
-// Voltage divider from VDD to VSS, tapped on RA0 (AN0). The LED on RD0 is on
-// when the reading is above half scale.
+// PIC18F4550 on the breadboard. A 10 kΩ / 10 kΩ divider feeds AN0 (RA0);
+// RD0 lights an LED when the reading is above half scale.
+
+const DIVIDER_PARTS: ComponentInstance[] = [
+  resistor("r_top", 10000, 42, "h"),
+  wire("w_div_v", "red", tie(42, "g"), rail("vcc_bot", 42)),
+  resistor("r_bot", 10000, 45, "i"),
+  wire("w_div_g", "black", tie(48, "g"), rail("gnd_bot", 48)),
+  wire("w_an0", "yellow", tie(45, "g"), pin("u1", "RA0")),
+];
+const LED_PARTS = ledChannel(0, pin("u1", "RD0"), {
+  wire: "w_led",
+  r: "r1",
+  led: "led1",
+  k: "w_led_gnd",
+});
+export const DIVIDER = DIVIDER_PARTS.map((p) => p.id);
+export const LED = ["w_led", "r1", "led1", "w_led_gnd"];
+
 export const components: ComponentInstance[] = [
-  { id: "bb", type: "breadboard" },
-  { id: "pic", type: "pic18f4550", side: "right" },
-  {
-    id: "r_top",
-    type: "resistor",
-    ohms: 10000,
-    mountedAt: { board: "bb", col: 2, row: "c" },
-  },
-  {
-    id: "r_bot",
-    type: "resistor",
-    ohms: 10000,
-    mountedAt: { board: "bb", col: 5, row: "c" },
-  },
-  {
-    id: "r1",
-    type: "resistor",
-    ohms: 330,
-    mountedAt: { board: "bb", col: 12, row: "c" },
-  },
-  {
-    id: "led1",
-    type: "led",
-    color: "red",
-    mountedAt: { board: "bb", col: 15, row: "c" },
-  },
-  {
-    id: "w_vdd",
-    type: "wire",
-    color: "red",
-    from: { dev: "pic", pin: "VDD" },
-    to: { board: "bb", rail: "vcc_top", col: 1 },
-  },
-  {
-    id: "w_top",
-    type: "wire",
-    color: "red",
-    from: { board: "bb", rail: "vcc_top", col: 2 },
-    to: { component: "r_top", end: "p1" },
-  },
-  {
-    id: "w_ra0",
-    type: "wire",
-    color: "yellow",
-    from: { dev: "pic", pin: "RA0" },
-    to: { board: "bb", col: 5, row: "a" },
-  },
-  {
-    id: "w_bot",
-    type: "wire",
-    color: "black",
-    from: { component: "r_bot", end: "p2" },
-    to: { board: "bb", rail: "gnd_top", col: 8 },
-  },
-  {
-    id: "w_vss",
-    type: "wire",
-    color: "black",
-    from: { dev: "pic", pin: "VSS" },
-    to: { board: "bb", rail: "gnd_top", col: 1 },
-  },
-  {
-    id: "w_rd0",
-    type: "wire",
-    color: "orange",
-    from: { dev: "pic", pin: "RD0" },
-    to: { board: "bb", col: 12, row: "a" },
-  },
-  {
-    id: "w_led_gnd",
-    type: "wire",
-    color: "black",
-    from: { led: "led1", end: "cathode" },
-    to: { board: "bb", rail: "gnd_top", col: 16 },
-  },
+  ...SUPPLY_PARTS,
+  ...SYS_PIC_PARTS,
+  ...DIVIDER_PARTS,
+  ...LED_PARTS,
 ];

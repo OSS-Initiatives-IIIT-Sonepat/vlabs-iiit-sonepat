@@ -1,47 +1,23 @@
 import { type ComponentInstance } from "@/labs/types";
+import {
+  SUPPLY_PARTS,
+  SYS_PIC_PARTS,
+  ledChannel,
+  pin,
+} from "@/labs/semesters/semester-04/04-embedded-systems/chip-bench";
 
-// Same LED circuit as the delay experiment: RD0 through 330 ohm to ground.
+// PIC18F4550 on the breadboard. Timer0 toggles the LED on RD0.
+
+const LED_PARTS = ledChannel(0, pin("u1", "RD0"), {
+  wire: "w_led",
+  r: "r1",
+  led: "led1",
+  k: "w_led_gnd",
+});
+export const LED = ["w_led", "r1", "led1", "w_led_gnd"];
+
 export const components: ComponentInstance[] = [
-  { id: "bb", type: "breadboard" },
-  { id: "pic", type: "pic18f4550", side: "right" },
-  {
-    id: "r1",
-    type: "resistor",
-    ohms: 330,
-    mountedAt: { board: "bb", col: 3, row: "c" },
-  },
-  {
-    id: "led1",
-    type: "led",
-    color: "red",
-    mountedAt: { board: "bb", col: 6, row: "c" },
-  },
-  {
-    id: "w_vdd",
-    type: "wire",
-    color: "red",
-    from: { dev: "pic", pin: "VDD" },
-    to: { board: "bb", rail: "vcc_top", col: 1 },
-  },
-  {
-    id: "w_rd0",
-    type: "wire",
-    color: "orange",
-    from: { dev: "pic", pin: "RD0" },
-    to: { board: "bb", col: 3, row: "a" },
-  },
-  {
-    id: "w_vss",
-    type: "wire",
-    color: "black",
-    from: { dev: "pic", pin: "VSS" },
-    to: { board: "bb", rail: "gnd_top", col: 2 },
-  },
-  {
-    id: "w_led_gnd",
-    type: "wire",
-    color: "black",
-    from: { led: "led1", end: "cathode" },
-    to: { board: "bb", rail: "gnd_top", col: 7 },
-  },
+  ...SUPPLY_PARTS,
+  ...SYS_PIC_PARTS,
+  ...LED_PARTS,
 ];

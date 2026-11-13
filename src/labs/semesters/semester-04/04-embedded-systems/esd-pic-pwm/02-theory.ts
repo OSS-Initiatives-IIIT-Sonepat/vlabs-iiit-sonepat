@@ -1,5 +1,5 @@
 import { type TheorySection } from "@/labs/lab-content.types";
-import { pwmChain } from "@/labs/schematics/semester-04/04-embedded-systems/esd-diagrams";
+import { picCcp1Diagrams } from "@/labs/schematics/semester-04/04-embedded-systems/esd-diagrams";
 
 export const theory: TheorySection = {
   id: "theory",
@@ -10,5 +10,5 @@ export const theory: TheorySection = {
     "On the PIC18 the CCP (capture/compare/PWM) module makes the waveform in hardware. Timer2 sets the period through PR2: the PWM period is (PR2 + 1) timer counts. The duty cycle uses the 8 high bits in CCPR1L, so duty = CCPR1L / (PR2 + 1). With PR2 = 255, CCPR1L = 64 gives 25 %, 128 gives 50 % and 255 gives almost 100 %.",
     "The CCP1 output is on RC2, and its TRIS bit must be an output. The PWM mode is selected in CCP1CON with the low nibble 1100.",
   ],
-  circuitDiagram: pwmChain()[3],
+  circuitDiagram: picCcp1Diagrams[3],
 };
