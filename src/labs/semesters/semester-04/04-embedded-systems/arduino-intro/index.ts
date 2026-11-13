@@ -6,16 +6,17 @@ import { theory } from "./02-theory";
 import { sketch } from "./03-sketch";
 import { apparatus } from "./04-apparatus";
 import { conclusion } from "./05-conclusion";
+import { components } from "./components";
+import { procedureSteps } from "./04-procedure";
 
 export const arduinoIntroExperiment: ExperimentDefinition = {
   id: "arduino-intro",
   title: "Introduction to Arduino",
   description:
-    "What an Arduino Uno is, where its pins are, and how a sketch runs: setup() once, then loop() forever.",
-  components: [],
-  sections: [aim, theory, sketch, apparatus, conclusion],
-  procedureSteps: [],
-  labType: "text",
+    "A guided tour of the Arduino Uno R3: what each part does, how power gets in, what the chip and crystal do, and what each pin is for.",
+  components,
+  sections: [aim, theory, apparatus, sketch, conclusion],
+  procedureSteps,
 };
 
 export const ArduinoIntroCircuit = buildCircuit(arduinoIntroExperiment);
