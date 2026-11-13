@@ -852,6 +852,54 @@ import {
 } from "./semester-04/03-microprocessors-and-microcontrollers/8085-pin-labelling";
 
 import {
+  ArduinoIntroCircuit,
+  ArduinoIntroContent,
+  arduinoIntroExperiment,
+} from "./semester-04/04-embedded-systems/arduino-intro";
+
+import {
+  ArduinoBlinkCircuit,
+  ArduinoBlinkContent,
+  arduinoBlinkExperiment,
+} from "./semester-04/04-embedded-systems/arduino-blink";
+
+import {
+  ArduinoButtonCircuit,
+  ArduinoButtonContent,
+  arduinoButtonExperiment,
+} from "./semester-04/04-embedded-systems/arduino-button";
+
+import {
+  ArduinoAnalogInputCircuit,
+  ArduinoAnalogInputContent,
+  arduinoAnalogInputExperiment,
+} from "./semester-04/04-embedded-systems/arduino-analog-input";
+
+import {
+  Esp32IntroCircuit,
+  Esp32IntroContent,
+  esp32IntroExperiment,
+} from "./semester-04/04-embedded-systems/esp32-intro";
+
+import {
+  Esp32BlinkCircuit,
+  Esp32BlinkContent,
+  esp32BlinkExperiment,
+} from "./semester-04/04-embedded-systems/esp32-blink";
+
+import {
+  Esp32ButtonCircuit,
+  Esp32ButtonContent,
+  esp32ButtonExperiment,
+} from "./semester-04/04-embedded-systems/esp32-button";
+
+import {
+  Esp32PwmFadeCircuit,
+  Esp32PwmFadeContent,
+  esp32PwmFadeExperiment,
+} from "./semester-04/04-embedded-systems/esp32-pwm-fade";
+
+import {
   OsiModelJourneyCircuit,
   OsiModelJourneyContent,
   osiModelJourneyExperiment,
@@ -2394,6 +2442,65 @@ export const SEMESTER_SUBJECTS: readonly SemesterSubjectCatalog[] = [
           "ALE",
           "multiplexed bus",
         ],
+      ),
+    ],
+  },
+  {
+    semesterId: "semester-4",
+    semesterLabel: "Semester 4",
+    subjectId: "04-embedded-systems",
+    subjectLabel: "Embedded Systems",
+    subjectDescription:
+      "Program Arduino and ESP32 boards on a 3D bench: pins, LEDs, buttons, analog input and PWM.",
+    defaultCircuitId: "arduino-blink",
+    experiments: [
+      fromBuilt(
+        arduinoIntroExperiment,
+        ArduinoIntroCircuit,
+        ArduinoIntroContent,
+        ["arduino", "introduction", "microcontroller"],
+      ),
+      fromBuilt(
+        arduinoBlinkExperiment,
+        ArduinoBlinkCircuit,
+        ArduinoBlinkContent,
+        ["arduino", "digital output", "LED"],
+      ),
+      fromBuilt(
+        arduinoButtonExperiment,
+        ArduinoButtonCircuit,
+        ArduinoButtonContent,
+        ["arduino", "digital input", "pull-up"],
+      ),
+      fromBuilt(
+        arduinoAnalogInputExperiment,
+        ArduinoAnalogInputCircuit,
+        ArduinoAnalogInputContent,
+        ["arduino", "ADC", "voltage divider"],
+      ),
+      fromBuilt(
+        esp32IntroExperiment,
+        Esp32IntroCircuit,
+        Esp32IntroContent,
+        ["esp32", "introduction", "3.3 V"],
+      ),
+      fromBuilt(
+        esp32BlinkExperiment,
+        Esp32BlinkCircuit,
+        Esp32BlinkContent,
+        ["esp32", "GPIO", "LED"],
+      ),
+      fromBuilt(
+        esp32ButtonExperiment,
+        Esp32ButtonCircuit,
+        Esp32ButtonContent,
+        ["esp32", "GPIO input", "pull-up"],
+      ),
+      fromBuilt(
+        esp32PwmFadeExperiment,
+        Esp32PwmFadeCircuit,
+        Esp32PwmFadeContent,
+        ["esp32", "PWM", "LEDC"],
       ),
     ],
   },
