@@ -21,7 +21,9 @@ function buildJumperPinTip(pos: THREE.Vector3, colorHex: number): THREE.Group {
     10,
   );
   const pin = new THREE.Mesh(pinGeo, M.gold());
-  pin.position.set(pos.x, TOP_Y + PITCH * 0.14 - pinH / 2, pos.z);
+  // The tip seats at the endpoint height: a breadboard hole (TOP_Y) or the
+  // top of a header socket on a development board.
+  pin.position.set(pos.x, pos.y + PITCH * 0.14 - pinH / 2, pos.z);
   grp.add(pin);
 
   // Dark thermoplastic crimp collar / ferrule sitting flush on TOP_Y
@@ -34,7 +36,7 @@ function buildJumperPinTip(pos: THREE.Vector3, colorHex: number): THREE.Group {
   );
   const collarMat = new THREE.MeshBasicMaterial({ color: 0x1e2024 });
   const collar = new THREE.Mesh(collarGeo, collarMat);
-  collar.position.set(pos.x, TOP_Y + collarH / 2, pos.z);
+  collar.position.set(pos.x, pos.y + collarH / 2, pos.z);
   grp.add(collar);
 
   // Colored strain-relief boot above the collar
@@ -47,7 +49,7 @@ function buildJumperPinTip(pos: THREE.Vector3, colorHex: number): THREE.Group {
   );
   const sleeveMat = new THREE.MeshBasicMaterial({ color: colorHex });
   const sleeve = new THREE.Mesh(sleeveGeo, sleeveMat);
-  sleeve.position.set(pos.x, TOP_Y + collarH + sleeveH / 2, pos.z);
+  sleeve.position.set(pos.x, pos.y + collarH + sleeveH / 2, pos.z);
   grp.add(sleeve);
 
   return grp;
@@ -67,26 +69,32 @@ export function buildWire(
   root.add(buildJumperPinTip(to, hexColor));
 
   const dist = from.distanceTo(to);
-  const startExitY = TOP_Y + PITCH * 0.34;
+  // Each end leaves from its own endpoint height, so a jumper to a header on a
+  // development board starts at the socket, not at breadboard level.
+  const exit = PITCH * 0.34;
+  const baseY = Math.max(from.y, to.y);
   const archH = Math.min(PITCH * 2.1, Math.max(PITCH * 0.72, dist * 0.24));
 
-  const p0 = new THREE.Vector3(from.x, startExitY, from.z);
-  const p3 = new THREE.Vector3(to.x, startExitY, to.z);
+  const p0 = new THREE.Vector3(from.x, from.y + exit, from.z);
+  const p3 = new THREE.Vector3(to.x, to.y + exit, to.z);
   const p1 = new THREE.Vector3(
     from.x + (to.x - from.x) * 0.18,
-    TOP_Y + archH,
+    baseY + archH,
     from.z + (to.z - from.z) * 0.18,
   );
   const p2 = new THREE.Vector3(
     to.x - (to.x - from.x) * 0.18,
-    TOP_Y + archH,
+    baseY + archH,
     to.z - (to.z - from.z) * 0.18,
   );
 
   const curve = new THREE.CubicBezierCurve3(p0, p1, p2, p3);
   const wireR = PITCH * 0.082;
   const tubeGeo = new THREE.TubeGeometry(curve, 32, wireR, 10, false);
-  root.add(new THREE.Mesh(tubeGeo, wireMat));
+  const tube = new THREE.Mesh(tubeGeo, wireMat);
+  root.add(tube);
+  // The lab grows the jumper on screen by raising this tube's draw range.
+  root.userData.tube = tube;
 
   return root;
 }
