@@ -20,7 +20,16 @@ export type IcPin = { ic: string; pin: string }; // pin is any named pin on the 
 export type PassivePin = { component: string; end: "p1" | "p2" };
 export type LedPin = { led: string; end: "anode" | "cathode" };
 
-export type PinRef = TiePin | RailPin | IcPin | PassivePin | LedPin;
+/** A named header pin on a development board, e.g. `{ dev: 'uno', pin: 'D13' }`. */
+export type DevPin = { dev: string; pin: string };
+
+export type PinRef =
+  | TiePin
+  | RailPin
+  | IcPin
+  | PassivePin
+  | LedPin
+  | DevPin;
 
 // ── Component instances ───────────────────────────────────────────────────
 // Every physical component placed on the breadboard.
@@ -32,6 +41,15 @@ export type ComponentInstance =
   | { id: string; type: "long-breadboard" }
   | { id: string; type: "wide-breadboard" }
   | { id: string; type: "wire"; from: PinRef; to: PinRef; color: WireColor }
+
+  // ── Development boards ─────────────────────────────────────────────────
+  // Placed on the bench beside the breadboard. Wire to their headers with
+  // `{ dev: id, pin: '<name>' }`. Pin names are in components/dev-boards.
+  | {
+      id: string;
+      type: "arduino-uno" | "esp32-devkit";
+      side: "left" | "right";
+    }
 
   // ── Passives ───────────────────────────────────────────────────────────
   | { id: string; type: "resistor"; ohms: number; mountedAt: MountPoint }
