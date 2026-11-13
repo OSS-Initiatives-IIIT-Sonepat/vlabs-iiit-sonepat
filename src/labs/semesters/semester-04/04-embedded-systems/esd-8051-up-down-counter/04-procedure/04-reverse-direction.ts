@@ -1,0 +1,11 @@
+import { type SceneProcedureStep } from "@/labs/experiments/types";
+import { buttonOnPin } from "@/labs/schematics/semester-04/04-embedded-systems/esd-diagrams";
+
+export const step: SceneProcedureStep = {
+  label: "Press to count down",
+  body: "Press and hold the button. P3.2 is pulled to ground, the program sees DIR = 0 and the count runs down: 15, 14, 13 and so on. Release the button and the count goes back up.",
+  show: ["bb", "mcu", "r0", "led0", "r1", "led1", "r2", "led2", "r3", "led3", "btn1", "w_vcc", "w_gnd", "w_rst", "w_p10", "w_p11", "w_p12", "w_p13", "w_k0", "w_k1", "w_k2", "w_k3", "w_p32", "w_btn_gnd"],
+  highlight: "btn1",
+  readings: { "Direction": "down while pressed" },
+  schematic: buttonOnPin("8051 P3.2", "up")[3],
+};

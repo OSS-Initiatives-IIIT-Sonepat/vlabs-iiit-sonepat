@@ -1,0 +1,42 @@
+import { type ComponentInstance } from "@/labs/types";
+
+// ADC0804 on the left of the bench, 8051 trainer on the right. VIN+ is the
+// middle of a 10 kohm / 10 kohm divider (2.5 V). CLKR and CLKIN use the
+// on-chip RC clock: 10 kohm to VCC and 150 pF to ground (about 640 kHz).
+// Data bus DB0 to DB7 goes to P1.0 to P1.7; WR, RD and INTR go to P3.6, P3.7
+// and P3.2.
+export const components: ComponentInstance[] = [
+  { id: "bb", type: "breadboard" },
+  { id: "mcu", type: "mcu-8051", side: "right" },
+  { id: "adc", type: "adc0804", side: "left" },
+  { id: "r_top", type: "resistor", ohms: 10000, mountedAt: { board: "bb", col: 2, row: "c" } },
+  { id: "r_bot", type: "resistor", ohms: 10000, mountedAt: { board: "bb", col: 5, row: "c" } },
+  { id: "r_clk", type: "resistor", ohms: 10000, mountedAt: { board: "bb", col: 10, row: "c" } },
+  { id: "c_clk", type: "capacitor", capacitance: 0.00015, mountedAt: { board: "bb", col: 10, row: "e" } },
+  { id: "w_vcc_mcu", type: "wire", color: "red", from: { dev: "mcu", pin: "VCC" }, to: { board: "bb", rail: "vcc_top", col: 1 } },
+  { id: "w_gnd_mcu", type: "wire", color: "black", from: { dev: "mcu", pin: "GND" }, to: { board: "bb", rail: "gnd_top", col: 1 } },
+  { id: "w_rst", type: "wire", color: "black", from: { dev: "mcu", pin: "RST" }, to: { board: "bb", rail: "gnd_top", col: 2 } },
+  { id: "w_vcc_adc", type: "wire", color: "red", from: { dev: "adc", pin: "VCC" }, to: { board: "bb", rail: "vcc_top", col: 2 } },
+  { id: "w_top", type: "wire", color: "red", from: { board: "bb", rail: "vcc_top", col: 2 }, to: { component: "r_top", end: "p1" } },
+  { id: "w_vinp", type: "wire", color: "yellow", from: { dev: "adc", pin: "VINP" }, to: { board: "bb", col: 5, row: "a" } },
+  { id: "w_bot", type: "wire", color: "black", from: { component: "r_bot", end: "p2" }, to: { board: "bb", rail: "gnd_top", col: 8 } },
+  { id: "w_vinn", type: "wire", color: "black", from: { dev: "adc", pin: "VINN" }, to: { board: "bb", rail: "gnd_top", col: 6 } },
+  { id: "w_agnd", type: "wire", color: "black", from: { dev: "adc", pin: "AGND" }, to: { board: "bb", rail: "gnd_top", col: 3 } },
+  { id: "w_dgnd", type: "wire", color: "black", from: { dev: "adc", pin: "DGND" }, to: { board: "bb", rail: "gnd_top", col: 4 } },
+  { id: "w_clkr", type: "wire", color: "white", from: { dev: "adc", pin: "CLKR" }, to: { board: "bb", col: 10, row: "a" } },
+  { id: "w_clkin", type: "wire", color: "white", from: { dev: "adc", pin: "CLKIN" }, to: { board: "bb", col: 10, row: "b" } },
+  { id: "w_rclk_vcc", type: "wire", color: "red", from: { component: "r_clk", end: "p2" }, to: { board: "bb", rail: "vcc_top", col: 13 } },
+  { id: "w_cclk_gnd", type: "wire", color: "black", from: { component: "c_clk", end: "p2" }, to: { board: "bb", rail: "gnd_top", col: 11 } },
+  { id: "w_cs", type: "wire", color: "black", from: { dev: "adc", pin: "CS" }, to: { board: "bb", rail: "gnd_top", col: 12 } },
+  { id: "w_rd", type: "wire", color: "green", from: { dev: "adc", pin: "RD" }, to: { dev: "mcu", pin: "P3.7" } },
+  { id: "w_wr", type: "wire", color: "yellow", from: { dev: "adc", pin: "WR" }, to: { dev: "mcu", pin: "P3.6" } },
+  { id: "w_intr", type: "wire", color: "blue", from: { dev: "adc", pin: "INTR" }, to: { dev: "mcu", pin: "P3.2" } },
+  { id: "w_db0", type: "wire", color: "orange", from: { dev: "adc", pin: "DB0" }, to: { dev: "mcu", pin: "P1.0" } },
+  { id: "w_db1", type: "wire", color: "orange", from: { dev: "adc", pin: "DB1" }, to: { dev: "mcu", pin: "P1.1" } },
+  { id: "w_db2", type: "wire", color: "orange", from: { dev: "adc", pin: "DB2" }, to: { dev: "mcu", pin: "P1.2" } },
+  { id: "w_db3", type: "wire", color: "orange", from: { dev: "adc", pin: "DB3" }, to: { dev: "mcu", pin: "P1.3" } },
+  { id: "w_db4", type: "wire", color: "orange", from: { dev: "adc", pin: "DB4" }, to: { dev: "mcu", pin: "P1.4" } },
+  { id: "w_db5", type: "wire", color: "orange", from: { dev: "adc", pin: "DB5" }, to: { dev: "mcu", pin: "P1.5" } },
+  { id: "w_db6", type: "wire", color: "orange", from: { dev: "adc", pin: "DB6" }, to: { dev: "mcu", pin: "P1.6" } },
+  { id: "w_db7", type: "wire", color: "orange", from: { dev: "adc", pin: "DB7" }, to: { dev: "mcu", pin: "P1.7" } },
+];
