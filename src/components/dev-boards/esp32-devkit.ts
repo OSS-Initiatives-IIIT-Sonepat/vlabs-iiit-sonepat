@@ -34,9 +34,9 @@ export function buildEsp32DevkitStandalone(): THREE.Group {
 
   // Wi-Fi/Bluetooth module (silver shield) at the top end, with the
   // antenna trace running off the edge.
-  const module = solidBox(w * 0.9, 0.34, 1.1, M.metal());
-  module.position.set(0, DEV_PCB_H / 2 + 0.17, -d / 2 + 0.85);
-  root.add(module);
+  const wifiModule = solidBox(w * 0.9, 0.34, 1.1, M.metal());
+  wifiModule.position.set(0, DEV_PCB_H / 2 + 0.17, -d / 2 + 0.85);
+  root.add(wifiModule);
   const antenna = solidBox(w * 0.7, 0.02, 0.5, M.gold());
   antenna.position.set(0, DEV_PCB_H / 2 + 0.01, -d / 2 - 0.05);
   root.add(antenna);
