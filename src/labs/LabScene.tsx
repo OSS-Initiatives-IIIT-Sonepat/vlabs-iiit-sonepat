@@ -13,6 +13,12 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { bindCtrlPan } from "./ctrl-pan";
 import { benchPlacement } from "@/components/shared";
 import {
+  devBoardCentre,
+  devPinWorld,
+} from "@/components/dev-boards/pinouts";
+import { buildArduinoUnoStandalone } from "@/components/dev-boards/arduino-uno";
+import { buildEsp32DevkitStandalone } from "@/components/dev-boards/esp32-devkit";
+import {
   componentDisplayName,
   formatOhms,
   useLabInteraction,
@@ -76,6 +82,7 @@ import {
   type ComponentInstance,
   type PinRef,
   type TiePin,
+  type DevPin,
   type RailPin,
   type IcPin,
   type PassivePin,
@@ -146,6 +153,15 @@ function resolvePin(
   all: ComponentInstance[],
   peerPin?: PinRef,
 ): THREE.Vector3 | null {
+  if ("dev" in pin) {
+    const dp = pin as DevPin;
+    const inst = all.find((c) => c.id === dp.dev);
+    if (!inst || (inst.type !== "arduino-uno" && inst.type !== "esp32-devkit")) {
+      return null;
+    }
+    return devPinWorld(inst.type, inst.side, dp.pin);
+  }
+
   if ("col" in pin && "row" in pin && "board" in pin) {
     const tie = pin as TiePin;
     const cols = colsForBoardId(tie.board, all);
@@ -674,6 +690,16 @@ function buildInstance(
 
     case "mcu-trainer": {
       return buildMcuTrainerStandalone();
+    }
+
+    case "arduino-uno":
+    case "esp32-devkit": {
+      const g =
+        inst.type === "arduino-uno"
+          ? buildArduinoUnoStandalone()
+          : buildEsp32DevkitStandalone();
+      g.position.copy(devBoardCentre(inst.type, inst.side));
+      return g;
     }
 
     case "io-port": {
