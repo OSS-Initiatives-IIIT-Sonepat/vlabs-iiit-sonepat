@@ -80,7 +80,19 @@ export type ObservationSection = {
   audioPath?: string;
   paragraphs: string[];
   table?: ObservationTable;
+  /**
+   * A labelled top view of a board or chip, drawn from its 3D model, shown
+   * as the scene of this section (see BoardTopView).
+   */
+  figure?: { board: TopViewBoard };
 };
+
+/** Boards and chips that have a labelled top view. */
+export type TopViewBoard =
+  | "arduino-uno"
+  | "esp32-devkit"
+  | "at89s52"
+  | "pic18f4550";
 
 // Conclusion: summary paragraphs
 export type ConclusionSection = {

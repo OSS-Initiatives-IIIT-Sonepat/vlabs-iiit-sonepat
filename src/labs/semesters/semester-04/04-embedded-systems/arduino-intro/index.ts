@@ -6,6 +6,7 @@ import { theory } from "./02-theory";
 import { sketch } from "./03-sketch";
 import { apparatus } from "./04-apparatus";
 import { conclusion } from "./05-conclusion";
+import { observations } from "./06-observations";
 import { components } from "./components";
 import { procedureSteps } from "./04-procedure";
 
@@ -15,7 +16,7 @@ export const arduinoIntroExperiment: ExperimentDefinition = {
   description:
     "A guided tour of the Arduino Uno R3: what each part does, how power gets in, what the chip and crystal do, and what each pin is for.",
   components,
-  sections: [aim, theory, apparatus, sketch, conclusion],
+  sections: [aim, theory, apparatus, sketch, observations, conclusion],
   procedureSteps,
 };
 

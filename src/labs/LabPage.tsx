@@ -62,6 +62,10 @@ const TheoryScene = dynamic(
   () => import("@/labs/TheoryScene").then((m) => m.TheoryScene),
   { ssr: false },
 );
+const BoardTopView = dynamic(
+  () => import("@/labs/BoardTopView").then((m) => m.BoardTopView),
+  { ssr: false },
+);
 const ApparatusScene = dynamic(
   () => import("@/labs/ApparatusScene").then((m) => m.ApparatusScene),
   { ssr: false },
@@ -512,6 +516,10 @@ const SceneRenderer = React.memo(function SceneRenderer({
   }
   if (section.type === "apparatus") {
     return <ApparatusScene items={section.items} />;
+  }
+  // An intro's observations: the labelled top view of its board or chip.
+  if (section.type === "observation" && section.figure) {
+    return <BoardTopView board={section.figure.board} />;
   }
   // A diagram lab has no breadboard. The step schematic is the scene.
   if (
