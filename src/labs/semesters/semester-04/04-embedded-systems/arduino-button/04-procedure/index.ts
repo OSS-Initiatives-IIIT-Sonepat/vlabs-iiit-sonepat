@@ -7,4 +7,11 @@ import { step as s04 } from "./04-wire-ground";
 import { step as s05 } from "./05-released";
 import { step as s06 } from "./06-pressed";
 
-export const procedureSteps: SceneProcedureStep[] = [s01, s02, s03, s04, s05, s06];
+export const procedureSteps: SceneProcedureStep[] = [
+  s01,
+  s02,
+  s03,
+  s04,
+  s05,
+  s06,
+];

@@ -19,5 +19,9 @@ export const arduinoAnalogInputExperiment: ExperimentDefinition = {
   procedureSteps,
 };
 
-export const ArduinoAnalogInputCircuit = buildCircuit(arduinoAnalogInputExperiment);
-export const ArduinoAnalogInputContent = buildLabContent(arduinoAnalogInputExperiment);
+export const ArduinoAnalogInputCircuit = buildCircuit(
+  arduinoAnalogInputExperiment,
+);
+export const ArduinoAnalogInputContent = buildLabContent(
+  arduinoAnalogInputExperiment,
+);

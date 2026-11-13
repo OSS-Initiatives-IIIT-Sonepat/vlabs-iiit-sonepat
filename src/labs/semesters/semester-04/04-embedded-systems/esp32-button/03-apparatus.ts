@@ -5,7 +5,11 @@ export const apparatus: ApparatusSection = {
   type: "apparatus",
   title: "Apparatus Required",
   items: [
-    { name: "ESP32 DevKit V1", quantity: "1" },
+    {
+      name: "ESP32-DevKitC",
+      specification: "ESP-WROOM-32, 38 pins",
+      quantity: "1",
+    },
     { name: "Breadboard", specification: "830 tie-point", quantity: "1" },
     { name: "Push-button", specification: "Tactile, 4-leg", quantity: "1" },
     { name: "Jumper wires", specification: "Blue and black", quantity: "2" },

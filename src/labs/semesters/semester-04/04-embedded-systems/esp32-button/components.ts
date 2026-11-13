@@ -5,8 +5,31 @@ import { type ComponentInstance } from "@/labs/types";
 export const components: ComponentInstance[] = [
   { id: "bb", type: "breadboard" },
   { id: "esp", type: "esp32-devkit", side: "right" },
-  { id: "btn1", type: "push-button", mountedAt: { board: "bb", col: 10, row: "c" } },
-  { id: "w_gpio4", type: "wire", color: "blue", from: { dev: "esp", pin: "GPIO4" }, to: { board: "bb", col: 9, row: "a" } },
-  { id: "w_btn_gnd", type: "wire", color: "black", from: { board: "bb", col: 11, row: "a" }, to: { board: "bb", rail: "gnd_top", col: 11 } },
-  { id: "w_gnd_esp", type: "wire", color: "black", from: { dev: "esp", pin: "GND" }, to: { board: "bb", rail: "gnd_top", col: 1 } },
+  {
+    id: "btn1",
+    type: "push-button",
+    mountedAt: { board: "bb", col: 10, row: "c" },
+  },
+  {
+    id: "w_gpio4",
+    type: "wire",
+    color: "blue",
+    from: { dev: "esp", pin: "GPIO4" },
+    to: { board: "bb", col: 9, row: "a" },
+  },
+  {
+    id: "w_btn_gnd",
+    type: "wire",
+    color: "black",
+    from: { board: "bb", col: 11, row: "a" },
+    to: { board: "bb", rail: "gnd_top", col: 11 },
+  },
+  {
+    id: "w_gnd_esp",
+    type: "wire",
+    color: "black",
+    from: { dev: "esp", pin: "GND" },
+    to: { board: "bb", rail: "gnd_top", col: 1 },
+  },
+  { id: "usb", type: "usb-power", dev: "esp" },
 ];

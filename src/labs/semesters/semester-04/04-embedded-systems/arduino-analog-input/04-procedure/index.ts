@@ -8,4 +8,12 @@ import { step as s05 } from "./05-wire-a0";
 import { step as s06 } from "./06-ground";
 import { step as s07 } from "./07-read-voltage";
 
-export const procedureSteps: SceneProcedureStep[] = [s01, s02, s03, s04, s05, s06, s07];
+export const procedureSteps: SceneProcedureStep[] = [
+  s01,
+  s02,
+  s03,
+  s04,
+  s05,
+  s06,
+  s07,
+];
