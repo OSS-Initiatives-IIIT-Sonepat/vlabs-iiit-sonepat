@@ -1007,6 +1007,20 @@ function inspectComponent(
 }
 
 // ── Camera framing & screen projection ────────────────────────────────────
+// Bench development boards and trainers (see components/dev-boards).
+const DEV_PART_TYPES = new Set<string>([
+  "arduino-uno",
+  "esp32-devkit",
+  "mcu-8051",
+  "pic18f4550",
+  "adc0804",
+  "seg7",
+]);
+
+// A jumper grows from its first pin to its second over this many clock units
+// the first time a step shows it (the loop advances the clock 0.016 a frame).
+const WIRE_GROW_TIME = 0.9;
+
 const HOME_POS = new THREE.Vector3(0, 6.5, 7.0);
 const HOME_TARGET = new THREE.Vector3(0, 0.1, 0);
 const NON_FOCUSABLE = new Set([
@@ -1165,6 +1179,10 @@ export function LabSceneCanvas({
   const pivotRef = useRef<THREE.Group | null>(null);
   const markerGrpRef = useRef<THREE.Group | null>(null);
   const markerUpdaters = useRef<Array<(t: number) => void>>([]);
+  // Wires already grown in this lab; a wire grows only the first time it shows.
+  const grownWiresRef = useRef<Set<string>>(new Set());
+  // True while the camera is framed on development boards.
+  const devFramedRef = useRef(false);
   const clockRef = useRef(0);
   const controlsRef = useRef<OrbitControls | null>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
@@ -1372,6 +1390,7 @@ export function LabSceneCanvas({
       }
     }
     meshMapRef.current = map;
+    grownWiresRef.current = new Set();
 
     // Marker group
     const markerGroup = new THREE.Group();
@@ -1577,6 +1596,22 @@ export function LabSceneCanvas({
     function loop() {
       raf = requestAnimationFrame(loop);
       clockRef.current += 0.016;
+      // Grow new jumpers: the tube's draw range runs from the first pin to
+      // the second, eased so the wire slows as it reaches the hole.
+      meshMapRef.current.forEach((g) => {
+        const start = g.userData.growStart as number | undefined;
+        if (start === undefined) return;
+        const tube = g.userData.tube as THREE.Mesh | undefined;
+        const t = Math.min(1, (clockRef.current - start) / WIRE_GROW_TIME);
+        const eased = 1 - Math.pow(1 - t, 3);
+        if (tube?.geometry.index) {
+          tube.geometry.setDrawRange(
+            0,
+            Math.floor(tube.geometry.index.count * eased),
+          );
+        }
+        if (t >= 1) delete g.userData.growStart;
+      });
       if (previewMode) {
         if (!spin.dragging) spin.ry += 0.002;
         pivot.rotation.y = spin.ry;
@@ -1665,8 +1700,54 @@ export function LabSceneCanvas({
     const pivot = pivotRef.current;
     if (!pivot) return;
 
+    // A step that shows a development board frames those boards together with
+    // the breadboard, so the wiring to them is in view. A step without one
+    // returns to the home view.
+    const cam = cameraRef.current;
+    if (cam && !previewMode) {
+      const hasDev = circuit.components.some(
+        (c) => DEV_PART_TYPES.has(c.type) && visible.has(c.id),
+      );
+      if (hasDev) {
+        const union = new THREE.Box3();
+        for (const c of circuit.components) {
+          if (!visible.has(c.id)) continue;
+          if (!DEV_PART_TYPES.has(c.type) && c.type !== "breadboard") continue;
+          const g = meshMapRef.current.get(c.id);
+          if (g) union.union(new THREE.Box3().setFromObject(g));
+        }
+        if (!union.isEmpty()) {
+          // Fit the boards in view from the home direction. (framingFor leaves
+          // room for the inspector card, which would push them aside.)
+          const target = union.getCenter(new THREE.Vector3());
+          const radius = union.getSize(new THREE.Vector3()).length() / 2;
+          const fit = radius / Math.sin(THREE.MathUtils.degToRad(cam.fov) / 2);
+          const dir = HOME_POS.clone().sub(HOME_TARGET).normalize();
+          const pos = target.clone().addScaledVector(dir, fit * 0.78);
+          animateCameraTo(pos, target, 800);
+          devFramedRef.current = true;
+        }
+      } else if (devFramedRef.current) {
+        animateCameraTo(homePosRef.current, HOME_TARGET, 800);
+        devFramedRef.current = false;
+      }
+    }
+
     meshMapRef.current.forEach((g, id) => {
       g.visible = visible.has(id);
+      // First time a jumper is shown: start it at zero length and grow it.
+      if (
+        g.visible &&
+        g.userData.componentType === "wire" &&
+        !grownWiresRef.current.has(id)
+      ) {
+        grownWiresRef.current.add(id);
+        const tube = g.userData.tube as THREE.Mesh | undefined;
+        if (tube) {
+          tube.geometry.setDrawRange(0, 0);
+          g.userData.growStart = clockRef.current;
+        }
+      }
     });
 
     // Rebuild LED meshes with correct isOn state
@@ -1826,7 +1907,7 @@ export function LabSceneCanvas({
       if (!g || !visible.has(sel)) setSelectedId(null);
       else focusBoxRef.current = computeFocusBox(g);
     }
-  }, [circuit, activeStepIndex, setSelectedId]);
+  }, [circuit, activeStepIndex, setSelectedId, previewMode, animateCameraTo]);
 
   // ── Rebuild markers when they change ─────────────────────────────────
   useEffect(() => {
