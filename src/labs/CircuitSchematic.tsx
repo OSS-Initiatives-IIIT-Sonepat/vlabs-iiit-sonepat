@@ -4,6 +4,9 @@ import React, { useContext, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useLabInteraction } from "./lab-interaction";
 import {
+  CHIP_PITCH,
+  CHIP_STUB,
+  chipHeight,
   PT_ICON_SIZE,
   PT_WINDOW,
   ptLinkPoints,
@@ -257,6 +260,45 @@ export type SchematicElement = (
       label?: string;
       highlight?: boolean;
     }
+  /**
+   * An IC as a box with named pins on its left and right. `x`,`y` is the
+   * centre; a `null` entry leaves a gap in that side. Only the pins a circuit
+   * uses are drawn.
+   */
+  | {
+      type: "chip";
+      id: string;
+      x: number;
+      y: number;
+      w: number;
+      label?: string;
+      left: (ChipPin | null)[];
+      right: (ChipPin | null)[];
+      highlight?: boolean;
+    }
+  /** Normally-open push-button, pins at -30 and +30. */
+  | {
+      type: "pushbutton";
+      id: string;
+      x: number;
+      y: number;
+      rotation?: number;
+      label?: string;
+      highlight?: boolean;
+    }
+  /** Quartz crystal, pins at -24 and +24. */
+  | {
+      type: "crystal";
+      id: string;
+      x: number;
+      y: number;
+      rotation?: number;
+      label?: string;
+      value?: string;
+      highlight?: boolean;
+    }
+  /** Supply rail flag (+5 V, VCC): a bar above a single pin at `x`,`y`. */
+  | { type: "supply"; id: string; x: number; y: number; label?: string }
   // LED indicator
   | {
       type: "led";
@@ -445,6 +487,9 @@ export type SchematicElement = (
   /** Id of the 3D component this symbol stands for, when it can't be inferred. */
   ref?: string;
 };
+
+/** One pin of a `chip` symbol: its name inside the box, its number on the lead. */
+export type ChipPin = { name: string; num?: number };
 
 export type PtIcon =
   | "pc"
@@ -2001,6 +2046,182 @@ function Led({
   );
 }
 
+/* ── IC with named pins ───────────────────────────────────────── */
+function Chip({
+  x,
+  y,
+  w,
+  label,
+  left,
+  right,
+  highlight,
+}: {
+  x: number;
+  y: number;
+  w: number;
+  label?: string;
+  left: (ChipPin | null)[];
+  right: (ChipPin | null)[];
+  highlight?: boolean;
+}) {
+  const h = chipHeight(left.length, right.length);
+  const stroke = highlight ? WIRE_HIGHLIGHT : SYMBOL_STROKE;
+  const side = (pins: (ChipPin | null)[], dir: -1 | 1) =>
+    pins.map((p, i) => {
+      if (!p) return null;
+      const py = -h / 2 + CHIP_PITCH + i * CHIP_PITCH;
+      const edge = (dir * w) / 2;
+      const tip = edge + dir * CHIP_STUB;
+      return (
+        <g key={`${dir}-${i}`}>
+          <line x1={edge} y1={py} x2={tip} y2={py} {...sp} />
+          <Pin x={tip} y={py} />
+          <text
+            x={edge - dir * 5}
+            y={py + 3.2}
+            textAnchor={dir < 0 ? "start" : "end"}
+            fontSize={9}
+            fill={SYMBOL_STROKE}
+            fontWeight={500}
+          >
+            {p.name}
+          </text>
+          {p.num !== undefined && (
+            <text
+              x={edge + (dir * CHIP_STUB) / 2}
+              y={py - 4}
+              textAnchor="middle"
+              fontSize={7.5}
+              fill={PIN_COLOR}
+            >
+              {p.num}
+            </text>
+          )}
+        </g>
+      );
+    });
+  return (
+    <g transform={`translate(${x},${y})`}>
+      {highlight && <SelectionRect hw={w / 2 + CHIP_STUB} hh={h / 2} />}
+      <rect
+        x={-w / 2}
+        y={-h / 2}
+        width={w}
+        height={h}
+        rx={3}
+        fill={highlight ? "#eff6ff" : SYMBOL_BODY}
+        stroke={stroke}
+        strokeWidth={highlight ? 2.2 : SW}
+      />
+      {side(left, -1)}
+      {side(right, 1)}
+      {label && (
+        <text
+          x={0}
+          y={-h / 2 - 7}
+          textAnchor="middle"
+          fontSize={11}
+          fontWeight={600}
+          fill={SYMBOL_STROKE}
+        >
+          {label}
+        </text>
+      )}
+    </g>
+  );
+}
+
+/* ── Normally-open push-button ─────────────────────────────────── */
+function PushButton({
+  x,
+  y,
+  rotation = 0,
+  label,
+  highlight,
+}: {
+  x: number;
+  y: number;
+  rotation?: number;
+  label?: string;
+  highlight?: boolean;
+}) {
+  return (
+    <g transform={`translate(${x},${y}) rotate(${rotation})`}>
+      {highlight && <SelectionRect hw={30} hh={18} />}
+      <line x1={-30} y1={0} x2={-14} y2={0} {...sp} />
+      <line x1={14} y1={0} x2={30} y2={0} {...sp} />
+      <circle cx={-12} cy={0} r={2.4} fill={SYMBOL_BODY} stroke={SYMBOL_STROKE} strokeWidth={SW} />
+      <circle cx={12} cy={0} r={2.4} fill={SYMBOL_BODY} stroke={SYMBOL_STROKE} strokeWidth={SW} />
+      {/* Contact bar held above the terminals, and the plunger. */}
+      <line x1={-15} y1={-7} x2={15} y2={-7} {...sp} />
+      <line x1={0} y1={-7} x2={0} y2={-15} {...sp} />
+      <line x1={-6} y1={-15} x2={6} y2={-15} {...sp} />
+      <Pin x={-30} y={0} />
+      <Pin x={30} y={0} />
+      {label && (
+        <SymText rotation={rotation} x={0} y={16} textAnchor="middle" fontSize={9.5}>
+          {label}
+        </SymText>
+      )}
+    </g>
+  );
+}
+
+/* ── Quartz crystal ────────────────────────────────────────────── */
+function Crystal({
+  x,
+  y,
+  rotation = 0,
+  label,
+  value,
+  highlight,
+}: {
+  x: number;
+  y: number;
+  rotation?: number;
+  label?: string;
+  value?: string;
+  highlight?: boolean;
+}) {
+  return (
+    <g transform={`translate(${x},${y}) rotate(${rotation})`}>
+      {highlight && <SelectionRect hw={24} hh={12} />}
+      <line x1={-24} y1={0} x2={-9} y2={0} {...sp} />
+      <line x1={9} y1={0} x2={24} y2={0} {...sp} />
+      <line x1={-9} y1={-9} x2={-9} y2={9} {...sp} />
+      <line x1={9} y1={-9} x2={9} y2={9} {...sp} />
+      <rect x={-5} y={-7} width={10} height={14} fill={SYMBOL_BODY} stroke={SYMBOL_STROKE} strokeWidth={SW} />
+      <Pin x={-24} y={0} />
+      <Pin x={24} y={0} />
+      {label && (
+        <SymText rotation={rotation} x={0} y={-14} textAnchor="middle" fontSize={10}>
+          {label}
+        </SymText>
+      )}
+      {value && (
+        <SymText rotation={rotation} x={0} y={22} textAnchor="middle" fontSize={9}>
+          {value}
+        </SymText>
+      )}
+    </g>
+  );
+}
+
+/* ── Supply rail flag ──────────────────────────────────────────── */
+function Supply({ x, y, label }: { x: number; y: number; label?: string }) {
+  return (
+    <g transform={`translate(${x},${y})`}>
+      <line x1={0} y1={0} x2={0} y2={-10} {...sp} />
+      <line x1={-10} y1={-10} x2={10} y2={-10} stroke={SYMBOL_STROKE} strokeWidth={2} strokeLinecap="round" />
+      {label && (
+        <text x={0} y={-15} textAnchor="middle" fontSize={9.5} fontWeight={600} fill={SYMBOL_STROKE}>
+          {label}
+        </text>
+      )}
+    </g>
+  );
+}
+
 /* ── Probe Point (CRO/scope) ───────────────────────────────────── */
 function Probe({
   x,
@@ -3426,6 +3647,8 @@ const SYMBOL_BOUNDS: Partial<
   "nor-gate": [36, 19, 5],
   "xor-gate": [32, 19],
   "xnor-gate": [36, 19, 4],
+  pushbutton: [32, 18],
+  crystal: [26, 14],
 };
 
 export type SchematicLink = { id: string; name: string };
@@ -3529,7 +3752,12 @@ export function CircuitSchematic({
         {schematic.elements.map((el) => {
           const symbol = renderSymbol(el);
           const bounds =
-            el.type === "block" ||
+            el.type === "chip"
+              ? ([
+                  el.w / 2 + CHIP_STUB,
+                  chipHeight(el.left.length, el.right.length) / 2,
+                ] as [number, number])
+              : el.type === "block" ||
             el.type === "decision" ||
             el.type === "terminal"
               ? ([el.w / 2, el.h / 2] as [number, number])
@@ -3638,6 +3866,41 @@ export function CircuitSchematic({
 
 function renderSymbol(el: SchematicElement): React.ReactNode {
   switch (el.type) {
+    case "chip":
+      return (
+        <Chip
+          x={el.x}
+          y={el.y}
+          w={el.w}
+          label={el.label}
+          left={el.left}
+          right={el.right}
+          highlight={el.highlight}
+        />
+      );
+    case "pushbutton":
+      return (
+        <PushButton
+          x={el.x}
+          y={el.y}
+          rotation={el.rotation}
+          label={el.label}
+          highlight={el.highlight}
+        />
+      );
+    case "crystal":
+      return (
+        <Crystal
+          x={el.x}
+          y={el.y}
+          rotation={el.rotation}
+          label={el.label}
+          value={el.value}
+          highlight={el.highlight}
+        />
+      );
+    case "supply":
+      return <Supply x={el.x} y={el.y} label={el.label} />;
     case "resistor":
       return (
         <Resistor

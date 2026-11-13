@@ -444,6 +444,7 @@ export function lintSchematic(schematic: SchematicData): LintIssue[] {
       if (
         t.owner === s.id &&
         (s.type === "block" ||
+          s.type === "chip" ||
           s.type === "terminal" ||
           s.type === "decision" ||
           s.type === "memword")
