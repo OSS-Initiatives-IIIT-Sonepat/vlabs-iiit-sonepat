@@ -4,7 +4,9 @@ export const observations: ObservationSection = {
   id: "observations",
   type: "observation",
   title: "Observations",
-  paragraphs: ["Measure the blink period at each clock setting with a stopwatch or the oscilloscope."],
+  paragraphs: [
+    "Measure the blink period at each clock setting with a stopwatch or the oscilloscope.",
+  ],
   table: {
     headers: ["OSCCON", "Clock", "Blink period (measured)", "Expected"],
     rows: [

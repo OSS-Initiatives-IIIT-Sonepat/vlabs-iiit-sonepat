@@ -4,7 +4,9 @@ export const observations: ObservationSection = {
   id: "observations",
   type: "observation",
   title: "Observations",
-  paragraphs: ["Change the divider and compare the ADC output with the calculated code."],
+  paragraphs: [
+    "Change the divider and compare the ADC output with the calculated code.",
+  ],
   table: {
     headers: ["VIN+", "Calculated code", "Binary (DB7 to DB0)", "Measured"],
     rows: [

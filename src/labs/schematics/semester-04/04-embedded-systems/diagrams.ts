@@ -26,9 +26,30 @@ function frames(
 
 function anatomy(board: string): SchematicData[] {
   const nodes: FlowNode[] = [
-    { id: "setup", kind: "terminal", x: 170, y: 70, w: 340, label: "setup(): runs once at power-up" },
-    { id: "loop", kind: "block", x: 170, y: 170, w: 340, label: "loop(): runs again and again" },
-    { id: "io", kind: "block", x: 170, y: 270, w: 340, label: `${board} pins: digitalWrite, analogRead` },
+    {
+      id: "setup",
+      kind: "terminal",
+      x: 170,
+      y: 70,
+      w: 340,
+      label: "setup(): runs once at power-up",
+    },
+    {
+      id: "loop",
+      kind: "block",
+      x: 170,
+      y: 170,
+      w: 340,
+      label: "loop(): runs again and again",
+    },
+    {
+      id: "io",
+      kind: "block",
+      x: 170,
+      y: 270,
+      w: 340,
+      label: `${board} pins: digitalWrite, analogRead`,
+    },
   ];
   const links: FlowLink[] = [
     { id: "a", from: "setup", to: "loop", label: "then" },
@@ -36,9 +57,21 @@ function anatomy(board: string): SchematicData[] {
     { id: "c", from: "io", to: "loop", label: "repeat" },
   ];
   return frames(nodes, links, [
-    { title: "setup() configures the pins", show: ["setup"], highlight: "setup" },
-    { title: "loop() holds the behaviour", show: ["setup", "loop"], highlight: "loop" },
-    { title: "Pins talk to the outside world", show: ["setup", "loop", "io"], highlight: "io" },
+    {
+      title: "setup() configures the pins",
+      show: ["setup"],
+      highlight: "setup",
+    },
+    {
+      title: "loop() holds the behaviour",
+      show: ["setup", "loop"],
+      highlight: "loop",
+    },
+    {
+      title: "Pins talk to the outside world",
+      show: ["setup", "loop", "io"],
+      highlight: "io",
+    },
   ]);
 }
 
@@ -51,7 +84,14 @@ function ledChain(pinLabel: string, ohms: string): SchematicData[] {
   const nodes: FlowNode[] = [
     { id: "pin", kind: "terminal", x: 200, y: 70, w: 240, label: pinLabel },
     { id: "r", kind: "block", x: 200, y: 160, w: 240, label: ohms },
-    { id: "led", kind: "block", x: 200, y: 250, w: 240, label: "LED: anode to cathode" },
+    {
+      id: "led",
+      kind: "block",
+      x: 200,
+      y: 250,
+      w: 240,
+      label: "LED: anode to cathode",
+    },
     { id: "gnd", kind: "terminal", x: 200, y: 340, w: 240, label: "GND" },
   ];
   const links: FlowLink[] = [
@@ -63,7 +103,11 @@ function ledChain(pinLabel: string, ohms: string): SchematicData[] {
     { title: "Board pin", show: ["pin"], highlight: "pin" },
     { title: "Series resistor", show: ["pin", "r"], highlight: "r" },
     { title: "LED", show: ["pin", "r", "led"], highlight: "led" },
-    { title: "Common ground", show: ["pin", "r", "led", "gnd"], highlight: "gnd" },
+    {
+      title: "Common ground",
+      show: ["pin", "r", "led", "gnd"],
+      highlight: "gnd",
+    },
   ]);
 }
 
@@ -76,7 +120,14 @@ export const esp32PwmDiagrams = ledChain("ESP32 GPIO5 (PWM)", "330 ohm");
 function buttonChain(pinLabel: string): SchematicData[] {
   const nodes: FlowNode[] = [
     { id: "pin", kind: "terminal", x: 170, y: 70, w: 230, label: pinLabel },
-    { id: "pu", kind: "block", x: 430, y: 70, w: 230, label: "Internal pull-up to +5 V" },
+    {
+      id: "pu",
+      kind: "block",
+      x: 430,
+      y: 70,
+      w: 230,
+      label: "Internal pull-up to +5 V",
+    },
     { id: "btn", kind: "block", x: 170, y: 190, w: 230, label: "Push-button" },
     { id: "gnd", kind: "terminal", x: 170, y: 300, w: 230, label: "GND" },
   ];
@@ -89,7 +140,11 @@ function buttonChain(pinLabel: string): SchematicData[] {
     { title: "Input pin", show: ["pin"], highlight: "pin" },
     { title: "Pull-up keeps it HIGH", show: ["pin", "pu"], highlight: "pu" },
     { title: "Push-button", show: ["pin", "pu", "btn"], highlight: "btn" },
-    { title: "Button to ground", show: ["pin", "pu", "btn", "gnd"], highlight: "gnd" },
+    {
+      title: "Button to ground",
+      show: ["pin", "pu", "btn", "gnd"],
+      highlight: "gnd",
+    },
   ]);
 }
 
@@ -100,9 +155,23 @@ export const esp32ButtonDiagrams = buttonChain("ESP32 GPIO4");
 
 export const arduinoAnalogDiagrams = frames(
   [
-    { id: "v5", kind: "terminal", x: 200, y: 60, w: 240, label: "+5 V (Arduino 5V pin)" },
+    {
+      id: "v5",
+      kind: "terminal",
+      x: 200,
+      y: 60,
+      w: 240,
+      label: "+5 V (Arduino 5V pin)",
+    },
     { id: "r1", kind: "block", x: 200, y: 150, w: 240, label: "10 kohm (R1)" },
-    { id: "adc", kind: "block", x: 200, y: 240, w: 240, label: "A0: ADC input (reads 2.5 V)" },
+    {
+      id: "adc",
+      kind: "block",
+      x: 200,
+      y: 240,
+      w: 240,
+      label: "A0: ADC input (reads 2.5 V)",
+    },
     { id: "r2", kind: "block", x: 200, y: 330, w: 240, label: "10 kohm (R2)" },
     { id: "gnd", kind: "terminal", x: 200, y: 420, w: 240, label: "GND" },
   ],
@@ -116,7 +185,15 @@ export const arduinoAnalogDiagrams = frames(
     { title: "Supply", show: ["v5"], highlight: "v5" },
     { title: "Top resistor", show: ["v5", "r1"], highlight: "r1" },
     { title: "Tap to A0", show: ["v5", "r1", "adc"], highlight: "adc" },
-    { title: "Bottom resistor", show: ["v5", "r1", "adc", "r2"], highlight: "r2" },
-    { title: "Return to GND", show: ["v5", "r1", "adc", "r2", "gnd"], highlight: "gnd" },
+    {
+      title: "Bottom resistor",
+      show: ["v5", "r1", "adc", "r2"],
+      highlight: "r2",
+    },
+    {
+      title: "Return to GND",
+      show: ["v5", "r1", "adc", "r2", "gnd"],
+      highlight: "gnd",
+    },
   ],
 );

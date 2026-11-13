@@ -20,4 +20,6 @@ export const esdPicDelayClockExperiment: ExperimentDefinition = {
 };
 
 export const EsdPicDelayClockCircuit = buildCircuit(esdPicDelayClockExperiment);
-export const EsdPicDelayClockContent = buildLabContent(esdPicDelayClockExperiment);
+export const EsdPicDelayClockContent = buildLabContent(
+  esdPicDelayClockExperiment,
+);

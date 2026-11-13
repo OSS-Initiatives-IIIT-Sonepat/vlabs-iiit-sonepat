@@ -19,5 +19,9 @@ export const esd8051PnSequenceExperiment: ExperimentDefinition = {
   procedureSteps,
 };
 
-export const Esd8051PnSequenceCircuit = buildCircuit(esd8051PnSequenceExperiment);
-export const Esd8051PnSequenceContent = buildLabContent(esd8051PnSequenceExperiment);
+export const Esd8051PnSequenceCircuit = buildCircuit(
+  esd8051PnSequenceExperiment,
+);
+export const Esd8051PnSequenceContent = buildLabContent(
+  esd8051PnSequenceExperiment,
+);

@@ -4,7 +4,9 @@ export const observations: ObservationSection = {
   id: "observations",
   type: "observation",
   title: "Observations",
-  paragraphs: ["Measure the time between LED toggles with a stopwatch or the oscilloscope."],
+  paragraphs: [
+    "Measure the time between LED toggles with a stopwatch or the oscilloscope.",
+  ],
   table: {
     headers: ["Quantity", "Calculated", "Measured"],
     rows: [

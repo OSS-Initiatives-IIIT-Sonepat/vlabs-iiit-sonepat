@@ -4,7 +4,9 @@ export const observations: ObservationSection = {
   id: "observations",
   type: "observation",
   title: "Observations",
-  paragraphs: ["Compare the measured output with the value calculated from the code."],
+  paragraphs: [
+    "Compare the measured output with the value calculated from the code.",
+  ],
   table: {
     headers: ["Code (P1)", "Calculated Vout", "Measured"],
     rows: [

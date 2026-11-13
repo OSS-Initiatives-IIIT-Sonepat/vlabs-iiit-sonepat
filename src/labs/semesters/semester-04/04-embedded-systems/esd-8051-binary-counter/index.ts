@@ -19,5 +19,9 @@ export const esd8051BinaryCounterExperiment: ExperimentDefinition = {
   procedureSteps,
 };
 
-export const Esd8051BinaryCounterCircuit = buildCircuit(esd8051BinaryCounterExperiment);
-export const Esd8051BinaryCounterContent = buildLabContent(esd8051BinaryCounterExperiment);
+export const Esd8051BinaryCounterCircuit = buildCircuit(
+  esd8051BinaryCounterExperiment,
+);
+export const Esd8051BinaryCounterContent = buildLabContent(
+  esd8051BinaryCounterExperiment,
+);

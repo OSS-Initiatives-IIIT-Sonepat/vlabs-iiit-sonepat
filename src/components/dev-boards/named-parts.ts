@@ -12,11 +12,14 @@ import {
 // Built centred on the origin. Pin positions come from DEV_BOARDS[kind], so a
 // wire always lands on the pin it names.
 
-type NamedKind = Extract<DevBoardKind, "mcu-8051" | "pic18f4550" | "adc0804" | "seg7">;
+type NamedKind = Extract<
+  DevBoardKind,
+  "mcu-8051" | "pic18f4550" | "adc0804" | "seg7"
+>;
 
 const TITLE: Record<NamedKind, string> = {
   "mcu-8051": "8051 TRAINER",
-  "pic18f4550": "PIC18F4550 TRAINER",
+  pic18f4550: "PIC18F4550 TRAINER",
   adc0804: "ADC0804",
   seg7: "7-SEG",
 };
@@ -31,12 +34,17 @@ export function buildNamedPartStandalone(kind: NamedKind): THREE.Group {
     const chip = solidBox(1.7, 0.24, 2.4, M.ic());
     chip.position.set(0, DEV_PCB_H / 2 + 0.12, 0);
     root.add(chip);
-    const label = textLabel(kind === "mcu-8051" ? "8051" : "PIC18F4550", 1.5, 0.35, {
-      bgColor: "#1c1c28",
-      textColor: "#ffffff",
-      fontSize: 42,
-      bold: true,
-    });
+    const label = textLabel(
+      kind === "mcu-8051" ? "8051" : "PIC18F4550",
+      1.5,
+      0.35,
+      {
+        bgColor: "#1c1c28",
+        textColor: "#ffffff",
+        fontSize: 42,
+        bold: true,
+      },
+    );
     if (label) {
       label.rotation.x = -Math.PI / 2;
       label.position.set(0, DEV_PCB_H / 2 + 0.25, 0);
@@ -60,7 +68,8 @@ export function buildNamedPartStandalone(kind: NamedKind): THREE.Group {
   }
 
   const tipGeo = new THREE.BoxGeometry(0.06, DEV_HEADER_H, 0.06);
-  const bodyTop = kind === "adc0804" || kind === "seg7" ? 0.3 / 2 : DEV_PCB_H / 2;
+  const bodyTop =
+    kind === "adc0804" || kind === "seg7" ? 0.3 / 2 : DEV_PCB_H / 2;
   for (const p of pins) {
     const tip = new THREE.Mesh(tipGeo, M.metal());
     tip.position.set(p.x, bodyTop + DEV_HEADER_H / 2, p.z);

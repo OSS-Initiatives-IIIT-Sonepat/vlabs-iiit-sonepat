@@ -4,7 +4,9 @@ export const observations: ObservationSection = {
   id: "observations",
   type: "observation",
   title: "Observations",
-  paragraphs: ["Record the brightness and the calculated average voltage at each duty cycle."],
+  paragraphs: [
+    "Record the brightness and the calculated average voltage at each duty cycle.",
+  ],
   table: {
     headers: ["CCPR1L", "Duty", "Average voltage", "LED"],
     rows: [

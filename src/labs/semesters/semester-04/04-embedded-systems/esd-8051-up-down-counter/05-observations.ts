@@ -4,7 +4,9 @@ export const observations: ObservationSection = {
   id: "observations",
   type: "observation",
   title: "Observations",
-  paragraphs: ["Record the direction and the LED pattern after each change of the button."],
+  paragraphs: [
+    "Record the direction and the LED pattern after each change of the button.",
+  ],
   table: {
     headers: ["Button", "P3.2", "Direction", "Count sequence"],
     rows: [

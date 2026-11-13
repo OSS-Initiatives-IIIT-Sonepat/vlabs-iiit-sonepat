@@ -4,7 +4,9 @@ export const observations: ObservationSection = {
   id: "observations",
   type: "observation",
   title: "Observations",
-  paragraphs: ["Compare the ADC reading with the voltage calculated from the divider."],
+  paragraphs: [
+    "Compare the ADC reading with the voltage calculated from the divider.",
+  ],
   table: {
     headers: ["Bottom resistor", "Middle voltage", "Expected ADC", "LED"],
     rows: [

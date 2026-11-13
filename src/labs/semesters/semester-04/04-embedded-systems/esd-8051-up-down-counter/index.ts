@@ -19,5 +19,9 @@ export const esd8051UpDownCounterExperiment: ExperimentDefinition = {
   procedureSteps,
 };
 
-export const Esd8051UpDownCounterCircuit = buildCircuit(esd8051UpDownCounterExperiment);
-export const Esd8051UpDownCounterContent = buildLabContent(esd8051UpDownCounterExperiment);
+export const Esd8051UpDownCounterCircuit = buildCircuit(
+  esd8051UpDownCounterExperiment,
+);
+export const Esd8051UpDownCounterContent = buildLabContent(
+  esd8051UpDownCounterExperiment,
+);

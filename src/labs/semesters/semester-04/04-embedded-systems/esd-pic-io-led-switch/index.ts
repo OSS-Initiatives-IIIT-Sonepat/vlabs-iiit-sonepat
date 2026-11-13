@@ -19,5 +19,9 @@ export const esdPicIoLedSwitchExperiment: ExperimentDefinition = {
   procedureSteps,
 };
 
-export const EsdPicIoLedSwitchCircuit = buildCircuit(esdPicIoLedSwitchExperiment);
-export const EsdPicIoLedSwitchContent = buildLabContent(esdPicIoLedSwitchExperiment);
+export const EsdPicIoLedSwitchCircuit = buildCircuit(
+  esdPicIoLedSwitchExperiment,
+);
+export const EsdPicIoLedSwitchContent = buildLabContent(
+  esdPicIoLedSwitchExperiment,
+);

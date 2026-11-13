@@ -7,4 +7,11 @@ import { step as s04 } from "./04-led-ground";
 import { step as s05 } from "./05-blink-at-8mhz";
 import { step as s06 } from "./06-slow-to-4mhz";
 
-export const procedureSteps: SceneProcedureStep[] = [s01, s02, s03, s04, s05, s06];
+export const procedureSteps: SceneProcedureStep[] = [
+  s01,
+  s02,
+  s03,
+  s04,
+  s05,
+  s06,
+];

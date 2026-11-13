@@ -4,7 +4,9 @@ export const observations: ObservationSection = {
   id: "observations",
   type: "observation",
   title: "Observations",
-  paragraphs: ["Record the first few register values and check each feedback bit by hand."],
+  paragraphs: [
+    "Record the first few register values and check each feedback bit by hand.",
+  ],
   table: {
     headers: ["Step", "Register (hex)", "Feedback bit", "Low nibble on LEDs"],
     rows: [
