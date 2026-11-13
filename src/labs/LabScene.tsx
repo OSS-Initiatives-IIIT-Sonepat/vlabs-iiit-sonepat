@@ -12,13 +12,21 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { bindCtrlPan } from "./ctrl-pan";
 import { benchPlacement } from "@/components/shared";
+import { BENCH_Y } from "@/components/shared/bench-layout";
 import {
+  DEV_BOARDS,
   devBoardCentre,
   devPinWorld,
 } from "@/components/dev-boards/pinouts";
 import { buildArduinoUnoStandalone } from "@/components/dev-boards/arduino-uno";
 import { buildEsp32DevkitStandalone } from "@/components/dev-boards/esp32-devkit";
 import { buildNamedPartStandalone } from "@/components/dev-boards/named-parts";
+import { UNO_PORTS } from "@/components/dev-boards/arduino-uno";
+import { ESP_PORTS } from "@/components/dev-boards/esp32-devkit";
+import {
+  buildBattery9v,
+  buildUsbPower,
+} from "@/components/dev-boards/power";
 
 // Part types that stand on the bench and expose named pins (see
 // components/dev-boards/pinouts.ts).
@@ -720,6 +728,38 @@ function buildInstance(
             : buildNamedPartStandalone(inst.type);
       g.position.copy(devBoardCentre(inst.type, inst.side, inst.zOffset ?? 0));
       return g;
+    }
+
+    // Power for a development board: a USB cable to a 5 V adapter, or a 9 V
+    // battery in the Uno's DC jack. Both plug into the board named by `dev`.
+    case "usb-power":
+    case "battery-9v": {
+      const board = all.find((c) => c.id === inst.dev);
+      if (!board || !isDevPart(board)) return null;
+      const centre = devBoardCentre(board.type, board.side, board.zOffset ?? 0);
+      const { d } = DEV_BOARDS[board.type];
+      if (inst.type === "battery-9v") {
+        if (board.type !== "arduino-uno") return null;
+        const j = UNO_PORTS.jack;
+        return buildBattery9v(
+          centre.clone().add(new THREE.Vector3(j.x, j.y, j.z)),
+          centre.z + d / 2,
+          BENCH_Y,
+        );
+      }
+      const local =
+        board.type === "arduino-uno"
+          ? UNO_PORTS.usb
+          : board.type === "esp32-devkit"
+            ? ESP_PORTS.usb
+            : null;
+      if (!local) return null;
+      return buildUsbPower(
+        centre.clone().add(new THREE.Vector3(local.x, local.y, local.z)),
+        board.type === "arduino-uno" ? "usb-b" : "micro-usb",
+        centre.z - d / 2,
+        BENCH_Y,
+      );
     }
 
     case "io-port": {

@@ -58,6 +58,10 @@ export type ComponentInstance =
       /** Moves the part along the bench, to place two parts on one side. */
       zOffset?: number;
     }
+  /** USB cable from a board's USB socket to a 5 V adapter on the bench. */
+  | { id: string; type: "usb-power"; dev: string }
+  /** 9 V battery and barrel plug in an Arduino Uno's DC jack. */
+  | { id: string; type: "battery-9v"; dev: string }
 
   // ── Passives ───────────────────────────────────────────────────────────
   | { id: string; type: "resistor"; ohms: number; mountedAt: MountPoint }
