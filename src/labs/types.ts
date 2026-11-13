@@ -62,6 +62,20 @@ export type ComponentInstance =
   | { id: string; type: "usb-power"; dev: string }
   /** 9 V battery and barrel plug in an Arduino Uno's DC jack. */
   | { id: string; type: "battery-9v"; dev: string }
+  /**
+   * A microcontroller or ADC in a DIP package, straddling the centre gap.
+   * `mountedAt.col` is the column of pin 1 (bottom left, notch to the left);
+   * `mountedAt.row` is ignored. Wire to a pin with `{ ic: id, pin: 'P1.0' }`,
+   * or `'P1.0:2'` for the hole two rows away from the leg.
+   */
+  | {
+      id: string;
+      type: "dip-mcu";
+      chip: "at89s52" | "pic18f4550" | "adc0804";
+      mountedAt: MountPoint;
+    }
+  /** Quartz crystal (HC-49/S), legs in `col` and `col + 1` of `row`. */
+  | { id: string; type: "crystal"; mhz: number; mountedAt: MountPoint }
 
   // ── Passives ───────────────────────────────────────────────────────────
   | { id: string; type: "resistor"; ohms: number; mountedAt: MountPoint }

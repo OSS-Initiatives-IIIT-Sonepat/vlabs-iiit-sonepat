@@ -27,6 +27,12 @@ import {
   buildBattery9v,
   buildUsbPower,
 } from "@/components/dev-boards/power";
+import {
+  buildCrystal,
+  buildDipChip,
+  dipCentreOffset,
+  dipHole,
+} from "@/components/dev-boards/dip-chips";
 
 // Part types that stand on the bench and expose named pins (see
 // components/dev-boards/pinouts.ts).
@@ -54,6 +60,7 @@ import {
   railHole,
   COLS,
   colsForBoardId,
+  colToX,
   PITCH,
   TOP_Y,
   BOARD_D,
@@ -207,6 +214,12 @@ function resolvePin(
     const inst = all.find((c) => c.id === ip.ic);
     if (!inst || !("mountedAt" in inst) || !inst.mountedAt) return null;
     const cols = colsForBoardId(inst.mountedAt.board, all);
+    if (inst.type === "dip-mcu") {
+      // "P1.0" is the hole next to the leg, "P1.0:2" the one after it.
+      const [name, reach] = ip.pin.split(":");
+      const h = dipHole(inst.chip, inst.mountedAt.col, name, Number(reach ?? 1));
+      return hole(h.col, h.row, cols);
+    }
     return resolveIcPin(
       ip.pin,
       inst.mountedAt.col,
@@ -762,6 +775,23 @@ function buildInstance(
       );
     }
 
+    case "dip-mcu": {
+      const { col, board } = inst.mountedAt;
+      const cols = colsForBoardId(board, all);
+      const g = buildDipChip(inst.chip);
+      const off = dipCentreOffset(inst.chip);
+      g.position.set(colToX(col, cols) + off.x, TOP_Y, off.z);
+      return g;
+    }
+
+    case "crystal": {
+      const { col, row, board } = inst.mountedAt;
+      const cols = colsForBoardId(board, all);
+      const g = buildCrystal(inst.mhz);
+      g.position.copy(hole(col, row, cols)).add(new THREE.Vector3(PITCH / 2, 0, 0));
+      return g;
+    }
+
     case "io-port": {
       const { col, board } = inst.mountedAt;
       const cols = colsForBoardId(board, all);
@@ -1057,9 +1087,72 @@ const DEV_PART_TYPES = new Set<string>([
   "seg7",
 ]);
 
+// A step showing one of these frames it with the breadboard. A chip seated on
+// the breadboard counts: its benches use the long breadboard and a supply.
+const FRAMED_TYPES = new Set<string>([...DEV_PART_TYPES, "dip-mcu"]);
+const FRAME_WITH = new Set<string>([
+  "breadboard",
+  "long-breadboard",
+  "dc-jack",
+]);
+
 // A jumper grows from its first pin to its second over this many clock units
 // the first time a step shows it (the loop advances the clock 0.016 a frame).
 const WIRE_GROW_TIME = 0.9;
+/** Width of the lab sidebar over the canvas, with its margin. */
+const SIDEBAR_INSET_PX = 290;
+
+/**
+ * Camera position and target that show `box` from direction `dir`, filling
+ * the canvas right of a left inset (a fraction of the canvas width). Projects
+ * the box corners and corrects the distance and centre a few times.
+ */
+function fitBoxInView(
+  cam: THREE.PerspectiveCamera,
+  box: THREE.Box3,
+  dir: THREE.Vector3,
+  inset: number,
+): { pos: THREE.Vector3; target: THREE.Vector3 } {
+  const probe = cam.clone();
+  const target = box.getCenter(new THREE.Vector3());
+  let dist = box.getSize(new THREE.Vector3()).length();
+  const corners = [0, 1, 2, 3, 4, 5, 6, 7].map(
+    (i) =>
+      new THREE.Vector3(
+        i & 1 ? box.max.x : box.min.x,
+        i & 2 ? box.max.y : box.min.y,
+        i & 4 ? box.max.z : box.min.z,
+      ),
+  );
+  const tanV = Math.tan(THREE.MathUtils.degToRad(cam.fov) / 2);
+  const availW = (2 - 2 * inset) * 0.9;
+  const availH = 2 * 0.8;
+  for (let i = 0; i < 4; i++) {
+    probe.position.copy(target).addScaledVector(dir, dist);
+    probe.lookAt(target);
+    probe.updateMatrixWorld();
+    let x0 = Infinity,
+      x1 = -Infinity,
+      y0 = Infinity,
+      y1 = -Infinity;
+    for (const c of corners) {
+      const p = c.clone().project(probe);
+      x0 = Math.min(x0, p.x);
+      x1 = Math.max(x1, p.x);
+      y0 = Math.min(y0, p.y);
+      y1 = Math.max(y1, p.y);
+    }
+    // Move the centre of what is seen to the centre of the free area.
+    const right = new THREE.Vector3().setFromMatrixColumn(probe.matrixWorld, 0);
+    const up = new THREE.Vector3().setFromMatrixColumn(probe.matrixWorld, 1);
+    const halfH = dist * tanV;
+    target
+      .addScaledVector(right, ((x0 + x1) / 2 - inset) * halfH * cam.aspect)
+      .addScaledVector(up, ((y0 + y1) / 2 - 0.06) * halfH);
+    dist *= Math.max((x1 - x0) / availW, (y1 - y0) / availH);
+  }
+  return { pos: target.clone().addScaledVector(dir, dist), target };
+}
 
 const HOME_POS = new THREE.Vector3(0, 6.5, 7.0);
 const HOME_TARGET = new THREE.Vector3(0, 0.1, 0);
@@ -1372,7 +1465,10 @@ export function LabSceneCanvas({
       controls.enableDamping = true;
       controls.dampingFactor = 0.08;
       controls.minDistance = 0.35;
-      controls.maxDistance = wide ? 70 : 20;
+      // A dev board beside the breadboard makes the bench wider than a plain
+      // breadboard: let the framed view pull back far enough to fit it.
+      const benchWide = circuit.components.some((c) => FRAMED_TYPES.has(c.type));
+      controls.maxDistance = wide ? 70 : benchWide ? 40 : 20;
       controls.maxPolarAngle = Math.PI * 0.48;
       controls.minPolarAngle = Math.PI * 0.05;
       controls.enablePan = true;
@@ -1746,24 +1842,26 @@ export function LabSceneCanvas({
     const cam = cameraRef.current;
     if (cam && !previewMode) {
       const hasDev = circuit.components.some(
-        (c) => DEV_PART_TYPES.has(c.type) && visible.has(c.id),
+        (c) => FRAMED_TYPES.has(c.type) && visible.has(c.id),
       );
       if (hasDev) {
         const union = new THREE.Box3();
         for (const c of circuit.components) {
           if (!visible.has(c.id)) continue;
-          if (!DEV_PART_TYPES.has(c.type) && c.type !== "breadboard") continue;
+          if (!FRAMED_TYPES.has(c.type) && !FRAME_WITH.has(c.type)) continue;
           const g = meshMapRef.current.get(c.id);
           if (g) union.union(new THREE.Box3().setFromObject(g));
         }
         if (!union.isEmpty()) {
           // Fit the boards in view from the home direction. (framingFor leaves
           // room for the inspector card, which would push them aside.)
-          const target = union.getCenter(new THREE.Vector3());
-          const radius = union.getSize(new THREE.Vector3()).length() / 2;
-          const fit = radius / Math.sin(THREE.MathUtils.degToRad(cam.fov) / 2);
+          // The sidebar covers the left of a wide canvas: fit the boards in
+          // the part to its right and centre them there.
+          const widthPx = canvasRef.current?.clientWidth ?? 0;
+          const inset =
+            widthPx >= 1024 ? SIDEBAR_INSET_PX / widthPx : 0;
           const dir = HOME_POS.clone().sub(HOME_TARGET).normalize();
-          const pos = target.clone().addScaledVector(dir, fit * 0.78);
+          const { pos, target } = fitBoxInView(cam, union, dir, inset);
           animateCameraTo(pos, target, 800);
           devFramedRef.current = true;
         }
