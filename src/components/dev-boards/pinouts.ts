@@ -271,14 +271,16 @@ export const DEV_BOARDS: Record<DevBoardKind, DevBoardSpec> = {
     d: UNO_D,
     pins: unoPins,
     pinTopY: DEV_PCB_H / 2 + UNO_HEADER_H,
-    sideGap: 2.4,
+    // Room for the USB-B plug and its cable between the board and the breadboard.
+    sideGap: 4.2,
   },
   "esp32-devkit": {
     w: ESP_W,
     d: ESP_D,
     pins: espPins,
     pinTopY: ESP_LIFT + ESP_PCB_H,
-    sideGap: 1.9,
+    // Room for the micro-USB plug and its cable.
+    sideGap: 3.0,
   },
   "mcu-8051": { w: TRAINER_W, d: TRAINER_D, pins: mcu8051Pins },
   pic18f4550: { w: TRAINER_W, d: TRAINER_D, pins: pic18Pins },

@@ -62,8 +62,8 @@ function usbAdapter(root: THREE.Group, x: number, z: number, bench: number) {
 }
 
 /**
- * USB power: the plug in the board's socket, a cable down to the bench and
- * back to a 5 V adapter behind the board.
+ * USB power: the plug in the board's socket, a cable that bends straight back
+ * and runs along the bench to a 5 V adapter behind the board.
  */
 export function buildUsbPower(
   port: THREE.Vector3,
@@ -103,23 +103,27 @@ export function buildUsbPower(
   );
   relief.rotation.z = Math.PI / 2;
 
-  // Adapter behind the board, in the clear lane left of it.
-  const laneX = gx - gripL / 2 - reliefL - 6 * MM;
-  const adapterZ = boardBackZ - 32 * MM;
-  const a = usbAdapter(root, laneX, adapterZ, bench);
-
+  // The cable bends straight back from the plug, drops to the bench behind
+  // the board and runs to an adapter sitting behind the board. It never goes
+  // further left than its bend, so it stays clear of the breadboard.
   const start = new THREE.Vector3(gx - gripL / 2 - reliefL, port.y, port.z);
   const r = 1.8 * MM;
+  const bendX = start.x - 5 * MM;
+  const adapterX = port.x + (big ? 26 : 14) * MM;
+  const adapterZ = boardBackZ - 46 * MM;
+  const a = usbAdapter(root, adapterX, adapterZ, bench);
+  const behind = boardBackZ - 8 * MM;
   root.add(
     tube(
       [
         start,
-        new THREE.Vector3(start.x - 4 * MM, port.y - 1 * MM, port.z),
-        new THREE.Vector3(laneX, bench + r + 4 * MM, port.z - 8 * MM),
-        new THREE.Vector3(laneX, bench + r, port.z - 25 * MM),
-        new THREE.Vector3(laneX, bench + r, a.portZ + 14 * MM),
-        new THREE.Vector3(laneX, a.portY, a.portZ + 3 * MM),
-        new THREE.Vector3(laneX, a.portY, a.portZ),
+        new THREE.Vector3(start.x - 3.5 * MM, port.y - 0.3 * MM, port.z - 1 * MM),
+        new THREE.Vector3(bendX, port.y - 1.5 * MM, port.z - 8 * MM),
+        new THREE.Vector3(bendX + 0.5 * MM, bench + r + 2 * MM, behind),
+        new THREE.Vector3(bendX + 6 * MM, bench + r, behind - 9 * MM),
+        new THREE.Vector3(adapterX - 6 * MM, bench + r, a.portZ + 10 * MM),
+        new THREE.Vector3(adapterX, a.portY, a.portZ + 3 * MM),
+        new THREE.Vector3(adapterX, a.portY, a.portZ),
       ],
       r,
       CABLE,
