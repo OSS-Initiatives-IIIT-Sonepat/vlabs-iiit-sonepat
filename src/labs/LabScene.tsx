@@ -18,6 +18,22 @@ import {
 } from "@/components/dev-boards/pinouts";
 import { buildArduinoUnoStandalone } from "@/components/dev-boards/arduino-uno";
 import { buildEsp32DevkitStandalone } from "@/components/dev-boards/esp32-devkit";
+import { buildNamedPartStandalone } from "@/components/dev-boards/named-parts";
+
+// Part types that stand on the bench and expose named pins (see
+// components/dev-boards/pinouts.ts).
+function isDevPart(
+  inst: ComponentInstance,
+): inst is Extract<ComponentInstance, { side: "left" | "right" }> {
+  return (
+    inst.type === "arduino-uno" ||
+    inst.type === "esp32-devkit" ||
+    inst.type === "mcu-8051" ||
+    inst.type === "pic18f4550" ||
+    inst.type === "adc0804" ||
+    inst.type === "seg7"
+  );
+}
 import {
   componentDisplayName,
   formatOhms,
@@ -156,10 +172,8 @@ function resolvePin(
   if ("dev" in pin) {
     const dp = pin as DevPin;
     const inst = all.find((c) => c.id === dp.dev);
-    if (!inst || (inst.type !== "arduino-uno" && inst.type !== "esp32-devkit")) {
-      return null;
-    }
-    return devPinWorld(inst.type, inst.side, dp.pin);
+    if (!inst || !isDevPart(inst)) return null;
+    return devPinWorld(inst.type, inst.side, dp.pin, inst.zOffset ?? 0);
   }
 
   if ("col" in pin && "row" in pin && "board" in pin) {
@@ -693,12 +707,18 @@ function buildInstance(
     }
 
     case "arduino-uno":
-    case "esp32-devkit": {
+    case "esp32-devkit":
+    case "mcu-8051":
+    case "pic18f4550":
+    case "adc0804":
+    case "seg7": {
       const g =
         inst.type === "arduino-uno"
           ? buildArduinoUnoStandalone()
-          : buildEsp32DevkitStandalone();
-      g.position.copy(devBoardCentre(inst.type, inst.side));
+          : inst.type === "esp32-devkit"
+            ? buildEsp32DevkitStandalone()
+            : buildNamedPartStandalone(inst.type);
+      g.position.copy(devBoardCentre(inst.type, inst.side, inst.zOffset ?? 0));
       return g;
     }
 

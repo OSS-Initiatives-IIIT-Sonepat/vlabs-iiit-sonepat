@@ -47,8 +47,16 @@ export type ComponentInstance =
   // `{ dev: id, pin: '<name>' }`. Pin names are in components/dev-boards.
   | {
       id: string;
-      type: "arduino-uno" | "esp32-devkit";
+      type:
+        | "arduino-uno"
+        | "esp32-devkit"
+        | "mcu-8051"
+        | "pic18f4550"
+        | "adc0804"
+        | "seg7";
       side: "left" | "right";
+      /** Moves the part along the bench, to place two parts on one side. */
+      zOffset?: number;
     }
 
   // ── Passives ───────────────────────────────────────────────────────────
