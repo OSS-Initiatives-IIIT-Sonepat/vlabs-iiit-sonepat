@@ -900,6 +900,66 @@ import {
 } from "./semester-04/04-embedded-systems/esp32-pwm-fade";
 
 import {
+  EsdPicDelayClockCircuit,
+  EsdPicDelayClockContent,
+  esdPicDelayClockExperiment,
+} from "./semester-04/04-embedded-systems/esd-pic-delay-clock";
+
+import {
+  EsdPicIoLedSwitchCircuit,
+  EsdPicIoLedSwitchContent,
+  esdPicIoLedSwitchExperiment,
+} from "./semester-04/04-embedded-systems/esd-pic-io-led-switch";
+
+import {
+  EsdPicTimer0Circuit,
+  EsdPicTimer0Content,
+  esdPicTimer0Experiment,
+} from "./semester-04/04-embedded-systems/esd-pic-timer0";
+
+import {
+  EsdPicAdcCircuit,
+  EsdPicAdcContent,
+  esdPicAdcExperiment,
+} from "./semester-04/04-embedded-systems/esd-pic-adc";
+
+import {
+  EsdPicPwmCircuit,
+  EsdPicPwmContent,
+  esdPicPwmExperiment,
+} from "./semester-04/04-embedded-systems/esd-pic-pwm";
+
+import {
+  Esd8051BinaryCounterCircuit,
+  Esd8051BinaryCounterContent,
+  esd8051BinaryCounterExperiment,
+} from "./semester-04/04-embedded-systems/esd-8051-binary-counter";
+
+import {
+  Esd8051UpDownCounterCircuit,
+  Esd8051UpDownCounterContent,
+  esd8051UpDownCounterExperiment,
+} from "./semester-04/04-embedded-systems/esd-8051-up-down-counter";
+
+import {
+  Esd8051DacRampCircuit,
+  Esd8051DacRampContent,
+  esd8051DacRampExperiment,
+} from "./semester-04/04-embedded-systems/esd-8051-dac-ramp";
+
+import {
+  Esd8051Adc0804Circuit,
+  Esd8051Adc0804Content,
+  esd8051Adc0804Experiment,
+} from "./semester-04/04-embedded-systems/esd-8051-adc0804";
+
+import {
+  Esd8051PnSequenceCircuit,
+  Esd8051PnSequenceContent,
+  esd8051PnSequenceExperiment,
+} from "./semester-04/04-embedded-systems/esd-8051-pn-sequence";
+
+import {
   OsiModelJourneyCircuit,
   OsiModelJourneyContent,
   osiModelJourneyExperiment,
@@ -2501,6 +2561,66 @@ export const SEMESTER_SUBJECTS: readonly SemesterSubjectCatalog[] = [
         Esp32PwmFadeCircuit,
         Esp32PwmFadeContent,
         ["esp32", "PWM", "LEDC"],
+      ),
+      fromBuilt(
+        esdPicDelayClockExperiment,
+        EsdPicDelayClockCircuit,
+        EsdPicDelayClockContent,
+        ["PIC18", "clock", "delay"],
+      ),
+      fromBuilt(
+        esdPicIoLedSwitchExperiment,
+        EsdPicIoLedSwitchCircuit,
+        EsdPicIoLedSwitchContent,
+        ["PIC18", "GPIO", "switch"],
+      ),
+      fromBuilt(
+        esdPicTimer0Experiment,
+        EsdPicTimer0Circuit,
+        EsdPicTimer0Content,
+        ["PIC18", "Timer0", "interrupt"],
+      ),
+      fromBuilt(
+        esdPicAdcExperiment,
+        EsdPicAdcCircuit,
+        EsdPicAdcContent,
+        ["PIC18", "ADC", "analog input"],
+      ),
+      fromBuilt(
+        esdPicPwmExperiment,
+        EsdPicPwmCircuit,
+        EsdPicPwmContent,
+        ["PIC18", "PWM", "CCP"],
+      ),
+      fromBuilt(
+        esd8051BinaryCounterExperiment,
+        Esd8051BinaryCounterCircuit,
+        Esd8051BinaryCounterContent,
+        ["8051", "counter", "binary"],
+      ),
+      fromBuilt(
+        esd8051UpDownCounterExperiment,
+        Esd8051UpDownCounterCircuit,
+        Esd8051UpDownCounterContent,
+        ["8051", "counter", "input pin"],
+      ),
+      fromBuilt(
+        esd8051DacRampExperiment,
+        Esd8051DacRampCircuit,
+        Esd8051DacRampContent,
+        ["8051", "DAC", "ramp"],
+      ),
+      fromBuilt(
+        esd8051Adc0804Experiment,
+        Esd8051Adc0804Circuit,
+        Esd8051Adc0804Content,
+        ["8051", "ADC0804", "data bus"],
+      ),
+      fromBuilt(
+        esd8051PnSequenceExperiment,
+        Esd8051PnSequenceCircuit,
+        Esd8051PnSequenceContent,
+        ["8051", "PN sequence", "LFSR"],
       ),
     ],
   },
