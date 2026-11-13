@@ -2,9 +2,12 @@ import { buildCircuit, buildLabContent } from "@/labs/experiments/build";
 import { type ExperimentDefinition } from "@/labs/experiments/types";
 import {
   type ConclusionSection,
+  type ObservationSection,
   type TheorySection,
   type ApparatusSection,
 } from "@/labs/lab-content.types";
+import { components } from "./components";
+import { procedureSteps } from "./04-procedure";
 import { esp32AnatomyDiagrams } from "@/labs/schematics/semester-04/04-embedded-systems/diagrams";
 
 const aim: TheorySection = {
@@ -67,6 +70,16 @@ const apparatus: ApparatusSection = {
   ],
 };
 
+const observations: ObservationSection = {
+  id: "observations",
+  type: "observation",
+  title: "Observations",
+  paragraphs: [
+    "The ESP32-DevKitC from above, with each part and pin group labelled. Find each one on the board and say what it is for.",
+  ],
+  figure: { board: "esp32-devkit" },
+};
+
 const conclusion: ConclusionSection = {
   id: "conclusion",
   type: "conclusion",
@@ -80,11 +93,10 @@ export const esp32IntroExperiment: ExperimentDefinition = {
   id: "esp32-intro",
   title: "Introduction to ESP32",
   description:
-    "What the ESP32 DevKit is, why its logic is 3.3 V, which GPIO pins are safe to use, and how its sketch differs from the Arduino.",
-  components: [],
-  sections: [aim, theory, sketch, apparatus, conclusion],
-  procedureSteps: [],
-  labType: "text",
+    "A guided tour of the ESP32-DevKitC: what each part does, why its logic is 3.3 V, which GPIO pins are safe to use, and how its sketch differs from the Arduino.",
+  components,
+  sections: [aim, theory, apparatus, sketch, observations, conclusion],
+  procedureSteps,
 };
 
 export const Esp32IntroCircuit = buildCircuit(esp32IntroExperiment);

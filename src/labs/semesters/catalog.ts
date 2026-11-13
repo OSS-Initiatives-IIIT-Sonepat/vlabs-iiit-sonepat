@@ -900,6 +900,18 @@ import {
 } from "./semester-04/04-embedded-systems/esp32-pwm-fade";
 
 import {
+  EsdPicIntroCircuit,
+  EsdPicIntroContent,
+  esdPicIntroExperiment,
+} from "./semester-04/04-embedded-systems/esd-pic-intro";
+
+import {
+  Esd8051IntroCircuit,
+  Esd8051IntroContent,
+  esd8051IntroExperiment,
+} from "./semester-04/04-embedded-systems/esd-8051-intro";
+
+import {
   EsdPicDelayClockCircuit,
   EsdPicDelayClockContent,
   esdPicDelayClockExperiment,
@@ -2511,7 +2523,7 @@ export const SEMESTER_SUBJECTS: readonly SemesterSubjectCatalog[] = [
     subjectId: "04-embedded-systems",
     subjectLabel: "Embedded Systems",
     subjectDescription:
-      "Program Arduino and ESP32 boards on a 3D bench: pins, LEDs, buttons, analog input and PWM.",
+      "Program Arduino, ESP32, 8051 and PIC18 microcontrollers on a 3D bench: pins, LEDs, buttons, timers, ADC, DAC and PWM.",
     defaultCircuitId: "arduino-blink",
     experiments: [
       fromBuilt(
@@ -2563,6 +2575,12 @@ export const SEMESTER_SUBJECTS: readonly SemesterSubjectCatalog[] = [
         ["esp32", "PWM", "LEDC"],
       ),
       fromBuilt(
+        esdPicIntroExperiment,
+        EsdPicIntroCircuit,
+        EsdPicIntroContent,
+        ["PIC18", "introduction", "minimal system"],
+      ),
+      fromBuilt(
         esdPicDelayClockExperiment,
         EsdPicDelayClockCircuit,
         EsdPicDelayClockContent,
@@ -2591,6 +2609,12 @@ export const SEMESTER_SUBJECTS: readonly SemesterSubjectCatalog[] = [
         EsdPicPwmCircuit,
         EsdPicPwmContent,
         ["PIC18", "PWM", "CCP"],
+      ),
+      fromBuilt(
+        esd8051IntroExperiment,
+        Esd8051IntroCircuit,
+        Esd8051IntroContent,
+        ["8051", "introduction", "minimal system"],
       ),
       fromBuilt(
         esd8051BinaryCounterExperiment,
