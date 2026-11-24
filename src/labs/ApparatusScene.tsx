@@ -30,7 +30,23 @@ import {
   buildTransformerStandalone,
   buildDipSwitchStandalone,
   buildLogicAnalyzerStandalone,
+  buildPushButtonStandalone,
 } from "@/components";
+import { buildArduinoUnoStandalone } from "@/components/dev-boards/arduino-uno";
+import { buildEsp32DevkitStandalone } from "@/components/dev-boards/esp32-devkit";
+import {
+  buildCrystal,
+  buildDipChipStandalone,
+} from "@/components/dev-boards/dip-chips";
+
+/** Scale a model so its largest side is `size`. Boards and chips are built
+ *  at true size, which is far larger (or smaller) than the other parts. */
+function fitTo(g: THREE.Group, size: number): THREE.Group {
+  const dims = new THREE.Box3().setFromObject(g).getSize(new THREE.Vector3());
+  const max = Math.max(dims.x, dims.y, dims.z);
+  if (max > 0) g.scale.setScalar(size / max);
+  return g;
+}
 
 // ── Model builder ─────────────────────────────────────────────────────────
 function buildItemModel(item: ApparatusItem): THREE.Group {
@@ -46,6 +62,20 @@ function buildItemModel(item: ApparatusItem): THREE.Group {
             ? "orange"
             : "red",
     );
+  }
+  // Development boards and chips of the Embedded Systems labs.
+  if (n.includes("esp32")) return fitTo(buildEsp32DevkitStandalone(), 2.6);
+  if (n.includes("arduino uno")) return fitTo(buildArduinoUnoStandalone(), 2.6);
+  if (n.includes("8051") || n.includes("at89s52")) {
+    return fitTo(buildDipChipStandalone("at89s52"), 2.6);
+  }
+  if (n.includes("pic18")) {
+    return fitTo(buildDipChipStandalone("pic18f4550"), 2.6);
+  }
+  if (n.includes("adc0804")) return fitTo(buildDipChipStandalone("adc0804"), 2);
+  if (n.includes("crystal")) return fitTo(buildCrystal(11.0592), 1.4);
+  if (n.includes("push-button") || n.includes("push button")) {
+    return fitTo(buildPushButtonStandalone(), 1.2);
   }
   if (n.includes("inductor") || n.includes("choke")) {
     return buildInductorStandalone(0.01);

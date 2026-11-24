@@ -47,6 +47,7 @@ const ENABLED_SUBJECTS = new Set([
   "02-peripheral-interfacing",
   "03-microprocessors-and-microcontrollers",
   "01-computer-networks",
+  "04-embedded-systems",
 ]);
 
 type Props = {

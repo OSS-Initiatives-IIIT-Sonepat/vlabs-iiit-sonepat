@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import type { ComponentInstance } from "./types";
+import { DIP_CHIPS } from "@/components/dev-boards/dip-chips";
 import type { SchematicElement } from "./CircuitSchematic";
 
 // ── Shared hover / selection state between the 3D scene and 2D schematic ──
@@ -93,6 +94,13 @@ const GATE_NAMES: Record<string, string> = {
   "buffer-gate": "Tri-state buffer",
 };
 
+/** Capacitance given in µF, written in the unit a part is sold in. */
+function formatFarads(uf: number): string {
+  if (uf < 1e-3) return `${+(uf * 1e6).toPrecision(3)} pF`;
+  if (uf < 1) return `${+(uf * 1e3).toPrecision(3)} nF`;
+  return `${+uf.toPrecision(3)} µF`;
+}
+
 export function componentDisplayName(inst: ComponentInstance): string {
   switch (inst.type) {
     case "breadboard":
@@ -116,7 +124,11 @@ export function componentDisplayName(inst: ComponentInstance): string {
     case "resistor":
       return `Resistor · ${formatOhms(inst.ohms)}`;
     case "capacitor":
-      return `Capacitor · ${inst.capacitance} µF`;
+      return `Capacitor · ${formatFarads(inst.capacitance)}`;
+    case "dip-mcu":
+      return DIP_CHIPS[inst.chip].display;
+    case "crystal":
+      return `Crystal · ${inst.mhz} MHz`;
     case "inductor":
       return `Inductor · ${+(inst.henrys * 1000).toFixed(2)} mH`;
     case "led":
@@ -184,6 +196,9 @@ const SCHEMATIC_TO_3D: Partial<Record<SchematicElement["type"], string[]>> = {
   diode: ["diode"],
   zener: ["zener"],
   led: ["led"],
+  chip: ["dip-mcu", "arduino-uno", "esp32-devkit"],
+  pushbutton: ["push-button"],
+  crystal: ["crystal"],
   vsource: ["dc-jack", "battery"],
   acsource: ["function-generator", "transformer"],
   ammeter: ["ammeter", "potentiometer"],

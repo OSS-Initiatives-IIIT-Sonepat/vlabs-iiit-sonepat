@@ -142,6 +142,8 @@ import * as s3_SubroutineAndIo from "./semester-03/08-assembly-systems/subroutin
 import * as s4_Assembly from "./semester-04/01-8085-assembly-programming/assembly-diagrams";
 import * as s4_Interface from "./semester-04/02-peripheral-interfacing/interface-diagrams";
 import * as s4_PinLabelling from "./semester-04/03-microprocessors-and-microcontrollers/8085-pin-labelling";
+import * as s4_DevBoards from "./semester-04/04-embedded-systems/diagrams";
+import * as s4_ChipBench from "./semester-04/04-embedded-systems/esd-diagrams";
 import * as s5_OsiModelJourney from "./semester-05/01-computer-networks/osi-model-journey";
 import * as s5_NetworkCables from "./semester-05/01-computer-networks/network-cables";
 import * as s5_NicFileTransfer from "./semester-05/01-computer-networks/nic-lan-wlan";
@@ -340,6 +342,8 @@ export const schematicModules = {
   "semester-04/02-peripheral-interfacing/gpio-interfacing": s4_Interface,
   "semester-04/03-microprocessors-and-microcontrollers/8085-pin-labelling":
     s4_PinLabelling,
+  "semester-04/04-embedded-systems/dev-boards": s4_DevBoards,
+  "semester-04/04-embedded-systems/chip-bench": s4_ChipBench,
   "semester-05/01-computer-networks/osi-model-journey": s5_OsiModelJourney,
   "semester-05/01-computer-networks/network-cables-crimping": s5_NetworkCables,
   "semester-05/01-computer-networks/nic-file-transfer": s5_NicFileTransfer,

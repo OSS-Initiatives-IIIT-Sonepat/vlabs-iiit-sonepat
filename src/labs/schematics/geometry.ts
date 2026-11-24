@@ -73,6 +73,15 @@ export function ptWindowHeight(el: PtWindow): number {
   return h + 6;
 }
 
+/** Row spacing and lead length of a `chip` symbol. */
+export const CHIP_PITCH = 20;
+export const CHIP_STUB = 20;
+
+/** Height of a `chip` box with this many rows on each side. */
+export function chipHeight(left: number, right: number): number {
+  return Math.max(left, right, 1) * CHIP_PITCH + CHIP_PITCH;
+}
+
 type LocalGeometry = {
   pins: Pt[];
   body: Box;
@@ -281,6 +290,62 @@ function localGeometry(el: SchematicElement): LocalGeometry | null {
         leads: [seg(-22, 0, -14, 0), seg(18, 0, 26, 0)],
         texts: txt(0, -18, el.label, 9),
       };
+    case "chip": {
+      const h = chipHeight(el.left.length, el.right.length);
+      const pins: Pt[] = [];
+      const leads: Seg[] = [];
+      const texts: TextSpec[] = [];
+      const side = (list: typeof el.left, dir: -1 | 1) =>
+        list.forEach((p, i) => {
+          if (!p) return;
+          const y = -h / 2 + CHIP_PITCH + i * CHIP_PITCH;
+          const edge = (dir * el.w) / 2;
+          const tip = edge + dir * CHIP_STUB;
+          pins.push(pt(tip, y));
+          leads.push(seg(tip, y, edge, y));
+          texts.push(
+            ...txt(
+              edge - dir * 5,
+              y + 3.2,
+              p.name,
+              9,
+              dir < 0 ? "start" : "end",
+            ),
+          );
+          if (p.num !== undefined)
+            texts.push(
+              ...txt(edge + (dir * CHIP_STUB) / 2, y - 4, String(p.num), 7.5),
+            );
+        });
+      side(el.left, -1);
+      side(el.right, 1);
+      texts.push(...txt(0, -h / 2 - 7, el.label, 11));
+      return {
+        pins,
+        body: box(-el.w / 2, -h / 2, el.w / 2, h / 2),
+        leads,
+        texts,
+      };
+    }
+    case "pushbutton":
+      return horizontal2(
+        30,
+        14,
+        box(-14, -16, 14, 3),
+        txt(0, 16, el.label, 9.5),
+      );
+    case "crystal":
+      return horizontal2(24, 9, box(-9, -9, 9, 9), [
+        ...txt(0, -14, el.label, 10),
+        ...txt(0, 22, el.value, 9),
+      ]);
+    case "supply":
+      return {
+        pins: [pt(0, 0)],
+        body: box(-10, -11, 10, -9),
+        leads: [seg(0, 0, 0, -10)],
+        texts: txt(0, -15, el.label, 9.5),
+      };
     case "block":
     case "terminal":
     case "decision":
@@ -424,6 +489,26 @@ export function symbolGeometry(el: SchematicElement): SymbolGeometry | null {
     texts: local.texts.map((t) => placeText(t, x, y, rot)),
     textStrings: local.texts.map((t) => t.text),
   };
+}
+
+/** World position of a named pin of a `chip` symbol. */
+export function chipPin(
+  el: Extract<SchematicElement, { type: "chip" }>,
+  name: string,
+): Pt {
+  const h = chipHeight(el.left.length, el.right.length);
+  for (const [list, dir] of [
+    [el.left, -1],
+    [el.right, 1],
+  ] as const) {
+    const i = list.findIndex((p) => p?.name === name);
+    if (i >= 0)
+      return {
+        x: el.x + dir * (el.w / 2 + CHIP_STUB),
+        y: el.y - h / 2 + CHIP_PITCH + i * CHIP_PITCH,
+      };
+  }
+  throw new Error(`chip ${el.id} has no pin "${name}"`);
 }
 
 /** World-space pins of a symbol, for authoring wires that land exactly on them. */

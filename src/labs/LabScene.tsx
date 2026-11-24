@@ -15,6 +15,42 @@ import { BENCH_Y as XFMR_BENCH_Y } from "@/components/shared/bench-layout";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { bindCtrlPan } from "./ctrl-pan";
 import { benchPlacement } from "@/components/shared";
+import { BENCH_Y } from "@/components/shared/bench-layout";
+import {
+  DEV_BOARDS,
+  devBoardCentre,
+  devPinWorld,
+} from "@/components/dev-boards/pinouts";
+import { buildArduinoUnoStandalone } from "@/components/dev-boards/arduino-uno";
+import { buildEsp32DevkitStandalone } from "@/components/dev-boards/esp32-devkit";
+import { buildNamedPartStandalone } from "@/components/dev-boards/named-parts";
+import { UNO_PORTS } from "@/components/dev-boards/arduino-uno";
+import { ESP_PORTS } from "@/components/dev-boards/esp32-devkit";
+import {
+  buildBattery9v,
+  buildUsbPower,
+} from "@/components/dev-boards/power";
+import {
+  buildCrystal,
+  buildDipChip,
+  dipCentreOffset,
+  dipHole,
+} from "@/components/dev-boards/dip-chips";
+
+// Part types that stand on the bench and expose named pins (see
+// components/dev-boards/pinouts.ts).
+function isDevPart(
+  inst: ComponentInstance,
+): inst is Extract<ComponentInstance, { side: "left" | "right" }> {
+  return (
+    inst.type === "arduino-uno" ||
+    inst.type === "esp32-devkit" ||
+    inst.type === "mcu-8051" ||
+    inst.type === "pic18f4550" ||
+    inst.type === "adc0804" ||
+    inst.type === "seg7"
+  );
+}
 import {
   componentDisplayName,
   formatOhms,
@@ -27,6 +63,7 @@ import {
   railHole,
   COLS,
   colsForBoardId,
+  colToX,
   PITCH,
   TOP_Y,
   BOARD_D,
@@ -79,6 +116,7 @@ import {
   type ComponentInstance,
   type PinRef,
   type TiePin,
+  type DevPin,
   type RailPin,
   type IcPin,
   type PassivePin,
@@ -150,6 +188,13 @@ function resolvePin(
   all: ComponentInstance[],
   peerPin?: PinRef,
 ): THREE.Vector3 | null {
+  if ("dev" in pin) {
+    const dp = pin as DevPin;
+    const inst = all.find((c) => c.id === dp.dev);
+    if (!inst || !isDevPart(inst)) return null;
+    return devPinWorld(inst.type, inst.side, dp.pin, inst.zOffset ?? 0);
+  }
+
   if ("col" in pin && "row" in pin && "board" in pin) {
     const tie = pin as TiePin;
     const cols = colsForBoardId(tie.board, all);
@@ -173,6 +218,12 @@ function resolvePin(
     const inst = all.find((c) => c.id === ip.ic);
     if (!inst || !("mountedAt" in inst) || !inst.mountedAt) return null;
     const cols = colsForBoardId(inst.mountedAt.board, all);
+    if (inst.type === "dip-mcu") {
+      // "P1.0" is the hole next to the leg, "P1.0:2" the one after it.
+      const [name, reach] = ip.pin.split(":");
+      const h = dipHole(inst.chip, inst.mountedAt.col, name, Number(reach ?? 1));
+      return hole(h.col, h.row, cols);
+    }
     return resolveIcPin(
       ip.pin,
       inst.mountedAt.col,
@@ -740,6 +791,71 @@ function buildInstance(
       return buildMcuTrainerStandalone();
     }
 
+    case "arduino-uno":
+    case "esp32-devkit":
+    case "mcu-8051":
+    case "pic18f4550":
+    case "adc0804":
+    case "seg7": {
+      const g =
+        inst.type === "arduino-uno"
+          ? buildArduinoUnoStandalone()
+          : inst.type === "esp32-devkit"
+            ? buildEsp32DevkitStandalone()
+            : buildNamedPartStandalone(inst.type);
+      g.position.copy(devBoardCentre(inst.type, inst.side, inst.zOffset ?? 0));
+      return g;
+    }
+
+    // Power for a development board: a USB cable to a 5 V adapter, or a 9 V
+    // battery in the Uno's DC jack. Both plug into the board named by `dev`.
+    case "usb-power":
+    case "battery-9v": {
+      const board = all.find((c) => c.id === inst.dev);
+      if (!board || !isDevPart(board)) return null;
+      const centre = devBoardCentre(board.type, board.side, board.zOffset ?? 0);
+      const { d } = DEV_BOARDS[board.type];
+      if (inst.type === "battery-9v") {
+        if (board.type !== "arduino-uno") return null;
+        const j = UNO_PORTS.jack;
+        return buildBattery9v(
+          centre.clone().add(new THREE.Vector3(j.x, j.y, j.z)),
+          centre.z + d / 2,
+          BENCH_Y,
+        );
+      }
+      const local =
+        board.type === "arduino-uno"
+          ? UNO_PORTS.usb
+          : board.type === "esp32-devkit"
+            ? ESP_PORTS.usb
+            : null;
+      if (!local) return null;
+      return buildUsbPower(
+        centre.clone().add(new THREE.Vector3(local.x, local.y, local.z)),
+        board.type === "arduino-uno" ? "usb-b" : "micro-usb",
+        centre.z - d / 2,
+        BENCH_Y,
+      );
+    }
+
+    case "dip-mcu": {
+      const { col, board } = inst.mountedAt;
+      const cols = colsForBoardId(board, all);
+      const g = buildDipChip(inst.chip);
+      const off = dipCentreOffset(inst.chip);
+      g.position.set(colToX(col, cols) + off.x, TOP_Y, off.z);
+      return g;
+    }
+
+    case "crystal": {
+      const { col, row, board } = inst.mountedAt;
+      const cols = colsForBoardId(board, all);
+      const g = buildCrystal(inst.mhz);
+      g.position.copy(hole(col, row, cols)).add(new THREE.Vector3(PITCH / 2, 0, 0));
+      return g;
+    }
+
     case "io-port": {
       const { col, board } = inst.mountedAt;
       const cols = colsForBoardId(board, all);
@@ -1025,6 +1141,83 @@ function inspectComponent(
 }
 
 // ── Camera framing & screen projection ────────────────────────────────────
+// Bench development boards and trainers (see components/dev-boards).
+const DEV_PART_TYPES = new Set<string>([
+  "arduino-uno",
+  "esp32-devkit",
+  "mcu-8051",
+  "pic18f4550",
+  "adc0804",
+  "seg7",
+]);
+
+// A step showing one of these frames it with the breadboard. A chip seated on
+// the breadboard counts: its benches use the long breadboard and a supply.
+const FRAMED_TYPES = new Set<string>([...DEV_PART_TYPES, "dip-mcu"]);
+const FRAME_WITH = new Set<string>([
+  "breadboard",
+  "long-breadboard",
+  "dc-jack",
+]);
+
+// A jumper grows from its first pin to its second over this many clock units
+// the first time a step shows it (the loop advances the clock 0.016 a frame).
+const WIRE_GROW_TIME = 0.9;
+/** Width of the lab sidebar over the canvas, with its margin. */
+const SIDEBAR_INSET_PX = 290;
+
+/**
+ * Camera position and target that show `box` from direction `dir`, filling
+ * the canvas right of a left inset (a fraction of the canvas width). Projects
+ * the box corners and corrects the distance and centre a few times.
+ */
+function fitBoxInView(
+  cam: THREE.PerspectiveCamera,
+  box: THREE.Box3,
+  dir: THREE.Vector3,
+  inset: number,
+): { pos: THREE.Vector3; target: THREE.Vector3 } {
+  const probe = cam.clone();
+  const target = box.getCenter(new THREE.Vector3());
+  let dist = box.getSize(new THREE.Vector3()).length();
+  const corners = [0, 1, 2, 3, 4, 5, 6, 7].map(
+    (i) =>
+      new THREE.Vector3(
+        i & 1 ? box.max.x : box.min.x,
+        i & 2 ? box.max.y : box.min.y,
+        i & 4 ? box.max.z : box.min.z,
+      ),
+  );
+  const tanV = Math.tan(THREE.MathUtils.degToRad(cam.fov) / 2);
+  const availW = (2 - 2 * inset) * 0.9;
+  const availH = 2 * 0.8;
+  for (let i = 0; i < 4; i++) {
+    probe.position.copy(target).addScaledVector(dir, dist);
+    probe.lookAt(target);
+    probe.updateMatrixWorld();
+    let x0 = Infinity,
+      x1 = -Infinity,
+      y0 = Infinity,
+      y1 = -Infinity;
+    for (const c of corners) {
+      const p = c.clone().project(probe);
+      x0 = Math.min(x0, p.x);
+      x1 = Math.max(x1, p.x);
+      y0 = Math.min(y0, p.y);
+      y1 = Math.max(y1, p.y);
+    }
+    // Move the centre of what is seen to the centre of the free area.
+    const right = new THREE.Vector3().setFromMatrixColumn(probe.matrixWorld, 0);
+    const up = new THREE.Vector3().setFromMatrixColumn(probe.matrixWorld, 1);
+    const halfH = dist * tanV;
+    target
+      .addScaledVector(right, ((x0 + x1) / 2 - inset) * halfH * cam.aspect)
+      .addScaledVector(up, ((y0 + y1) / 2 - 0.06) * halfH);
+    dist *= Math.max((x1 - x0) / availW, (y1 - y0) / availH);
+  }
+  return { pos: target.clone().addScaledVector(dir, dist), target };
+}
+
 const HOME_POS = new THREE.Vector3(0, 6.5, 7.0);
 const HOME_TARGET = new THREE.Vector3(0, 0.1, 0);
 const NON_FOCUSABLE = new Set([
@@ -1183,6 +1376,10 @@ export function LabSceneCanvas({
   const pivotRef = useRef<THREE.Group | null>(null);
   const markerGrpRef = useRef<THREE.Group | null>(null);
   const markerUpdaters = useRef<Array<(t: number) => void>>([]);
+  // Wires already grown in this lab; a wire grows only the first time it shows.
+  const grownWiresRef = useRef<Set<string>>(new Set());
+  // True while the camera is framed on development boards.
+  const devFramedRef = useRef(false);
   const clockRef = useRef(0);
   const controlsRef = useRef<OrbitControls | null>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
@@ -1332,7 +1529,10 @@ export function LabSceneCanvas({
       controls.enableDamping = true;
       controls.dampingFactor = 0.08;
       controls.minDistance = 0.35;
-      controls.maxDistance = wide ? 70 : 20;
+      // A dev board beside the breadboard makes the bench wider than a plain
+      // breadboard: let the framed view pull back far enough to fit it.
+      const benchWide = circuit.components.some((c) => FRAMED_TYPES.has(c.type));
+      controls.maxDistance = wide ? 70 : benchWide ? 40 : 20;
       controls.maxPolarAngle = Math.PI * 0.48;
       controls.minPolarAngle = Math.PI * 0.05;
       controls.enablePan = true;
@@ -1390,6 +1590,7 @@ export function LabSceneCanvas({
       }
     }
     meshMapRef.current = map;
+    grownWiresRef.current = new Set();
 
     // Marker group
     const markerGroup = new THREE.Group();
@@ -1595,6 +1796,22 @@ export function LabSceneCanvas({
     function loop() {
       raf = requestAnimationFrame(loop);
       clockRef.current += 0.016;
+      // Grow new jumpers: the tube's draw range runs from the first pin to
+      // the second, eased so the wire slows as it reaches the hole.
+      meshMapRef.current.forEach((g) => {
+        const start = g.userData.growStart as number | undefined;
+        if (start === undefined) return;
+        const tube = g.userData.tube as THREE.Mesh | undefined;
+        const t = Math.min(1, (clockRef.current - start) / WIRE_GROW_TIME);
+        const eased = 1 - Math.pow(1 - t, 3);
+        if (tube?.geometry.index) {
+          tube.geometry.setDrawRange(
+            0,
+            Math.floor(tube.geometry.index.count * eased),
+          );
+        }
+        if (t >= 1) delete g.userData.growStart;
+      });
       if (previewMode) {
         if (!spin.dragging) spin.ry += 0.002;
         pivot.rotation.y = spin.ry;
@@ -1683,8 +1900,56 @@ export function LabSceneCanvas({
     const pivot = pivotRef.current;
     if (!pivot) return;
 
+    // A step that shows a development board frames those boards together with
+    // the breadboard, so the wiring to them is in view. A step without one
+    // returns to the home view.
+    const cam = cameraRef.current;
+    if (cam && !previewMode) {
+      const hasDev = circuit.components.some(
+        (c) => FRAMED_TYPES.has(c.type) && visible.has(c.id),
+      );
+      if (hasDev) {
+        const union = new THREE.Box3();
+        for (const c of circuit.components) {
+          if (!visible.has(c.id)) continue;
+          if (!FRAMED_TYPES.has(c.type) && !FRAME_WITH.has(c.type)) continue;
+          const g = meshMapRef.current.get(c.id);
+          if (g) union.union(new THREE.Box3().setFromObject(g));
+        }
+        if (!union.isEmpty()) {
+          // Fit the boards in view from the home direction. (framingFor leaves
+          // room for the inspector card, which would push them aside.)
+          // The sidebar covers the left of a wide canvas: fit the boards in
+          // the part to its right and centre them there.
+          const widthPx = canvasRef.current?.clientWidth ?? 0;
+          const inset =
+            widthPx >= 1024 ? SIDEBAR_INSET_PX / widthPx : 0;
+          const dir = HOME_POS.clone().sub(HOME_TARGET).normalize();
+          const { pos, target } = fitBoxInView(cam, union, dir, inset);
+          animateCameraTo(pos, target, 800);
+          devFramedRef.current = true;
+        }
+      } else if (devFramedRef.current) {
+        animateCameraTo(homePosRef.current, HOME_TARGET, 800);
+        devFramedRef.current = false;
+      }
+    }
+
     meshMapRef.current.forEach((g, id) => {
       g.visible = visible.has(id);
+      // First time a jumper is shown: start it at zero length and grow it.
+      if (
+        g.visible &&
+        g.userData.componentType === "wire" &&
+        !grownWiresRef.current.has(id)
+      ) {
+        grownWiresRef.current.add(id);
+        const tube = g.userData.tube as THREE.Mesh | undefined;
+        if (tube) {
+          tube.geometry.setDrawRange(0, 0);
+          g.userData.growStart = clockRef.current;
+        }
+      }
     });
 
     // Rebuild LED meshes with correct isOn state
@@ -1844,7 +2109,7 @@ export function LabSceneCanvas({
       if (!g || !visible.has(sel)) setSelectedId(null);
       else focusBoxRef.current = computeFocusBox(g);
     }
-  }, [circuit, activeStepIndex, setSelectedId]);
+  }, [circuit, activeStepIndex, setSelectedId, previewMode, animateCameraTo]);
 
   // ── Rebuild markers when they change ─────────────────────────────────
   useEffect(() => {
