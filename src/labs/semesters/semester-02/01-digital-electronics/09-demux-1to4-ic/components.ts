@@ -1,299 +1,54 @@
 import { type ComponentInstance } from "@/labs/types";
 
+import { board, ic, input, sinkLamp, tie } from "../_board";
+
+/**
+ * 1-to-4 demultiplexer / 2-to-4 decoder with the 74HC139 (first half).
+ *
+ * Outputs are active-LOW, so each LED is wired +5 V → 330 Ω → LED → Yn:
+ * the selected output goes LOW, sinks the LED current and lights its LED.
+ * Select: A (LSB, pin 2) from col 2, B (MSB, pin 3) from col 4.
+ * Enable 1G' (pin 1) tied to GND.
+ */
 export const components: ComponentInstance[] = [
-  {
-    id: "bb",
-    type: "breadboard",
-  },
-  {
-    id: "demux14",
-    type: "demux-1to4",
-    mountedAt: {
-      board: "bb",
-      col: 7,
-      row: "e",
-    },
-  },
-  {
-    id: "r_y0",
-    type: "resistor",
-    ohms: 330,
-    mountedAt: {
-      board: "bb",
-      col: 18,
-      row: "c",
-    },
-  },
-  {
-    id: "r_y1",
-    type: "resistor",
-    ohms: 330,
-    mountedAt: {
-      board: "bb",
-      col: 18,
-      row: "h",
-    },
-  },
-  {
-    id: "r_y2",
-    type: "resistor",
-    ohms: 330,
-    mountedAt: {
-      board: "bb",
-      col: 25,
-      row: "c",
-    },
-  },
-  {
-    id: "r_y3",
-    type: "resistor",
-    ohms: 330,
-    mountedAt: {
-      board: "bb",
-      col: 25,
-      row: "h",
-    },
-  },
-  {
-    id: "led_y0",
-    type: "led",
-    color: "red",
-    mountedAt: {
-      board: "bb",
-      col: 22,
-      row: "c",
-    },
-  },
-  {
-    id: "led_y1",
-    type: "led",
-    color: "yellow",
-    mountedAt: {
-      board: "bb",
-      col: 22,
-      row: "h",
-    },
-  },
-  {
-    id: "led_y2",
-    type: "led",
-    color: "green",
-    mountedAt: {
-      board: "bb",
-      col: 29,
-      row: "c",
-    },
-  },
-  {
-    id: "led_y3",
-    type: "led",
-    color: "blue",
-    mountedAt: {
-      board: "bb",
-      col: 29,
-      row: "h",
-    },
-  },
-  {
-    id: "w_en_gnd",
-    type: "wire",
-    color: "black",
-    from: {
-      ic: "demux14",
-      pin: "en_bar",
-    },
-    to: {
-      board: "bb",
-      rail: "gnd_top",
-      col: 7,
-    },
-  },
-  {
-    id: "w_a_demux14",
-    type: "wire",
-    color: "red",
-    from: {
-      board: "bb",
-      col: 4,
-      row: "a",
-    },
-    to: {
-      ic: "demux14",
-      pin: "a",
-    },
-  },
-  {
-    id: "w_b_demux14",
-    type: "wire",
-    color: "orange",
-    from: {
-      board: "bb",
-      col: 5,
-      row: "a",
-    },
-    to: {
-      ic: "demux14",
-      pin: "b",
-    },
-  },
-  {
-    id: "w_y0_r",
-    type: "wire",
-    color: "red",
-    from: {
-      ic: "demux14",
-      pin: "y0",
-    },
-    to: {
-      component: "r_y0",
-      end: "p1",
-    },
-  },
-  {
-    id: "w_y0_led",
-    type: "wire",
-    color: "red",
-    from: {
-      component: "r_y0",
-      end: "p2",
-    },
-    to: {
-      led: "led_y0",
-      end: "anode",
-    },
-  },
-  {
-    id: "w_y0_gnd",
-    type: "wire",
-    color: "black",
-    from: {
-      led: "led_y0",
-      end: "cathode",
-    },
-    to: {
-      board: "bb",
-      rail: "gnd_top",
-      col: 1,
-    },
-  },
-  {
-    id: "w_y1_r",
-    type: "wire",
-    color: "yellow",
-    from: {
-      ic: "demux14",
-      pin: "y1",
-    },
-    to: {
-      component: "r_y1",
-      end: "p1",
-    },
-  },
-  {
-    id: "w_y1_led",
-    type: "wire",
-    color: "yellow",
-    from: {
-      component: "r_y1",
-      end: "p2",
-    },
-    to: {
-      led: "led_y1",
-      end: "anode",
-    },
-  },
-  {
-    id: "w_y1_gnd",
-    type: "wire",
-    color: "black",
-    from: {
-      led: "led_y1",
-      end: "cathode",
-    },
-    to: {
-      board: "bb",
-      rail: "gnd_top",
-      col: 2,
-    },
-  },
-  {
-    id: "w_y2_r",
-    type: "wire",
-    color: "green",
-    from: {
-      ic: "demux14",
-      pin: "y2",
-    },
-    to: {
-      component: "r_y2",
-      end: "p1",
-    },
-  },
-  {
-    id: "w_y2_led",
-    type: "wire",
-    color: "green",
-    from: {
-      component: "r_y2",
-      end: "p2",
-    },
-    to: {
-      led: "led_y2",
-      end: "anode",
-    },
-  },
-  {
-    id: "w_y2_gnd",
-    type: "wire",
-    color: "black",
-    from: {
-      led: "led_y2",
-      end: "cathode",
-    },
-    to: {
-      board: "bb",
-      rail: "gnd_top",
-      col: 3,
-    },
-  },
-  {
-    id: "w_y3_r",
-    type: "wire",
-    color: "blue",
-    from: {
-      ic: "demux14",
-      pin: "y3",
-    },
-    to: {
-      component: "r_y3",
-      end: "p1",
-    },
-  },
-  {
-    id: "w_y3_led",
-    type: "wire",
-    color: "blue",
-    from: {
-      component: "r_y3",
-      end: "p2",
-    },
-    to: {
-      led: "led_y3",
-      end: "anode",
-    },
-  },
-  {
-    id: "w_y3_gnd",
-    type: "wire",
-    color: "black",
-    from: {
-      led: "led_y3",
-      end: "cathode",
-    },
-    to: {
-      board: "bb",
-      rail: "gnd_top",
-      col: 4,
-    },
-  },
+  ...board(),
+
+  ...ic("demux14", "demux-1to4", 8),
+  tie("w_en_gnd", { ic: "demux14", pin: "en_bar" }, "gnd", 8),
+
+  input("w_a_demux14", 2, "a", { ic: "demux14", pin: "a" }, "red"),
+  input("w_b_demux14", 4, "a", { ic: "demux14", pin: "b" }, "orange"),
+
+  ...sinkLamp(
+    "y0",
+    { ic: "demux14", pin: "y0" },
+    18,
+    "red",
+    "w_y0_vcc",
+    "w_y0_led",
+  ),
+  ...sinkLamp(
+    "y1",
+    { ic: "demux14", pin: "y1" },
+    23,
+    "yellow",
+    "w_y1_vcc",
+    "w_y1_led",
+  ),
+  ...sinkLamp(
+    "y2",
+    { ic: "demux14", pin: "y2" },
+    28,
+    "green",
+    "w_y2_vcc",
+    "w_y2_led",
+  ),
+  ...sinkLamp(
+    "y3",
+    { ic: "demux14", pin: "y3" },
+    33,
+    "blue",
+    "w_y3_vcc",
+    "w_y3_led",
+  ),
 ];

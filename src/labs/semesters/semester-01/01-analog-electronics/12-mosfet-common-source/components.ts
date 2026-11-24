@@ -1,26 +1,25 @@
 import { type ComponentInstance } from "@/labs/types";
 
 /**
- * MOSFET common source amplifier (2N7000)
+ * MOSFET common source amplifier (2N7000).
  *
- * Top rails    : V_DD (psu, + on vcc_top, - on gnd_top)
- * Bottom rails : V_GG (vgg, + on vcc_bot, - on gnd_bot) - grounds linked by w_gnd_link
- *
- * Column map (row c unless noted):
- *   2-5   r_g (100k)        gate bias resistor
- *   6-7   c_in (1 uF)       input coupling capacitor
- *   10-12 m1 (G, D, S)      2N7000
- *   15-18 r_d (1k)          drain resistor
- *   20-21 c_out (1 uF)      output coupling capacitor
- *   24-27 r_l (10k)         load resistor
+ * 2N7000 flat face front, legs S-G-D at cols 10-11-12 (row c).
+ *   R_G  (100 kΩ) cols 8-11 : col 8 ← V_GG (+), other end on the gate
+ *   R_D  (1 kΩ)   cols 9-12 : col 9 ← V_DD through the I_D ammeter, other end on the drain
+ *   C_out (1 µF)  cols 12-13: + on the drain, − on the output column 13
+ *   R_L  (10 kΩ)  cols 13-16: output → col 16 → GND
+ *   C_in (1 µF)   cols 5-6  : + jumpered to the gate, − to the function generator
+ *   source col 10 → GND
+ * Both supplies return to the top GND rail.
  */
 export const components: ComponentInstance[] = [
   { id: "bb", type: "breadboard" },
 
-  // --- Bench instruments (no wires: use terminals / probes) ---
+  // --- Bench instruments ---
   {
     id: "psu",
     type: "dc-jack",
+    label: "V_DD",
     mountedAt: { board: "bb", col: 1, row: "a" },
     terminals: [
       { board: "bb", rail: "vcc_top", col: 2 },
@@ -30,10 +29,11 @@ export const components: ComponentInstance[] = [
   {
     id: "vgg",
     type: "dc-jack",
+    label: "V_GG",
     mountedAt: { board: "bb", col: 1, row: "b" },
     terminals: [
-      { board: "bb", rail: "vcc_bot", col: 2 },
-      { board: "bb", rail: "gnd_bot", col: 2 },
+      { board: "bb", col: 8, row: "b" },
+      { board: "bb", rail: "gnd_top", col: 4 },
     ],
   },
   {
@@ -41,8 +41,8 @@ export const components: ComponentInstance[] = [
     type: "ammeter",
     mountedAt: { board: "bb", col: 30, row: "a" },
     probes: [
-      { board: "bb", rail: "vcc_top", col: 15 }, // + (series in, from V_DD)
-      { board: "bb", col: 15, row: "a" }, //          - (series out, to R_D)
+      { board: "bb", rail: "vcc_top", col: 9 },
+      { board: "bb", col: 9, row: "a" },
     ],
   },
   {
@@ -50,8 +50,8 @@ export const components: ComponentInstance[] = [
     type: "voltmeter",
     mountedAt: { board: "bb", col: 1, row: "e" },
     probes: [
-      { board: "bb", col: 10, row: "d" }, //          + gate
-      { board: "bb", rail: "gnd_top", col: 10 }, //   - ground
+      { board: "bb", col: 11, row: "d" },
+      { board: "bb", col: 10, row: "d" },
     ],
   },
   {
@@ -59,8 +59,8 @@ export const components: ComponentInstance[] = [
     type: "voltmeter",
     mountedAt: { board: "bb", col: 1, row: "h" },
     probes: [
-      { board: "bb", col: 11, row: "d" }, //          + drain
-      { board: "bb", rail: "gnd_top", col: 11 }, //   - ground
+      { board: "bb", col: 12, row: "e" },
+      { board: "bb", col: 10, row: "e" },
     ],
   },
   {
@@ -68,8 +68,8 @@ export const components: ComponentInstance[] = [
     type: "function-generator",
     mountedAt: { board: "bb", col: 1, row: "g" },
     probes: [
-      { board: "bb", col: 6, row: "a" }, //           OUTPUT -> c_in
-      { board: "bb", rail: "gnd_top", col: 6 }, //    GND
+      { board: "bb", col: 6, row: "a" },
+      { board: "bb", rail: "gnd_top", col: 6 },
     ],
   },
   {
@@ -77,112 +77,66 @@ export const components: ComponentInstance[] = [
     type: "oscilloscope",
     mountedAt: { board: "bb", col: 20, row: "e" },
     probes: [
-      { board: "bb", col: 21, row: "a" }, //          CH1 -> output after c_out
-      { board: "bb", rail: "gnd_top", col: 21 }, //   GND
+      { board: "bb", col: 13, row: "b" },
+      { board: "bb", rail: "gnd_top", col: 14 },
     ],
   },
 
   // --- Active device ---
-  {
-    id: "m1",
-    type: "n-mosfet",
-    mountedAt: { board: "bb", col: 10, row: "c" }, // G=10, D=11, S=12
-  },
+  { id: "m1", type: "n-mosfet", mountedAt: { board: "bb", col: 11, row: "c" } },
 
   // --- Passives ---
   {
     id: "r_g",
     type: "resistor",
     ohms: 100000,
-    mountedAt: { board: "bb", col: 2, row: "c" },
+    mountedAt: { board: "bb", col: 8, row: "a" },
   },
   {
     id: "r_d",
     type: "resistor",
     ohms: 1000,
-    mountedAt: { board: "bb", col: 15, row: "c" },
+    mountedAt: { board: "bb", col: 9, row: "b" },
   },
   {
     id: "r_l",
     type: "resistor",
     ohms: 10000,
-    mountedAt: { board: "bb", col: 24, row: "c" },
+    mountedAt: { board: "bb", col: 13, row: "a" },
   },
   {
     id: "c_in",
     type: "capacitor",
     capacitance: 1,
-    mountedAt: { board: "bb", col: 6, row: "c" },
+    mountedAt: { board: "bb", col: 5, row: "c" },
   },
   {
     id: "c_out",
     type: "capacitor",
     capacitance: 1,
-    mountedAt: { board: "bb", col: 20, row: "c" },
+    mountedAt: { board: "bb", col: 12, row: "d" },
   },
 
   // --- Wires ---
   {
-    id: "w_gnd_link",
-    type: "wire",
-    color: "black",
-    from: { board: "bb", rail: "gnd_top", col: 8 },
-    to: { board: "bb", rail: "gnd_bot", col: 8 },
-  },
-  {
     id: "w_src_gnd",
     type: "wire",
     color: "black",
-    from: { board: "bb", col: 12, row: "a" },
-    to: { board: "bb", rail: "gnd_top", col: 12 },
-  },
-  {
-    id: "w_rd_drain",
-    type: "wire",
-    color: "green",
-    from: { component: "r_d", end: "p2" },
-    to: { board: "bb", col: 11, row: "b" },
-  },
-  {
-    id: "w_vgg_rg",
-    type: "wire",
-    color: "orange",
-    from: { board: "bb", rail: "vcc_bot", col: 3 },
-    to: { component: "r_g", end: "p1" },
-  },
-  {
-    id: "w_rg_gate",
-    type: "wire",
-    color: "orange",
-    from: { component: "r_g", end: "p2" },
-    to: { board: "bb", col: 10, row: "a" },
+    from: { ic: "m1", pin: "S" },
+    to: { board: "bb", rail: "gnd_top", col: 10 },
   },
   {
     id: "w_cin_gate",
     type: "wire",
     color: "blue",
-    from: { component: "c_in", end: "p2" },
-    to: { board: "bb", col: 10, row: "b" },
-  },
-  {
-    id: "w_drain_cout",
-    type: "wire",
-    color: "yellow",
-    from: { board: "bb", col: 11, row: "a" },
-    to: { component: "c_out", end: "p1" },
-  },
-  {
-    id: "w_cout_rl",
-    type: "wire",
-    color: "yellow",
-    from: { component: "c_out", end: "p2" },
-    to: { component: "r_l", end: "p1" },
+    from: { component: "c_in", end: "p1" },
+    to: { ic: "m1", pin: "G" },
   },
   {
     id: "w_rl_gnd",
     type: "wire",
     color: "black",
     from: { component: "r_l", end: "p2" },
-    to: { board: "bb", rail: "gnd_top", col: 27 },
+    to: { board: "bb", rail: "gnd_top", col: 16 },
   },
 ];

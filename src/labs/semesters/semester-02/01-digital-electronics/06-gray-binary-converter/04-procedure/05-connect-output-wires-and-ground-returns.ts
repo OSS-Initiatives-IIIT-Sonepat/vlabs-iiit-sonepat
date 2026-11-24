@@ -2,23 +2,14 @@ import { type SceneProcedureStep } from "@/labs/experiments/types";
 
 export const step: SceneProcedureStep = {
   label: "Connect output drive lines and ground return wires.",
-  body:
-    "Wire the G₃ pass-through line and XOR gate outputs (Y pins) to the respective 330 Ω resistors. " +
-    "Connect resistor outputs to LED anodes, and return all LED cathodes to the bottom GND rail using black jumper wires. " +
-    "With all inputs set to 0000₂, all outputs are 0 and all LEDs remain OFF.",
+  body: "Connect the XOR outputs (pins 3, 6 and 8) to the G₂, G₁ and G₀ resistors. The Gray MSB equals the binary MSB, so run a red jumper straight from the B₃ input column to the G₃ resistor. Return each LED cathode to the top GND rail with a black jumper.",
   show: [
     "bb",
     "psu",
     "w_rail_link",
     "xor1",
-    "xor2",
-    "xor3",
     "w_vcc_xor1",
     "w_gnd_xor1",
-    "w_vcc_xor2",
-    "w_gnd_xor2",
-    "w_vcc_xor3",
-    "w_gnd_xor3",
     "r_g3",
     "led_g3",
     "r_g2",
@@ -29,22 +20,17 @@ export const step: SceneProcedureStep = {
     "led_g0",
     "w_b3_xor1",
     "w_b3_g3",
-    "w_b3_to_r",
     "w_b2_xor1",
     "w_b2_xor2",
     "w_b1_xor2",
     "w_b1_xor3",
     "w_b0_xor3",
-    "w_r_to_led_g3",
     "w_gnd_g3",
     "w_xor1_to_r",
-    "w_r_to_led_g2",
     "w_gnd_g2",
     "w_xor2_to_r",
-    "w_r_to_led_g1",
     "w_gnd_g1",
     "w_xor3_to_r",
-    "w_r_to_led_g0",
     "w_gnd_g0",
   ],
   activeInputs: {

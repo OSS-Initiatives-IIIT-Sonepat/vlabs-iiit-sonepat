@@ -13,7 +13,7 @@ export const theory: LabSection = {
     "**NAND gate:** AND followed by NOT. $Y = \\overline{A \\cdot B}$. IC: 74HC00. NAND is a *universal gate*: any Boolean function can be built from NAND gates alone.",
     "**NOR gate:** OR followed by NOT. $Y = \\overline{A + B}$. IC: 74HC02. NOR is also a universal gate.",
     "**EX-OR (XOR) gate:** output is 1 when the inputs are different. $Y = A \\oplus B = A\\overline{B} + \\overline{A}B$. IC: 74HC86.",
-    "**EX-NOR (XNOR) gate:** output is 1 when the inputs are the same. $Y = \\overline{A \\oplus B} = AB + \\overline{A}\\,\\overline{B}$. IC: 74HC266. It is also called the equivalence gate.",
+    "**EX-NOR (XNOR) gate:** output is 1 when the inputs are the same. $Y = \\overline{A \\oplus B} = AB + \\overline{A}\\,\\overline{B}$. IC: 74HC7266 (the 74HC266 is the open-drain version and needs a pull-up resistor to drive an LED). It is also called the equivalence gate.",
     "**Truth tables** (A, B → NOT A, AND, OR, NAND, NOR, XOR, XNOR): 00 → 1, 0, 0, 1, 1, 0, 1; 01 → 1, 0, 1, 1, 0, 1, 0; 10 → 0, 0, 1, 1, 0, 1, 0; 11 → 0, 1, 1, 0, 0, 0, 1.",
   ],
   circuitDiagram: s2IntroLogicGatesTheoryDiagram,

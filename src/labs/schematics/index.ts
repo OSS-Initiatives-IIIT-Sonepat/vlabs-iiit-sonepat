@@ -6,7 +6,9 @@ import * as s1_ZenerDiode from "./semester-01/01-analog-electronics/03-zener-dio
 import * as s1_ZenerVoltageRegulator from "./semester-01/01-analog-electronics/04-zener-voltage-regulator";
 import * as s1_HalfWaveRectifier from "./semester-01/01-analog-electronics/05-half-wave-rectifier";
 import * as s1_FullWaveRectifier from "./semester-01/01-analog-electronics/06-full-wave-rectifier";
+import * as s1_CenterTappedFullWave from "./semester-01/01-analog-electronics/18-center-tapped-full-wave";
 import * as s1_CeAmplifier from "./semester-01/01-analog-electronics/07-ce-amplifier";
+import * as s1_CeTransistorCharacteristics from "./semester-01/01-analog-electronics/19-ce-transistor-characteristics";
 import * as s1_CbTransistorCharacteristics from "./semester-01/01-analog-electronics/08-cb-transistor-characteristics";
 import * as s1_CbAmplifier from "./semester-01/01-analog-electronics/09-cb-amplifier";
 import * as s1_BjtBias from "./semester-01/01-analog-electronics/10-bjt-bias";
@@ -31,6 +33,9 @@ import * as s1_KirchhoffLaws from "./semester-01/03-FEE/kirchhoff-laws";
 import * as s1_NortonTheorem from "./semester-01/03-FEE/norton-theorem";
 import * as s1_SuperpositionTheorem from "./semester-01/03-FEE/superposition-theorem";
 import * as s1_TheveninTheorem from "./semester-01/03-FEE/thevenin-theorem";
+import * as s1_MaximumPowerTransfer from "./semester-01/03-FEE/maximum-power-transfer";
+import * as s1_ParallelRlcResonance from "./semester-01/03-FEE/parallel-rlc-resonance";
+import * as s1_TransformerOcSc from "./semester-01/03-FEE/transformer-oc-sc";
 import * as s2_IntroLogicGates from "./semester-02/01-digital-electronics/01-intro-logic-gates";
 import * as s2_GateLevelMinimization from "./semester-02/01-digital-electronics/02-gate-level-minimization";
 import * as s2_HalfAdderSubtractor from "./semester-02/01-digital-electronics/03-half-adder-subtractor";
@@ -170,7 +175,11 @@ export const schematicModules = {
     s1_HalfWaveRectifier,
   "semester-01/01-analog-electronics/06-full-wave-rectifier":
     s1_FullWaveRectifier,
+  "semester-01/01-analog-electronics/18-center-tapped-full-wave":
+    s1_CenterTappedFullWave,
   "semester-01/01-analog-electronics/07-ce-amplifier": s1_CeAmplifier,
+  "semester-01/01-analog-electronics/19-ce-transistor-characteristics":
+    s1_CeTransistorCharacteristics,
   "semester-01/01-analog-electronics/08-cb-transistor-characteristics":
     s1_CbTransistorCharacteristics,
   "semester-01/01-analog-electronics/09-cb-amplifier": s1_CbAmplifier,
@@ -201,6 +210,9 @@ export const schematicModules = {
   "semester-01/03-FEE/norton-theorem": s1_NortonTheorem,
   "semester-01/03-FEE/superposition-theorem": s1_SuperpositionTheorem,
   "semester-01/03-FEE/thevenin-theorem": s1_TheveninTheorem,
+  "semester-01/03-FEE/maximum-power-transfer": s1_MaximumPowerTransfer,
+  "semester-01/03-FEE/parallel-rlc-resonance": s1_ParallelRlcResonance,
+  "semester-01/03-FEE/transformer-oc-sc": s1_TransformerOcSc,
   "semester-02/01-digital-electronics/01-intro-logic-gates": s2_IntroLogicGates,
   "semester-02/01-digital-electronics/02-gate-level-minimization":
     s2_GateLevelMinimization,

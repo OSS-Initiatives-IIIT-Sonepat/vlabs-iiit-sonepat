@@ -31,24 +31,29 @@ export const apparatus: ApparatusSection = {
       quantity: "1",
     },
     {
-      name: "DC Power Supply",
-      specification: "0–12 V variable, 500 mA",
+      name: "Dual DC Power Supply",
+      specification: "Two 0–12 V variable outputs (V_CC and V_EE), 500 mA",
       quantity: "1",
     },
     {
       name: "Digital Multimeter",
-      specification: "DC voltage + DC mA modes",
-      quantity: "2",
+      specification: "Two on DC mA (I_E, I_C), one on DC volts",
+      quantity: "3",
+    },
+    {
+      name: "Function Generator",
+      specification: "1 kHz sine, 20 mV peak-to-peak",
+      quantity: "1",
+    },
+    {
+      name: "CRO",
+      specification: "Dual trace, AC coupling",
+      quantity: "1",
     },
     {
       name: "Breadboard wires",
-      specification: "Red, black, orange, green, blue",
+      specification: "Black and blue jumpers",
       quantity: "1 set",
-    },
-    {
-      name: "LED (yellow)",
-      specification: "5 mm, $V_f \\approx 2.0\\,\\text{V}$",
-      quantity: "1",
     },
   ],
 };

@@ -2,7 +2,7 @@ import { type SceneProcedureStep } from "@/labs/experiments/types";
 
 export const step: SceneProcedureStep = {
   label: "Connect NOT A to the Borrow AND gate (white).",
-  body: "Use a white jumper to connect the output of the NOT gate ($\\overline{A}$) to input A of the second AND gate. This internal signal is what turns a plain AND into the Borrow function $\\overline{A} \\cdot B$.",
+  body: "Use a white jumper to connect the output of the NOT gate ($\\overline{A}$) to input A of the second AND gate (pin 4 of the 74HC08). This internal signal is what turns a plain AND into the Borrow function $\\overline{A} \\cdot B$.",
   show: [
     "bb",
     "psu",
@@ -14,11 +14,8 @@ export const step: SceneProcedureStep = {
     "w_vcc_and1",
     "w_gnd_and1",
     "not1",
-    "and2",
     "w_vcc_not1",
     "w_gnd_not1",
-    "w_vcc_and2",
-    "w_gnd_and2",
     "w_a_xor",
     "w_a_and",
     "w_a_not",

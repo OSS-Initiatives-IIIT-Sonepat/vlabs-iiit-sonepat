@@ -1,5 +1,9 @@
 import { type ComponentInstance } from "@/labs/types";
 
+// Vs+ → ammeter (DMM in mA) → R1 (cols 5–8) → Zener → GND. Voltmeter across the Zener.
+// Forward: zener_fwd anode shares R1's col 8 strip, cathode col 11 → GND.
+// Reverse: zener_rev anode col 12 → GND, cathode col 15 ← jumper from R1 (col 8).
+
 export const components: ComponentInstance[] = [
   { id: "bb", type: "breadboard" },
 
@@ -8,33 +12,20 @@ export const components: ComponentInstance[] = [
     type: "dc-jack",
     mountedAt: { board: "bb", col: 1, row: "a" },
     terminals: [
-      { board: "bb", rail: "vcc_top", col: 5 },
-      { board: "bb", rail: "gnd_top", col: 5 },
+      { board: "bb", rail: "vcc_top", col: 2 },
+      { board: "bb", rail: "gnd_top", col: 2 },
     ],
   },
+
+  // DMM on DC mA, in series: (+) on the supply rail, (−) on R1's input strip.
   {
     id: "dmm",
     type: "potentiometer",
     mountedAt: { board: "bb", col: 1, row: "b" },
     probes: [
-      { board: "bb", col: 3, row: "d" },
-      { board: "bb", col: 3, row: "c" },
+      { board: "bb", rail: "vcc_top", col: 4 },
+      { board: "bb", col: 5, row: "a" },
     ],
-  },
-
-  {
-    id: "w_amm_in",
-    type: "wire",
-    color: "orange",
-    from: { board: "bb", rail: "vcc_top", col: 5 },
-    to: { board: "bb", col: 3, row: "d" },
-  },
-  {
-    id: "w_amm_out",
-    type: "wire",
-    color: "orange",
-    from: { board: "bb", col: 3, row: "c" },
-    to: { component: "r1", end: "p1" },
   },
 
   {
@@ -44,48 +35,37 @@ export const components: ComponentInstance[] = [
     mountedAt: { board: "bb", col: 5, row: "c" },
   },
 
-  // Forward-biased Zener: anode col 10, cathode col 13.
+  // ── Forward bias ──────────────────────────────────────────────
   {
     id: "zener_fwd",
     type: "zener",
     vz: 5.1,
-    mountedAt: { board: "bb", col: 10, row: "c" },
-  },
-  {
-    id: "w_r1_zfwd",
-    type: "wire",
-    color: "green",
-    from: { component: "r1", end: "p2" },
-    to: { component: "zener_fwd", end: "p1" },
+    mountedAt: { board: "bb", col: 8, row: "d" },
   },
   {
     id: "w_zfwd_gnd",
     type: "wire",
     color: "black",
     from: { component: "zener_fwd", end: "p2" },
-    to: { board: "bb", rail: "gnd_top", col: 13 },
+    to: { board: "bb", rail: "gnd_top", col: 11 },
   },
   {
-    id: "w_vm_fwd_pos",
-    type: "wire",
-    color: "blue",
-    from: { component: "zener_fwd", end: "p1" },
-    to: { board: "bb", col: 10, row: "a" },
-  },
-  {
-    id: "w_vm_fwd_neg",
-    type: "wire",
-    color: "blue",
-    from: { component: "zener_fwd", end: "p2" },
-    to: { board: "bb", col: 13, row: "a" },
+    id: "vm_fwd",
+    type: "voltmeter",
+    label: "V_Z",
+    mountedAt: { board: "bb", col: 1, row: "e" },
+    probes: [
+      { board: "bb", col: 8, row: "a" },
+      { board: "bb", col: 11, row: "a" },
+    ],
   },
 
-  // Reverse-biased Zener: anode col 15 (to ground), cathode col 18 (to R1).
+  // ── Reverse bias ──────────────────────────────────────────────
   {
     id: "zener_rev",
     type: "zener",
     vz: 5.1,
-    mountedAt: { board: "bb", col: 15, row: "c" },
+    mountedAt: { board: "bb", col: 12, row: "c" },
   },
   {
     id: "w_r1_zrev",
@@ -99,20 +79,17 @@ export const components: ComponentInstance[] = [
     type: "wire",
     color: "black",
     from: { component: "zener_rev", end: "p1" },
-    to: { board: "bb", rail: "gnd_top", col: 15 },
+    to: { board: "bb", rail: "gnd_top", col: 12 },
   },
+  // Same polarity as the forward reading (+ on anode), so V_Z reads negative.
   {
-    id: "w_vm_rev_pos",
-    type: "wire",
-    color: "blue",
-    from: { component: "zener_rev", end: "p2" },
-    to: { board: "bb", col: 18, row: "a" },
-  },
-  {
-    id: "w_vm_rev_neg",
-    type: "wire",
-    color: "blue",
-    from: { component: "zener_rev", end: "p1" },
-    to: { board: "bb", col: 15, row: "a" },
+    id: "vm_rev",
+    type: "voltmeter",
+    label: "V_Z",
+    mountedAt: { board: "bb", col: 1, row: "e" },
+    probes: [
+      { board: "bb", col: 12, row: "a" },
+      { board: "bb", col: 15, row: "a" },
+    ],
   },
 ];

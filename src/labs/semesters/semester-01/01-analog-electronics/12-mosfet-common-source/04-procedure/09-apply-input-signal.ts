@@ -2,20 +2,16 @@ import { type SceneProcedureStep } from "@/labs/experiments/types";
 
 export const step: SceneProcedureStep = {
   label: "Apply the AC input signal.",
-  body: "Mount the input coupling capacitor $C_{in}$ ($1\\,\\mu\\text{F}$) at column 6 and connect it to the gate with a blue wire. Connect the function generator output to $C_{in}$ and its ground to the ground rail. Set a $1\\,\\text{kHz}$ sine wave of $100\\,\\text{mV}$ peak-to-peak. The capacitor blocks the generator's DC level so the bias set by $V_{GG}$ is unchanged.",
+  body: "Mount the input coupling capacitor $C_{in}$ ($1\\,\\mu\\text{F}$) at columns 5–6 with its + lead (column 5) towards the gate, which sits at $V_{GG}$, and connect column 5 to the gate with a blue wire. Connect the function generator output to column 6 and its ground to the ground rail. Set a $1\\,\\text{kHz}$ sine wave of $100\\,\\text{mV}$ peak-to-peak. The capacitor blocks the generator's DC level so the bias set by $V_{GG}$ is unchanged.",
   show: [
     "bb",
     "psu",
     "vgg",
     "m1",
-    "w_gnd_link",
     "w_src_gnd",
     "r_d",
     "am_d",
-    "w_rd_drain",
     "r_g",
-    "w_vgg_rg",
-    "w_rg_gate",
     "vm_gs",
     "vm_ds",
     "fg1",

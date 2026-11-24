@@ -1,490 +1,103 @@
 import { type ComponentInstance } from "@/labs/types";
 
-// Auto-structured BOM for the 4-bit ripple-carry adder (5 quad-gate ICs, 5 LED outputs).
-// Bit i uses gate (i+1) of every IC. Inputs: col 1 = Cin, cols 2-9 = A0,B0,A1,B1,A2,B2,A3,B3.
-// Output bank (cols 55-58): Cout, S3, S2, S1, S0 on rows a, c, e, g, i.
+import { board, ic, input, lamp, link } from "../_board";
+
+/**
+ * 4-bit ripple-carry adder from discrete gates (five ICs, all four gates of each used).
+ *
+ * Bit i uses gate i+1 of every IC:
+ *   xor_p (74HC86)  P_i = A_i ⊕ B_i        and_g (74HC08)  G_i = A_i · B_i
+ *   xor_s (74HC86)  S_i = P_i ⊕ C_i        and_p (74HC08)  T_i = P_i · C_i
+ *   or_c  (74HC32)  C_{i+1} = G_i + T_i    C_0 = Cin, C_4 = Cout
+ *
+ * Inputs (top bank): Cin col 1, A0/B0 cols 2/3, A1/B1 4/5, A2/B2 6/7, A3/B3 8/9.
+ * ICs at cols 11, 19, 27, 35, 43. Indicators S0…S3, Cout at cols 52–76.
+ */
+const XP = "xor_p";
+const AG = "and_g";
+const XS = "xor_s";
+const AP = "and_p";
+const OC = "or_c";
+
+const bits: ComponentInstance[] = [0, 1, 2, 3].flatMap(
+  (i): ComponentInstance[] => {
+    const g = i + 1;
+    const aCol = 2 + 2 * i;
+    const bCol = 3 + 2 * i;
+    const carry: ComponentInstance[] =
+      i === 0
+        ? [
+            input("w_cin_xs0", 1, "a", { ic: XS, pin: "1B" }, "orange"),
+            input("w_cin_ap0", 1, "b", { ic: AP, pin: "1B" }, "orange"),
+          ]
+        : [
+            link(
+              `w_c_xs${i}`,
+              { ic: OC, pin: `${i}Y` },
+              { ic: XS, pin: `${g}B` },
+            ),
+            link(
+              `w_c_ap${i}`,
+              { ic: OC, pin: `${i}Y:2` },
+              { ic: AP, pin: `${g}B` },
+            ),
+          ];
+    return [
+      input(`w_a${i}_xp`, aCol, "a", { ic: XP, pin: `${g}A` }, "red"),
+      input(`w_a${i}_ag`, aCol, "b", { ic: AG, pin: `${g}A` }, "red"),
+      input(`w_b${i}_xp`, bCol, "a", { ic: XP, pin: `${g}B` }, "blue"),
+      input(`w_b${i}_ag`, bCol, "b", { ic: AG, pin: `${g}B` }, "blue"),
+      link(
+        `w_p_xs${i}`,
+        { ic: XP, pin: `${g}Y` },
+        { ic: XS, pin: `${g}A` },
+        "white",
+      ),
+      link(
+        `w_p_ap${i}`,
+        { ic: XP, pin: `${g}Y:2` },
+        { ic: AP, pin: `${g}A` },
+        "white",
+      ),
+      ...carry,
+      link(
+        `w_g_oc${i}`,
+        { ic: AG, pin: `${g}Y` },
+        { ic: OC, pin: `${g}A` },
+        "purple",
+      ),
+      link(
+        `w_t_oc${i}`,
+        { ic: AP, pin: `${g}Y` },
+        { ic: OC, pin: `${g}B` },
+        "purple",
+      ),
+    ];
+  },
+);
+
 export const components: ComponentInstance[] = [
-  {
-    id: "bb",
-    type: "long-breadboard",
-  },
-  {
-    id: "psu",
-    type: "dc-jack",
-    mountedAt: { board: "bb", col: 1, row: "a" },
-    terminals: [
-      { board: "bb", rail: "vcc_top", col: 1 },
-      { board: "bb", rail: "gnd_top", col: 3 },
-    ],
-  },
-  {
-    id: "xor_p",
-    type: "xor-gate",
-    mountedAt: { board: "bb", col: 11, row: "e" },
-  },
-  {
-    id: "xor_s",
-    type: "xor-gate",
-    mountedAt: { board: "bb", col: 20, row: "e" },
-  },
-  {
-    id: "and_g",
-    type: "and-gate",
-    mountedAt: { board: "bb", col: 29, row: "e" },
-  },
-  {
-    id: "and_p",
-    type: "and-gate",
-    mountedAt: { board: "bb", col: 38, row: "e" },
-  },
-  {
-    id: "or_c",
-    type: "or-gate",
-    mountedAt: { board: "bb", col: 47, row: "e" },
-  },
-  {
-    id: "r_cout",
-    type: "resistor",
-    ohms: 330,
-    mountedAt: { board: "bb", col: 55, row: "a" },
-  },
-  {
-    id: "r_s3",
-    type: "resistor",
-    ohms: 330,
-    mountedAt: { board: "bb", col: 55, row: "c" },
-  },
-  {
-    id: "r_s2",
-    type: "resistor",
-    ohms: 330,
-    mountedAt: { board: "bb", col: 55, row: "e" },
-  },
-  {
-    id: "r_s1",
-    type: "resistor",
-    ohms: 330,
-    mountedAt: { board: "bb", col: 55, row: "g" },
-  },
-  {
-    id: "r_s0",
-    type: "resistor",
-    ohms: 330,
-    mountedAt: { board: "bb", col: 55, row: "i" },
-  },
-  {
-    id: "led_cout",
-    type: "led",
-    color: "yellow",
-    mountedAt: { board: "bb", col: 57, row: "a" },
-  },
-  {
-    id: "led_s3",
-    type: "led",
-    color: "green",
-    mountedAt: { board: "bb", col: 57, row: "c" },
-  },
-  {
-    id: "led_s2",
-    type: "led",
-    color: "green",
-    mountedAt: { board: "bb", col: 57, row: "e" },
-  },
-  {
-    id: "led_s1",
-    type: "led",
-    color: "green",
-    mountedAt: { board: "bb", col: 57, row: "g" },
-  },
-  {
-    id: "led_s0",
-    type: "led",
-    color: "green",
-    mountedAt: { board: "bb", col: 57, row: "i" },
-  },
-  {
-    id: "w_a_xp0",
-    type: "wire",
-    color: "red",
-    from: { board: "bb", col: 2, row: "a" },
-    to: { ic: "xor_p", pin: "1A" },
-  },
-  {
-    id: "w_a_ag0",
-    type: "wire",
-    color: "red",
-    from: { board: "bb", col: 2, row: "b" },
-    to: { ic: "and_g", pin: "1A" },
-  },
-  {
-    id: "w_b_xp0",
-    type: "wire",
-    color: "blue",
-    from: { board: "bb", col: 3, row: "a" },
-    to: { ic: "xor_p", pin: "1B" },
-  },
-  {
-    id: "w_b_ag0",
-    type: "wire",
-    color: "blue",
-    from: { board: "bb", col: 3, row: "b" },
-    to: { ic: "and_g", pin: "1B" },
-  },
-  {
-    id: "w_p_xs0",
-    type: "wire",
-    color: "white",
-    from: { ic: "xor_p", pin: "1Y" },
-    to: { ic: "xor_s", pin: "1A" },
-  },
-  {
-    id: "w_p_ap0",
-    type: "wire",
-    color: "white",
-    from: { ic: "xor_p", pin: "1Y" },
-    to: { ic: "and_p", pin: "1A" },
-  },
-  {
-    id: "w_c_xs0",
-    type: "wire",
-    color: "orange",
-    from: { board: "bb", col: 1, row: "a" },
-    to: { ic: "xor_s", pin: "1B" },
-  },
-  {
-    id: "w_c_ap0",
-    type: "wire",
-    color: "orange",
-    from: { board: "bb", col: 1, row: "b" },
-    to: { ic: "and_p", pin: "1B" },
-  },
-  {
-    id: "w_g_oc0",
-    type: "wire",
-    color: "white",
-    from: { ic: "and_g", pin: "1Y" },
-    to: { ic: "or_c", pin: "1A" },
-  },
-  {
-    id: "w_t_oc0",
-    type: "wire",
-    color: "white",
-    from: { ic: "and_p", pin: "1Y" },
-    to: { ic: "or_c", pin: "1B" },
-  },
-  {
-    id: "w_a_xp1",
-    type: "wire",
-    color: "red",
-    from: { board: "bb", col: 4, row: "a" },
-    to: { ic: "xor_p", pin: "2A" },
-  },
-  {
-    id: "w_a_ag1",
-    type: "wire",
-    color: "red",
-    from: { board: "bb", col: 4, row: "b" },
-    to: { ic: "and_g", pin: "2A" },
-  },
-  {
-    id: "w_b_xp1",
-    type: "wire",
-    color: "blue",
-    from: { board: "bb", col: 5, row: "a" },
-    to: { ic: "xor_p", pin: "2B" },
-  },
-  {
-    id: "w_b_ag1",
-    type: "wire",
-    color: "blue",
-    from: { board: "bb", col: 5, row: "b" },
-    to: { ic: "and_g", pin: "2B" },
-  },
-  {
-    id: "w_p_xs1",
-    type: "wire",
-    color: "white",
-    from: { ic: "xor_p", pin: "2Y" },
-    to: { ic: "xor_s", pin: "2A" },
-  },
-  {
-    id: "w_p_ap1",
-    type: "wire",
-    color: "white",
-    from: { ic: "xor_p", pin: "2Y" },
-    to: { ic: "and_p", pin: "2A" },
-  },
-  {
-    id: "w_c_xs1",
-    type: "wire",
-    color: "yellow",
-    from: { ic: "or_c", pin: "1Y" },
-    to: { ic: "xor_s", pin: "2B" },
-  },
-  {
-    id: "w_c_ap1",
-    type: "wire",
-    color: "yellow",
-    from: { ic: "or_c", pin: "1Y" },
-    to: { ic: "and_p", pin: "2B" },
-  },
-  {
-    id: "w_g_oc1",
-    type: "wire",
-    color: "white",
-    from: { ic: "and_g", pin: "2Y" },
-    to: { ic: "or_c", pin: "2A" },
-  },
-  {
-    id: "w_t_oc1",
-    type: "wire",
-    color: "white",
-    from: { ic: "and_p", pin: "2Y" },
-    to: { ic: "or_c", pin: "2B" },
-  },
-  {
-    id: "w_a_xp2",
-    type: "wire",
-    color: "red",
-    from: { board: "bb", col: 6, row: "a" },
-    to: { ic: "xor_p", pin: "3A" },
-  },
-  {
-    id: "w_a_ag2",
-    type: "wire",
-    color: "red",
-    from: { board: "bb", col: 6, row: "b" },
-    to: { ic: "and_g", pin: "3A" },
-  },
-  {
-    id: "w_b_xp2",
-    type: "wire",
-    color: "blue",
-    from: { board: "bb", col: 7, row: "a" },
-    to: { ic: "xor_p", pin: "3B" },
-  },
-  {
-    id: "w_b_ag2",
-    type: "wire",
-    color: "blue",
-    from: { board: "bb", col: 7, row: "b" },
-    to: { ic: "and_g", pin: "3B" },
-  },
-  {
-    id: "w_p_xs2",
-    type: "wire",
-    color: "white",
-    from: { ic: "xor_p", pin: "3Y" },
-    to: { ic: "xor_s", pin: "3A" },
-  },
-  {
-    id: "w_p_ap2",
-    type: "wire",
-    color: "white",
-    from: { ic: "xor_p", pin: "3Y" },
-    to: { ic: "and_p", pin: "3A" },
-  },
-  {
-    id: "w_c_xs2",
-    type: "wire",
-    color: "yellow",
-    from: { ic: "or_c", pin: "2Y" },
-    to: { ic: "xor_s", pin: "3B" },
-  },
-  {
-    id: "w_c_ap2",
-    type: "wire",
-    color: "yellow",
-    from: { ic: "or_c", pin: "2Y" },
-    to: { ic: "and_p", pin: "3B" },
-  },
-  {
-    id: "w_g_oc2",
-    type: "wire",
-    color: "white",
-    from: { ic: "and_g", pin: "3Y" },
-    to: { ic: "or_c", pin: "3A" },
-  },
-  {
-    id: "w_t_oc2",
-    type: "wire",
-    color: "white",
-    from: { ic: "and_p", pin: "3Y" },
-    to: { ic: "or_c", pin: "3B" },
-  },
-  {
-    id: "w_a_xp3",
-    type: "wire",
-    color: "red",
-    from: { board: "bb", col: 8, row: "a" },
-    to: { ic: "xor_p", pin: "4A" },
-  },
-  {
-    id: "w_a_ag3",
-    type: "wire",
-    color: "red",
-    from: { board: "bb", col: 8, row: "b" },
-    to: { ic: "and_g", pin: "4A" },
-  },
-  {
-    id: "w_b_xp3",
-    type: "wire",
-    color: "blue",
-    from: { board: "bb", col: 9, row: "a" },
-    to: { ic: "xor_p", pin: "4B" },
-  },
-  {
-    id: "w_b_ag3",
-    type: "wire",
-    color: "blue",
-    from: { board: "bb", col: 9, row: "b" },
-    to: { ic: "and_g", pin: "4B" },
-  },
-  {
-    id: "w_p_xs3",
-    type: "wire",
-    color: "white",
-    from: { ic: "xor_p", pin: "4Y" },
-    to: { ic: "xor_s", pin: "4A" },
-  },
-  {
-    id: "w_p_ap3",
-    type: "wire",
-    color: "white",
-    from: { ic: "xor_p", pin: "4Y" },
-    to: { ic: "and_p", pin: "4A" },
-  },
-  {
-    id: "w_c_xs3",
-    type: "wire",
-    color: "yellow",
-    from: { ic: "or_c", pin: "3Y" },
-    to: { ic: "xor_s", pin: "4B" },
-  },
-  {
-    id: "w_c_ap3",
-    type: "wire",
-    color: "yellow",
-    from: { ic: "or_c", pin: "3Y" },
-    to: { ic: "and_p", pin: "4B" },
-  },
-  {
-    id: "w_g_oc3",
-    type: "wire",
-    color: "white",
-    from: { ic: "and_g", pin: "4Y" },
-    to: { ic: "or_c", pin: "4A" },
-  },
-  {
-    id: "w_t_oc3",
-    type: "wire",
-    color: "white",
-    from: { ic: "and_p", pin: "4Y" },
-    to: { ic: "or_c", pin: "4B" },
-  },
-  {
-    id: "w_s0_r",
-    type: "wire",
-    color: "green",
-    from: { ic: "xor_s", pin: "1Y" },
-    to: { component: "r_s0", end: "p1" },
-  },
-  {
-    id: "w_r0_led",
-    type: "wire",
-    color: "green",
-    from: { component: "r_s0", end: "p2" },
-    to: { led: "led_s0", end: "anode" },
-  },
-  {
-    id: "w_s1_r",
-    type: "wire",
-    color: "green",
-    from: { ic: "xor_s", pin: "2Y" },
-    to: { component: "r_s1", end: "p1" },
-  },
-  {
-    id: "w_r1_led",
-    type: "wire",
-    color: "green",
-    from: { component: "r_s1", end: "p2" },
-    to: { led: "led_s1", end: "anode" },
-  },
-  {
-    id: "w_s2_r",
-    type: "wire",
-    color: "green",
-    from: { ic: "xor_s", pin: "3Y" },
-    to: { component: "r_s2", end: "p1" },
-  },
-  {
-    id: "w_r2_led",
-    type: "wire",
-    color: "green",
-    from: { component: "r_s2", end: "p2" },
-    to: { led: "led_s2", end: "anode" },
-  },
-  {
-    id: "w_s3_r",
-    type: "wire",
-    color: "green",
-    from: { ic: "xor_s", pin: "4Y" },
-    to: { component: "r_s3", end: "p1" },
-  },
-  {
-    id: "w_r3_led",
-    type: "wire",
-    color: "green",
-    from: { component: "r_s3", end: "p2" },
-    to: { led: "led_s3", end: "anode" },
-  },
-  {
-    id: "w_cout_r",
-    type: "wire",
-    color: "yellow",
-    from: { ic: "or_c", pin: "4Y" },
-    to: { component: "r_cout", end: "p1" },
-  },
-  {
-    id: "w_r_cout_led",
-    type: "wire",
-    color: "yellow",
-    from: { component: "r_cout", end: "p2" },
-    to: { led: "led_cout", end: "anode" },
-  },
-  {
-    id: "w_gnd_s0",
-    type: "wire",
-    color: "black",
-    from: { led: "led_s0", end: "cathode" },
-    to: { board: "bb", rail: "gnd_top", col: 1 },
-  },
-  {
-    id: "w_gnd_s1",
-    type: "wire",
-    color: "black",
-    from: { led: "led_s1", end: "cathode" },
-    to: { board: "bb", rail: "gnd_top", col: 2 },
-  },
-  {
-    id: "w_gnd_s2",
-    type: "wire",
-    color: "black",
-    from: { led: "led_s2", end: "cathode" },
-    to: { board: "bb", rail: "gnd_top", col: 3 },
-  },
-  {
-    id: "w_gnd_s3",
-    type: "wire",
-    color: "black",
-    from: { led: "led_s3", end: "cathode" },
-    to: { board: "bb", rail: "gnd_top", col: 4 },
-  },
-  {
-    id: "w_gnd_cout",
-    type: "wire",
-    color: "black",
-    from: { led: "led_cout", end: "cathode" },
-    to: { board: "bb", rail: "gnd_top", col: 5 },
-  },
+  ...board({ wide: true }),
+
+  ...ic(XP, "xor-quad", 11),
+  ...ic(AG, "and-quad", 19),
+  ...ic(XS, "xor-quad", 27),
+  ...ic(AP, "and-quad", 35),
+  ...ic(OC, "or-quad", 43),
+
+  ...bits,
+
+  ...lamp("s0", { ic: XS, pin: "1Y" }, 52, "green", "w_s0_r", "w_gnd_s0"),
+  ...lamp("s1", { ic: XS, pin: "2Y" }, 57, "green", "w_s1_r", "w_gnd_s1"),
+  ...lamp("s2", { ic: XS, pin: "3Y" }, 62, "green", "w_s2_r", "w_gnd_s2"),
+  ...lamp("s3", { ic: XS, pin: "4Y" }, 67, "green", "w_s3_r", "w_gnd_s3"),
+  ...lamp(
+    "cout",
+    { ic: OC, pin: "4Y" },
+    72,
+    "yellow",
+    "w_cout_r",
+    "w_gnd_cout",
+    "yellow",
+  ),
 ];

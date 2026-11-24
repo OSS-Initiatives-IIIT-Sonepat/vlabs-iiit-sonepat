@@ -5,10 +5,8 @@ export const step: SceneProcedureStep = {
   label: "Connect the ammeter (DMM) in series.",
   body:
     "Place the **Digital Multimeter** (DMM) beside the breadboard and set it to **DC mA** mode.\n" +
-    "Connect the ammeter in series using **orange jumper wires**:\n" +
-    "**Orange wire 1**: VCC rail (col 5) → col 3 row d (ammeter input).\n" +
-    "**Orange wire 2**: col 3 row c → R₁ input (col 5 row c).\n" +
-    "Since rows c and d in the same column share a net, all circuit current flows through the ammeter, measuring $I_Z$ directly.",
-  show: ["bb", "psu", "dmm", "w_amm_in", "w_amm_out"],
+    "Connect it **in series**: the (+) lead goes to the VCC rail and the (−) lead goes to col 5, where R₁ will start.\n" +
+    "The meter is now the only path from the supply into the circuit, so all of $I_Z$ flows through it. Never put both leads in the same column: that shorts the meter and it reads zero.",
+  show: ["bb", "psu", "dmm"],
   schematic,
 };

@@ -2,7 +2,7 @@ import { type SceneProcedureStep } from "@/labs/experiments/types";
 
 export const step: SceneProcedureStep = {
   label: "Build the output indicator",
-  body: "Place the 330 Ω resistor and the green LED. Connect output 1Y to the resistor, the resistor to the LED anode, and the LED cathode to GND. The resistor limits the LED current.",
+  body: "Place the 330 Ω resistor and the green LED. Put the LED anode in the column of the resistor's right lead (no jumper needed), connect output 1Y (pin 7) to the resistor, and the LED cathode to GND. The resistor limits the LED current.",
   show: [
     "bb",
     "psu",
@@ -19,7 +19,6 @@ export const step: SceneProcedureStep = {
     "r_y",
     "led_y",
     "w_y_r",
-    "w_r_led",
     "w_gnd_led",
   ],
   highlight: "led_y",

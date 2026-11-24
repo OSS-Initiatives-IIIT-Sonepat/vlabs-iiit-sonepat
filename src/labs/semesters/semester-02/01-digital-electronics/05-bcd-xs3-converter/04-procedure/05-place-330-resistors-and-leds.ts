@@ -1,38 +1,24 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
 
 export const step: SceneProcedureStep = {
-  label: "Mount 330 Ω current-limiting resistors and output LEDs on row h.",
-  body:
-    "Mount four 330 Ω resistors and color-coded LEDs on row h directly beneath the generating gates: " +
-    "r_w and led_w (Red, W output / MSB) at cols 21/25; " +
-    "r_x and led_x (Yellow, X output) at cols 29/33; " +
-    "r_y and led_y (Green, Y output) at cols 45/49; and " +
-    "r_z and led_z (Blue, Z output / LSB) at cols 53/57.",
+  label: "Mount 330 Ω current-limiting resistors and output LEDs.",
+  body: "Mount four 330 Ω resistors on the right, each with its LED anode in the column of the resistor's right lead: W (red, MSB) at columns 41–44, X (yellow) at 46–49, Y (green) at 51–54 and Z (blue, LSB) at 56–59. Keep the LEDs out of the IC columns: an LED sharing a strip with an IC pin or with both resistor leads is shorted.",
   show: [
     "bb",
     "psu",
     "w_rail_link",
     "or_cd",
     "and_b_t",
-    "or_w",
     "xor_x",
-    "xor_cd",
     "not_y",
-    "not_z",
     "w_vcc_or_cd",
     "w_gnd_or_cd",
-    "w_vcc_and",
-    "w_gnd_and",
-    "w_vcc_or_w",
-    "w_gnd_or_w",
+    "w_vcc_and_b_t",
+    "w_gnd_and_b_t",
     "w_vcc_xor_x",
     "w_gnd_xor_x",
-    "w_vcc_xor_cd",
-    "w_gnd_xor_cd",
     "w_vcc_not_y",
     "w_gnd_not_y",
-    "w_vcc_not_z",
-    "w_gnd_not_z",
     "w_a_or_w",
     "w_b_and",
     "w_b_xor",

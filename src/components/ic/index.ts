@@ -12,7 +12,7 @@ function chipCode(label: string): string {
     NOT: "74HC04",
     NAND: "74HC00",
     NOR: "74HC02",
-    XNOR: "74HC266",
+    XNOR: "74HC7266",
     BUF: "74HC125",
     "D-FF": "74HC74",
     "JK-FF": "74HC76",
@@ -223,6 +223,20 @@ export function resolveIcPin(
 ): THREE.Vector3 | null {
   const mr = mountRow.toLowerCase();
 
+  // "1Y:2" is the second free hole in pin 1Y's strip, one row further from
+  // the chip than "1Y". Lets two jumpers leave the same pin.
+  const reach = /^(.+):(\d)$/.exec(pin.trim());
+  if (reach) {
+    const base = resolveIcPin(reach[1], startCol, mountRow, cols, icType);
+    if (!base) return null;
+    const order = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
+    const at = order.findIndex((r) => Math.abs(Z[r] - base.z) < 1e-6);
+    if (at < 0) return base;
+    const away = at <= 4 ? -1 : 1;
+    const to = Math.min(9, Math.max(0, at + away * (Number(reach[2]) - 1)));
+    return new THREE.Vector3(base.x, base.y, Z[order[to]]);
+  }
+
   // ── BJT transistors (TO-92: C at col-1, B at col, E at col+1) ──
   if (icType === "npn-bjt" || icType === "pnp-bjt") {
     const p = pin.trim().toUpperCase();
@@ -234,14 +248,14 @@ export function resolveIcPin(
     if (p === "E" || p === "EMITTER") return hole(startCol + 1, wireRow, cols);
   }
 
-  // ── MOSFETs (TO-220 / TO-92: G at col-1, D at col, S at col+1) ──
+  // ── MOSFETs (2N7000, TO-92 flat face front: S at col-1, G at col, D at col+1) ──
   if (icType === "n-mosfet" || icType === "p-mosfet") {
     const p = pin.trim().toUpperCase();
     const wireRow =
       mr === "e" ? "d" : mr === "c" ? "b" : mr === "h" ? "g" : "b";
-    if (p === "G" || p === "GATE") return hole(startCol - 1, wireRow, cols);
-    if (p === "D" || p === "DRAIN") return hole(startCol, wireRow, cols);
-    if (p === "S" || p === "SOURCE") return hole(startCol + 1, wireRow, cols);
+    if (p === "S" || p === "SOURCE") return hole(startCol - 1, wireRow, cols);
+    if (p === "G" || p === "GATE") return hole(startCol, wireRow, cols);
+    if (p === "D" || p === "DRAIN") return hole(startCol + 1, wireRow, cols);
   }
 
   // Use adjacent hole rows (d for top bank e, g for bottom bank f) so wires plug cleanly next to IC legs
@@ -345,7 +359,9 @@ export function resolveIcPin(
     }
   }
 
-  // ── JK Flip-Flop 74HC76 (DIP-16) ──
+  // ── JK Flip-Flop 74HC76 (DIP-16), flip-flop 1 ──
+  // 1 1CLK, 2 1PRE', 3 1CLR', 4 1J, 5 VCC, 6 2CLK, 7 2PRE', 8 2CLR',
+  // 9 2J, 10 2Q', 11 2Q, 12 2K, 13 GND, 14 1Q', 15 1Q, 16 1K.
   if (icType === "jk-ff") {
     switch (pLower) {
       case "clk":
@@ -353,43 +369,47 @@ export function resolveIcPin(
       case "set":
       case "set_bar":
         return hole(startCol + 1, sideA, cols);
-      case "k":
+      case "clr":
+      case "clr_bar":
         return hole(startCol + 2, sideA, cols);
       case "j":
         return hole(startCol + 3, sideA, cols);
-      case "q_bar":
+      case "vcc":
         return hole(startCol + 4, sideA, cols);
+      case "k":
+        return hole(startCol + 0, sideB, cols);
       case "out":
       case "q":
-        return hole(startCol + 5, sideA, cols);
-      case "gnd":
-        return hole(startCol + 6, sideA, cols);
-      case "vcc":
-        return hole(startCol + 0, sideB, cols);
-      case "clr":
-      case "clr_bar":
         return hole(startCol + 1, sideB, cols);
+      case "q_bar":
+        return hole(startCol + 2, sideB, cols);
+      case "gnd":
+        return hole(startCol + 3, sideB, cols);
     }
   }
 
-  // ── SR Latch 74HC279 (DIP-16) ──
+  // ── SR Latch 74HC279 (DIP-16), latches 1 and 2 ──
+  // 1 1R', 2 1S1', 3 1S2', 4 1Q, 5 2R', 6 2S', 7 2Q, 8 GND, 16 VCC.
+  // Latch 1 sets when either S input is low: tie the unused 1S2' high.
   if (icType === "sr-latch") {
     switch (pLower) {
-      case "s":
-        return hole(startCol + 0, sideA, cols);
       case "r":
+        return hole(startCol + 0, sideA, cols);
+      case "s":
         return hole(startCol + 1, sideA, cols);
+      case "s_2":
+        return hole(startCol + 2, sideA, cols);
       case "q":
       case "out":
-        return hole(startCol + 2, sideA, cols);
-      case "s2":
         return hole(startCol + 3, sideA, cols);
       case "r2":
         return hole(startCol + 4, sideA, cols);
-      case "q2":
+      case "s2":
         return hole(startCol + 5, sideA, cols);
-      case "gnd":
+      case "q2":
         return hole(startCol + 6, sideA, cols);
+      case "gnd":
+        return hole(startCol + 7, sideA, cols);
       case "vcc":
         return hole(startCol + 0, sideB, cols);
     }
@@ -414,21 +434,22 @@ export function resolveIcPin(
         return hole(startCol + 6, sideA, cols);
       case "gnd":
         return hole(startCol + 7, sideA, cols);
+      // 16 VCC, 15 B3, 14 A3, 13 S3, 12 A4, 11 B4, 10 S4, 9 C4
       case "vcc":
         return hole(startCol + 0, sideB, cols);
-      case "c4":
-        return hole(startCol + 1, sideB, cols);
-      case "s4":
-        return hole(startCol + 2, sideB, cols);
-      case "a4":
-        return hole(startCol + 3, sideB, cols);
-      case "b4":
-        return hole(startCol + 4, sideB, cols);
-      case "s3":
-        return hole(startCol + 5, sideB, cols);
-      case "a3":
-        return hole(startCol + 6, sideB, cols);
       case "b3":
+        return hole(startCol + 1, sideB, cols);
+      case "a3":
+        return hole(startCol + 2, sideB, cols);
+      case "s3":
+        return hole(startCol + 3, sideB, cols);
+      case "a4":
+        return hole(startCol + 4, sideB, cols);
+      case "b4":
+        return hole(startCol + 5, sideB, cols);
+      case "s4":
+        return hole(startCol + 6, sideB, cols);
+      case "c4":
         return hole(startCol + 7, sideB, cols);
     }
   }
@@ -535,6 +556,7 @@ export function resolveIcPin(
   }
 
   // ── 4-Bit Async Counter 74HC93 (DIP-14) ──
+  // 1 CKB, 2 R0(1), 3 R0(2), 5 VCC, 8 QC, 9 QB, 10 GND, 11 QD, 12 QA, 14 CKA.
   if (icType === "counter-4bit-async") {
     switch (pLower) {
       case "clk_b":
@@ -543,21 +565,45 @@ export function resolveIcPin(
         return hole(startCol + 1, sideA, cols);
       case "r02":
         return hole(startCol + 2, sideA, cols);
-      case "gnd":
-        return hole(startCol + 6, sideA, cols);
+      case "vcc":
+        return hole(startCol + 4, sideA, cols);
       case "clk_a":
         return hole(startCol + 0, sideB, cols);
-      case "qd":
-        return hole(startCol + 2, sideB, cols);
-      case "qc":
-        return hole(startCol + 3, sideB, cols);
-      case "qb":
-        return hole(startCol + 4, sideB, cols);
-      case "vcc":
-        return hole(startCol + 5, sideB, cols);
       case "qa":
+        return hole(startCol + 2, sideB, cols);
+      case "qd":
+        return hole(startCol + 3, sideB, cols);
+      case "gnd":
+        return hole(startCol + 4, sideB, cols);
+      case "qb":
+        return hole(startCol + 5, sideB, cols);
+      case "qc":
         return hole(startCol + 6, sideB, cols);
     }
+  }
+
+  // ── Dual 4:1 MUX 74HC153 (DIP-16): netlist pin names ──
+  if (icType === "mux-4to1") {
+    const map: Record<string, [number, "A" | "B"]> = {
+      en1_bar: [0, "A"],
+      s1: [1, "A"],
+      i3_1: [2, "A"],
+      i2_1: [3, "A"],
+      i1_1: [4, "A"],
+      i0_1: [5, "A"],
+      y1: [6, "A"],
+      gnd: [7, "A"],
+      vcc: [0, "B"],
+      en2_bar: [1, "B"],
+      s0: [2, "B"],
+      i3_2: [3, "B"],
+      i2_2: [4, "B"],
+      i1_2: [5, "B"],
+      i0_2: [6, "B"],
+      y2: [7, "B"],
+    };
+    const m = map[pLower];
+    if (m) return hole(startCol + m[0], m[1] === "A" ? sideA : sideB, cols);
   }
 
   // ── 4-Bit Sync Counter 74HC161 (DIP-16) ──
@@ -683,7 +729,8 @@ export function resolveIcPin(
     }
   }
 
-  if (icType === "not-gate") {
+  // 74HC04: 1 1A, 2 1Y, 3 2A, 4 2Y, 5 3A, 6 3Y / 8 4Y, 9 4A, 10 5Y, 11 5A, 12 6Y, 13 6A
+  if (icType === "not-gate" || icType === "not-hex") {
     switch (p) {
       case "1A":
         return hole(startCol + 0, sideA, cols);
@@ -700,9 +747,87 @@ export function resolveIcPin(
       case "3Y":
       case "3B":
         return hole(startCol + 5, sideA, cols);
+      case "6A":
+        return hole(startCol + 1, sideB, cols);
+      case "6Y":
+        return hole(startCol + 2, sideB, cols);
+      case "5A":
+        return hole(startCol + 3, sideB, cols);
+      case "5Y":
+        return hole(startCol + 4, sideB, cols);
+      case "4A":
+        return hole(startCol + 5, sideB, cols);
+      case "4Y":
+        return hole(startCol + 6, sideB, cols);
     }
+    return null;
   }
 
+  // 74HC02: 1 1Y, 2 1A, 3 1B, 4 2Y, 5 2A, 6 2B / 8 3A, 9 3B, 10 3Y, 11 4A, 12 4B, 13 4Y
+  if (icType === "nor-gate") {
+    switch (p) {
+      case "1Y":
+        return hole(startCol + 0, sideA, cols);
+      case "1A":
+        return hole(startCol + 1, sideA, cols);
+      case "1B":
+        return hole(startCol + 2, sideA, cols);
+      case "2Y":
+        return hole(startCol + 3, sideA, cols);
+      case "2A":
+        return hole(startCol + 4, sideA, cols);
+      case "2B":
+        return hole(startCol + 5, sideA, cols);
+      case "4Y":
+        return hole(startCol + 1, sideB, cols);
+      case "4B":
+        return hole(startCol + 2, sideB, cols);
+      case "4A":
+        return hole(startCol + 3, sideB, cols);
+      case "3Y":
+        return hole(startCol + 4, sideB, cols);
+      case "3B":
+        return hole(startCol + 5, sideB, cols);
+      case "3A":
+        return hole(startCol + 6, sideB, cols);
+    }
+    return null;
+  }
+
+  // 74HC266 / 74HC7266 (XNOR): 1 1A, 2 1B, 3 1Y, 4 2Y, 5 2A, 6 2B /
+  // 8 3A, 9 3B, 10 3Y, 11 4Y, 12 4A, 13 4B
+  if (icType === "xnor-gate") {
+    switch (p) {
+      case "1A":
+        return hole(startCol + 0, sideA, cols);
+      case "1B":
+        return hole(startCol + 1, sideA, cols);
+      case "1Y":
+        return hole(startCol + 2, sideA, cols);
+      case "2Y":
+        return hole(startCol + 3, sideA, cols);
+      case "2A":
+        return hole(startCol + 4, sideA, cols);
+      case "2B":
+        return hole(startCol + 5, sideA, cols);
+      case "4B":
+        return hole(startCol + 1, sideB, cols);
+      case "4A":
+        return hole(startCol + 2, sideB, cols);
+      case "4Y":
+        return hole(startCol + 3, sideB, cols);
+      case "3Y":
+        return hole(startCol + 4, sideB, cols);
+      case "3B":
+        return hole(startCol + 5, sideB, cols);
+      case "3A":
+        return hole(startCol + 6, sideB, cols);
+    }
+    return null;
+  }
+
+  // 74HC08 / 32 / 86 / 00: 1 1A, 2 1B, 3 1Y, 4 2A, 5 2B, 6 2Y /
+  // 8 3Y, 9 3A, 10 3B, 11 4Y, 12 4A, 13 4B
   switch (p) {
     case "1A":
       return hole(startCol + 0, sideA, cols);
@@ -716,17 +841,17 @@ export function resolveIcPin(
       return hole(startCol + 4, sideA, cols);
     case "2Y":
       return hole(startCol + 5, sideA, cols);
-    case "4Y":
-      return hole(startCol + 1, sideB, cols);
     case "4B":
-      return hole(startCol + 2, sideB, cols);
+      return hole(startCol + 1, sideB, cols);
     case "4A":
+      return hole(startCol + 2, sideB, cols);
+    case "4Y":
       return hole(startCol + 3, sideB, cols);
-    case "3Y":
-      return hole(startCol + 4, sideB, cols);
     case "3B":
-      return hole(startCol + 5, sideB, cols);
+      return hole(startCol + 4, sideB, cols);
     case "3A":
+      return hole(startCol + 5, sideB, cols);
+    case "3Y":
       return hole(startCol + 6, sideB, cols);
     default:
       return null;

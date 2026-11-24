@@ -12,8 +12,8 @@ export const apparatus: LabSection = {
     },
     {
       name: "XOR gate IC",
-      specification: "74HC86",
-      quantity: "4",
+      specification: "74HC86 (all four gates used)",
+      quantity: "1",
     },
     {
       name: "AND gate IC",

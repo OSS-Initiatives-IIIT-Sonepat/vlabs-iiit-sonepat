@@ -6,7 +6,7 @@ export const apparatus: LabSection = {
   title: "Apparatus",
   items: [
     {
-      name: "Breadboard (long, 60-column)",
+      name: "Breadboard (wide, 100-column)",
       specification: "830-point",
       quantity: "1",
     },

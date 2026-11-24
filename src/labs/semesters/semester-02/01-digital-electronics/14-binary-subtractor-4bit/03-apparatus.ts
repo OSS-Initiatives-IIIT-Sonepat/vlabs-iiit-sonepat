@@ -11,8 +11,8 @@ export const apparatus: LabSection = {
       quantity: "1",
     },
     {
-      name: "Hex inverter IC",
-      specification: "74HC04, DIP-14 (4 of 6 gates used)",
+      name: "Quad XOR IC",
+      specification: "74HC86, DIP-14 (all four gates as inverters: B ⊕ 1 = B')",
       quantity: "1",
     },
     {

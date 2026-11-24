@@ -622,14 +622,38 @@ export function simulate(
     let anodeSig: Signal = ["x"];
     let cathodeGnd = false;
 
+    let anodeWired = false;
     for (const w of components) {
       if (w.type !== "wire") continue;
       const wTo = w.to as Record<string, unknown>;
       const wFrom = w.from as Record<string, unknown>;
-      if ("led" in wTo && wTo.led === inst.id && wTo.end === "anode")
+      if ("led" in wTo && wTo.led === inst.id && wTo.end === "anode") {
         anodeSig = traceSource(wFrom);
+        anodeWired = true;
+      }
       if ("led" in wFrom && wFrom.led === inst.id && wFrom.end === "cathode")
         cathodeGnd = cathodeGnd || cathodeIsGnd(wTo);
+    }
+
+    // No jumper on the anode: the LED shares a breadboard strip with one
+    // lead of its series resistor. The LED sees whatever drives the
+    // resistor's other lead.
+    const anodeNet = nl.componentPinNet(inst.id, "anode");
+    if (!anodeWired && anodeNet) {
+      for (const r of components) {
+        if (r.type !== "resistor") continue;
+        const p1 = nl.componentPinNet(r.id, "p1");
+        const p2 = nl.componentPinNet(r.id, "p2");
+        const far = p2 === anodeNet ? p1 : p1 === anodeNet ? p2 : null;
+        if (!far) continue;
+        anodeSig = nv.get(far) ?? ["x"];
+        break;
+      }
+    }
+    const cathodeNet = nl.componentPinNet(inst.id, "cathode");
+    if (!cathodeGnd && cathodeNet) {
+      const s = nv.get(cathodeNet);
+      cathodeGnd = s !== undefined && s[0] === 0;
     }
 
     ledOn.set(inst.id, anodeSig[0] === 1 && cathodeGnd);

@@ -1,587 +1,89 @@
 import { type ComponentInstance } from "@/labs/types";
 
+import { board, ic, input, lamp, link, tie } from "../_board";
+
+/**
+ * 4-bit subtractor A − B = A + B' + 1 on two ICs.
+ *
+ *   74HC86 (xor_b)    : gate n inverts B_n (other input tied HIGH: B ⊕ 1 = B')
+ *   74HC283 (adder_sub): A + B' with C0 tied HIGH (the +1 of the 2's complement)
+ *
+ * Inputs A1…A4 at cols 2–5, B1…B4 at cols 6–9 (bit 1 = LSB).
+ * ICs at cols 12 and 22. Indicators S1…S4, C4 at cols 32–56.
+ */
+const bitsIdx = [1, 2, 3, 4];
+
 export const components: ComponentInstance[] = [
-  {
-    id: "bb",
-    type: "long-breadboard",
-  },
-  {
-    id: "xor_b1",
-    type: "xor-gate",
-    mountedAt: {
-      board: "bb",
-      col: 3,
-      row: "e",
-    },
-  },
-  {
-    id: "xor_b2",
-    type: "xor-gate",
-    mountedAt: {
-      board: "bb",
-      col: 3,
-      row: "h",
-    },
-  },
-  {
-    id: "xor_b3",
-    type: "xor-gate",
-    mountedAt: {
-      board: "bb",
-      col: 7,
-      row: "e",
-    },
-  },
-  {
-    id: "xor_b4",
-    type: "xor-gate",
-    mountedAt: {
-      board: "bb",
-      col: 7,
-      row: "h",
-    },
-  },
-  {
-    id: "adder_sub",
-    type: "adder-4bit",
-    mountedAt: {
-      board: "bb",
-      col: 13,
-      row: "e",
-    },
-  },
-  {
-    id: "r_s1",
-    type: "resistor",
-    ohms: 330,
-    mountedAt: {
-      board: "bb",
-      col: 28,
-      row: "c",
-    },
-  },
-  {
-    id: "r_s2",
-    type: "resistor",
-    ohms: 330,
-    mountedAt: {
-      board: "bb",
-      col: 28,
-      row: "h",
-    },
-  },
-  {
-    id: "r_s3",
-    type: "resistor",
-    ohms: 330,
-    mountedAt: {
-      board: "bb",
-      col: 35,
-      row: "c",
-    },
-  },
-  {
-    id: "r_s4",
-    type: "resistor",
-    ohms: 330,
-    mountedAt: {
-      board: "bb",
-      col: 35,
-      row: "h",
-    },
-  },
-  {
-    id: "r_c4",
-    type: "resistor",
-    ohms: 330,
-    mountedAt: {
-      board: "bb",
-      col: 42,
-      row: "c",
-    },
-  },
-  {
-    id: "led_s1",
-    type: "led",
-    color: "red",
-    mountedAt: {
-      board: "bb",
-      col: 32,
-      row: "c",
-    },
-  },
-  {
-    id: "led_s2",
-    type: "led",
-    color: "yellow",
-    mountedAt: {
-      board: "bb",
-      col: 32,
-      row: "h",
-    },
-  },
-  {
-    id: "led_s3",
-    type: "led",
-    color: "green",
-    mountedAt: {
-      board: "bb",
-      col: 39,
-      row: "c",
-    },
-  },
-  {
-    id: "led_s4",
-    type: "led",
-    color: "blue",
-    mountedAt: {
-      board: "bb",
-      col: 39,
-      row: "h",
-    },
-  },
-  {
-    id: "led_c4",
-    type: "led",
-    color: "white",
-    mountedAt: {
-      board: "bb",
-      col: 46,
-      row: "c",
-    },
-  },
-  {
-    id: "w_vcc_xb1",
-    type: "wire",
-    color: "red",
-    from: {
-      board: "bb",
-      rail: "vcc_top",
-      col: 3,
-    },
-    to: {
-      ic: "xor_b1",
-      pin: "B",
-    },
-  },
-  {
-    id: "w_vcc_xb2",
-    type: "wire",
-    color: "red",
-    from: {
-      board: "bb",
-      rail: "vcc_top",
-      col: 4,
-    },
-    to: {
-      ic: "xor_b2",
-      pin: "B",
-    },
-  },
-  {
-    id: "w_vcc_xb3",
-    type: "wire",
-    color: "red",
-    from: {
-      board: "bb",
-      rail: "vcc_top",
-      col: 5,
-    },
-    to: {
-      ic: "xor_b3",
-      pin: "B",
-    },
-  },
-  {
-    id: "w_vcc_xb4",
-    type: "wire",
-    color: "red",
-    from: {
-      board: "bb",
-      rail: "vcc_top",
-      col: 6,
-    },
-    to: {
-      ic: "xor_b4",
-      pin: "B",
-    },
-  },
-  {
-    id: "w_c0_vcc",
-    type: "wire",
-    color: "red",
-    from: {
-      ic: "adder_sub",
-      pin: "c0",
-    },
-    to: {
-      board: "bb",
-      rail: "vcc_top",
-      col: 19,
-    },
-  },
-  {
-    id: "w_a1_adder_sub",
-    type: "wire",
-    color: "orange",
-    from: {
-      board: "bb",
-      col: 52,
-      row: "a",
-    },
-    to: {
-      ic: "adder_sub",
-      pin: "a1",
-    },
-  },
-  {
-    id: "w_a2_adder_sub",
-    type: "wire",
-    color: "orange",
-    from: {
-      board: "bb",
-      col: 53,
-      row: "a",
-    },
-    to: {
-      ic: "adder_sub",
-      pin: "a2",
-    },
-  },
-  {
-    id: "w_a3_adder_sub",
-    type: "wire",
-    color: "orange",
-    from: {
-      board: "bb",
-      col: 54,
-      row: "a",
-    },
-    to: {
-      ic: "adder_sub",
-      pin: "a3",
-    },
-  },
-  {
-    id: "w_a4_adder_sub",
-    type: "wire",
-    color: "orange",
-    from: {
-      board: "bb",
-      col: 55,
-      row: "a",
-    },
-    to: {
-      ic: "adder_sub",
-      pin: "a4",
-    },
-  },
-  {
-    id: "w_b1_xor",
-    type: "wire",
-    color: "blue",
-    from: {
-      board: "bb",
-      col: 48,
-      row: "f",
-    },
-    to: {
-      ic: "xor_b1",
-      pin: "A",
-    },
-  },
-  {
-    id: "w_b2_xor",
-    type: "wire",
-    color: "blue",
-    from: {
-      board: "bb",
-      col: 49,
-      row: "f",
-    },
-    to: {
-      ic: "xor_b2",
-      pin: "A",
-    },
-  },
-  {
-    id: "w_b3_xor",
-    type: "wire",
-    color: "blue",
-    from: {
-      board: "bb",
-      col: 50,
-      row: "f",
-    },
-    to: {
-      ic: "xor_b3",
-      pin: "A",
-    },
-  },
-  {
-    id: "w_b4_xor",
-    type: "wire",
-    color: "blue",
-    from: {
-      board: "bb",
-      col: 51,
-      row: "f",
-    },
-    to: {
-      ic: "xor_b4",
-      pin: "A",
-    },
-  },
-  {
-    id: "w_xb1_adder",
-    type: "wire",
-    color: "white",
-    from: {
-      ic: "xor_b1",
-      pin: "Y",
-    },
-    to: {
-      ic: "adder_sub",
-      pin: "b1",
-    },
-  },
-  {
-    id: "w_xb2_adder",
-    type: "wire",
-    color: "white",
-    from: {
-      ic: "xor_b2",
-      pin: "Y",
-    },
-    to: {
-      ic: "adder_sub",
-      pin: "b2",
-    },
-  },
-  {
-    id: "w_xb3_adder",
-    type: "wire",
-    color: "white",
-    from: {
-      ic: "xor_b3",
-      pin: "Y",
-    },
-    to: {
-      ic: "adder_sub",
-      pin: "b3",
-    },
-  },
-  {
-    id: "w_xb4_adder",
-    type: "wire",
-    color: "white",
-    from: {
-      ic: "xor_b4",
-      pin: "Y",
-    },
-    to: {
-      ic: "adder_sub",
-      pin: "b4",
-    },
-  },
-  {
-    id: "w_s1_r",
-    type: "wire",
-    color: "red",
-    from: {
-      ic: "adder_sub",
-      pin: "s1",
-    },
-    to: {
-      component: "r_s1",
-      end: "p1",
-    },
-  },
-  {
-    id: "w_s1_led",
-    type: "wire",
-    color: "red",
-    from: {
-      component: "r_s1",
-      end: "p2",
-    },
-    to: {
-      led: "led_s1",
-      end: "anode",
-    },
-  },
-  {
-    id: "w_s1_gnd",
-    type: "wire",
-    color: "black",
-    from: {
-      led: "led_s1",
-      end: "cathode",
-    },
-    to: {
-      board: "bb",
-      rail: "gnd_top",
-      col: 1,
-    },
-  },
-  {
-    id: "w_s2_r",
-    type: "wire",
-    color: "yellow",
-    from: {
-      ic: "adder_sub",
-      pin: "s2",
-    },
-    to: {
-      component: "r_s2",
-      end: "p1",
-    },
-  },
-  {
-    id: "w_s2_led",
-    type: "wire",
-    color: "yellow",
-    from: {
-      component: "r_s2",
-      end: "p2",
-    },
-    to: {
-      led: "led_s2",
-      end: "anode",
-    },
-  },
-  {
-    id: "w_s2_gnd",
-    type: "wire",
-    color: "black",
-    from: {
-      led: "led_s2",
-      end: "cathode",
-    },
-    to: {
-      board: "bb",
-      rail: "gnd_top",
-      col: 2,
-    },
-  },
-  {
-    id: "w_s3_r",
-    type: "wire",
-    color: "green",
-    from: {
-      ic: "adder_sub",
-      pin: "s3",
-    },
-    to: {
-      component: "r_s3",
-      end: "p1",
-    },
-  },
-  {
-    id: "w_s3_led",
-    type: "wire",
-    color: "green",
-    from: {
-      component: "r_s3",
-      end: "p2",
-    },
-    to: {
-      led: "led_s3",
-      end: "anode",
-    },
-  },
-  {
-    id: "w_s3_gnd",
-    type: "wire",
-    color: "black",
-    from: {
-      led: "led_s3",
-      end: "cathode",
-    },
-    to: {
-      board: "bb",
-      rail: "gnd_top",
-      col: 3,
-    },
-  },
-  {
-    id: "w_s4_r",
-    type: "wire",
-    color: "blue",
-    from: {
-      ic: "adder_sub",
-      pin: "s4",
-    },
-    to: {
-      component: "r_s4",
-      end: "p1",
-    },
-  },
-  {
-    id: "w_s4_led",
-    type: "wire",
-    color: "blue",
-    from: {
-      component: "r_s4",
-      end: "p2",
-    },
-    to: {
-      led: "led_s4",
-      end: "anode",
-    },
-  },
-  {
-    id: "w_s4_gnd",
-    type: "wire",
-    color: "black",
-    from: {
-      led: "led_s4",
-      end: "cathode",
-    },
-    to: {
-      board: "bb",
-      rail: "gnd_top",
-      col: 4,
-    },
-  },
-  {
-    id: "w_c4_r",
-    type: "wire",
-    color: "white",
-    from: {
-      ic: "adder_sub",
-      pin: "c4",
-    },
-    to: {
-      component: "r_c4",
-      end: "p1",
-    },
-  },
-  {
-    id: "w_c4_led",
-    type: "wire",
-    color: "white",
-    from: {
-      component: "r_c4",
-      end: "p2",
-    },
-    to: {
-      led: "led_c4",
-      end: "anode",
-    },
-  },
-  {
-    id: "w_c4_gnd",
-    type: "wire",
-    color: "black",
-    from: {
-      led: "led_c4",
-      end: "cathode",
-    },
-    to: {
-      board: "bb",
-      rail: "gnd_top",
-      col: 5,
-    },
-  },
+  ...board(),
+
+  ...ic("xor_b", "xor-quad", 12),
+  ...ic("adder_sub", "adder-4bit", 22),
+
+  // B_n → XOR gate n, other XOR input tied HIGH, output B_n' → adder B_n
+  ...bitsIdx.flatMap((n): ComponentInstance[] => [
+    input(`w_b${n}_xor`, 5 + n, "a", { ic: "xor_b", pin: `${n}A` }, "blue"),
+    tie(`w_vcc_xb${n}`, { ic: "xor_b", pin: `${n}B` }, "vcc", 11 + n),
+    link(
+      `w_xb${n}_adder`,
+      { ic: "xor_b", pin: `${n}Y` },
+      { ic: "adder_sub", pin: `b${n}` },
+      "white",
+    ),
+  ]),
+
+  // A_n → adder A_n
+  ...bitsIdx.map((n) =>
+    input(
+      `w_a${n}_adder_sub`,
+      1 + n,
+      "a",
+      { ic: "adder_sub", pin: `a${n}` },
+      "red",
+    ),
+  ),
+
+  // Carry-in = 1
+  tie("w_c0_vcc", { ic: "adder_sub", pin: "c0" }, "vcc", 28),
+
+  ...lamp(
+    "s1",
+    { ic: "adder_sub", pin: "s1" },
+    32,
+    "green",
+    "w_s1_r",
+    "w_s1_gnd",
+  ),
+  ...lamp(
+    "s2",
+    { ic: "adder_sub", pin: "s2" },
+    37,
+    "green",
+    "w_s2_r",
+    "w_s2_gnd",
+  ),
+  ...lamp(
+    "s3",
+    { ic: "adder_sub", pin: "s3" },
+    42,
+    "green",
+    "w_s3_r",
+    "w_s3_gnd",
+  ),
+  ...lamp(
+    "s4",
+    { ic: "adder_sub", pin: "s4" },
+    47,
+    "green",
+    "w_s4_r",
+    "w_s4_gnd",
+  ),
+  ...lamp(
+    "c4",
+    { ic: "adder_sub", pin: "c4" },
+    52,
+    "yellow",
+    "w_c4_r",
+    "w_c4_gnd",
+    "yellow",
+  ),
 ];

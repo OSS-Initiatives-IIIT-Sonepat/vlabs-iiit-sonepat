@@ -5,7 +5,7 @@ export const observations: ObservationSection = {
   type: "observation",
   title: "Observations",
   paragraphs: [
-    "4:2 Priority Encoder truth table. A = I2+I3 (MSB), B = I1+I3 (LSB). One input active at a time for basic encoding.",
+    "4:2 Priority Encoder truth table. A = I3 + I2 (MSB), B = I3 + I1·I2′ (LSB). The last two rows have more than one input active: the higher-numbered input wins.",
   ],
   table: {
     headers: [
@@ -24,6 +24,8 @@ export const observations: ObservationSection = {
       [0, 0, 1, 0, 0, 1, 0, 1, "01 → I1"],
       [0, 1, 0, 0, 1, 0, 1, 0, "10 → I2"],
       [1, 0, 0, 0, 1, 1, 1, 1, "11 → I3"],
+      [0, 1, 1, 0, 1, 0, 1, 0, "10 → I2 wins"],
+      [1, 0, 1, 1, 1, 1, 1, 1, "11 → I3 wins"],
     ],
   },
 };

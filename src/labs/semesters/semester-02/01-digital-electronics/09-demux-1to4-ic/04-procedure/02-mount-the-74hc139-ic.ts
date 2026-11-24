@@ -2,7 +2,14 @@ import { type SceneProcedureStep } from "@/labs/experiments/types";
 
 export const step: SceneProcedureStep = {
   label: "Mount the 74HC139 IC.",
-  body: "Place the 74HC139 at column 7 straddling the centre gap. Pin 1 (EN_bar) is at col 7, row e. Pin 16 (VCC) is at col 7, row f. Connect pin 16 to VCC rail and pin 8 (GND, col 14 row e) to GND rail.",
-  show: ["bb", "demux14"],
-  highlight: "demux14",
+  body: "Place the 74HC139 at columns 8–15, straddling the centre gap, notch to the left. Connect pin 16 (VCC, column 8 bottom) to the +5 V rail with a purple jumper and pin 8 (GND, column 15 top) to the GND rail with a black jumper.",
+  show: [
+    "bb",
+    "psu",
+    "w_rail_link",
+    "demux14",
+    "w_vcc_demux14",
+    "w_gnd_demux14",
+  ],
+  highlight: "psu",
 };

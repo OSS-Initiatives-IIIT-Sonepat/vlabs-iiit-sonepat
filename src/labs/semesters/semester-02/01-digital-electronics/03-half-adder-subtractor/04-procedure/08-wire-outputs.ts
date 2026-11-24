@@ -2,7 +2,7 @@ import { type SceneProcedureStep } from "@/labs/experiments/types";
 
 export const step: SceneProcedureStep = {
   label: "Wire each gate output to its resistor and LED.",
-  body: "Connect the XOR output to the green resistor and on to the green LED (green wires). Connect the first AND output to the yellow resistor and LED (yellow wires). Connect the second AND output to the red resistor and LED (orange wires). Each output uses its own colour so you can follow it across the board.",
+  body: "Connect the XOR output to the green resistor (green wire), the first AND output to the yellow resistor (yellow wire) and the second AND output to the red resistor (orange wire). Each resistor already feeds its LED through the shared column. Each output uses its own colour so you can follow it across the board.",
   show: [
     "bb",
     "psu",
@@ -14,11 +14,8 @@ export const step: SceneProcedureStep = {
     "w_vcc_and1",
     "w_gnd_and1",
     "not1",
-    "and2",
     "w_vcc_not1",
     "w_gnd_not1",
-    "w_vcc_and2",
-    "w_gnd_and2",
     "w_a_xor",
     "w_a_and",
     "w_a_not",
@@ -33,11 +30,8 @@ export const step: SceneProcedureStep = {
     "r_b",
     "led_b",
     "w_xor_r",
-    "w_r_led_sd",
     "w_and_r",
-    "w_r_led_c",
     "w_and2_r",
-    "w_r_led_b",
   ],
   highlight: "w_xor_r",
   audioPath:

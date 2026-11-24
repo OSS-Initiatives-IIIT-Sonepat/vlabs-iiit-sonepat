@@ -11,6 +11,16 @@ export const apparatus: ApparatusSection = {
       quantity: "1",
     },
     {
+      name: "74HC04 Hex Inverter IC",
+      specification: "DIP-14 (one inverter used, I2′)",
+      quantity: "1",
+    },
+    {
+      name: "74HC08 Quad 2-input AND IC",
+      specification: "DIP-14 (one AND gate used, I1·I2′)",
+      quantity: "1",
+    },
+    {
       name: "LED",
       specification: "Red, 5 mm (output A — MSB)",
       quantity: "1",

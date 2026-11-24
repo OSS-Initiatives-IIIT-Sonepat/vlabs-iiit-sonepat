@@ -31,13 +31,13 @@ export const components: ComponentInstance[] = [
     id: "r_y",
     type: "resistor",
     ohms: 330,
-    mountedAt: { board: "bb", col: 18, row: "c" },
+    mountedAt: { board: "bb", col: 18, row: "b" },
   },
   {
     id: "led_y",
     type: "led",
     color: "green",
-    mountedAt: { board: "bb", col: 20, row: "c" },
+    mountedAt: { board: "bb", col: 21, row: "c" },
   },
 
   // IC power
@@ -120,17 +120,10 @@ export const components: ComponentInstance[] = [
     to: { component: "r_y", end: "p1" },
   },
   {
-    id: "w_r_led",
-    type: "wire",
-    color: "green",
-    from: { component: "r_y", end: "p2" },
-    to: { led: "led_y", end: "anode" },
-  },
-  {
     id: "w_gnd_led",
     type: "wire",
     color: "black",
     from: { led: "led_y", end: "cathode" },
-    to: { board: "bb", rail: "gnd_top", col: 1 },
+    to: { board: "bb", rail: "gnd_top", col: 22 },
   },
 ];

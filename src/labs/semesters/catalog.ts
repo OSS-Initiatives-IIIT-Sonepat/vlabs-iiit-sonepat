@@ -35,16 +35,10 @@ import {
 } from "./semester-01/01-analog-electronics/06-full-wave-rectifier";
 
 import {
-  RectifiersCapacitorFiltersCircuit,
-  RectifiersCapacitorFiltersContent,
-  rectifiersCapacitorFiltersExperiment,
-} from "./semester-01/01-analog-electronics/rectifiers-capacitor-filters";
-
-import {
-  OhmsLawCircuit,
-  OhmsLawContent,
-  ohmsLawExperiment,
-} from "./semester-01/01-analog-electronics/ohms-law";
+  CenterTappedFullWaveCircuit,
+  CenterTappedFullWaveContent,
+  centerTappedFullWaveExperiment,
+} from "./semester-01/01-analog-electronics/18-center-tapped-full-wave";
 
 import {
   KirchhoffLawsCircuit,
@@ -69,6 +63,24 @@ import {
   NortonTheoremContent,
   nortonTheoremExperiment,
 } from "./semester-01/03-FEE/norton-theorem";
+
+import {
+  MaximumPowerTransferCircuit,
+  MaximumPowerTransferContent,
+  maximumPowerTransferExperiment,
+} from "./semester-01/03-FEE/maximum-power-transfer";
+
+import {
+  ParallelRlcResonanceCircuit,
+  ParallelRlcResonanceContent,
+  parallelRlcResonanceExperiment,
+} from "./semester-01/03-FEE/parallel-rlc-resonance";
+
+import {
+  TransformerOcScCircuit,
+  TransformerOcScContent,
+  transformerOcScExperiment,
+} from "./semester-01/03-FEE/transformer-oc-sc";
 
 import {
   LogicGatesCircuit,
@@ -105,6 +117,12 @@ import {
   CeAmplifierContent,
   ceAmplifierExperiment,
 } from "./semester-01/01-analog-electronics/07-ce-amplifier";
+
+import {
+  CeTransistorCharacteristicsCircuit,
+  CeTransistorCharacteristicsContent,
+  ceTransistorCharacteristicsExperiment,
+} from "./semester-01/01-analog-electronics/19-ce-transistor-characteristics";
 
 import {
   CbAmplifierCircuit,
@@ -977,7 +995,7 @@ export const SEMESTER_SUBJECTS: readonly SemesterSubjectCatalog[] = [
     subjectId: "01-analog-electronics",
     subjectLabel: "Analog Electronics",
     subjectDescription:
-      "Study passive and active components, diode characteristics, rectifiers, and DC network theorems. Build and test circuits on a breadboard using multimeters and power supplies.",
+      "Study the bench equipment, diode and transistor characteristics, rectifiers, MOSFET stages, and op-amp circuits.",
     defaultCircuitId: "study-basic-components",
     experiments: [
       fromBuilt(
@@ -1005,12 +1023,6 @@ export const SEMESTER_SUBJECTS: readonly SemesterSubjectCatalog[] = [
           "characteristics",
         ],
       ),
-      fromBuilt(zenerDiodeExperiment, ZenerDiodeCircuit, ZenerDiodeContent, [
-        "zener",
-        "diode",
-        "breakdown",
-        "characteristics",
-      ]),
       fromBuilt(
         zenerVoltageRegulatorExperiment,
         ZenerVoltageRegulatorCircuit,
@@ -1029,6 +1041,12 @@ export const SEMESTER_SUBJECTS: readonly SemesterSubjectCatalog[] = [
         FullWaveRectifierContent,
         ["rectifier", "bridge", "full-wave", "ripple"],
       ),
+      fromBuilt(
+        centerTappedFullWaveExperiment,
+        CenterTappedFullWaveCircuit,
+        CenterTappedFullWaveContent,
+        ["rectifier", "centre-tap", "full-wave", "filter", "ripple"],
+      ),
       fromBuilt(ceAmplifierExperiment, CeAmplifierCircuit, CeAmplifierContent, [
         "bjt",
         "amplifier",
@@ -1036,6 +1054,18 @@ export const SEMESTER_SUBJECTS: readonly SemesterSubjectCatalog[] = [
         "frequency response",
         "gain",
       ]),
+      fromBuilt(
+        ceTransistorCharacteristicsExperiment,
+        CeTransistorCharacteristicsCircuit,
+        CeTransistorCharacteristicsContent,
+        [
+          "bjt",
+          "common emitter",
+          "input characteristics",
+          "output characteristics",
+          "beta",
+        ],
+      ),
       fromBuilt(cbAmplifierExperiment, CbAmplifierCircuit, CbAmplifierContent, [
         "bjt",
         "amplifier",
@@ -1104,59 +1134,11 @@ export const SEMESTER_SUBJECTS: readonly SemesterSubjectCatalog[] = [
         "CRO",
       ]),
       fromBuilt(
-        seriesRlcResonanceExperiment,
-        SeriesRlcResonanceCircuit,
-        SeriesRlcResonanceContent,
-        ["rlc", "resonance", "inductor", "quality factor", "bandwidth", "CRO"],
-      ),
-      fromBuilt(
         transistorSwitchExperiment,
         TransistorSwitchCircuit,
         TransistorSwitchContent,
         ["bjt", "bc547", "switch", "saturation", "cut-off", "led driver"],
       ),
-      // fromBuilt(
-      //   rectifiersCapacitorFiltersExperiment,
-      //   RectifiersCapacitorFiltersCircuit,
-      //   RectifiersCapacitorFiltersContent,
-      //   ["rectifier", "filter", "capacitor", "ripple reduction"],
-      // ),
-      // fromBuilt(ohmsLawExperiment, OhmsLawCircuit, OhmsLawContent, [
-      //   "ohm",
-      //   "resistance",
-      //   "voltage",
-      //   "current",
-      //   "v-i graph",
-      // ]),
-      // fromBuilt(
-      //   kirchhoffLawsExperiment,
-      //   KirchhoffLawsCircuit,
-      //   KirchhoffLawsContent,
-      //   ["kirchhoff", "kcl", "kvl", "dc circuit", "nodes", "loops"],
-      // ),
-      // fromBuilt(
-      //   superpositionTheoremExperiment,
-      //   SuperpositionTheoremCircuit,
-      //   SuperpositionTheoremContent,
-      //   ["superposition", "linear circuit", "multiple sources", "dc network"],
-      // ),
-      // fromBuilt(
-      //   theveninTheoremExperiment,
-      //   TheveninTheoremCircuit,
-      //   TheveninTheoremContent,
-      //   ["thevenin", "equivalent circuit", "V_th", "R_th"],
-      // ),
-      // fromBuilt(
-      //   nortonTheoremExperiment,
-      //   NortonTheoremCircuit,
-      //   NortonTheoremContent,
-      //   [
-      //     "norton",
-      //     "equivalent circuit",
-      //     "short circuit current",
-      //     "source transformation",
-      //   ],
-      // ),
     ],
   },
   {
@@ -1210,9 +1192,22 @@ export const SEMESTER_SUBJECTS: readonly SemesterSubjectCatalog[] = [
     subjectId: "03-FEE",
     subjectLabel: "Fundamentals of Electrical and Electronics Engineering",
     subjectDescription:
-      "Amplifier stages, device characteristics, and regulator circuits. Build and characterise BJT, MOSFET, and op-amp circuits on a breadboard.",
-    defaultCircuitId: "thevenin-theorem",
+      "Study the bench instruments, network theorems, series and parallel resonance, transformer tests, diode characteristics, and rectifiers.",
+    defaultCircuitId: "kirchhoff-laws",
     experiments: [
+      fromBuilt(
+        exp01StudyBasicComponentsExperiment,
+        Exp01StudyBasicComponentsCircuit,
+        Exp01StudyBasicComponentsContent,
+        [
+          "DSO",
+          "CRO",
+          "multimeter",
+          "function generator",
+          "power supply",
+          "breadboard",
+        ],
+      ),
       fromBuilt(
         kirchhoffLawsExperiment,
         KirchhoffLawsCircuit,
@@ -1241,6 +1236,54 @@ export const SEMESTER_SUBJECTS: readonly SemesterSubjectCatalog[] = [
           "short circuit current",
           "source transformation",
         ],
+      ),
+      fromBuilt(
+        maximumPowerTransferExperiment,
+        MaximumPowerTransferCircuit,
+        MaximumPowerTransferContent,
+        ["maximum power", "load", "source resistance", "dc circuit"],
+      ),
+      fromBuilt(
+        seriesRlcResonanceExperiment,
+        SeriesRlcResonanceCircuit,
+        SeriesRlcResonanceContent,
+        ["rlc", "series", "resonance", "quality factor", "bandwidth"],
+      ),
+      fromBuilt(
+        parallelRlcResonanceExperiment,
+        ParallelRlcResonanceCircuit,
+        ParallelRlcResonanceContent,
+        ["rlc", "parallel", "resonance", "quality factor", "bandwidth"],
+      ),
+      fromBuilt(
+        pnJunctionDiodeExperiment,
+        PnJunctionDiodeCircuit,
+        PnJunctionDiodeContent,
+        ["diode", "pn junction", "forward bias", "reverse bias", "zener"],
+      ),
+      fromBuilt(zenerDiodeExperiment, ZenerDiodeCircuit, ZenerDiodeContent, [
+        "zener",
+        "diode",
+        "breakdown",
+        "characteristics",
+      ]),
+      fromBuilt(
+        halfWaveRectifierExperiment,
+        HalfWaveRectifierCircuit,
+        HalfWaveRectifierContent,
+        ["rectifier", "diode", "half-wave", "ripple"],
+      ),
+      fromBuilt(
+        fullWaveRectifierExperiment,
+        FullWaveRectifierCircuit,
+        FullWaveRectifierContent,
+        ["rectifier", "full-wave", "bridge", "ripple"],
+      ),
+      fromBuilt(
+        transformerOcScExperiment,
+        TransformerOcScCircuit,
+        TransformerOcScContent,
+        ["transformer", "open circuit", "short circuit", "efficiency"],
       ),
     ],
   },
@@ -2642,16 +2685,19 @@ export const SEMESTER_SUBJECTS: readonly SemesterSubjectCatalog[] = [
   },
 ];
 
-export const SEMESTER_CIRCUITS: Circuit[] = SEMESTER_SUBJECTS.flatMap(
-  (subject) =>
-    subject.experiments
-
-      .filter(
-        (item) => (item.experiment.labType ?? "breadboard") === "breadboard",
-      )
-
-      .map((item) => item.circuit),
-);
+export const SEMESTER_CIRCUITS: Circuit[] = (() => {
+  const seen = new Set<string>();
+  const circuits: Circuit[] = [];
+  for (const subject of SEMESTER_SUBJECTS) {
+    for (const item of subject.experiments) {
+      if ((item.experiment.labType ?? "breadboard") !== "breadboard") continue;
+      if (seen.has(item.circuit.id)) continue;
+      seen.add(item.circuit.id);
+      circuits.push(item.circuit);
+    }
+  }
+  return circuits;
+})();
 
 export const SEMESTER_CONTENTS: Record<string, LabContent> = Object.fromEntries(
   SEMESTER_SUBJECTS.flatMap((subject) =>

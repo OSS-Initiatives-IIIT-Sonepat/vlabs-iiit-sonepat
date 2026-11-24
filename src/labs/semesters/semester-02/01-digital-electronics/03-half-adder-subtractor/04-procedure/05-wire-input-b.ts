@@ -2,7 +2,7 @@ import { type SceneProcedureStep } from "@/labs/experiments/types";
 
 export const step: SceneProcedureStep = {
   label: "Wire input B (blue).",
-  body: "Use blue jumpers to connect the B tie-point (column 4) to input B of the XOR gate, the first AND gate and the second AND gate. Again use rows $a$, $b$ and $c$ so the three wires stay separate.",
+  body: "Use blue jumpers to connect the B tie-point (column 4) to input B of the XOR gate and of both AND gates in the 74HC08 (pins 2 and 5). Again use rows $a$, $b$ and $c$ so the three wires stay separate.",
   show: [
     "bb",
     "psu",
@@ -14,11 +14,8 @@ export const step: SceneProcedureStep = {
     "w_vcc_and1",
     "w_gnd_and1",
     "not1",
-    "and2",
     "w_vcc_not1",
     "w_gnd_not1",
-    "w_vcc_and2",
-    "w_gnd_and2",
     "w_a_xor",
     "w_a_and",
     "w_a_not",

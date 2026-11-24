@@ -1,10 +1,21 @@
 import { type ComponentInstance } from "@/labs/types";
 
+/**
+ * 2N7000 drain and transfer characteristics.
+ *
+ * 2N7000 flat face front, legs S-G-D at cols 13-14-15 (row c).
+ *   R_D (100 Ω) cols 12-15: drain end shares the drain column; col 12 ← V_DD jumper
+ *   source col 13 → GND jumper
+ *   V_GS supply: (+) straight into the gate column, (−) on the GND rail
+ * Three DMMs on DC volts: across R_D (I_D = V_RD / 100 Ω), D-S and G-S.
+ */
 export const components: ComponentInstance[] = [
   { id: "bb", type: "breadboard" },
+
   {
     id: "psu_vds",
     type: "dc-jack",
+    label: "V_DD",
     mountedAt: { board: "bb", col: 1, row: "a" },
     terminals: [
       { board: "bb", rail: "vcc_top", col: 1 },
@@ -14,65 +25,44 @@ export const components: ComponentInstance[] = [
   {
     id: "psu_vgs",
     type: "dc-jack",
+    label: "V_GS",
     mountedAt: { board: "bb", col: 1, row: "b" },
     terminals: [
-      { board: "bb", rail: "vcc_bot", col: 1 },
-      { board: "bb", rail: "gnd_bot", col: 1 },
+      { board: "bb", col: 14, row: "b" },
+      { board: "bb", rail: "gnd_top", col: 16 },
     ],
   },
+
+  { id: "q1", type: "n-mosfet", mountedAt: { board: "bb", col: 14, row: "c" } },
   {
     id: "r_d",
     type: "resistor",
     ohms: 100,
-    mountedAt: { board: "bb", col: 6, row: "c" },
+    mountedAt: { board: "bb", col: 12, row: "a" },
   },
-  {
-    id: "q1",
-    type: "n-mosfet",
-    mountedAt: { board: "bb", col: 14, row: "c" },
-  },
+
   {
     id: "w_vdd_rd",
     type: "wire",
     color: "red",
-    from: { board: "bb", rail: "vcc_top", col: 3 },
+    from: { board: "bb", rail: "vcc_top", col: 12 },
     to: { component: "r_d", end: "p1" },
-  },
-  {
-    id: "w_rd_drain",
-    type: "wire",
-    color: "green",
-    from: { component: "r_d", end: "p2" },
-    to: { board: "bb", col: 14, row: "a" },
   },
   {
     id: "w_source_gnd",
     type: "wire",
     color: "black",
-    from: { board: "bb", col: 15, row: "a" },
-    to: { board: "bb", rail: "gnd_top", col: 4 },
+    from: { ic: "q1", pin: "S" },
+    to: { board: "bb", rail: "gnd_top", col: 13 },
   },
-  {
-    id: "w_gate",
-    type: "wire",
-    color: "blue",
-    from: { board: "bb", rail: "vcc_bot", col: 3 },
-    to: { board: "bb", col: 13, row: "b" },
-  },
-  {
-    id: "w_gnd_common",
-    type: "wire",
-    color: "black",
-    from: { board: "bb", rail: "gnd_top", col: 6 },
-    to: { board: "bb", rail: "gnd_bot", col: 6 },
-  },
+
   {
     id: "dmm_id",
     type: "potentiometer",
     mountedAt: { board: "bb", col: 2, row: "a" },
     probes: [
-      { board: "bb", col: 6, row: "b" },
-      { board: "bb", col: 9, row: "b" },
+      { board: "bb", col: 12, row: "c" },
+      { board: "bb", col: 15, row: "b" },
     ],
   },
   {
@@ -80,8 +70,8 @@ export const components: ComponentInstance[] = [
     type: "potentiometer",
     mountedAt: { board: "bb", col: 2, row: "b" },
     probes: [
-      { board: "bb", col: 14, row: "b" },
-      { board: "bb", col: 15, row: "b" },
+      { board: "bb", col: 15, row: "d" },
+      { board: "bb", col: 13, row: "d" },
     ],
   },
   {
@@ -89,8 +79,8 @@ export const components: ComponentInstance[] = [
     type: "potentiometer",
     mountedAt: { board: "bb", col: 2, row: "c" },
     probes: [
-      { board: "bb", col: 13, row: "a" },
-      { board: "bb", col: 15, row: "a" },
+      { board: "bb", col: 14, row: "d" },
+      { board: "bb", col: 13, row: "e" },
     ],
   },
 ];

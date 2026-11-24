@@ -1,224 +1,35 @@
 import { type ComponentInstance } from "@/labs/types";
 
+import { board, ic, input, lamp, link, tie } from "../_board";
+
+/**
+ * 1-to-2 DEMUX used as an address decoder, on two ICs.
+ *
+ *   Y0 = I · S'   74HC08 gate 1 (pins 1, 2 → 3), S' from 74HC04 gate 1 (pin 1 → 2)
+ *   Y1 = I · S    74HC08 gate 2 (pins 4, 5 → 6)
+ *
+ * The data input I is tied to +5 V (always enabled); the address S is the
+ * tie column 2 (input A0). ICs at cols 8 and 16.
+ */
 export const components: ComponentInstance[] = [
-  {
-    id: "bb",
-    type: "breadboard",
-  },
-  {
-    id: "not1",
-    type: "not-gate",
-    mountedAt: {
-      board: "bb",
-      col: 5,
-      row: "e",
-    },
-  },
-  {
-    id: "and1",
-    type: "and-gate",
-    mountedAt: {
-      board: "bb",
-      col: 12,
-      row: "e",
-    },
-  },
-  {
-    id: "and2",
-    type: "and-gate",
-    mountedAt: {
-      board: "bb",
-      col: 19,
-      row: "e",
-    },
-  },
-  {
-    id: "r_y0",
-    type: "resistor",
-    ohms: 330,
-    mountedAt: {
-      board: "bb",
-      col: 23,
-      row: "c",
-    },
-  },
-  {
-    id: "r_y1",
-    type: "resistor",
-    ohms: 330,
-    mountedAt: {
-      board: "bb",
-      col: 23,
-      row: "h",
-    },
-  },
-  {
-    id: "led_y0",
-    type: "led",
-    color: "green",
-    mountedAt: {
-      board: "bb",
-      col: 27,
-      row: "c",
-    },
-  },
-  {
-    id: "led_y1",
-    type: "led",
-    color: "yellow",
-    mountedAt: {
-      board: "bb",
-      col: 27,
-      row: "h",
-    },
-  },
-  {
-    id: "w_a0_not",
-    type: "wire",
-    color: "orange",
-    from: {
-      board: "bb",
-      col: 2,
-      row: "a",
-    },
-    to: {
-      ic: "not1",
-      pin: "A",
-    },
-  },
-  {
-    id: "w_na0_and1",
-    type: "wire",
-    color: "white",
-    from: {
-      ic: "not1",
-      pin: "Y",
-    },
-    to: {
-      ic: "and1",
-      pin: "A",
-    },
-  },
-  {
-    id: "w_a0_and2",
-    type: "wire",
-    color: "orange",
-    from: {
-      board: "bb",
-      col: 2,
-      row: "b",
-    },
-    to: {
-      ic: "and2",
-      pin: "A",
-    },
-  },
-  {
-    id: "w_en_and1",
-    type: "wire",
-    color: "red",
-    from: {
-      board: "bb",
-      col: 1,
-      row: "a",
-    },
-    to: {
-      ic: "and1",
-      pin: "B",
-    },
-  },
-  {
-    id: "w_en_and2",
-    type: "wire",
-    color: "red",
-    from: {
-      board: "bb",
-      col: 1,
-      row: "b",
-    },
-    to: {
-      ic: "and2",
-      pin: "B",
-    },
-  },
-  {
-    id: "w_y0_r",
-    type: "wire",
-    color: "green",
-    from: {
-      ic: "and1",
-      pin: "Y",
-    },
-    to: {
-      component: "r_y0",
-      end: "p1",
-    },
-  },
-  {
-    id: "w_y0_led",
-    type: "wire",
-    color: "green",
-    from: {
-      component: "r_y0",
-      end: "p2",
-    },
-    to: {
-      led: "led_y0",
-      end: "anode",
-    },
-  },
-  {
-    id: "w_gnd1",
-    type: "wire",
-    color: "black",
-    from: {
-      led: "led_y0",
-      end: "cathode",
-    },
-    to: {
-      board: "bb",
-      rail: "gnd_top",
-      col: 1,
-    },
-  },
-  {
-    id: "w_y1_r",
-    type: "wire",
-    color: "yellow",
-    from: {
-      ic: "and2",
-      pin: "Y",
-    },
-    to: {
-      component: "r_y1",
-      end: "p1",
-    },
-  },
-  {
-    id: "w_y1_led",
-    type: "wire",
-    color: "yellow",
-    from: {
-      component: "r_y1",
-      end: "p2",
-    },
-    to: {
-      led: "led_y1",
-      end: "anode",
-    },
-  },
-  {
-    id: "w_gnd2",
-    type: "wire",
-    color: "black",
-    from: {
-      led: "led_y1",
-      end: "cathode",
-    },
-    to: {
-      board: "bb",
-      rail: "gnd_top",
-      col: 2,
-    },
-  },
+  ...board(),
+
+  ...ic("not1", "not-hex", 8),
+  ...ic("and1", "and-quad", 16),
+
+  // S (A0) to the inverter and to AND gate 2 pin 5; S' to AND gate 1 pin 2
+  input("w_a0_not", 2, "a", { ic: "not1", pin: "1A" }, "red"),
+  input("w_a0_and2", 2, "b", { ic: "and1", pin: "2B" }, "red"),
+  link(
+    "w_na0_and1",
+    { ic: "not1", pin: "1Y" },
+    { ic: "and1", pin: "1B" },
+    "white",
+  ),
+  // I tied HIGH on AND pins 1 and 4
+  tie("w_en_and1", { ic: "and1", pin: "1A" }, "vcc", 16),
+  tie("w_en_and2", { ic: "and1", pin: "2A" }, "vcc", 19),
+
+  ...lamp("y0", { ic: "and1", pin: "1Y" }, 24, "green", "w_y0_r", "w_gnd1"),
+  ...lamp("y1", { ic: "and1", pin: "2Y" }, 29, "red", "w_y1_r", "w_gnd2"),
 ];

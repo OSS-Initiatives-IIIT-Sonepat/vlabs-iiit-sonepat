@@ -138,7 +138,7 @@ export function componentDisplayName(inst: ComponentInstance): string {
     case "wire":
       return `${capitalize(inst.color)} Jumper Wire`;
     case "transformer":
-      return "Transformer";
+      return inst.label ? `Transformer · ${inst.label}` : "Transformer";
     case "7seg-display":
       return "7-Segment Display";
     case "dip-switch":
