@@ -9,10 +9,12 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import * as THREE from "three";
+import { instrumentWire } from "@/components/shared/instrument-wire";
+import { WIRE_HEX } from "@/components/shared/materials";
+import { BENCH_Y as XFMR_BENCH_Y } from "@/components/shared/bench-layout";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { bindCtrlPan } from "./ctrl-pan";
-import { benchPlacement, instrumentWire, WIRE_HEX } from "@/components/shared";
-import { BENCH_Y } from "@/components/shared/bench-layout";
+import { benchPlacement } from "@/components/shared";
 import {
   componentDisplayName,
   formatOhms,
@@ -239,7 +241,7 @@ const XFMR_PIN_XZ: Record<XfmrPin["pin"], [number, number]> = {
 function transformerOrigin(): THREE.Vector3 {
   return new THREE.Vector3(
     -(BOARD_W / 2) - 1.7,
-    BENCH_Y + 4.5 * XFMR_MM * XFMR_SCALE,
+    XFMR_BENCH_Y + 4.5 * XFMR_MM * XFMR_SCALE,
     0.2,
   );
 }
@@ -250,7 +252,7 @@ function transformerPinWorld(pin: XfmrPin["pin"]): THREE.Vector3 | null {
   const origin = transformerOrigin();
   return new THREE.Vector3(
     origin.x + local[0] * XFMR_SCALE,
-    BENCH_Y,
+    XFMR_BENCH_Y,
     origin.z + local[1] * XFMR_SCALE,
   );
 }
