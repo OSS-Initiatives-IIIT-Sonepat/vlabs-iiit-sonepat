@@ -4,22 +4,10 @@ import { step06 as schematic } from "@/labs/schematics/semester-01/01-analog-ele
 export const step: SceneProcedureStep = {
   label: "Connect voltmeter across the forward-biased Zener.",
   body:
-    "Set DMM 1 to **DC Voltage, 20 V range**.\n" +
-    "**Blue wire** (+): col 10, spanning row a → row e (anode side).\n" +
-    "**Blue wire** (−): col 13, spanning row a → row e (cathode side).\n" +
+    "Take a second DMM and set it to **DC Voltage, 20 V range**.\n" +
+    "**Red probe** (+): col 8, row a (anode).\n" +
+    "**Black probe** (−): col 11, row a (cathode).\n" +
     "These probes measure $V_Z$ directly across the diode.",
-  show: [
-    "bb",
-    "psu",
-    "dmm",
-    "w_amm_in",
-    "w_amm_out",
-    "r1",
-    "zener_fwd",
-    "w_r1_zfwd",
-    "w_zfwd_gnd",
-    "w_vm_fwd_pos",
-    "w_vm_fwd_neg",
-  ],
+  show: ["bb", "psu", "dmm", "r1", "zener_fwd", "w_zfwd_gnd", "vm_fwd"],
   schematic,
 };

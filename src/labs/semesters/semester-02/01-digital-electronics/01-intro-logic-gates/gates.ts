@@ -1,7 +1,7 @@
 // Shared gate table: one source of truth for components.ts and procedure steps.
-// Layout: long-breadboard (60 cols). ICs on row `e`, 7 cols wide, 1 col apart (pitch 8).
-// Inputs A / B tie points sit at cols 1 and 2 (row `a`) and are wired to every IC.
-// Each gate gets a 330 Ω resistor + LED indicator on row `h` under its own IC columns.
+// Layout: wide breadboard (100 cols). Each gate gets a 13-column unit: the IC
+// (7 cols) followed by its indicator (330 Ω at cols +7…+10, LED at +10/+11) and
+// one free column. Inputs A / B are tie columns 1 and 2, wired to every IC.
 
 export const GATES = [
   {
@@ -18,7 +18,7 @@ export const GATES = [
     name: "AND",
     type: "and-gate",
     chip: "74HC08",
-    col: 12,
+    col: 17,
     twoInput: true,
     led: "green",
   },
@@ -27,7 +27,7 @@ export const GATES = [
     name: "OR",
     type: "or-gate",
     chip: "74HC32",
-    col: 20,
+    col: 30,
     twoInput: true,
     led: "yellow",
   },
@@ -36,7 +36,7 @@ export const GATES = [
     name: "NAND",
     type: "nand-gate",
     chip: "74HC00",
-    col: 28,
+    col: 43,
     twoInput: true,
     led: "blue",
   },
@@ -45,7 +45,7 @@ export const GATES = [
     name: "NOR",
     type: "nor-gate",
     chip: "74HC02",
-    col: 36,
+    col: 56,
     twoInput: true,
     led: "white",
   },
@@ -54,7 +54,7 @@ export const GATES = [
     name: "EX-OR",
     type: "xor-gate",
     chip: "74HC86",
-    col: 44,
+    col: 69,
     twoInput: true,
     led: "red",
   },
@@ -62,8 +62,8 @@ export const GATES = [
     key: "xnor",
     name: "EX-NOR",
     type: "xnor-gate",
-    chip: "74HC266",
-    col: 52,
+    chip: "74HC7266",
+    col: 82,
     twoInput: true,
     led: "green",
   },
@@ -77,12 +77,19 @@ export const ledId = (k: GateKey) => `led_${k}`;
 export const wireAId = (k: GateKey) => `w_a_${k}`;
 export const wireBId = (k: GateKey) => `w_b_${k}`;
 export const wireYId = (k: GateKey) => `w_y_${k}`;
-export const wireRId = (k: GateKey) => `w_r_${k}`;
 export const wireGndId = (k: GateKey) => `w_gnd_${k}`;
 
 export const BB = "bb";
 
-export const allIcIds = GATES.map((g) => icId(g.key));
+export const vccId = (k: GateKey) => `w_vcc_${icId(k)}`;
+export const gndId = (k: GateKey) => `w_gnd_${icId(k)}`;
+
+/** Chips, the supply and every chip's VCC / GND jumper. */
+export const allIcIds = [
+  "psu",
+  "w_rail_link",
+  ...GATES.flatMap((g) => [icId(g.key), vccId(g.key), gndId(g.key)]),
+];
 
 export const inputWireIds = GATES.flatMap((g) =>
   g.twoInput ? [wireAId(g.key), wireBId(g.key)] : [wireAId(g.key)],
@@ -92,7 +99,6 @@ export const indicatorIds = GATES.flatMap((g) => [resId(g.key), ledId(g.key)]);
 
 export const outputWireIds = GATES.flatMap((g) => [
   wireYId(g.key),
-  wireRId(g.key),
   wireGndId(g.key),
 ]);
 

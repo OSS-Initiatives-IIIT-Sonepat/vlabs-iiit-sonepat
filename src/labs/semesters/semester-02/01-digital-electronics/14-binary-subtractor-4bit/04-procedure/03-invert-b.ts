@@ -2,18 +2,21 @@ import { type SceneProcedureStep } from "@/labs/experiments/types";
 
 export const step: SceneProcedureStep = {
   label: "Invert the B inputs",
-  body: "Blue wires from row b carry the switches $B_1$–$B_4$ to pin A of the XOR gates (col 1 → $xor\\_b1$, col 2 → $xor\\_b2$, col 3 → $xor\\_b3$, col 4 → $xor\\_b4$). Because pin B of each XOR is tied high, each gate now outputs the complement of its A input. White wires carry the outputs $\\overline{B_1}$–$\\overline{B_4}$ to the adder B inputs, bit for bit.",
+  body: "Blue wires carry $B_1$–$B_4$ (columns 6–9) to the first input of XOR gates 1–4 (pins 1, 4, 9, 12). Because the other input of each gate is tied high, each gate outputs the complement of its B bit. White wires carry $\\overline{B_1}$–$\\overline{B_4}$ (pins 3, 6, 8, 11) to the adder's B inputs, bit for bit.",
   show: [
     "bb",
-    "xor_b1",
-    "xor_b2",
-    "xor_b3",
-    "xor_b4",
+    "psu",
+    "w_rail_link",
+    "xor_b",
+    "w_vcc_xor_b",
+    "w_gnd_xor_b",
     "w_vcc_xb1",
     "w_vcc_xb2",
     "w_vcc_xb3",
     "w_vcc_xb4",
     "adder_sub",
+    "w_vcc_adder_sub",
+    "w_gnd_adder_sub",
     "w_b1_xor",
     "w_b2_xor",
     "w_b3_xor",
@@ -23,5 +26,5 @@ export const step: SceneProcedureStep = {
     "w_xb3_adder",
     "w_xb4_adder",
   ],
-  highlight: "xor_b1",
+  highlight: "psu",
 };

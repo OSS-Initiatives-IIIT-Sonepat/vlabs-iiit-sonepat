@@ -227,9 +227,9 @@ const finalStage: ComponentInstance[] = [
     );
   }),
   input("s3", "fmH", "s1", col.fmH + 1, "blue"),
-  input("s2", "fmH", "s0", col.fmH + 1, "orange", "j"),
+  input("s2", "fmH", "s0", col.fmH + 2, "orange", "j"),
   input("s1", "ymH", "s1", col.ymH + 1, "yellow"),
-  input("s0", "ymH", "s0", col.ymH + 1, "green", "j"),
+  input("s0", "ymH", "s0", col.ymH + 2, "green", "j"),
   link("w_s3_link", "fmH", "s1", "fmL", "s1", "blue"),
   link("w_s2_link", "fmH", "s0", "fmL", "s0", "orange"),
   link("w_s1_ym", "ymH", "s1", "ymL", "s1", "yellow"),

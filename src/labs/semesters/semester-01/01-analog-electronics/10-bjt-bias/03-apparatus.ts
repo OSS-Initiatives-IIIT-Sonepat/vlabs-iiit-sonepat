@@ -51,13 +51,8 @@ export const apparatus: ApparatusSection = {
       quantity: "2",
     },
     {
-      name: "LEDs",
-      specification: "Red and green, 5 mm",
-      quantity: "1 each",
-    },
-    {
       name: "Jumper wires",
-      specification: "Red, black, orange, green assorted",
+      specification: "Red and black",
       quantity: "1 set",
     },
   ],

@@ -8,14 +8,14 @@ import {
 
 // ── Zener diode circuit layout on the breadboard ───────────────────────────
 //   r1: resistor at col 5, row c  (p1=col5, p2=col8)
-//   zener: col 10, row c  (anode=col10, cathode=col13, same footprint as a resistor)
+//   zener: col 8, row d  (anode=col8 in R1's strip, cathode=col11)
 //   vcc rail tap at col 5 (top red rail)
-//   gnd rail tap at col 13 (top blue rail)
+//   gnd rail tap at col 11 (top blue rail)
 
 export const R1_COL = 5;
 export const R1_ROW = "c";
-export const ZD_COL = 10;
-export const ZD_ROW = "c";
+export const ZD_COL = 8;
+export const ZD_ROW = "d";
 export const HOVER = 0.55;
 
 const hover = ([x, , z]: [number, number, number]): [

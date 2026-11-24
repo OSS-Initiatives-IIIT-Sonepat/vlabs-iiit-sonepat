@@ -6,6 +6,8 @@ import { step as s04 } from "./04-add-resistors-and-leds";
 import { step as s05 } from "./05-connect-output-wires-and-ground-returns";
 import { step as s06 } from "./06-test-binary-0011-gray-0010";
 import { step as s07 } from "./07-test-binary-0111-gray-0100";
+import { step as s08 } from "./08-build-gray-to-binary";
+import { step as s09 } from "./09-test-gray-0010-binary-0011";
 
 import { type SceneProcedureStep } from "@/labs/experiments/types";
 
@@ -17,4 +19,6 @@ export const procedureSteps: SceneProcedureStep[] = [
   { ...s05, schematic: s2GrayBinaryConverterStepSchematics[4] },
   { ...s06, schematic: s2GrayBinaryConverterStepSchematics[5] },
   { ...s07, schematic: s2GrayBinaryConverterStepSchematics[6] },
+  s08,
+  s09,
 ];

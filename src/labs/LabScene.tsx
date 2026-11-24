@@ -9,6 +9,9 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import * as THREE from "three";
+import { instrumentWire } from "@/components/shared/instrument-wire";
+import { WIRE_HEX } from "@/components/shared/materials";
+import { BENCH_Y as XFMR_BENCH_Y } from "@/components/shared/bench-layout";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { bindCtrlPan } from "./ctrl-pan";
 import { benchPlacement } from "@/components/shared";
@@ -27,6 +30,7 @@ import {
   PITCH,
   TOP_Y,
   BOARD_D,
+  BOARD_W,
 } from "./coords";
 import {
   buildBreadboard,
@@ -51,7 +55,6 @@ import {
   FG_OUT_ANCHOR,
   FG_GND_ANCHOR,
   buildBjt,
-  buildMosfet,
   buildDiode,
   buildZenerDiode,
   buildOpAmp,
@@ -80,6 +83,7 @@ import {
   type IcPin,
   type PassivePin,
   type LedPin,
+  type XfmrPin,
   type Row,
 } from "./types";
 
@@ -192,6 +196,13 @@ function resolvePin(
     return hole(targetCol, targetRow, cols);
   }
 
+  if ("transformer" in pin) {
+    const xp = pin as XfmrPin;
+    const inst = all.find((c) => c.id === xp.transformer);
+    if (!inst || inst.type !== "transformer") return null;
+    return transformerPinWorld(xp.pin);
+  }
+
   if ("led" in pin) {
     const lp = pin as LedPin;
     const inst = all.find((c) => c.id === lp.led);
@@ -213,6 +224,38 @@ function resolvePin(
 // Must match LEAD_LENGTH in src/components/bjt — used to seat the TO-92 body
 // so its three leads land on the board surface.
 const BJT_LEAD_LENGTH = PITCH * 0.75;
+
+// The PCB transformer stands beside the board. Its five pins are not on a
+// breadboard strip (plugging them in would short each winding), so jumper
+// leads run from the pin tips to the holes named in the procedure.
+const XFMR_SCALE = 0.62;
+const XFMR_MM = PITCH / 2.54;
+const XFMR_PIN_XZ: Record<XfmrPin["pin"], [number, number]> = {
+  P1: [-6 * PITCH, -PITCH],
+  P2: [-6 * PITCH, PITCH],
+  S1: [6 * PITCH, -2 * PITCH],
+  CT: [6 * PITCH, 0],
+  S2: [6 * PITCH, 2 * PITCH],
+};
+
+function transformerOrigin(): THREE.Vector3 {
+  return new THREE.Vector3(
+    -(BOARD_W / 2) - 1.7,
+    XFMR_BENCH_Y + 4.5 * XFMR_MM * XFMR_SCALE,
+    0.2,
+  );
+}
+
+function transformerPinWorld(pin: XfmrPin["pin"]): THREE.Vector3 | null {
+  const local = XFMR_PIN_XZ[pin];
+  if (!local) return null;
+  const origin = transformerOrigin();
+  return new THREE.Vector3(
+    origin.x + local[0] * XFMR_SCALE,
+    XFMR_BENCH_Y,
+    origin.z + local[1] * XFMR_SCALE,
+  );
+}
 
 // Bench instruments stand behind the board in a row of slots (see
 // bench-layout). This assigns each instrument a stable slot index, ordered
@@ -405,7 +448,6 @@ function buildInstance(
     case "nand-quad":
     case "xor-quad":
     case "dff":
-    case "sr-latch":
     case "counter-4bit-async": {
       const { col, board } = inst.mountedAt;
       const cols = colsForBoardId(board, all);
@@ -424,7 +466,6 @@ function buildInstance(
         "nand-quad": "74HC00",
         "xor-quad": "74HC86",
         dff: "74HC74",
-        "sr-latch": "74HC279",
         "counter-4bit-async": "74HC93",
       };
       return buildDip14(col, labels[inst.type] ?? "IC", cols);
@@ -437,6 +478,7 @@ function buildInstance(
     case "encoder-8to3":
     case "adder-4bit":
     case "jk-ff":
+    case "sr-latch":
     case "counter-4bit-sync":
     case "register-4bit":
     case "ram":
@@ -451,7 +493,8 @@ function buildInstance(
         "decoder-3to8": "74HC138",
         "encoder-8to3": "74HC148",
         "adder-4bit": "74HC283",
-        "jk-ff": "74HC73",
+        "jk-ff": "74HC76",
+        "sr-latch": "74HC279",
         "counter-4bit-sync": "74HC161",
         "register-4bit": "74HC194",
         ram: "RAM",
@@ -475,9 +518,17 @@ function buildInstance(
 
     case "n-mosfet":
     case "p-mosfet": {
+      // 2N7000 in TO-92: Source, Gate, Drain from left to right (flat face
+      // front). The gate sits on mountedAt.col, like the base of a BC547.
       const { col, row, board } = inst.mountedAt;
       const cols = colsForBoardId(board, all);
-      return buildMosfet(hole(col, row, cols));
+      const mount = hole(col, row, cols);
+      mount.y = TOP_Y + BJT_LEAD_LENGTH;
+      return buildBjt(mount, {
+        leadSpacing: PITCH,
+        label: "2N7000",
+        pinLabels: ["S", "G", "D"],
+      });
     }
 
     case "diode": {
@@ -600,6 +651,14 @@ function buildInstance(
       const from = resolvePin(inst.from, all, inst.to);
       const to = resolvePin(inst.to, all, inst.from);
       if (!from || !to) return null;
+      if ("transformer" in inst.from || "transformer" in inst.to) {
+        return instrumentWire(
+          from,
+          to,
+          WIRE_HEX[inst.color] ?? 0xe03424,
+          PITCH * 2.4,
+        );
+      }
       return buildWire(from, to, inst.color);
     }
 
@@ -669,7 +728,12 @@ function buildInstance(
     }
 
     case "transformer": {
-      return buildTransformer(new THREE.Vector3());
+      return buildTransformer(
+        transformerOrigin(),
+        inst.secondary ?? "12-0-12V",
+        inst.rating ?? "2 VA",
+        XFMR_SCALE,
+      );
     }
 
     case "mcu-trainer": {

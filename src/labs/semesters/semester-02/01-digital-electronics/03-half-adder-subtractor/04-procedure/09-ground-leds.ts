@@ -2,7 +2,7 @@ import { type SceneProcedureStep } from "@/labs/experiments/types";
 
 export const step: SceneProcedureStep = {
   label: "Connect the LED cathodes to ground.",
-  body: "Use black jumpers to connect the cathode of each LED to the top ground rail (columns 49, 53 and 57). With both inputs at 0, all three LEDs stay OFF.",
+  body: "Use black jumpers to connect the cathode of each LED to the top ground rail (columns 48, 53 and 58). With both inputs at 0, all three LEDs stay OFF.",
   show: [
     "bb",
     "psu",
@@ -14,11 +14,8 @@ export const step: SceneProcedureStep = {
     "w_vcc_and1",
     "w_gnd_and1",
     "not1",
-    "and2",
     "w_vcc_not1",
     "w_gnd_not1",
-    "w_vcc_and2",
-    "w_gnd_and2",
     "w_a_xor",
     "w_a_and",
     "w_a_not",
@@ -33,11 +30,8 @@ export const step: SceneProcedureStep = {
     "r_b",
     "led_b",
     "w_xor_r",
-    "w_r_led_sd",
     "w_and_r",
-    "w_r_led_c",
     "w_and2_r",
-    "w_r_led_b",
     "w_gnd_sd",
     "w_gnd_c",
     "w_gnd_b",

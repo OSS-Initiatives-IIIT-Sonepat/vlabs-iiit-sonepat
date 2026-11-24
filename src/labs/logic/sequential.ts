@@ -437,8 +437,11 @@ export function createSequentialState(
   config?: Record<string, unknown>,
 ): SequentialState | null {
   switch (type) {
-    case "dff":
-      return new DffState((config as DffConfig) ?? {});
+    case "dff": {
+      // A placed 74HC74 is rising-edge triggered unless told otherwise.
+      const c = (config as DffConfig) ?? {};
+      return new DffState({ ...c, polarity: c.polarity ?? { clock: true } });
+    }
     case "jk-ff":
       return new JKFlipFlopState();
     case "sr-latch":

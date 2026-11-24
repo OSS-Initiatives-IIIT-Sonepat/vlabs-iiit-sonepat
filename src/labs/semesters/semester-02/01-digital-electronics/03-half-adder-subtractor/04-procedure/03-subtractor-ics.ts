@@ -1,8 +1,8 @@
 import { type SceneProcedureStep } from "@/labs/experiments/types";
 
 export const step: SceneProcedureStep = {
-  label: "Place the NOT and AND ICs (subtractor section).",
-  body: "Insert the NOT gate (74HC04) at column 28 and the second AND gate at column 38. The NOT gate inverts A and the AND gate combines $\\overline{A}$ with B to give the Borrow. Leave the three-column gap between ICs so wires can be routed cleanly.",
+  label: "Place the NOT IC (subtractor section).",
+  body: "Insert the NOT IC (74HC04) at column 28 and power it. The NOT gate inverts A, and the **second** AND gate of the 74HC08 already on the board combines $\\overline{A}$ with B to give the Borrow, so no fourth IC is needed.",
   show: [
     "bb",
     "psu",
@@ -14,11 +14,8 @@ export const step: SceneProcedureStep = {
     "w_vcc_and1",
     "w_gnd_and1",
     "not1",
-    "and2",
     "w_vcc_not1",
     "w_gnd_not1",
-    "w_vcc_and2",
-    "w_gnd_and2",
   ],
   highlight: "not1",
   audioPath:

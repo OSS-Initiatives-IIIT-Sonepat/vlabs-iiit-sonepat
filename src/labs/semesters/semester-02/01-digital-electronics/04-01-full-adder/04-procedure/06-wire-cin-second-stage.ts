@@ -2,13 +2,11 @@ import { type SceneProcedureStep } from "@/labs/experiments/types";
 
 export const step: SceneProcedureStep = {
   label: "Connect Cin and the second half adder",
-  body: "Feed the output of XOR1 (A ⊕ B) into XOR2 and AND2 with white wires. Bring the carry-in Cin (orange wires) to XOR2 and AND2. XOR2 gives Sum = A ⊕ B ⊕ Cin and AND2 gives Cin · (A ⊕ B).",
+  body: "Feed the output of XOR1 (A ⊕ B, pin 3) into XOR2 (pin 4) and AND2 (pin 4 of the 74HC08) with white wires, using two different holes of the pin-3 column. Bring the carry-in Cin (orange wires) to XOR2 and AND2. XOR2 gives Sum = A ⊕ B ⊕ Cin and AND2 gives Cin · (A ⊕ B).",
   show: [
     "bb",
     "xor1",
-    "xor2",
     "and1",
-    "and2",
     "or1",
     "r_sum",
     "led_sum",
@@ -28,10 +26,6 @@ export const step: SceneProcedureStep = {
     "w_gnd_xor1",
     "w_vcc_and1",
     "w_gnd_and1",
-    "w_vcc_xor2",
-    "w_gnd_xor2",
-    "w_vcc_and2",
-    "w_gnd_and2",
     "w_vcc_or1",
     "w_gnd_or1",
   ],

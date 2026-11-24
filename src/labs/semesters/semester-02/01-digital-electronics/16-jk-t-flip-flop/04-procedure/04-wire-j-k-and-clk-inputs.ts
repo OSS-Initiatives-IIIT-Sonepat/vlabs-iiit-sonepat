@@ -5,7 +5,12 @@ export const step: SceneProcedureStep = {
   body: "Connect J from col 1 row a, K from col 2 row a, CLK from col 3 row a to respective IC pins. These are the primary control inputs.",
   show: [
     "bb",
+    "psu",
+    "w_rail_link",
+    "w_gnd_link",
     "jk1",
+    "w_vcc_jk1",
+    "w_gnd_jk1",
     "w_set_vcc",
     "w_clr_vcc",
     "w_j_jk1",

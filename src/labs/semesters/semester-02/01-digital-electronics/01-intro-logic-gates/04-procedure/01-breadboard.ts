@@ -4,7 +4,7 @@ import { BB } from "../gates";
 
 export const step: SceneProcedureStep = {
   label: "Place the long breadboard.",
-  body: "Place the 60-column breadboard on the bench. Seven ICs and seven LED indicators will be mounted on it, so the long board is used. Keep the top rail pair free: the **top blue rail** is GND and the **top red rail** is +5 V.",
+  body: "Place the 100-column breadboard on the bench. Seven ICs and seven LED indicators will be mounted on it, each indicator in its own columns beside its IC, so the wide board is used. Connect the +5 V supply to the top rails and link the top red rail to the bottom red rail. Keep the top rail pair free: the **top blue rail** is GND and the **top red rail** is +5 V.",
   show: [BB],
   highlight: BB,
 };

@@ -2,7 +2,7 @@ import { type SceneProcedureStep } from "@/labs/experiments/types";
 
 export const step: SceneProcedureStep = {
   label: "Place the output resistors and LEDs.",
-  body: "On the right side of the board place three 330 Ω resistors with an LED just after each: green for Sum/Difference (columns 46 and 48), yellow for Carry (50 and 52) and red for Borrow (54 and 56). The resistors limit the LED current.",
+  body: "On the right side of the board place three 330 Ω resistors, each followed by an LED whose anode shares the resistor's right-hand column: green for Sum/Difference (resistor at columns 44–47), yellow for Carry (49–52) and red for Borrow (54–57). If the LED shares both of its columns with the resistor it is shorted out and never lights. The resistors limit the LED current.",
   show: [
     "bb",
     "psu",
@@ -14,11 +14,8 @@ export const step: SceneProcedureStep = {
     "w_vcc_and1",
     "w_gnd_and1",
     "not1",
-    "and2",
     "w_vcc_not1",
     "w_gnd_not1",
-    "w_vcc_and2",
-    "w_gnd_and2",
     "w_a_xor",
     "w_a_and",
     "w_a_not",

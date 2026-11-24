@@ -19,7 +19,6 @@ export const step: SceneProcedureStep = {
     "r_y",
     "led_y",
     "w_y_r",
-    "w_r_led",
     "w_gnd_led",
   ],
   highlight: "led_y",

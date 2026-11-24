@@ -2,28 +2,16 @@ import { type SceneProcedureStep } from "@/labs/experiments/types";
 
 export const step: SceneProcedureStep = {
   label: "Mount 330 Ω current-limiting resistors and output LEDs on row h.",
-  body:
-    "Mount four 330 Ω resistors and color-coded LEDs on row h below the ICs: " +
-    "r_g3 and led_g3 (Red, G₃ output / MSB) at cols 12/16; " +
-    "r_g2 and led_g2 (Yellow, G₂ output) at cols 24/28; " +
-    "r_g1 and led_g1 (Green, G₁ output) at cols 38/42; and " +
-    "r_g0 and led_g0 (Blue, G₀ output / LSB) at cols 50/54.",
+  body: "Mount four 330 Ω resistors in the top bank to the right of the IC, each with its LED anode in the column of the resistor's right lead: G₃ (red) at columns 23–26, G₂ (yellow) at 28–31, G₁ (green) at 33–36 and G₀ (blue) at 38–41.",
   show: [
     "bb",
     "psu",
     "w_rail_link",
     "xor1",
-    "xor2",
-    "xor3",
     "w_vcc_xor1",
     "w_gnd_xor1",
-    "w_vcc_xor2",
-    "w_gnd_xor2",
-    "w_vcc_xor3",
-    "w_gnd_xor3",
     "w_b3_xor1",
     "w_b3_g3",
-    "w_b3_to_r",
     "w_b2_xor1",
     "w_b2_xor2",
     "w_b1_xor2",

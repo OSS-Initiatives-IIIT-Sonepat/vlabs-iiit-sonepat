@@ -2,37 +2,23 @@ import { type SceneProcedureStep } from "@/labs/experiments/types";
 
 export const step: SceneProcedureStep = {
   label: "Connect internal logic cascaded paths and complete LED drive lines.",
-  body:
-    "Connect white jumper wires for internal sub-expressions: " +
-    "T = C + D from or_cd.Y to and_b_t.B and xor_x.B; " +
-    "B·T from and_b_t.Y to or_w.B; and C ⊕ D from xor_cd.Y to not_y.A. " +
-    "Wire gate outputs to their respective 330 Ω resistors, connect resistors to LED anodes, " +
-    "and return all LED cathodes to the bottom ground rail using black wires.",
+  body: "Internal signals (yellow): T = C + D from OR gate 1 (pin 3) to the AND (pin 2) and to XOR gate 1 (pin 2); B·T from the AND output (pin 3) to OR gate 2 (pin 5); C ⊕ D from XOR gate 2 (pin 6) to NOT gate 1 (pin 1). Outputs (green): W from OR pin 6, X from XOR pin 3, Y from NOT pin 2 and Z from NOT pin 4, each to its resistor. Finally connect each LED cathode to the top ground rail with a black jumper.",
   show: [
     "bb",
     "psu",
     "w_rail_link",
     "or_cd",
     "and_b_t",
-    "or_w",
     "xor_x",
-    "xor_cd",
     "not_y",
-    "not_z",
     "w_vcc_or_cd",
     "w_gnd_or_cd",
-    "w_vcc_and",
-    "w_gnd_and",
-    "w_vcc_or_w",
-    "w_gnd_or_w",
+    "w_vcc_and_b_t",
+    "w_gnd_and_b_t",
     "w_vcc_xor_x",
     "w_gnd_xor_x",
-    "w_vcc_xor_cd",
-    "w_gnd_xor_cd",
     "w_vcc_not_y",
     "w_gnd_not_y",
-    "w_vcc_not_z",
-    "w_gnd_not_z",
     "r_w",
     "led_w",
     "r_x",
@@ -54,16 +40,12 @@ export const step: SceneProcedureStep = {
     "w_and_to_or_w",
     "w_xor_cd_to_not_y",
     "w_w_to_r",
-    "w_r_to_led_w",
     "w_gnd_w",
     "w_x_to_r",
-    "w_r_to_led_x",
     "w_gnd_x",
     "w_y_to_r",
-    "w_r_to_led_y",
     "w_gnd_y",
     "w_z_to_r",
-    "w_r_to_led_z",
     "w_gnd_z",
   ],
   activeInputs: {

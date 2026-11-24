@@ -116,6 +116,11 @@ function railKey(rail: "vcc_top" | "gnd_top" | "vcc_bot" | "gnd_bot"): string {
   return `rail:${rail}`;
 }
 
+// "1Y:2" names a second hole in pin 1Y's strip. Same pin, same net.
+function stripReach(pin: string): string {
+  return pin.replace(/:\d$/, "");
+}
+
 // ── The main Netlist class ─────────────────────────────────────────────────
 export class Netlist {
   private uf = new UnionFind();
@@ -196,10 +201,28 @@ export class Netlist {
           );
           break;
         }
+        case "nor-gate": {
+          // 74HC02: 1Y=p1, 1A=p2, 1B=p3, GND=p7, VCC=p14
+          const { col, row } = inst.mountedAt;
+          const a = row as Row;
+          const pins: [string, number][] = [
+            ["1Y", 0],
+            ["Y", 0],
+            ["1A", 1],
+            ["A", 1],
+            ["1B", 2],
+            ["B", 2],
+            ["GND", 6],
+          ];
+          for (const [pin, dc] of pins) {
+            this.registerPin(inst.id, pin, tieKey(col + dc, a));
+          }
+          this.registerPin(inst.id, "VCC", tieKey(col, this.oppositeRow(a)));
+          break;
+        }
         case "and-gate":
         case "or-gate":
         case "nand-gate":
-        case "nor-gate":
         case "xnor-gate":
         case "buffer-gate": {
           this.registerDip14Logic(
@@ -257,23 +280,24 @@ export class Netlist {
           break;
         }
 
-        // ── BJT transistors (TO-92: E-B-C left to right) ──────────────
+        // ── BJT transistors (BC547, TO-92 flat face front: C-B-E) ─────
+        // The base sits on mountedAt.col, as drawn by LabScene.
         case "npn-bjt":
         case "pnp-bjt": {
           const { col, row } = inst.mountedAt;
-          this.registerPin(inst.id, "E", tieKey(col, row as Row));
-          this.registerPin(inst.id, "B", tieKey(col + 1, row as Row));
-          this.registerPin(inst.id, "C", tieKey(col + 2, row as Row));
+          this.registerPin(inst.id, "C", tieKey(col - 1, row as Row));
+          this.registerPin(inst.id, "B", tieKey(col, row as Row));
+          this.registerPin(inst.id, "E", tieKey(col + 1, row as Row));
           break;
         }
 
-        // ── MOSFETs (Visual: G-D-S left to right) ──────────────────────
+        // ── MOSFETs (2N7000, TO-92 flat face front: S-G-D) ─────────────
         case "n-mosfet":
         case "p-mosfet": {
           const { col, row } = inst.mountedAt;
-          this.registerPin(inst.id, "G", tieKey(col - 1, row as Row));
-          this.registerPin(inst.id, "D", tieKey(col, row as Row));
-          this.registerPin(inst.id, "S", tieKey(col + 1, row as Row));
+          this.registerPin(inst.id, "S", tieKey(col - 1, row as Row));
+          this.registerPin(inst.id, "G", tieKey(col, row as Row));
+          this.registerPin(inst.id, "D", tieKey(col + 1, row as Row));
           break;
         }
 
@@ -289,6 +313,8 @@ export class Netlist {
           this.registerPin(inst.id, "set_bar", tieKey(c + 3, "e"));
           this.registerPin(inst.id, "out", tieKey(c + 4, "e")); // Q
           this.registerPin(inst.id, "q_bar", tieKey(c + 5, "e"));
+          this.registerPin(inst.id, "d", tieKey(c + 1, "e"));
+          this.registerPin(inst.id, "q", tieKey(c + 4, "e"));
           this.registerPin(inst.id, "GND", tieKey(c + 6, "e"));
           this.registerPin(inst.id, "VCC", tieKey(c + 0, "f"));
           // Gate 2 (second FF in same package)
@@ -301,44 +327,48 @@ export class Netlist {
           break;
         }
 
-        // ── JK flip-flop 74HC76 — DIP-16 ──────────────────────────────
-        // Pin layout:
-        //  e-bank: CLK1=p1, SET1_bar=p2, K1=p3, VCC=p4(offset), J1=p5, Q1_bar=p6, Q1=p7, GND=p8
-        //  f-bank: J2=p9, Q2=p10, Q2_bar=p11, CLK2=p12, SET2_bar=p13, K2=p14, CLR2_bar=p15, CLR1_bar=p16(skipped for DIP-14 span)
+        // ── JK flip-flop 74HC76 — DIP-16 (flip-flop 1) ────────────────
+        //  e-bank: 1CLK=p1, 1PRE'=p2, 1CLR'=p3, 1J=p4, VCC=p5
+        //  f-bank: 1K=p16, 1Q=p15, 1Q'=p14, GND=p13
         case "jk-ff": {
           const c = inst.mountedAt.col;
           this.registerPin(inst.id, "clk", tieKey(c + 0, "e"));
           this.registerPin(inst.id, "set", tieKey(c + 1, "e"));
-          this.registerPin(inst.id, "k", tieKey(c + 2, "e"));
+          this.registerPin(inst.id, "clr", tieKey(c + 2, "e"));
           this.registerPin(inst.id, "j", tieKey(c + 3, "e"));
-          this.registerPin(inst.id, "q_bar", tieKey(c + 4, "e"));
-          this.registerPin(inst.id, "out", tieKey(c + 5, "e")); // Q
-          this.registerPin(inst.id, "GND", tieKey(c + 6, "e"));
-          this.registerPin(inst.id, "VCC", tieKey(c + 0, "f"));
-          this.registerPin(inst.id, "clr", tieKey(c + 1, "f"));
+          this.registerPin(inst.id, "VCC", tieKey(c + 4, "e"));
+          this.registerPin(inst.id, "k", tieKey(c + 0, "f"));
+          this.registerPin(inst.id, "out", tieKey(c + 1, "f")); // Q
+          this.registerPin(inst.id, "q_bar", tieKey(c + 2, "f"));
+          this.registerPin(inst.id, "GND", tieKey(c + 3, "f"));
+          // Names the 3D view also accepts
+          this.registerPin(inst.id, "q", tieKey(c + 1, "f"));
+          this.registerPin(inst.id, "set_bar", tieKey(c + 1, "e"));
+          this.registerPin(inst.id, "clr_bar", tieKey(c + 2, "e"));
           break;
         }
 
         // ── SR latch 74HC279 — DIP-16 ─────────────────────────────────
-        // 4 SR latches, active-low S and R inputs
+        // Active-low inputs. e-bank: 1R'=p1, 1S1'=p2, 1S2'=p3, 1Q=p4,
+        // 2R'=p5, 2S'=p6, 2Q=p7, GND=p8. f-bank: VCC=p16.
         case "sr-latch": {
           const c = inst.mountedAt.col;
-          // Latch 1
-          this.registerPin(inst.id, "s", tieKey(c + 0, "e"));
-          this.registerPin(inst.id, "r", tieKey(c + 1, "e"));
-          this.registerPin(inst.id, "q", tieKey(c + 2, "e"));
-          // Latch 2
-          this.registerPin(inst.id, "s2", tieKey(c + 3, "e"));
+          this.registerPin(inst.id, "r", tieKey(c + 0, "e"));
+          this.registerPin(inst.id, "s", tieKey(c + 1, "e"));
+          this.registerPin(inst.id, "s_2", tieKey(c + 2, "e"));
+          this.registerPin(inst.id, "q", tieKey(c + 3, "e"));
+          this.registerPin(inst.id, "out", tieKey(c + 3, "e"));
           this.registerPin(inst.id, "r2", tieKey(c + 4, "e"));
-          this.registerPin(inst.id, "q2", tieKey(c + 5, "e"));
-          this.registerPin(inst.id, "GND", tieKey(c + 6, "e"));
+          this.registerPin(inst.id, "s2", tieKey(c + 5, "e"));
+          this.registerPin(inst.id, "q2", tieKey(c + 6, "e"));
+          this.registerPin(inst.id, "GND", tieKey(c + 7, "e"));
           this.registerPin(inst.id, "VCC", tieKey(c + 0, "f"));
           break;
         }
 
         // ── 4-bit adder 74HC283 — DIP-16 ──────────────────────────────
         // e-bank: S2=p1, B2=p2, A2=p3, S1=p4, A1=p5, B1=p6, C0=p7, GND=p8
-        // f-bank: VCC=p16, C4=p15, S4=p14, A4=p13, B4=p12, S3=p11, A3=p10, B3=p9
+        // f-bank: VCC=p16, B3=p15, A3=p14, S3=p13, A4=p12, B4=p11, S4=p10, C4=p9
         case "adder-4bit": {
           const c = inst.mountedAt.col;
           this.registerPin(inst.id, "s2", tieKey(c + 0, "e"));
@@ -350,19 +380,19 @@ export class Netlist {
           this.registerPin(inst.id, "c0", tieKey(c + 6, "e"));
           this.registerPin(inst.id, "GND", tieKey(c + 7, "e"));
           this.registerPin(inst.id, "VCC", tieKey(c + 0, "f"));
-          this.registerPin(inst.id, "c4", tieKey(c + 1, "f"));
-          this.registerPin(inst.id, "s4", tieKey(c + 2, "f"));
-          this.registerPin(inst.id, "a4", tieKey(c + 3, "f"));
-          this.registerPin(inst.id, "b4", tieKey(c + 4, "f"));
-          this.registerPin(inst.id, "s3", tieKey(c + 5, "f"));
-          this.registerPin(inst.id, "a3", tieKey(c + 6, "f"));
-          this.registerPin(inst.id, "b3", tieKey(c + 7, "f"));
+          this.registerPin(inst.id, "b3", tieKey(c + 1, "f"));
+          this.registerPin(inst.id, "a3", tieKey(c + 2, "f"));
+          this.registerPin(inst.id, "s3", tieKey(c + 3, "f"));
+          this.registerPin(inst.id, "a4", tieKey(c + 4, "f"));
+          this.registerPin(inst.id, "b4", tieKey(c + 5, "f"));
+          this.registerPin(inst.id, "s4", tieKey(c + 6, "f"));
+          this.registerPin(inst.id, "c4", tieKey(c + 7, "f"));
           break;
         }
 
         // ── 74HC153: Dual 4:1 MUX — DIP-16 ──────────────────────────
         // e-bank: EN1_bar=p1, S1=p2, I3_1=p3, I2_1=p4, I1_1=p5, I0_1=p6, Y1=p7, GND=p8
-        // f-bank: VCC=p16, S0=p15, Y2=p14, I0_2=p13, I1_2=p12, I2_2=p11, I3_2=p10, EN2_bar=p9
+        // f-bank: VCC=p16, EN2_bar=p15, S0=p14, I3_2=p13, I2_2=p12, I1_2=p11, I0_2=p10, Y2=p9
         case "mux-4to1": {
           const c = inst.mountedAt.col;
           this.registerPin(inst.id, "en1_bar", tieKey(c + 0, "e"));
@@ -374,13 +404,30 @@ export class Netlist {
           this.registerPin(inst.id, "y1", tieKey(c + 6, "e"));
           this.registerPin(inst.id, "GND", tieKey(c + 7, "e"));
           this.registerPin(inst.id, "VCC", tieKey(c + 0, "f"));
-          this.registerPin(inst.id, "s0", tieKey(c + 1, "f")); // LSB of select
-          this.registerPin(inst.id, "y2", tieKey(c + 2, "f"));
-          this.registerPin(inst.id, "i0_2", tieKey(c + 3, "f"));
-          this.registerPin(inst.id, "i1_2", tieKey(c + 4, "f"));
-          this.registerPin(inst.id, "i2_2", tieKey(c + 5, "f"));
-          this.registerPin(inst.id, "i3_2", tieKey(c + 6, "f"));
-          this.registerPin(inst.id, "en2_bar", tieKey(c + 7, "f"));
+          this.registerPin(inst.id, "en2_bar", tieKey(c + 1, "f"));
+          this.registerPin(inst.id, "s0", tieKey(c + 2, "f")); // LSB of select
+          this.registerPin(inst.id, "i3_2", tieKey(c + 3, "f"));
+          this.registerPin(inst.id, "i2_2", tieKey(c + 4, "f"));
+          this.registerPin(inst.id, "i1_2", tieKey(c + 5, "f"));
+          this.registerPin(inst.id, "i0_2", tieKey(c + 6, "f"));
+          this.registerPin(inst.id, "y2", tieKey(c + 7, "f"));
+          // Datasheet names, as used by the 3D view (1G = 1E', 1Cn = 1In)
+          const alias: [string, string][] = [
+            ["1G", "en1_bar"],
+            ["2G", "en2_bar"],
+            ["S0", "s0"],
+            ["S1", "s1"],
+            ["1Y", "y1"],
+            ["2Y", "y2"],
+            ...[0, 1, 2, 3].flatMap((n): [string, string][] => [
+              [`1C${n}`, `i${n}_1`],
+              [`2C${n}`, `i${n}_2`],
+            ]),
+          ];
+          for (const [name, pin] of alias) {
+            const key = this.pinNets.get(`${inst.id}:${pin}`);
+            if (key) this.registerPin(inst.id, name, key);
+          }
           break;
         }
 
@@ -449,18 +496,19 @@ export class Netlist {
         }
 
         // ── 4-bit async counter 74HC93 — DIP-14 ──────────────────────
+        // 1 CKB, 2 R0(1), 3 R0(2), 5 VCC / 14 CKA, 12 QA, 11 QD, 10 GND, 9 QB, 8 QC
         case "counter-4bit-async": {
           const c = inst.mountedAt.col;
           this.registerPin(inst.id, "clk_b", tieKey(c + 0, "e"));
           this.registerPin(inst.id, "r01", tieKey(c + 1, "e"));
           this.registerPin(inst.id, "r02", tieKey(c + 2, "e"));
-          this.registerPin(inst.id, "GND", tieKey(c + 6, "e"));
-          this.registerPin(inst.id, "qd", tieKey(c + 2, "f"));
-          this.registerPin(inst.id, "qc", tieKey(c + 3, "f"));
-          this.registerPin(inst.id, "qb", tieKey(c + 4, "f"));
-          this.registerPin(inst.id, "VCC", tieKey(c + 5, "f"));
-          this.registerPin(inst.id, "qa", tieKey(c + 6, "f"));
+          this.registerPin(inst.id, "VCC", tieKey(c + 4, "e"));
           this.registerPin(inst.id, "clk_a", tieKey(c + 0, "f"));
+          this.registerPin(inst.id, "qa", tieKey(c + 2, "f"));
+          this.registerPin(inst.id, "qd", tieKey(c + 3, "f"));
+          this.registerPin(inst.id, "GND", tieKey(c + 4, "f"));
+          this.registerPin(inst.id, "qb", tieKey(c + 5, "f"));
+          this.registerPin(inst.id, "qc", tieKey(c + 6, "f"));
           break;
         }
 
@@ -802,7 +850,7 @@ export class Netlist {
     // IcPin: { ic, pin }
     if ("ic" in ep) {
       const icId = ep.ic as string;
-      const pin = ep.pin as string;
+      const pin = stripReach(ep.pin as string);
       const key = this.pinNets.get(`${icId}:${pin}`);
       return key ?? null;
     }
@@ -838,7 +886,7 @@ export class Netlist {
 
   /** Net id for a named component pin */
   componentPinNet(compId: string, pin: string): NetId | null {
-    const key = this.pinNets.get(`${compId}:${pin}`);
+    const key = this.pinNets.get(`${compId}:${stripReach(pin)}`);
     if (!key) return null;
     return this.uf.find(key);
   }

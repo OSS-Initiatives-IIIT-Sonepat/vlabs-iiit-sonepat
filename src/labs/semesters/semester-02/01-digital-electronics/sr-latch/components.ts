@@ -1,105 +1,20 @@
 import { type ComponentInstance } from "@/labs/types";
 
+import { board, ic, input, lamp, tie } from "../_board";
+
+/**
+ * SR latch with the 74HC279 (latch 1). Inputs are active-LOW.
+ *   pin 1 = 1R', pin 2 = 1S1', pin 3 = 1S2' (tied HIGH, unused), pin 4 = 1Q
+ * Inputs: S' at col 1, R' at col 2. IC at col 8.
+ */
 export const components: ComponentInstance[] = [
-  {
-    id: "bb",
-    type: "breadboard",
-  },
-  {
-    id: "sr1",
-    type: "sr-latch",
-    mountedAt: {
-      board: "bb",
-      col: 5,
-      row: "e",
-    },
-  },
-  {
-    id: "r_q",
-    type: "resistor",
-    ohms: 330,
-    mountedAt: {
-      board: "bb",
-      col: 19,
-      row: "c",
-    },
-  },
-  {
-    id: "led_q",
-    type: "led",
-    color: "green",
-    mountedAt: {
-      board: "bb",
-      col: 24,
-      row: "c",
-    },
-  },
-  {
-    id: "w_s_sr1",
-    type: "wire",
-    color: "blue",
-    from: {
-      board: "bb",
-      col: 1,
-      row: "a",
-    },
-    to: {
-      ic: "sr1",
-      pin: "s",
-    },
-  },
-  {
-    id: "w_r_sr1",
-    type: "wire",
-    color: "orange",
-    from: {
-      board: "bb",
-      col: 2,
-      row: "a",
-    },
-    to: {
-      ic: "sr1",
-      pin: "r",
-    },
-  },
-  {
-    id: "w_q_out",
-    type: "wire",
-    color: "green",
-    from: {
-      ic: "sr1",
-      pin: "q",
-    },
-    to: {
-      component: "r_q",
-      end: "p1",
-    },
-  },
-  {
-    id: "w_q_led",
-    type: "wire",
-    color: "green",
-    from: {
-      component: "r_q",
-      end: "p2",
-    },
-    to: {
-      led: "led_q",
-      end: "anode",
-    },
-  },
-  {
-    id: "w_q_gnd",
-    type: "wire",
-    color: "black",
-    from: {
-      led: "led_q",
-      end: "cathode",
-    },
-    to: {
-      board: "bb",
-      rail: "gnd_top",
-      col: 1,
-    },
-  },
+  ...board(),
+
+  ...ic("sr1", "sr-latch", 8),
+  tie("w_s2_vcc", { ic: "sr1", pin: "s_2" }, "vcc", 10),
+
+  input("w_sbar_sr1", 1, "a", { ic: "sr1", pin: "s" }, "blue"),
+  input("w_rbar_sr1", 2, "a", { ic: "sr1", pin: "r" }, "orange"),
+
+  ...lamp("q", { ic: "sr1", pin: "q" }, 18, "green", "w_q_out", "w_q_gnd"),
 ];
