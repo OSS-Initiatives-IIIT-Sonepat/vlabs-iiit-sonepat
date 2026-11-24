@@ -20,6 +20,12 @@ export type IcPin = { ic: string; pin: string }; // pin is any named pin on the 
 export type PassivePin = { component: string; end: "p1" | "p2" };
 export type LedPin = { led: string; end: "anode" | "cathode" };
 
+/** A lead on the bench transformer. P1/P2 are the primary, S1/CT/S2 the secondary. */
+export type XfmrPin = {
+  transformer: string;
+  pin: "P1" | "P2" | "S1" | "CT" | "S2";
+};
+
 /** A named header pin on a development board, e.g. `{ dev: 'uno', pin: 'D13' }`. */
 export type DevPin = { dev: string; pin: string };
 
@@ -29,6 +35,7 @@ export type PinRef =
   | IcPin
   | PassivePin
   | LedPin
+  | XfmrPin
   | DevPin;
 
 // ── Component instances ───────────────────────────────────────────────────
